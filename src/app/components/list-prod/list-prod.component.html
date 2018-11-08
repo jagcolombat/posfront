@@ -1,0 +1,5 @@
+<button mat-button fxFlex="130px" [fxLayoutGap]="space" *ngFor="let i of prods" (click)="doAction(i)"
+        [ngClass]="i.generic ? 'generic' : 'normal'">
+  {{i.name | uppercase }}
+</button>
+<button mat-button [fxLayoutGap]="space" [routerLink]="['/home/dptos']"> << DPTOS </button>

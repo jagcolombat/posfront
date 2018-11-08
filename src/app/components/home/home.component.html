@@ -1,0 +1,18 @@
+<div fxLayout="row" class="container" fxLayoutAlign="space-between">
+  <div id="shopcarnops" fxFlex="58" fxLayout="column">
+    <app-shopping-car #shoppingcar [product]="product" ></app-shopping-car>
+    <div fxLayout="row">
+      <app-financial-op fxFlex="30"></app-financial-op>
+      <app-calculator fxFlex="70" (evKeys)="getKey($event)"></app-calculator>
+    </div>
+  </div>
+
+  <div id="dptosnprods" fxFlex="41" fxLayout="column" fxLayoutAlign="space-between">
+    <div fxFlex="50">
+      <router-outlet ></router-outlet>
+    </div>
+    <div fxFlex="50">
+      <app-payment-ops></app-payment-ops>
+    </div>
+  </div>
+</div>

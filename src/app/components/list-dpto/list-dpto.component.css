@@ -1,0 +1,17 @@
+:host {
+  flex-wrap: wrap;
+}
+
+button[mat-button] {
+
+}
+
+.normal {
+  background-color: #ed5f5f;
+  border-color: #913939;
+}
+
+.generic {
+  background-color: #ff9b3e;
+  border-color: #ffac41;
+}

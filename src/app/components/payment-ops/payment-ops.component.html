@@ -1,0 +1,17 @@
+<div fxLayout="column" fxFlex="50">
+  <div fxLayout="row">
+    <div class="special" fxLayout="column">
+      <button mat-button fxFlex="100px" [fxLayoutGap]="space" *ngFor="let i of specials">
+        {{ i | uppercase }}
+      </button>
+    </div>
+    <div class="cards" fxLayout="column">
+      <button mat-button fxFlex="100px" [fxLayoutGap]="space" *ngFor="let i of cards">
+        {{ i | uppercase }}
+      </button>
+    </div>
+  </div>
+  <button mat-button class="cash" fxFlex="130px" [fxLayoutGap]="space">
+    CASH
+  </button>
+</div>

@@ -1,0 +1,8 @@
+:host {
+  flex-wrap: wrap;
+}
+
+button[mat-button] {
+  background-color: #15a367;
+  border-color: #0f572f;
+}

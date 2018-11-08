@@ -1,0 +1,26 @@
+<mat-toolbar color="primary">
+  Login as Manager
+  <span class="flex-spacer"></span>
+  <!--<button mat-raised-button mat-dialog-close>&times;</button>-->
+</mat-toolbar>
+
+<p>{{ user | json }}</p>
+<form novalidate #loginForm="ngForm">
+  <mat-dialog-content>
+    <p>
+      <mat-form-field>
+        <input matInput placeholder="Password" type="password" [(ngModel)]="data.pass"
+               name="password" #password="ngModel" required (input)="tryValidation = false"/>
+        <mat-error *ngIf="password.errors?.required">Password is required</mat-error>
+      </mat-form-field>
+    </p>
+
+    <mat-error *ngIf="!valid && tryValidation">Password is invalid</mat-error>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <span class="flex-spacer"></span>
+    <button mat-raised-button mat-dialog-close>Cancel</button>
+    <button mat-raised-button class="background-primary text-floral-white"
+            [disabled]="loginForm.form.invalid" (click)="this.login()">Login</button>
+  </mat-dialog-actions>
+</form>

@@ -1,0 +1,26 @@
+<mat-toolbar color="primary">
+  Generic Product ({{data.product.name}})
+  <span class="flex-spacer"></span>
+</mat-toolbar>
+<form novalidate #productGenericForm="ngForm">
+  <mat-dialog-content>
+    <p>
+      <mat-form-field>
+        <input matInput placeholder="Count" type="number" [(ngModel)]="data.quantity"
+               name="count" #count="ngModel" required />
+        <mat-error *ngIf="count.errors?.required">Count is required</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Price" type="number" [(ngModel)]="data.unitCost"
+               name="price" #price="ngModel" required />
+        <mat-error *ngIf="price.errors?.required">Price is required</mat-error>
+      </mat-form-field>
+    </p>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <span class="flex-spacer"></span>
+    <button mat-raised-button mat-dialog-close>Cancel</button>
+    <button mat-raised-button class="background-primary text-floral-white"
+            [disabled]="productGenericForm.form.invalid" (click)="addGenericProd()">Add product</button>
+  </mat-dialog-actions>
+</form>
