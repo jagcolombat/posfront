@@ -8,7 +8,8 @@ import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
   styleUrls: ['dialog-invoice.component.css']
 })
 export class DialogInvoiceComponent {
-
+  title = "Holder Orders";
+  subtitle = "Select a hold order:";
   constructor(
     public dialogRef: MatDialogRef<DialogInvoiceComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Invoice[]) {}

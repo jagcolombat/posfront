@@ -1,11 +1,12 @@
 .container   {
-  margin: 10px;
+  display: flex;
+  height: 100%;
 }
 
-.dptosnprods {
+/*.dptosnprods {
   height: 360px;
 }
 
 app-shopping-car {
   height: 380px;
-}
+}*/

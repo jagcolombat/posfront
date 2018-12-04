@@ -1,13 +1,18 @@
-<h1 mat-dialog-title>Holder Orders</h1>
-<div mat-dialog-content>
-  <p>Select a hold order:</p>
-  <div class="buttons">
-    <button mat-button fxFlex="150px" [fxLayoutGap]="space" *ngFor="let i of data"
-            [mat-dialog-close]="i" cdkFocusInitial>
-      {{i.receiptNumber }}<p>{{i.total | currency }}</p>
-    </button>
+<div oncontextmenu="return false">
+  <mat-toolbar color="primary">
+    {{ title }}
+    <span class="flex-spacer"></span>
+  </mat-toolbar>
+  <div mat-dialog-content>
+    <p>{{ subtitle }}</p>
+    <div class="buttons">
+      <button mat-button fxFlex="150px" [fxLayoutGap]="space" *ngFor="let i of data"
+              [mat-dialog-close]="i" cdkFocusInitial>
+        {{i.receiptNumber }}<p>{{i.total | currency }}</p>
+      </button>
+    </div>
   </div>
-</div>
-<div mat-dialog-actions>
-  <button mat-raised-button [mat-dialog-close]>Cancel</button>
+  <div mat-dialog-actions>
+    <button mat-raised-button [mat-dialog-close]>Cancel</button>
+  </div>
 </div>

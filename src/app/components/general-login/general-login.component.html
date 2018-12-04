@@ -1,18 +1,18 @@
 <div fxLayout="row" class="container" fxLayoutAlign="space-between">
-  <div id="right" fxFlex="65" fxLayout="column" fxLayoutAlign="space-between">
-    <div id="logo" fxLayoutAlign="center center">
+  <div id="right" fxFlex="54" fxLayout="column" fxLayoutAlign="space-between" style="border: 1px solid gray">
+    <div id="logo" fxLayoutAlign="center center" fxFlex="50" class="border">
       <span>LOGO</span>
     </div>
-    <div fxLayoutAlign="center center" class="anuncios">
+    <div fxLayoutAlign="center center" fxFlex="50" class="border">
       <span>ANUNCIOS</span>
     </div>
   </div>
 
-  <div id="left" fxFlex="34" fxLayout="column" fxLayoutAlign="space-between">
-    <div fxLayoutAlign="center center" class="promotions">
+  <div id="left" fxFlex="45" fxLayout="column" fxLayoutAlign="space-between" class="border">
+    <div fxLayoutAlign="center center" fxFlex="40" class="border">
       <span>PROMOCIONES</span>
     </div>
-    <div fxLayoutAlign="center" fxLayout="column" class="keyboard">
+    <div fxLayoutAlign="center" fxLayout="column">
       <input type="password" id="password" [(value)]="input">
       <app-generic-keyboard (evKeys)="getKeys($event)"></app-generic-keyboard>
     </div>

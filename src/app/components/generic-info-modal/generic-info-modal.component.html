@@ -1,17 +1,12 @@
-<mat-toolbar color="primary">
-  {{ data.title }}
-  <span class="flex-spacer"></span>
-</mat-toolbar><!--
-<h1 mat-dialog-title>Information</h1>-->
-<div mat-dialog-content>
-  <p>{{ data.content }}</p><!--
-  <div class="buttons">
-    <button mat-button fxFlex="150px" [fxLayoutGap]="space" *ngFor="let i of data"
-            [mat-dialog-close]="i" cdkFocusInitial>
-      {{i.receiptNumber }}<p>{{i.total | currency }}</p>
-    </button>
-  </div>-->
-</div>
-<div mat-dialog-actions>
-  <button mat-raised-button [mat-dialog-close]>Cancel</button>
+<div oncontextmenu="return false">
+  <mat-toolbar color="primary">
+    {{ data.title }}
+    <span class="flex-spacer"></span>
+  </mat-toolbar>
+  <div mat-dialog-content>
+    <p>{{ data.content }}</p>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-raised-button [mat-dialog-close]>Cancel</button>
+  </div>
 </div>

@@ -1,23 +1,25 @@
-<mat-toolbar color="primary">
-  Generic Product ({{data.product.name}})
-  <span class="flex-spacer"></span>
-</mat-toolbar>
-<form novalidate #productGenericForm="ngForm">
-  <mat-dialog-content>
-    <p>
-      <mat-form-field>
-        <input matInput placeholder="Price" type="number" [(ngModel)]="data.unitCost"
-               name="price" #price="ngModel" required />
-        <mat-error *ngIf="price.errors?.required">Price is required</mat-error>
-      </mat-form-field>
-    </p>
-    <!--<app-input-price></app-input-price>-->
-    <app-generic-keyboard (evKeys)="getKeys($event)" ></app-generic-keyboard>
-  </mat-dialog-content>
-  <mat-dialog-actions>
+<div oncontextmenu="return false">
+  <mat-toolbar color="primary">
+    Generic Product ({{data.product.name}})
     <span class="flex-spacer"></span>
-    <button mat-raised-button mat-dialog-close>Cancel</button>
-    <!--<button mat-raised-button class="background-primary text-floral-white"
-            [disabled]="productGenericForm.form.invalid" (click)="addGenericProd()">Add product</button>-->
-  </mat-dialog-actions>
-</form>
+  </mat-toolbar>
+  <form novalidate #productGenericForm="ngForm">
+    <mat-dialog-content>
+      <p>
+        <mat-form-field>
+          <input matInput placeholder="Price" type="text" [(ngModel)]="cost" name="price" #price="ngModel"
+                 required [maxlength]="maxlength" [size]="maxlength" disabled/>
+          <mat-error *ngIf="price.errors?.required">Price is required</mat-error>
+        </mat-form-field>
+      </p>
+      <!--<app-input-price></app-input-price>-->
+      <app-generic-keyboard (evKeys)="getKeys($event)" ></app-generic-keyboard>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+      <span class="flex-spacer"></span>
+      <button mat-raised-button mat-dialog-close>Cancel</button>
+      <!--<button mat-raised-button class="background-primary text-floral-white"
+              [disabled]="productGenericForm.form.invalid" (click)="addGenericProd()">Add product</button>-->
+    </mat-dialog-actions>
+  </form>
+</div>

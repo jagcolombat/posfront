@@ -1,18 +1,19 @@
 <div fxLayout="row" class="container" fxLayoutAlign="space-between">
-  <div id="shopcarnops" fxFlex="58" fxLayout="column">
-    <app-shopping-car #shoppingcar [product]="product" ></app-shopping-car>
-    <div fxLayout="row">
-      <app-financial-op fxFlex="30"></app-financial-op>
-      <app-calculator fxFlex="70" (evKeys)="getKey($event)"></app-calculator>
+  <div id="shopcarnops" fxFlex="57" fxLayout="column" fxLayoutAlign="space-between">
+    <app-shopping-car #shoppingcar [product]="product" fxFlex="50" style="margin: 5px 0 0 5px;">
+    </app-shopping-car>
+    <div fxLayout="row" style="margin-left: 5px">
+      <app-financial-op fxFlex="38"></app-financial-op>
+      <app-calculator fxFlex="60" (evKeys)="getKey($event)" style="margin-left: 5px"></app-calculator>
     </div>
   </div>
 
-  <div id="dptosnprods" fxFlex="41" fxLayout="column" >
-    <div class="dptosnprods">
+  <div id="dptosnprods" fxFlex="42" fxLayout="column" fxLayoutAlign="space-between">
+    <div fxFlex="50" fxLayoutAlign="start end" style="margin-top: 5px">
       <router-outlet ></router-outlet>
     </div>
-    <div>
-      <app-payment-ops></app-payment-ops>
+    <div fxFlex="48" style="margin-right: 5px">
+      <app-payment-ops fxLayoutAlign="end end"></app-payment-ops>
     </div>
   </div>
 </div>

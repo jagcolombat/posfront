@@ -101,7 +101,7 @@ export class FinancialOpComponent implements OnInit {
     // this.loginData = new LoginData("Manager");
     const dialogRef = this.dialog.open(LoginComponent,
       {
-        width: '480px', height: '620px'/*, data: this.loginData*/
+        width: '480px', height: '650px'/*, data: this.loginData*/
       });
 
     dialogRef.afterClosed().subscribe(loginValid => {

@@ -42,7 +42,6 @@ import { ProductGenericComponent } from './components/product-generic/product-ge
 import { GenericInfoModalComponent } from './components/generic-info-modal/generic-info-modal.component';
 import { GeneralLoginComponent } from './components/general-login/general-login.component';
 import { GenericKeyboardComponent } from './components/generic-keyboard/generic-keyboard.component';
-import {InputPriceComponent} from "./components/input-price/input-price.component";
 
 @NgModule({
   declarations: [
@@ -65,8 +64,7 @@ import {InputPriceComponent} from "./components/input-price/input-price.componen
     ProductGenericComponent,
     GenericInfoModalComponent,
     GeneralLoginComponent,
-    GenericKeyboardComponent,
-    InputPriceComponent
+    GenericKeyboardComponent
   ],
   imports: [
     BrowserModule,

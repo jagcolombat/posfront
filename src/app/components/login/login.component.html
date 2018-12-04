@@ -1,25 +1,27 @@
-<mat-toolbar color="primary">
-  Login as Manager
-  <span class="flex-spacer"></span>
-  <!--<button mat-raised-button mat-dialog-close>&times;</button>-->
-</mat-toolbar>
-
-<form novalidate #loginForm="ngForm">
-  <mat-dialog-content>
-    <p>
-      <mat-form-field>
-        <input matInput placeholder="Password" type="password" [(ngModel)]="input"
-               name="password" #password="ngModel" required [minlength]="4" (input)="tryValidation = false"/>
-        <mat-error *ngIf="password.errors?.required">Password is required</mat-error>
-      </mat-form-field>
-    </p>
-    <mat-error *ngIf="!valid && tryValidation && !authorize">User not is a manager</mat-error>
-    <app-generic-keyboard (evKeys)="getKeys($event)" [valid]="loginForm.form.invalid"></app-generic-keyboard>
-  </mat-dialog-content>
-  <mat-dialog-actions>
+<div oncontextmenu="return false">
+  <mat-toolbar color="primary">
+    Login as Manager
     <span class="flex-spacer"></span>
-    <button mat-raised-button mat-dialog-close>Cancel</button><!--
-    <button mat-raised-button class="background-primary text-floral-white"
-            [disabled]="loginForm.form.invalid" (click)="this.login()">Login</button>-->
-  </mat-dialog-actions>
-</form>
+    <!--<button mat-raised-button mat-dialog-close>&times;</button>-->
+  </mat-toolbar>
+
+  <form novalidate #loginForm="ngForm">
+    <mat-dialog-content>
+      <p>
+        <mat-form-field>
+          <input matInput placeholder="Password" type="password" [(ngModel)]="input"
+                 name="password" #password="ngModel" required [minlength]="4" (input)="tryValidation = false"/>
+          <mat-error *ngIf="password.errors?.required">Password is required</mat-error>
+        </mat-form-field>
+      </p>
+      <mat-error *ngIf="!valid && tryValidation && !authorize">User not is a manager</mat-error>
+      <app-generic-keyboard (evKeys)="getKeys($event)" [valid]="loginForm.form.invalid"></app-generic-keyboard>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+      <span class="flex-spacer"></span>
+      <button mat-raised-button mat-dialog-close>Cancel</button><!--
+      <button mat-raised-button class="background-primary text-floral-white"
+              [disabled]="loginForm.form.invalid" (click)="this.login()">Login</button>-->
+    </mat-dialog-actions>
+  </form>
+</div>
