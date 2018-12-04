@@ -55,10 +55,11 @@ export class ListProdComponent implements OnInit {
   openDialogGenericProd(prod: Product) {
     // this.loginData = new LoginData("Manager");
     let tax = 0;
-    if(!prod.applyTax) tax = this.dptTax;
+    if(prod.applyTax && prod.followDeparment) tax = this.dptTax;
+    else if (prod.applyTax && !prod.followDeparment) tax = prod.tax;
     const dialogRef = this.dialog.open(ProductGenericComponent,
       {
-        width: '450px', height: '250px', data:  new ProductOrder(1, prod.unitCost, 1 * prod.unitCost, tax, prod)
+        width: '480px', height: '650px', data:  new ProductOrder(1, prod.unitCost, 1 * prod.unitCost, tax, prod)
       });
   }
 }

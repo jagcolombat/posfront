@@ -1,7 +1,5 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {LoginData} from "../../shared/login-data";
-import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
-import {LoginService} from "../../services/login.service";
+import {Component, OnInit} from '@angular/core';
+import {MatDialogRef} from '@angular/material';
 import {AuthService} from "../../services/connection/services/auth.service";
 
 @Component({
@@ -10,10 +8,12 @@ import {AuthService} from "../../services/connection/services/auth.service";
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+  input = "";
   tryValidation:boolean;
   valid: boolean;
+  authorize: boolean;
+
   constructor(public dialogRef: MatDialogRef<LoginComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: LoginData,
               private authService: AuthService) {
 
   }
@@ -22,23 +22,47 @@ export class LoginComponent implements OnInit {
   }
 
   login(){
-    console.log("login", this.data);
-    this.data.user = 'admin';
-    // this.data.pass = 'Angel*2018';
-    this.authService.login({ username:this.data.user, password: this.data.pass }).subscribe(t => {
+    // console.log("login", this.data);
+    // this.data.user = 'admin';
+    this.authService.login({ username: 'user', password: this.input }).subscribe(t => {
       console.log(t);
-      this.valid = true;
-      this.tryValidation = true;
-      // console.log("login", this.valid);
-      if(this.valid) {
-        this.dialogRef.close(t.fullname);
+      if (t.rol === "Administrator")  {
+        this.valid = true;
+        this.tryValidation = true;
+        this.authorize = true;
+        if(this.valid) {
+          this.dialogRef.close(t.fullname);
+        }
+      } else {
+        console.error("El usuario no es un administrador");
+        this.valid = false;
+        this.authorize = false;
+        this.tryValidation = true;
+        this.input = "";
       }
     }, error1 => {
       console.error(error1);
       this.valid = false;
+      this.authorize = false;
       this.tryValidation = true;
+      this.input = "";
     });
 
+  }
+
+  getKeys(ev) {
+    console.log(ev);
+    if(ev.type === 1) {
+      this.input += ev.value;
+      this.tryValidation = false;
+    }
+    else if(ev.value === 'Clear') {
+      this.input = "";
+    }
+    else if(ev.value === 'Enter') {
+      console.log(this.input);
+      this.login()
+    }
   }
 
 }

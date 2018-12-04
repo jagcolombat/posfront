@@ -10,7 +10,7 @@ import {Invoice} from "../../models/invoice.model";
 export class GenericInfoModalComponent implements OnInit {
 
   constructor( public dialogRef: MatDialogRef<GenericInfoModalComponent>,
-               @Inject(MAT_DIALOG_DATA) public data: Invoice[]) {}
+               @Inject(MAT_DIALOG_DATA) public data: any) {}
 
   ngOnInit() {
   }

@@ -3,7 +3,7 @@
   <table mat-table [dataSource]="dataSource">
 
     <!-- Checkbox Column -->
-    <!--<ng-container matColumnDef="select">
+    <ng-container matColumnDef="select">
       <th mat-header-cell *matHeaderCellDef>
         <mat-checkbox color="primary" (change)="$event ? masterToggle() : null"
                       [checked]="selection.hasValue() && isAllSelected()"
@@ -16,7 +16,7 @@
                       [checked]="selection.isSelected(row)">
         </mat-checkbox>
       </td>
-    </ng-container>-->
+    </ng-container>
 
 
     <!--<ng-container matColumnDef="name">

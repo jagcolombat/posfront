@@ -30,10 +30,11 @@ export class ShoppingCarComponent implements OnInit {
   qty:number;
   numbers = 0;
 
-  constructor(private prodService: ProductsService, private finService: FinancialOpService, private dataStore: DataStorageService) { }
+  constructor(public prodService: ProductsService, private finService: FinancialOpService, private dataStore: DataStorageService) { }
 
   ngOnInit() {
     this.prodService.selectProduct.subscribe(ev => this.resetDigits());
+    this.prodService.evAddProd.subscribe(ev => this.resetDigits());
     this.prodService.evSetOrder.subscribe(ev => this.setOrder(ev));
     this.finService.evCreateOrder.subscribe(ev => this.createOrder(ev));
     this.finService.evSetUser.subscribe(ev => this.cashier = ev);
@@ -67,7 +68,7 @@ export class ShoppingCarComponent implements OnInit {
   setKey(val: ValueCalculator) {
     if(val.type === TypeKey.NUMBER) {
       this.showDigits = true;
-      // console.log(this.prodService.digits, this.prodService.qty, val.value );
+      console.log(this.prodService.digits, this.prodService.qty, val.value );
       this.prodService.digits += val.value.toString();
       this.numbers = parseInt(this.numbers + "" + val.value.toString());
     } else if(val.type === TypeKey.FOR) {
@@ -84,8 +85,13 @@ export class ShoppingCarComponent implements OnInit {
         let mockOrder;
         this.dataStore.getProductByUpc(this.numbers).subscribe(prod => {
           let tax = 0;
-          if(prod.applyTax) tax = this.dataStore.deparments.filter(dpto => dpto.id == prod.departmentId).
-          map(dpto => dpto.tax)[0];
+          if(prod.applyTax && prod.followDeparment) {
+            tax = this.dataStore.deparments.filter(dpto => dpto.id == prod.departmentId).
+            map(dpto => dpto.tax)[0];
+          } else if (prod.applyTax && !prod.followDeparment) {
+            tax =  prod.tax;
+          }
+
           if(this.prodService.qty) qty = this.prodService.qty;
           mockOrder = new ProductOrder(qty, prod.unitCost, prod.unitCost * qty, tax, prod);
           // console.log(mockOrder);
@@ -100,6 +106,7 @@ export class ShoppingCarComponent implements OnInit {
       } else if (val.value === ERightOp.CLEAR) {
         this.prodService.qty = 1;
         this.resetDigits();
+        this.productstable.deleteProduscts();
       }
     }
   }

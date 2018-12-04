@@ -8,5 +8,7 @@ export interface Product {
     generic?: boolean;
     unitCost?: number;
     applyTax?: boolean;
+    followDeparment?: boolean;
     departmentId?: number;
+    tax: number;
 }

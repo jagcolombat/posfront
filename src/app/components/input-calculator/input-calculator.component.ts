@@ -6,7 +6,6 @@ import {Component, Input, OnInit} from '@angular/core';
   styleUrls: ['./input-calculator.component.css']
 })
 export class InputCalculatorComponent implements OnInit {
-
   @Input() data = "";
 
   constructor() { }

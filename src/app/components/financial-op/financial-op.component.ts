@@ -11,6 +11,7 @@ import {LoginData} from "../../shared/login-data";
 import {Invoice} from "../../models/invoice.model";
 import {map} from "rxjs/operators";
 import {GenericInfoModalComponent} from "../generic-info-modal/generic-info-modal.component";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-financial-op',
@@ -22,7 +23,8 @@ export class FinancialOpComponent implements OnInit {
     "Refund", "Logout"];
   loginData: LoginData;
 
-  constructor(private finService: FinancialOpService, public dialog: MatDialog) {  }
+  constructor(private finService: FinancialOpService, public dialog: MatDialog,
+              private route: ActivatedRoute, private router: Router) {  }
 
   ngOnInit() {
   }
@@ -30,24 +32,37 @@ export class FinancialOpComponent implements OnInit {
   selectOperation(op) {
     switch (op) {
       case "Hold Order": {
-        this.finService.holdOrder(this.finService.actualOrderId).
-        subscribe(result => this.successHoldOrder(result), error1 => this.errorHoldOrder (error1));
+        if (this.finService.getProducts().length> 0) {
+          this.finService.holdOrder(this.finService.actualOrderId).
+          subscribe(result => this.successHoldOrder(result), error1 => this.errorHoldOrder (error1));
+        } else {
+          console.error('Not possible Hold Order without products this Invoice');
+          this.openGenericInfo("Error", "Not possible Hold Order without products in this Invoice")
+        }
         break;
       } case "Manager Screen": {
         this.openDialogLogin();
         break;
       } case "Recall Check": {
-        let digits = this.finService.getDigits();
-        console.log("Recall", digits);
-        if(digits) {
-          this.getOrderById(digits).subscribe(inv => {
-            console.log(inv);
-            this.setOrder(inv);
-          }, error1 => console.log(error1));
+        if (this.finService.getProducts().length == 0) {
+          let digits = this.finService.getDigits();
+          console.log("Recall", digits);
+          if (digits) {
+            this.getOrderById(digits).subscribe(inv => {
+              console.log(inv);
+              this.setOrder(inv);
+            }, error1 => console.log(error1));
+          } else {
+            this.openDialogHoldOrders();
+          }
         } else {
-          this.openDialogHoldOrders();
+          console.error('Not possible Recall Check with products selected in this Invoice');
+          this.openGenericInfo("Error", "Not possible Recall Check with products selected in this Invoice")
         }
         break;
+      } case "Logout": {
+          this.router.navigateByUrl('/login');
+          break;
       }
     }
   }
@@ -76,17 +91,17 @@ export class FinancialOpComponent implements OnInit {
           if(orderId) this.finService.setOrder(orderId);
         });
       } else {
-        this.openGenericInfo();
+        this.openGenericInfo('Information', 'Not exist hold orders');
       }
     });
 
   }
 
   openDialogLogin() {
-    this.loginData = new LoginData("Manager");
+    // this.loginData = new LoginData("Manager");
     const dialogRef = this.dialog.open(LoginComponent,
       {
-        width: '300px', height: '300px', data: this.loginData
+        width: '480px', height: '620px'/*, data: this.loginData*/
       });
 
     dialogRef.afterClosed().subscribe(loginValid => {
@@ -97,11 +112,11 @@ export class FinancialOpComponent implements OnInit {
     });
   }
 
-  openGenericInfo(title?: string, content?: string) {
+  openGenericInfo(title: string, content?: string) {
     // this.loginData = new LoginData("Manager");
     const dialogRef = this.dialog.open(GenericInfoModalComponent,
       {
-        width: '300px', height: '220px', data: {title: title, content: content}
+        width: '300px', height: '220px', data: {title: title ? title: 'Information', content: content}
       });
 
     dialogRef.afterClosed().subscribe(loginValid => {

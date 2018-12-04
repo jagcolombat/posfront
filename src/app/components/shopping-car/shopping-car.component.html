@@ -1,7 +1,8 @@
 <div class="container" fxFlexLayout="column">
   <div fxLayout="row" class="header">
     <app-info-pos *ngIf="!showDigits" title="Cashier" [value]="cashier" fxFlex="50" class="title-header"></app-info-pos>
-    <app-input-calculator *ngIf="showDigits" [data]="prodService.digits" fxFlex="50" class="title-header"></app-input-calculator>
+    <app-input-calculator *ngIf="showDigits" [data]="prodService.digits" (sendKey)="setKey($event)" fxFlex="50" class="title-header">
+    </app-input-calculator>
     <app-info-pos title="Receipt Number" [value]="account" fxFlex="50" align="end" class="title-header"></app-info-pos>
   </div>
   <pos-products-table #productstable [products]="products"></pos-products-table>

@@ -1,9 +1,8 @@
 import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import { EColumns } from '../../utils/columns.enum';
-import { getDisplayColumnsToProductsTable } from '../../utils/invoce.functions';
-import { MatPaginator, MatTableDataSource } from '@angular/material';
-import { Product } from '../../models/product.model';
-import { SelectionModel } from '@angular/cdk/collections';
+import {EColumns} from '../../utils/columns.enum';
+import {getDisplayColumnsToProductsTable} from '../../utils/invoce.functions';
+import {MatPaginator, MatTableDataSource} from '@angular/material';
+import {SelectionModel} from '@angular/cdk/collections';
 import {ProductsService} from "../../services/products.service";
 import {IProductOrder, ProductOrder} from "../../models/order.model";
 
@@ -30,6 +29,7 @@ export class PosProductsTableComponent implements OnInit {
         this.deleteEvent = new EventEmitter<any>();
         this.selectEvent = new EventEmitter<any>();
         this.typeColumns = [
+            EColumns.SELECT,
             EColumns.UPC,
             EColumns.DESCRIPTION,
             EColumns.PRICE,
@@ -61,6 +61,20 @@ export class PosProductsTableComponent implements OnInit {
       const data = this.dataSource.data;
       data.push(product);
       this.dataSource.data = data;
+      this.scrollBottom();
+      this.syncProducts();
+    }
+
+    deleteProduscts() {
+      const data = this.dataSource.data;
+      console.log("selection", this.selection, data);
+      this.selection.selected.map(sel => data.filter((d, i)  => {
+        if(sel.product.id === d.product.id ) {
+          data.splice(i, 1);
+        }
+      }));
+      this.dataSource.data = data;
+      this.selection.clear();
       this.scrollBottom();
       this.syncProducts();
     }

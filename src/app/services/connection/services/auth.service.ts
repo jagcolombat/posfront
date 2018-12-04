@@ -19,7 +19,7 @@ export class AuthService {
       'Content-Type': 'application/json'
     });
 
-    return this.http.post<any>(this.url + '/login', credentials, { headers: headers, observe: 'response' }).pipe(
+    return this.http.post<any>(this.url + '/login/pos', credentials, { headers: headers, observe: 'response' }).pipe(
       map(response => {
         console.log(response);
         const decoded = jwt_decode(response.body);

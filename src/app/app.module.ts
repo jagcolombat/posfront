@@ -40,6 +40,9 @@ import { InputCalculatorComponent } from './components/input-calculator/input-ca
 import { DialogInvoiceComponent } from "./components/dialog-invoice/dialog-invoice.component";
 import { ProductGenericComponent } from './components/product-generic/product-generic.component';
 import { GenericInfoModalComponent } from './components/generic-info-modal/generic-info-modal.component';
+import { GeneralLoginComponent } from './components/general-login/general-login.component';
+import { GenericKeyboardComponent } from './components/generic-keyboard/generic-keyboard.component';
+import {InputPriceComponent} from "./components/input-price/input-price.component";
 
 @NgModule({
   declarations: [
@@ -60,7 +63,10 @@ import { GenericInfoModalComponent } from './components/generic-info-modal/gener
     InputCalculatorComponent,
     DialogInvoiceComponent,
     ProductGenericComponent,
-    GenericInfoModalComponent
+    GenericInfoModalComponent,
+    GeneralLoginComponent,
+    GenericKeyboardComponent,
+    InputPriceComponent
   ],
   imports: [
     BrowserModule,
@@ -89,7 +95,7 @@ import { GenericInfoModalComponent } from './components/generic-info-modal/gener
     provide: HTTP_INTERCEPTORS,
     useClass: AuthInterceptor,
     multi: true }],
-  entryComponents: [DialogInvoiceComponent, ProductGenericComponent, GenericInfoModalComponent],
+  entryComponents: [DialogInvoiceComponent, ProductGenericComponent, GenericInfoModalComponent, LoginComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

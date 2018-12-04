@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {TypeKey} from "../../utils/typekey.enum";
 import {ValueCalculator} from "../../models/value-calculator.model";
 
@@ -9,9 +9,10 @@ import {ValueCalculator} from "../../models/value-calculator.model";
 })
 export class CalculatorComponent implements OnInit {
   @Output() evKeys = new EventEmitter<any>();
-  rightOperations=["Clear", "PLU", "Print Check", "Void"];
-  numbers = [1,2,3,4,5,6,7,8,9,0,"00","@/FOR"];
-  leftOperations=["F/S Subtotal", "Subtotal"];
+  @Input() rightOperations=["Clear", "PLU", "Print Check", "Void"];
+  @Input() numbers = [1,2,3,4,5,6,7,8,9,0,"00","@/FOR"];
+  @Input() leftOperations=["F/S Subtotal", "Subtotal"];
+  @Input() valid: boolean;
   space = "10px";
 
   constructor() { }

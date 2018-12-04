@@ -69,4 +69,8 @@ export class FinancialOpService {
   getDigits() {
     return this.prodService.digits;
   }
+
+  getProducts() {
+    return this.prodService.products;
+  }
 }

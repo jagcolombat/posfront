@@ -49,9 +49,10 @@ export class ListDptoComponent implements OnInit {
     // this.getGenericProdByDpto(dpto)
     console.log(prod, tax);
     if(!prod.applyTax) tax = 0;
+    else if (prod.applyTax && !prod.followDeparment) tax = prod.tax;
     const dialogRef = this.dialog.open(ProductGenericComponent,
       {
-        width: '450px', height: '250px', data:  new ProductOrder(1, prod.unitCost, prod.unitCost, tax, prod)
+        width: '480px', height: '650px', data:  new ProductOrder(1, prod.unitCost, prod.unitCost, tax, prod)
       });
 
 1    /*dialogRef.afterClosed().subscribe(loginValid => {
