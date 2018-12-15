@@ -19,6 +19,5 @@ export class Invoice implements IInvoice {
               public productsOrders = new Array<ProductOrder>(),
               public applicationUserId?: number,
               public clientAge?: number) {
-
   }
 }

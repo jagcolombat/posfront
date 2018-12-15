@@ -4,4 +4,5 @@ export interface Department {
   priorityOrder: number;
   generic: boolean;
   tax: number;
+  ageVerification?: boolean;
 }
