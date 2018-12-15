@@ -1,0 +1,14 @@
+<div fxLayout="row">
+  <div class="column">
+    <button mat-button fxFlex="100px" [fxLayoutGap]="space" *ngFor="let i of rightOperations" class="right"
+            (click)="sendKey(i, 'right')">{{i}}</button>
+  </div>
+  <div fxFlex="330px" class="column">
+    <button mat-button fxFlex="100px" [fxLayoutGap]="space" *ngFor="let j of numbers" class="numbers"
+            (click)="sendKey(j, 'number')">{{j}}</button>
+  </div>
+  <div class="column">
+    <button mat-button fxFlex="100px" [fxLayoutGap]="space" *ngFor="let k of leftOperations;" class="left"
+            (click)="sendKey(k, 'left')" [disabled]="valid && k === 'Enter'">{{k}}</button>
+  </div>
+</div>

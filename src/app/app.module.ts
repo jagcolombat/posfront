@@ -18,17 +18,23 @@ import { MatListModule } from '@angular/material/list';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
+import { AppRoutingModule } from './modules/app-routing/app-routing.module';
 import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
-import { AuthInterceptor } from "./services/connection/interceptors/auth.interceptor";
+import { AuthInterceptor } from "./services/interceptors/auth.interceptor";
 
 import { AppComponent } from './app.component';
-import { HeaderComponent } from './components/header/header.component';
-import { FooterComponent } from './components/footer/footer.component';
-import { LoginComponent } from './components/login/login.component';
+/*import { InvoiceComponent } from './components/containers/invoice/invoice.component';
+import { CashViewComponent } from './components/containers/cash-view/cash-view.component';
+import { StockComponent } from './components/containers/stock/stock.component';*/
+import { InitViewComponent } from './components/containers/init-view/init-view.component';
+import {LoginComponent} from "./components/presentationals/login/login.component";
+import {CalculatorComponent} from "./components/presentationals/calculator/calculator.component";
+import {GenericKeyboardComponent} from "./components/presentationals/generic-keyboard/generic-keyboard.component";
+// import { OperationsComponent } from './components/containers/operations/operations.component';
+/*import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
 import { CalculatorComponent } from './components/calculator/calculator.component';
 import { ShoppingCarComponent } from './components/shopping-car/shopping-car.component';
-import { AppRoutingModule } from './app-routing/app-routing.module';
 import { ListDptoComponent } from './components/list-dpto/list-dpto.component';
 import { FinancialOpComponent } from './components/financial-op/financial-op.component';
 import { PosProductsTableComponent } from './components/pos-products-table/pos-products-table.component';
@@ -45,14 +51,20 @@ import { GenericKeyboardComponent } from './components/generic-keyboard/generic-
 import { CashOpComponent } from './components/cash-op/cash-op.component';
 import { CashPaymentComponent } from './components/cash-payment/cash-payment.component';
 import { AgeValidationComponent } from './components/age-validation/age-validation.component';
-import { CashValidationDirective } from './directives/cash-validation.directive';
+import { CashValidationDirective } from './directives/cash-validation.directive';*/
 
 @NgModule({
   declarations: [
     AppComponent,
-    HeaderComponent,
-    FooterComponent,
+    /*InvoiceComponent,
+    CashViewComponent,
+    StockComponent,
+    OperationsComponent,*/
+    InitViewComponent,
     LoginComponent,
+    CalculatorComponent,
+    GenericKeyboardComponent,
+    /*LoginComponent,
     HomeComponent,
     CalculatorComponent,
     ShoppingCarComponent,
@@ -72,7 +84,7 @@ import { CashValidationDirective } from './directives/cash-validation.directive'
     CashOpComponent,
     CashPaymentComponent,
     AgeValidationComponent,
-    CashValidationDirective
+    CashValidationDirective*/
   ],
   imports: [
     BrowserModule,
@@ -102,13 +114,13 @@ import { CashValidationDirective } from './directives/cash-validation.directive'
     useClass: AuthInterceptor,
     multi: true }],
   entryComponents: [
-    DialogInvoiceComponent,
+    /*DialogInvoiceComponent,
     ProductGenericComponent,
     GenericInfoModalComponent,
     LoginComponent,
     CashOpComponent,
     CashPaymentComponent,
-    AgeValidationComponent],
+    AgeValidationComponent*/],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

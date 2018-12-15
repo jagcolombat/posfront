@@ -1,10 +1,10 @@
 import { Product } from '../models';
 import { MatDialog } from '@angular/material';
-import { ProductGenericComponent } from '../components/product-generic/product-generic.component';
+/*import { ProductGenericComponent } from '../components/product-generic/product-generic.component';
 import { AgeValidationComponent } from '../components/age-validation/age-validation.component';
-import { GenericInfoModalComponent } from '../components/generic-info-modal/generic-info-modal.component';
-import { ProductOrder } from '../models/order.model';
-import { DataStorageService } from '../shared/data-storage.service';
+import { GenericInfoModalComponent } from '../components/generic-info-modal/generic-info-modal.component';*/
+import { ProductOrder } from '../models/product-order.model';
+import { DataStorageService } from '../services/api/data-storage.service';
 import { ProductsService } from '../services/bussiness-logic/products.service';
 
 const AgeValid = 18;
@@ -42,7 +42,7 @@ function onCreateProductOrder(product: Product, prodService: ProductsService, da
 
   function openDialogGenericProd(productOrder: ProductOrder, prodService: ProductsService,
      dataStore: DataStorageService, dialog: MatDialog, action?: (param) => void): void {
-    const dialogRef = dialog.open(ProductGenericComponent,
+    /*const dialogRef = dialog.open(ProductGenericComponent,
       {
         width: '480px', height: '650px', data: productOrder
       });
@@ -50,14 +50,14 @@ function onCreateProductOrder(product: Product, prodService: ProductsService, da
       dialogRef.afterClosed().subscribe( (data: ProductOrder) => {
         // prodService.evAddProd.emit(<ProductOrder>data);
         if(data) action(data);
-      });
+      });*/
 
   }
 
   function onAgeVerification(product: Product, prodService: ProductsService, dataStore: DataStorageService,
     dialog: MatDialog, action?: (param) => void) {
 
-    const dialogRef = dialog.open(AgeValidationComponent,
+    /*const dialogRef = dialog.open(AgeValidationComponent,
       {
         width: '450px', height: '250px'
       });
@@ -76,7 +76,7 @@ function onCreateProductOrder(product: Product, prodService: ProductsService, da
                 });
             }
         }
-      });
+      });*/
   }
 
 function createProductOrder(prod: Product, qty: number, tax: number): ProductOrder {
