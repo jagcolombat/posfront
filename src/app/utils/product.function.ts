@@ -5,7 +5,7 @@ import { AgeValidationComponent } from '../components/age-validation/age-validat
 import { GenericInfoModalComponent } from '../components/generic-info-modal/generic-info-modal.component';
 import { ProductOrder } from '../models/order.model';
 import { DataStorageService } from '../shared/data-storage.service';
-import { ProductsService } from '../services/products.service';
+import { ProductsService } from '../services/bussiness-logic/products.service';
 
 const AgeValid = 18;
 

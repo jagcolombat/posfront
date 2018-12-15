@@ -4,16 +4,21 @@ import {ProductOrder} from "./product-order.model";
 export interface IInvoice {
   id: number;
   receiptNumber: string;
-  status: number;
+  status: InvoiceStatus;
   total: number;
   productsOrders: ProductOrder[];
   applicationUserId?: number;
+  clientAge?: number;
 }
 
 export class Invoice implements IInvoice {
   id: number;
-  constructor(public receiptNumber: string, public status: number, public total: number, public productsOrders: ProductOrder[],
-              public applicationUserId?: number) {
+  constructor(public receiptNumber: string,
+              public status = InvoiceStatus.IN_PROGRESS,
+              public total = 0,
+              public productsOrders = new Array<ProductOrder>(),
+              public applicationUserId?: number,
+              public clientAge?: number) {
 
   }
 }
