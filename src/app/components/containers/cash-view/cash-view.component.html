@@ -1,3 +1,26 @@
-<p>
-  cash-view works!
-</p>
+<div fxLayout="column" class="container">
+  <div id="invoice-stock" class="border" fxFlex="100" fxLayout="row" >
+    <!--<app-shopping-car #shoppingcar [product]="product" fxFlex="100" style="margin: 5px 0 5px 5px;">
+    </app-shopping-car>
+    <div fxLayout="row" style="margin-left: 5px" fxFlex="380px">
+      <app-financial-op fxFlex.lg="28" fxFlex.lt-lg="38"></app-financial-op>
+      <app-calculator fxFlex="60" (evKeys)="getKey($event)" style="margin-left: 5px"></app-calculator>
+    </div>-->
+    <div id="invoice" fxFlex="60" class="border">INVOICE</div>
+    <div id="stock" fxFlex="40" class="border">STOCK</div>
+  </div>
+
+  <div id="operations" class="border" fxFlex="380px" fxLayout="row">
+    <!--<div fxFlex="100" fxLayoutAlign="start start" style="margin: 5px 0; overflow: auto;">
+      <router-outlet ></router-outlet>
+    </div>
+    <div fxFlex="380px" style="margin-right: 5px">
+      <app-payment-ops fxLayoutAlign.lt-lg="end end" fxLayoutAlign.lg="start center"></app-payment-ops>
+    </div>-->
+    <div id="financial" fxFlex="20" class="border">FINANCIAL OPERATIONS</div>
+    <div id="calculator" fxFlex="40" class="border">
+      <calculator></calculator>
+    </div>
+    <div id="payment" fxFlex="40" class="border">PAYMENTS OPERATIONS</div>
+  </div>
+</div>
