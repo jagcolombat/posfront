@@ -1,6 +1,6 @@
 <form novalidate #loginForm="ngForm" fxFlex="100" fxLayout="column" fxLayoutAlign="space-between">
-  <div>
-    <mat-form-field>
+  <div class="form-field" fxFlex="60" fxLayoutAlign="start center">
+    <mat-form-field fxFlex="60">
       <input matInput placeholder="Password" type="password" [(ngModel)]="input"
              name="password" #password="ngModel" required [minlength]="4" (input)="tryValidation = false"/>
       <mat-error *ngIf="password.errors?.required">Password is required</mat-error>

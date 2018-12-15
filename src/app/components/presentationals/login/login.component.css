@@ -1,6 +1,10 @@
-mat-form-field {
+.mat-form-field {
   width: 60%;
   margin:10px 0 0 10px;
+}
+
+mat-form-field {
+  width: 100%;
 }
 
 input {
