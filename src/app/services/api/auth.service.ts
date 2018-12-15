@@ -4,22 +4,35 @@ import { map } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Credentials, Token } from '../../models/index';
 import jwt_decode from 'jwt-decode';
+import { Url } from '../../utils/url.path.enum';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private url = 'http://localhost:5000/api/1.0';
+  private url = Url.PATH;
   token: Token;
+  credentials: Credentials;
+  headers: HttpHeaders;
 
-  constructor(private http: HttpClient) {}
-
-  login(credentials: Credentials): Observable<any> {
-    const headers = new HttpHeaders({
+  constructor(private http: HttpClient) {
+    this.headers = new HttpHeaders({
       'Content-Type': 'application/json'
     });
+  }
 
-    return this.http.post<any>(this.url + '/login/pos', credentials, { headers: headers, observe: 'response' }).pipe(
+  login(credentials: Credentials): Observable<any> {
+    this.credentials = credentials;
+    return this.getToken();
+
+  }
+
+  refreshToken() {
+    return this.getToken();
+  }
+
+  private getToken() {
+    return this.http.post<any>(this.url + '/login/pos', this.credentials, { headers: this.headers, observe: 'response' }).pipe(
       map(response => {
         console.log(response);
         const decoded = jwt_decode(response.body);
@@ -32,7 +45,6 @@ export class AuthService {
         token.user_id = decoded.user_id;
         token.username = decoded.username;
         const expiredAt = new Date();
-        // expiredAt.setSeconds(expiredAt.getSeconds() + decoded.exp);
         token.exp = expiredAt.getTime();
         this.token = token;
         return token;
