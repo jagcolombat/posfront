@@ -3,7 +3,6 @@ export * from './credentials.model';
 export * from './auth.model';
 export * from './token.model';
 export * from './product.model';
-export * from './page.model';
 export * from './client.model';
 export * from './payment.model';
 export * from './credit-card.model';

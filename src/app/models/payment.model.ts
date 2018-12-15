@@ -1,4 +1,4 @@
-import {PaymentType} from '../services/connection/utils/payment.enum';
+import {PaymentType} from '../utils/payment.enum';
 
 export interface Payment {
     type: PaymentType;

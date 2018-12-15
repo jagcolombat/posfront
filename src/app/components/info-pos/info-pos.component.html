@@ -1,5 +1,0 @@
-<div fxLayout="column">
-  <label fxLayoutAlign="center">{{title}}</label>
-  <span *ngIf="format === 'currency'" fxLayoutAlign="end">{{value | currency }}</span>
-  <span *ngIf="format !== 'currency'" [fxLayoutAlign]="align">{{value}}</span>
-</div>

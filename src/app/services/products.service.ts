@@ -1,6 +1,5 @@
 import {EventEmitter, Injectable, Output} from '@angular/core';
-import {Product} from "../models/product.model";
-import {Order, ProductOrder} from "../models/order.model";
+import {ProductOrder} from "../models/product-order.model";
 import {Invoice} from "../models/invoice.model";
 
 @Injectable({

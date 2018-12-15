@@ -1,9 +1,9 @@
 import {EventEmitter, Injectable, Output} from '@angular/core';
 import {ProductsService} from "./products.service";
 import {Observable} from "rxjs/index";
-import {DataStorageService} from "../shared/data-storage.service";
+import {DataStorageService} from "./api/data-storage.service";
 import {Invoice} from "../models/invoice.model";
-import {InvoiceStatus} from "./connection/utils/invoice-status.enum";
+import {InvoiceStatus} from "../utils/invoice-status.enum";
 import {map} from "rxjs/operators";
 
 

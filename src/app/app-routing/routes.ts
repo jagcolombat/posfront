@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 
 import { HomeComponent } from '../components/home/home.component';
-import { LoginComponent } from '../components/login/login.component';
 import {ListProdComponent} from "../components/list-prod/list-prod.component";
 import {ListDptoComponent} from "../components/list-dpto/list-dpto.component";
 import {GeneralLoginComponent} from "../components/general-login/general-login.component";
@@ -16,5 +15,5 @@ export const routes: Routes = [
     ]
   },
   { path: 'login',     component: GeneralLoginComponent },
-  { path: '', redirectTo: '/home', pathMatch: 'full' }
+  { path: '', redirectTo: '/login', pathMatch: 'full' }
 ];

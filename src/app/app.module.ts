@@ -42,6 +42,10 @@ import { ProductGenericComponent } from './components/product-generic/product-ge
 import { GenericInfoModalComponent } from './components/generic-info-modal/generic-info-modal.component';
 import { GeneralLoginComponent } from './components/general-login/general-login.component';
 import { GenericKeyboardComponent } from './components/generic-keyboard/generic-keyboard.component';
+import { CashOpComponent } from './components/cash-op/cash-op.component';
+import { CashPaymentComponent } from './components/cash-payment/cash-payment.component';
+import { AgeValidationComponent } from './components/age-validation/age-validation.component';
+import { CashValidationDirective } from './directives/cash-validation.directive';
 
 @NgModule({
   declarations: [
@@ -64,7 +68,11 @@ import { GenericKeyboardComponent } from './components/generic-keyboard/generic-
     ProductGenericComponent,
     GenericInfoModalComponent,
     GeneralLoginComponent,
-    GenericKeyboardComponent
+    GenericKeyboardComponent,
+    CashOpComponent,
+    CashPaymentComponent,
+    AgeValidationComponent,
+    CashValidationDirective
   ],
   imports: [
     BrowserModule,
@@ -93,7 +101,14 @@ import { GenericKeyboardComponent } from './components/generic-keyboard/generic-
     provide: HTTP_INTERCEPTORS,
     useClass: AuthInterceptor,
     multi: true }],
-  entryComponents: [DialogInvoiceComponent, ProductGenericComponent, GenericInfoModalComponent, LoginComponent],
+  entryComponents: [
+    DialogInvoiceComponent,
+    ProductGenericComponent,
+    GenericInfoModalComponent,
+    LoginComponent,
+    CashOpComponent,
+    CashPaymentComponent,
+    AgeValidationComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

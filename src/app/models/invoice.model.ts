@@ -1,5 +1,5 @@
-import {InvoiceStatus} from "../services/connection/utils/invoice-status.enum";
-import {ProductOrder} from "./order.model";
+import {InvoiceStatus} from "../utils/invoice-status.enum";
+import {ProductOrder} from "./product-order.model";
 
 export interface IInvoice {
   id: number;
