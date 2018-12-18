@@ -1,0 +1,19 @@
+:host, div.column {
+  flex-wrap: wrap;
+}
+
+button[mat-button] {
+  background-color: rgba(19, 34, 87, 0.71);
+  border-color: rgba(13, 20, 40, 0.71);
+}
+
+button[mat-button] {
+  font-size: x-large;
+}
+
+button[mat-button]:last-of-type {
+  background-color: lightgrey;
+  border-color: darkgray;
+  color: black;
+  font-size: inherit;
+}
