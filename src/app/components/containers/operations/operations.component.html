@@ -1,11 +1,11 @@
 <operation-group fxFlex.lg="20" fxFlex.lt-lg="22" [operations]="financeOperations" [colors]="financeColor"
                  class="border" (evPressKeys)="financeKey($event)"></operation-group>
 <div fxFlex.lg="40" fxFlex.lt-lg="53" class="border">
-  <operation-group fxFlex="21" [operations]="invoiceOperations" [colors]="invoiceColor" class="border"
+  <operation-group fxFlex="20" [operations]="invoiceOperations" [colors]="invoiceColor" class="border"
                    (evPressKeys)="invoiceKey($event)"></operation-group>
   <app-numpad lastKey="@/FOR"></app-numpad>
   <operation-group [operations]="totalsOperations" [colors]="totalColor" layout="two" class="border"
                    (evPressKeys)="totalKey($event)" ></operation-group>
 </div>
-<operation-group id="payment" fxFlex.lg="40" fxFlex.lt-lg="25" [operations]="paymentOperations" [colors]="paymentColor"
+<operation-group id="payment" fxFlex.lg="20" fxFlex.lt-lg="25" [operations]="paymentOperations" [colors]="paymentColor"
                  layout="five" class="border" (evPressKeys)="paymentKey($event)"></operation-group>

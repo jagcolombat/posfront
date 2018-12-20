@@ -1,0 +1,21 @@
+:host {
+  flex-wrap: wrap;
+}
+
+/*button[mat-button] {
+  background-color: #9a61ff;
+}*/
+
+button[mat-button]:last-of-type {
+  background-color: lightgrey;
+}
+
+.normal {
+  background-color: #9a61ff;
+  border-color: #5b4cab;
+}
+
+.generic {
+  background-color: #ff9b3e;
+  border-color: #ffac41;
+}

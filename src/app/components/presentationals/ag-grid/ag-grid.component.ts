@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-// import { GridOptions, GridApi } from 'ag-grid-community';
+import { GridOptions, GridApi } from 'ag-grid-community';
 
 @Component({
   selector: 'ag-grid',
@@ -7,12 +7,12 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./ag-grid.component.css']
 })
 export class AgGridComponent implements OnInit {
-  public gridOptions: /*GridOptions*/ any;
-  private gridApi: /*GridApi*/any;
+  public gridOptions: GridOptions;
+  private gridApi: GridApi;
   private newCount = 1;
 
   constructor() {
-    /*this.gridOptions = <GridOptions>{
+    this.gridOptions = <GridOptions>{
       rowData: this.createRowData(),
       rowSelection: 'multiple',
       columnDefs: this.createColumnDefs(),
@@ -20,11 +20,11 @@ export class AgGridComponent implements OnInit {
         this.gridOptions.api.sizeColumnsToFit();
       },
       rowHeight: 48
-    };*/
+    };
   }
 
   ngOnInit() {
-    // this.gridApi = this.gridOptions.api;
+    this.gridApi = this.gridOptions.api;
   }
 
   private createColumnDefs() {
@@ -76,7 +76,7 @@ export class AgGridComponent implements OnInit {
     ];
   }
 
-  /*removeItem(start?: number, limit?: number) {
+  removeItem(start?: number, limit?: number) {
     // this.gridOptions.rowData.splice(start, limit);
     console.log('remove', this.gridOptions.rowData, this.gridOptions.rowSelection);
     this.gridApi.refreshInfiniteCache();
@@ -101,21 +101,6 @@ export class AgGridComponent implements OnInit {
     // printResult(res);
   }
 
-  addItems() {
-    const newItems = [this.createNewRowData(), this.createNewRowData(), this.createNewRowData()];
-    const res = this.gridApi.updateRowData({ add: newItems });
-    // printResult(res);
-  }
-
-  addItemsAtIndex() {
-    const newItems = [this.createNewRowData(), this.createNewRowData(), this.createNewRowData()];
-    const res = this.gridApi.updateRowData({
-      add: newItems,
-      addIndex: 2
-    });
-    // printResult(res);
-  }
-
   updateItems() {
     const itemsToUpdate = [];
     this.gridApi.forEachNodeAfterFilterAndSort(function(rowNode, index) {
@@ -130,20 +115,11 @@ export class AgGridComponent implements OnInit {
     // printResult(res);
   }
 
-  onInsertRowAt2() {
-    const newItem = this.createNewRowData();
-    const res = this.gridApi.updateRowData({
-      add: [newItem],
-      addIndex: 2
-    });
-    // printResult(res);
-  }
-
   onRemoveSelected() {
     const selectedData = this.gridOptions.api.getSelectedRows();
     const res = this.gridOptions.api.updateRowData({ remove: selectedData });
     // printResult(res);
-  }*/
+  }
 
   createNewRowData() {
     const newData = {

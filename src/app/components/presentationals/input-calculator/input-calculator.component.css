@@ -1,0 +1,7 @@
+label, input {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  font-size: xx-large;
+  height: 90%;
+}
