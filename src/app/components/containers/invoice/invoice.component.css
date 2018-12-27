@@ -1,0 +1,40 @@
+:host {
+  height: 100%;
+}
+
+.total {
+  width: 100%;
+  /*margin-top: 10px;*/
+  border-top: 1px solid gray ;
+  border-bottom: 1px solid gray ;
+  background-color: lightyellow;
+}
+
+.total > info-pos /deep/ span {
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+info-pos {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.title-header {
+  background-color: lightyellow;
+}
+
+.title-header /deep/ span {
+  /*border-top: 1px solid gray ;*/
+  padding-top: 5px;
+  font-weight: bold;
+}
+
+div.header {
+  border-top: 1px solid gray ;
+  border-bottom: 1px solid gray ;
+}
+
+.header, .total {
+  height: 80px;
+}

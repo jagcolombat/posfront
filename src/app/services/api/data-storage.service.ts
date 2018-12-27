@@ -15,8 +15,6 @@ import { Url } from '../../utils/url.path.enum';
 })
 export class DataStorageService {
 
-  deparments: Department[];
-
   constructor(private departmentService: DepartmentService,
               private productService: ProductService,
               private invoiceService: InvoiceService) { }

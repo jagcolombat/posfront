@@ -2,8 +2,12 @@
   <div id="invoice-stock" class="border" fxFlex="100" fxLayout="row" >
     <!--<app-shopping-car #shoppingcar [product]="product" fxFlex="100" style="margin: 5px 0 5px 5px;">
     </app-shopping-car>-->
-    <invoice fxFlex="60" class="border container" fxLayout="column"></invoice>
-    <div id="stock" fxFlex="40" class="border">STOCK</div>
+    <invoice fxFlex="58" class="border container" fxLayout="column"></invoice>
+    <div id="stock" fxFlex="42" class="border">
+      <div fxFlex="100" fxLayoutAlign="start start" style="margin: 5px 0; overflow: auto;">
+        <router-outlet ></router-outlet>
+      </div>
+    </div>
   </div>
 
   <operations class="border" fxFlex="380px" fxLayout="row"></operations>

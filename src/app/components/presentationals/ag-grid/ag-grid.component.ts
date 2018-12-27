@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { GridOptions, GridApi } from 'ag-grid-community';
+import { InvoiceService } from "../../../services/bussiness-logic/invoice.service";
+import { ProductOrder } from "../../../models/product-order.model";
 
 @Component({
   selector: 'ag-grid',
@@ -9,18 +11,17 @@ import { GridOptions, GridApi } from 'ag-grid-community';
 export class AgGridComponent implements OnInit {
   public gridOptions: GridOptions;
   private gridApi: GridApi;
-  private newCount = 1;
 
-  constructor() {
+  constructor(private invoiceService: InvoiceService) {
     this.gridOptions = <GridOptions>{
-      rowData: this.createRowData(),
       rowSelection: 'multiple',
       columnDefs: this.createColumnDefs(),
       onGridReady: () => {
         this.gridOptions.api.sizeColumnsToFit();
       },
-      rowHeight: 48
+      rowHeight: 42
     };
+    this.invoiceService.evAddProd.subscribe(po => this.onAddRow(po));
   }
 
   ngOnInit() {
@@ -30,48 +31,32 @@ export class AgGridComponent implements OnInit {
   private createColumnDefs() {
     return [
       {
-        headerName: 'Full Name (popup input editor)',
-        field: 'full_name',
+        headerName: 'Number Item',
+        field: 'number_item',
         headerCheckboxSelection: true,
         headerCheckboxSelectionFilteredOnly: true,
-        checkboxSelection: true
+        checkboxSelection: true,
+        width: 150
       },
       {
-        headerName: 'Fruit (popup radio editor)',
-        field: 'fruit'
+        headerName: 'Description',
+        field: 'description',
+        width: 210
       },
       {
-        headerName: 'Vegetables (popup select editor)',
-        field: 'vegetable'
-      }
-    ];
-  }
-
-  private createRowData() {
-    return [
-      {
-        full_name: 'Sean Landsman',
-        fruit: 'Apple',
-        vegetable: 'Carrot',
-        percentage: 5
+        headerName: 'Price',
+        field: 'price',
+        width: 90
       },
       {
-        full_name: 'Niall Crosby',
-        fruit: 'Apple',
-        vegetable: 'Potato',
-        percentage: 35
+        headerName: 'Quantity',
+        field: 'quantity',
+        width: 95
       },
       {
-        full_name: 'Alberto Guiterzzz',
-        fruit: 'Orange',
-        vegetable: 'Broccoli',
-        percentage: 78
-      },
-      {
-        full_name: 'John Masterson',
-        fruit: 'Banana',
-        vegetable: 'Potato',
-        percentage: 98
+        headerName: 'Amount',
+        field: 'amount',
+        width: 95
       }
     ];
   }
@@ -87,18 +72,25 @@ export class AgGridComponent implements OnInit {
     this.gridApi.forEachNode(function(node) {
       rowData.push(node.data);
     });
-    console.log('Row Data:');
-    console.log(rowData);
+    console.log('Row Data:', rowData);
   }
 
   clearData() {
     this.gridOptions.api.setRowData([]);
   }
 
-  onAddRow() {
-    const newItem = this.createNewRowData();
-    const res = this.gridOptions.api.updateRowData({ add: [newItem] });
+  onAddRow(data: ProductOrder) {
+    const newData = {
+      number_item: data.product.upc,
+      description: data.product.description,
+      price: data.unitCost,
+      quantity: data.quantity,
+      amount: data.total
+    };
+    //console.log('createNewRowData', newData);
+    const res = this.gridOptions.api.updateRowData({ add: [newData] });
     // printResult(res);
+    this.gridOptions.api.sizeColumnsToFit();
   }
 
   updateItems() {
@@ -119,18 +111,6 @@ export class AgGridComponent implements OnInit {
     const selectedData = this.gridOptions.api.getSelectedRows();
     const res = this.gridOptions.api.updateRowData({ remove: selectedData });
     // printResult(res);
-  }
-
-  createNewRowData() {
-    const newData = {
-      full_name: 'Pepe',
-      fruit: 'Uva',
-      on_off: 'Off',
-      vegetable: 'Tomato',
-      percentage: 60
-    };
-    this.newCount++;
-    return newData;
   }
 
 }

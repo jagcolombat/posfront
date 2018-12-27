@@ -1,9 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
-
-import { ReactiveFormsModule } from '@angular/forms';
-import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './modules/app-routing/app-routing.module';
 import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
 import { AuthInterceptor } from "./services/interceptors/auth.interceptor";
@@ -11,25 +8,11 @@ import { AuthInterceptor } from "./services/interceptors/auth.interceptor";
 import { AppComponent } from './app.component';
 import { InitViewComponent } from './components/containers/init-view/init-view.component';
 import { LoginComponent } from "./components/presentationals/login/login.component";
-import { GenericKeyboardComponent } from "./components/presentationals/generic-keyboard/generic-keyboard.component";
 import { SharedModule } from "./modules/shared/shared.module";
 import { MaterialModule } from "./modules/material/material.module";
-/*
-import { ListDptoComponent } from './components/list-dpto/list-dpto.component';
-import { FinancialOpComponent } from './components/financial-op/financial-op.component';
-import { PosProductsTableComponent } from './components/pos-products-table/pos-products-table.component';
-import { InfoPosComponent } from './components/info-pos/info-pos.component';
-import { ListProdComponent } from './components/list-prod/list-prod.component';
-import { InputCalculatorComponent } from './components/input-calculator/input-calculator.component';
-import { DialogInvoiceComponent } from "./components/dialog-invoice/dialog-invoice.component";
-import { ProductGenericComponent } from './components/product-generic/product-generic.component';
-import { GenericInfoModalComponent } from './components/generic-info-modal/generic-info-modal.component';
-import { GeneralLoginComponent } from './components/general-login/general-login.component';
-import { GenericKeyboardComponent } from './components/generic-keyboard/generic-keyboard.component';
-import { CashOpComponent } from './components/cash-op/cash-op.component';
-import { CashPaymentComponent } from './components/cash-payment/cash-payment.component';
-import { AgeValidationComponent } from './components/age-validation/age-validation.component';
-import { CashValidationDirective } from './directives/cash-validation.directive';*/
+import { ProductGenericComponent } from "./components/presentationals/product-generic/product-generic.component";
+import { AgeValidationComponent } from "./components/presentationals/age-validation/age-validation.component";
+import { GenericInfoModalComponent } from "./components/presentationals/generic-info-modal/generic-info-modal.component";
 
 @NgModule({
   imports: [
@@ -38,43 +21,28 @@ import { CashValidationDirective } from './directives/cash-validation.directive'
     AppRoutingModule,
     SharedModule,
     MaterialModule,
-    ReactiveFormsModule,
-    FormsModule,
     HttpClientModule
   ],
   declarations: [
     AppComponent,
     InitViewComponent,
     LoginComponent,
-    GenericKeyboardComponent,
-    /*
-    ListDptoComponent,
-    FinancialOpComponent,
-    PosProductsTableComponent,
-    InfoPosComponent,
-    ListProdComponent,
-    InputCalculatorComponent,
-    DialogInvoiceComponent,
-    ProductGenericComponent,
-    GenericInfoModalComponent,
-    GeneralLoginComponent,
-    GenericKeyboardComponent,
-    CashOpComponent,
-    CashPaymentComponent,
     AgeValidationComponent,
-    CashValidationDirective*/
+    GenericInfoModalComponent,
+    ProductGenericComponent
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
   ],
   entryComponents: [
-    /*DialogInvoiceComponent,
     ProductGenericComponent,
     GenericInfoModalComponent,
-    LoginComponent,
+    AgeValidationComponent,
+    /*LoginComponent,
     CashOpComponent,
     CashPaymentComponent,
-    AgeValidationComponent*/],
+    DialogInvoiceComponent,*/
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

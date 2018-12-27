@@ -1,5 +1,7 @@
 :host {
   flex-wrap: wrap;
+  align-items: start;
+  justify-content: center;
 }
 
 button[mat-button] {

@@ -1,0 +1,13 @@
+<div oncontextmenu="return false">
+  <mat-toolbar color="primary">
+    {{ data.title }}
+    <span class="flex-spacer"></span>
+    <button mat-raised-button mat-dialog-close color="primary">&times;</button>
+  </mat-toolbar>
+  <div mat-dialog-content>
+    <p>{{ data.content }}</p>
+  </div><!--
+  <div mat-dialog-actions>
+    <button mat-raised-button [mat-dialog-close]>Cancel</button>
+  </div>-->
+</div>
