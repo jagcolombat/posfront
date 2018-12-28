@@ -9,21 +9,15 @@
     <p fxLayoutAlign="space-between">
       <mat-form-field>
         <input matInput
-         type="date"
+         type="text"
          [(ngModel)]="data"
          name="ageInput"
          #ageInput="ngModel"
          required/>
         <mat-error *ngIf="!ageInput.valid && ageInput.touched">Date is required</mat-error>
       </mat-form-field>
-      <button mat-button class="background-primary text-floral-white"
-              [disabled]="!ageForm.valid" (click)="onAgeValidation()">Validate age</button>
     </p>
     <!-- <mat-error *ngIf="!valid && tryValidation">Date is invalid</mat-error> -->
   </mat-dialog-content>
-  <mat-dialog-actions>
-    <span class="flex-spacer"></span>
-    <!--<button mat-raised-button mat-dialog-close>Cancel</button>-->
-
-  </mat-dialog-actions>
+  <generic-keyboard (evKeys)="getKeys($event)" ></generic-keyboard>
 </form>

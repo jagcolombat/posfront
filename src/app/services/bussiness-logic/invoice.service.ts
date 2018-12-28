@@ -8,6 +8,7 @@ import {DataStorageService} from "../api/data-storage.service";
 })
 export class InvoiceService {
   receiptNumber: string;
+  cashier: string;
   @Output() evAddProd = new EventEmitter<ProductOrder>();
   @Output() evDelProd = new EventEmitter<any>();
   @Output() evDelAllProds = new EventEmitter<any>();
@@ -15,7 +16,7 @@ export class InvoiceService {
   constructor(private authService: AuthService, private dataStorage: DataStorageService) { }
 
   getCashier(): string{
-    return this.authService.token.username ? this.authService.token.username : ''
+    return this.cashier = this.authService.token.username ? this.authService.token.username : ''
   }
 
   addProductOrder(po: ProductOrder){

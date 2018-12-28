@@ -5,6 +5,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Credentials, Token } from '../../models/index';
 import jwt_decode from 'jwt-decode';
 import { Url } from '../../utils/url.path.enum';
+import { Router } from "@angular/router";
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ export class AuthService {
   credentials: Credentials;
   headers: HttpHeaders;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private router: Router) {
     this.headers = new HttpHeaders({
       'Content-Type': 'application/json'
     });
@@ -52,7 +53,9 @@ export class AuthService {
     );
   }
 
-  logout(): Observable<any> {
-    return this.http.post(this.url, {});
+  logout()/*: Observable<any>*/ {
+    this.token = {};
+    this.router.navigateByUrl('/init');
+    // return this.http.post(this.url, {});
   }
 }

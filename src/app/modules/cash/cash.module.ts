@@ -15,14 +15,13 @@ import { InfoPosComponent } from '../../components/presentationals/info-pos/info
 import { InputCalculatorComponent } from "../../components/presentationals/input-calculator/input-calculator.component";
 import { ListDptoComponent } from "../../components/presentationals/list-dpto/list-dpto.component";
 import {ListProdComponent} from "../../components/presentationals/list-prod/list-prod.component";
-import {AgeValidationComponent} from "../../components/presentationals/age-validation/age-validation.component";
-// import {ProductGenericComponent} from "../../components/presentationals/product-generic/product-generic.component";
-import {GenericInfoModalComponent} from "../../components/presentationals/generic-info-modal/generic-info-modal.component";
+import {AdminOptionsComponent} from "../../components/presentationals/admin-options/admin-options.component";
 
 const routes: Routes = [
   { path: '',  component: CashViewComponent,
     children: [
       { path: '', redirectTo: 'dptos', pathMatch: 'full' },
+      { path: 'options', component: AdminOptionsComponent },
       { path: 'dptos', component: ListDptoComponent },
       { path: 'products', component: ListProdComponent },
       { path: 'products/:dpto/:tax', component: ListProdComponent }
@@ -48,6 +47,7 @@ const routes: Routes = [
     InputCalculatorComponent,
     ListDptoComponent,
     ListProdComponent,
+    AdminOptionsComponent
     // AgeValidationComponent,
     // ProductGenericComponent,
     // GenericInfoModalComponent

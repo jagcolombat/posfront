@@ -13,6 +13,7 @@ import { MaterialModule } from "./modules/material/material.module";
 import { ProductGenericComponent } from "./components/presentationals/product-generic/product-generic.component";
 import { AgeValidationComponent } from "./components/presentationals/age-validation/age-validation.component";
 import { GenericInfoModalComponent } from "./components/presentationals/generic-info-modal/generic-info-modal.component";
+import { DialogLoginComponent } from './components/containers/dialog-login/dialog-login.component';
 
 @NgModule({
   imports: [
@@ -29,7 +30,8 @@ import { GenericInfoModalComponent } from "./components/presentationals/generic-
     LoginComponent,
     AgeValidationComponent,
     GenericInfoModalComponent,
-    ProductGenericComponent
+    ProductGenericComponent,
+    DialogLoginComponent
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
@@ -38,8 +40,8 @@ import { GenericInfoModalComponent } from "./components/presentationals/generic-
     ProductGenericComponent,
     GenericInfoModalComponent,
     AgeValidationComponent,
-    /*LoginComponent,
-    CashOpComponent,
+    DialogLoginComponent,
+    /*CashOpComponent,
     CashPaymentComponent,
     DialogInvoiceComponent,*/
   ],

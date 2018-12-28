@@ -7,8 +7,10 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
   styleUrls: ['./age-validation.component.css']
 })
 export class AgeValidationComponent implements OnInit {
-
-  data: string;
+  data = 'mm/dd/yyyy';
+  number = '00000000';
+  maxlength = 10;
+  index = 0;
 
   constructor(public dialogRef: MatDialogRef<AgeValidationComponent>) { }
 
@@ -28,5 +30,56 @@ export class AgeValidationComponent implements OnInit {
     console.log('Age:' + age);
     this.dialogRef.close({age: age, date: birthday.getTime()});
   }
+
+  getKeys(ev) {
+    if (ev.type === 1) {
+      this.inputNumber(ev.value);
+    } else if (ev.value === 'Clear') {
+      this.resetPrice();
+    } else if (ev.value === 'Enter') {
+      this.onAgeValidation();
+    } else if (ev.value === 'Back') {
+      this.back();
+    }
+  }
+
+  inputNumber(value) {
+    if (this.index < 8) {
+      console.log(this.data);
+      this.number = this.replaceAt(this.number, this.index, value);
+      console.log(this.number);
+      this.data = this.insertAt(this.number, 2, '/');
+      this.data = this.insertAt(this.data, 5, '/');
+      this.index++;
+      console.log(this.data);
+    }
+  }
+
+  back() {
+    if (this.index > 0) {
+      this.index--;
+      this.number = this.replaceAt(this.number, this.index, '0');
+      console.log(this.number);
+
+      this.data = this.insertAt(this.number, 2, '/');
+      this.data = this.insertAt(this.data, 5, '/');
+      console.log(this.data);
+    }
+  }
+
+  resetPrice() {
+    this.data = 'mm/dd/yyyy';
+    this.number = '00000000';
+    this.index = 0;
+  }
+
+  replaceAt(data: string, index: number, replacement: string): string {
+    return data.slice(0, index) + replacement + data.slice(index + 1);
+  }
+
+  insertAt(data: string, index: number, replacement: string): string {
+    return data.slice(0, index) + replacement + data.slice(index);
+  }
+
 
 }

@@ -1,7 +1,7 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {MatDialogRef} from '@angular/material';
-import {AuthService} from "../../../services/api/auth.service";
-import {ActivatedRoute, Router} from "@angular/router";
+import {Component, EventEmitter, Inject, Input, OnInit, Output} from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { AuthService } from "../../../services/api/auth.service";
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'login',
@@ -9,13 +9,17 @@ import {ActivatedRoute, Router} from "@angular/router";
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+  @Output() evRol = new EventEmitter<boolean>();
   @Input() rol: string;
   input = "";
   tryValidation:boolean;
   valid: boolean;
   errorMsg: string;
 
-  constructor(private route: ActivatedRoute, private router: Router, private authService: AuthService) { }
+  constructor(private router: Router, private authService: AuthService/*,
+              public dialogRef: MatDialogRef<LoginComponent>, @Inject(MAT_DIALOG_DATA) public data: any*/) {
+    // if (data.rol) this.rol = this.data.rol;
+  }
 
   ngOnInit() {
   }
@@ -54,8 +58,7 @@ export class LoginComponent implements OnInit {
   validAuth() {
     this.valid = true;
     this.tryValidation = true;
-    // this.dialogRef.close(t.fullname);
-    this.router.navigateByUrl('/cash');
+    (this.rol) ? this.evRol.emit(true) : this.router.navigateByUrl('/cash');
   }
 
   invalidAuth(msg?: string) {

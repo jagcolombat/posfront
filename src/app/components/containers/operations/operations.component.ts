@@ -23,16 +23,31 @@ export class OperationsComponent implements OnInit {
   ngOnInit() {
   }
 
-  financeKey(ev) {}
+  financeKey(ev) {
+    switch (ev) {
+      case 'Logout':
+        this.operationService.logout();
+        break
+      case 'Manager Screen':
+        this.operationService.manager();
+        break
+    }
+  }
 
   invoiceKey(ev) {
     switch (ev) {
       case 'Clear':
         this.operationService.clear();
-        break
+        break;
       case 'Void':
         this.operationService.void();
-        break
+        break;
+      case 'PLU':
+        this.operationService.plu();
+        break;
+      case 'Price Check':
+        this.operationService.priceCheck();
+        break;
     }
   }
 

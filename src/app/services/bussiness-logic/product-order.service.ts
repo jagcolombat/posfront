@@ -22,22 +22,22 @@ export class ProductOrderService {
   constructor(public dialog: MatDialog, private invoiceService: InvoiceService) { }
 
   addProduct(product: Product): void {
-    if (product.ageVerification && !this.ageValidation) {
-      this.onAgeVerification().afterClosed().subscribe(data => {
-        if (data.age && data.age >= AGE) {
-          this.ageValidation=true;
-          this.onCreateProductOrder(product);
-        } else {
-          this.invalidAge();
-        }
-      });
+    if ( product.followDepartment ) {
+      const isAgeVerification = this.departments.find(dpto => dpto.id === product.departmentId).ageVerification;
+      if (isAgeVerification) {
+        this.ageVerification(product);
+      } else {
+        this.onCreateProductOrder(product);
+      }
+    } else if (product.ageVerification && !this.ageValidation) {
+      this.ageVerification(product);
     } else {
       this.onCreateProductOrder(product);
     }
   }
 
   onAgeVerification() {
-    return this.dialog.open(AgeValidationComponent, { width: '450px', height: '250px' });
+    return this.dialog.open(AgeValidationComponent, { width: '480px', height: '650px' });
   }
 
   private invalidAge() {
@@ -82,6 +82,17 @@ export class ProductOrderService {
       tax = product.tax;
     }
     return tax;
+  }
+
+  private ageVerification(product: Product) {
+    this.onAgeVerification().afterClosed().subscribe(data => {
+      if (data.age && data.age >= AGE) {
+        this.ageValidation = true;
+        this.onCreateProductOrder(product);
+      } else {
+        this.invalidAge();
+      }
+    });
   }
 
 }

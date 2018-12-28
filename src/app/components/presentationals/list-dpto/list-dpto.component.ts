@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {Department} from '../../../models/department.model';
 import {StockService} from "../../../services/bussiness-logic/stock.service";
-import {MatDialog} from "@angular/material";
 import {Router} from "@angular/router";
 
 @Component({
@@ -13,7 +12,7 @@ export class ListDptoComponent implements OnInit {
   dptos: Department[];
   space = '10px';
 
-  constructor(private router: Router, public dialog: MatDialog, private stockService: StockService) {
+  constructor(private router: Router, private stockService: StockService) {
     this.stockService.getDepartments().subscribe(dptos => {
       this.stockService.productOrderService.departments = this.dptos = dptos;
     });
