@@ -1,19 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, OnDestroy } from '@angular/core';
 import { GridOptions, GridApi } from 'ag-grid-community';
 import { InvoiceService } from "../../../services/bussiness-logic/invoice.service";
 import { ProductOrder } from "../../../models/product-order.model";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: 'ag-grid',
   templateUrl: './ag-grid.component.html',
   styleUrls: ['./ag-grid.component.css']
 })
-export class AgGridComponent implements OnInit {
+export class AgGridComponent implements OnInit, OnDestroy {
+  @Output() updateData = new EventEmitter<boolean>();
   public gridOptions: GridOptions;
   private gridApi: GridApi;
+  private subscriptions: Subscription[] = [];
 
   constructor(private invoiceService: InvoiceService) {
     this.gridOptions = <GridOptions>{
+      rowData: [],
       rowSelection: 'multiple',
       columnDefs: this.createColumnDefs(),
       onGridReady: () => {
@@ -21,7 +25,9 @@ export class AgGridComponent implements OnInit {
       },
       rowHeight: 42
     };
-    this.invoiceService.evAddProd.subscribe(po => this.onAddRow(po));
+    this.subscriptions.push(this.invoiceService.evAddProd.subscribe(po => this.onAddRow(po)));
+    this.subscriptions.push(this.invoiceService.evDelAllProds.subscribe(ev => this.clearData()));
+    this.subscriptions.push(this.invoiceService.evDelProd.subscribe(ev => this.onRemoveSelected()));
   }
 
   ngOnInit() {
@@ -61,22 +67,18 @@ export class AgGridComponent implements OnInit {
     ];
   }
 
-  removeItem(start?: number, limit?: number) {
-    // this.gridOptions.rowData.splice(start, limit);
-    console.log('remove', this.gridOptions.rowData, this.gridOptions.rowSelection);
-    this.gridApi.refreshInfiniteCache();
-  }
-
   getRowData() {
     const rowData = [];
-    this.gridApi.forEachNode(function(node) {
+    this.gridOptions.api.forEachNode(function(node) {
       rowData.push(node.data);
     });
     console.log('Row Data:', rowData);
+    return rowData;
   }
 
   clearData() {
     this.gridOptions.api.setRowData([]);
+    this.updateData.emit(true);
   }
 
   onAddRow(data: ProductOrder) {
@@ -85,12 +87,15 @@ export class AgGridComponent implements OnInit {
       description: data.product.description,
       price: data.unitCost,
       quantity: data.quantity,
-      amount: data.total
+      amount: data.total,
+      tax: data.tax/*,
+      product: data.product*/
     };
     //console.log('createNewRowData', newData);
     const res = this.gridOptions.api.updateRowData({ add: [newData] });
     // printResult(res);
-    this.gridOptions.api.sizeColumnsToFit();
+    // this.getRowData();
+    this.updateData.emit(true);
   }
 
   updateItems() {
@@ -105,12 +110,18 @@ export class AgGridComponent implements OnInit {
     });
     const res = this.gridApi.updateRowData({ update: itemsToUpdate });
     // printResult(res);
+    this.updateData.emit(true);
   }
 
   onRemoveSelected() {
     const selectedData = this.gridOptions.api.getSelectedRows();
     const res = this.gridOptions.api.updateRowData({ remove: selectedData });
     // printResult(res);
+    this.updateData.emit(true);
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.map(sub => sub.unsubscribe());
   }
 
 }

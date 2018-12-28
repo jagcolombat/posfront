@@ -48,7 +48,7 @@ export class InvoiceService {
     return this._http.get<Invoice>(url + this.path, { params });
   }
 
-  getNextReceiptNumber(url: string) {
+  getNextReceiptNumber(url: string): Observable<string> {
     return this._http.get<string>(url + this.path + '/next');
   }
 
