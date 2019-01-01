@@ -3,7 +3,7 @@
 <div fxFlex.lg="40" fxFlex.lt-lg="53" class="border">
   <operation-group fxFlex="20" [operations]="invoiceOperations" [colors]="invoiceColor" class="border"
                    (evPressKeys)="invoiceKey($event)"></operation-group>
-  <app-numpad lastKey="@/FOR"></app-numpad>
+  <numpad lastKey="@/FOR" (evPressKeys)="numpadKey($event)"></numpad>
   <operation-group [operations]="totalsOperations" [colors]="totalColor" layout="two" class="border"
                    (evPressKeys)="totalKey($event)" ></operation-group>
 </div>

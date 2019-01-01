@@ -1,4 +1,5 @@
 import {Component, OnInit} from '@angular/core';
+import {InvoiceService} from "../../../services/bussiness-logic/invoice.service";
 
 @Component({
   selector: 'app-cash-view',
@@ -10,13 +11,16 @@ import {Component, OnInit} from '@angular/core';
 })
 export class CashViewComponent implements OnInit {
 
-  constructor() { }
+  constructor(private invoiceService: InvoiceService) {
+
+  }
 
   ngOnInit() {
   }
 
   handleKeyboardEvent(ev: KeyboardEvent) {
     console.log('inputKeyboard', ev);
+    this.invoiceService.evNumpadInput.emit(ev.key);
   }
 
 }

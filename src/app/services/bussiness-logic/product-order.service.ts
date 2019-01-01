@@ -8,6 +8,7 @@ import {Department} from "../../models/department.model";
 import {InvoiceService} from "./invoice.service";
 import {ProductGenericComponent} from "../../components/presentationals/product-generic/product-generic.component";
 import {ProductGeneric} from "../../models/product-generic";
+import {Subscription} from "rxjs";
 
 export const AGE = 18;
 
@@ -18,8 +19,11 @@ export class ProductOrderService {
   ageValidation: boolean;
   departments: Department[];
   quantityByProduct = 1;
+  subscription: Subscription [] = [];
 
-  constructor(public dialog: MatDialog, private invoiceService: InvoiceService) { }
+  constructor(public dialog: MatDialog, private invoiceService: InvoiceService) {
+    this.subscription.push(this.invoiceService.evAddProdByUPC.subscribe(prod => this.addProduct(prod)));
+  }
 
   addProduct(product: Product): void {
     if ( product.followDepartment ) {
@@ -93,6 +97,10 @@ export class ProductOrderService {
         this.invalidAge();
       }
     });
+  }
+
+  ngOnDestroy(){
+    this.subscription.map(sub => sub.unsubscribe());
   }
 
 }

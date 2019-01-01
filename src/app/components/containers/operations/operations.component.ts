@@ -51,6 +51,10 @@ export class OperationsComponent implements OnInit {
     }
   }
 
+  numpadKey(ev) {
+    this.operationService.numpadInput(ev);
+  }
+
   totalKey(ev) {}
 
   paymentKey(ev) {}

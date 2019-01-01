@@ -6,12 +6,13 @@ import {MatDialog} from "@angular/material";
 import {GenericInfoModalComponent} from "../../components/presentationals/generic-info-modal/generic-info-modal.component";
 import {LoginComponent} from "../../components/presentationals/login/login.component";
 import {DialogLoginComponent} from "../../components/containers/dialog-login/dialog-login.component";
+import {ProductOrderService} from "./product-order.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class OperationsService {
-  counter: number = 60;
+  counter: number = 300;
   interval: number;
   constructor(private invoiceService: InvoiceService, private authService: AuthService, private dialog: MatDialog,
               private router: Router) {
@@ -44,6 +45,8 @@ export class OperationsService {
 
   plu() {
     console.log('plu');
+    // Consume servicio de PLU con this.digits eso devuelve ProductOrder
+    this.invoiceService.addProductByUpc();
     this.resetInactivity(true);
   }
 
@@ -69,5 +72,9 @@ export class OperationsService {
       }
     });
     this.resetInactivity(true);
+  }
+
+  numpadInput(ev) {
+    this.invoiceService.evNumpadInput.emit(ev)
   }
 }
