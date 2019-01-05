@@ -14,7 +14,6 @@ import { ProductGenericComponent } from "./components/presentationals/product-ge
 import { AgeValidationComponent } from "./components/presentationals/age-validation/age-validation.component";
 import { GenericInfoModalComponent } from "./components/presentationals/generic-info-modal/generic-info-modal.component";
 import { DialogLoginComponent } from './components/containers/dialog-login/dialog-login.component';
-import { PosSlideshowComponent } from './components/presentationals/slideshow/slideshow.component';
 import { AnnounceComponent } from './components/presentationals/announce/announce.component';
 import { PromotionsComponent } from './components/presentationals/promotions/promotions.component';
 
@@ -36,7 +35,6 @@ import { PromotionsComponent } from './components/presentationals/promotions/pro
     GenericInfoModalComponent,
     ProductGenericComponent,
     DialogLoginComponent,
-    PosSlideshowComponent,
     AnnounceComponent,
     PromotionsComponent
   ],
