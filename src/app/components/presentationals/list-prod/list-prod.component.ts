@@ -6,13 +6,13 @@ import { ActivatedRoute } from "@angular/router";
 @Component({
   selector: 'app-list-prod',
   templateUrl: './list-prod.component.html',
-  styleUrls: ['./list-prod.component.css']
+  styleUrls: ['./list-prod.component.scss']
 })
 export class ListProdComponent implements OnInit {
   // @Output() selectProduct = new EventEmitter<any>();
-  prods: Product[];
+  prods: Product[] = [];
   dptTax: number;
-  space = '10px';
+  page = 1;
 
   constructor( private route: ActivatedRoute, private stockService: StockService) { }
 

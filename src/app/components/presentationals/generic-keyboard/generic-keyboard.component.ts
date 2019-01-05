@@ -3,7 +3,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 @Component({
   selector: 'generic-keyboard',
   templateUrl: './generic-keyboard.component.html',
-  styleUrls: ['./generic-keyboard.component.css']
+  styleUrls: ['./generic-keyboard.component.scss']
 })
 export class GenericKeyboardComponent implements OnInit {
   @Input() valid: boolean;

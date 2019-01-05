@@ -16,6 +16,8 @@ import { InputCalculatorComponent } from "../../components/presentationals/input
 import { ListDptoComponent } from "../../components/presentationals/list-dpto/list-dpto.component";
 import {ListProdComponent} from "../../components/presentationals/list-prod/list-prod.component";
 import {AdminOptionsComponent} from "../../components/presentationals/admin-options/admin-options.component";
+import {SlideshowModule} from "../slideshow/slideshow.module";
+import {NgxPaginationModule, PaginationControlsDirective} from "ngx-pagination";
 
 const routes: Routes = [
   { path: '',  component: CashViewComponent,
@@ -32,6 +34,7 @@ const routes: Routes = [
   imports: [
     SharedModule,
     MaterialModule,
+    NgxPaginationModule,
     AgGridModule.withComponents([null]),
     RouterModule.forChild(routes)
   ],

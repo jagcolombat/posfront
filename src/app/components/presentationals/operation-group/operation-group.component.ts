@@ -3,7 +3,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 @Component({
   selector: 'operation-group',
   templateUrl: './operation-group.component.html',
-  styleUrls: ['./operation-group.component.css']
+  styleUrls: ['./operation-group.component.scss']
 })
 export class OperationGroupComponent implements OnInit {
   @Input() operations: string[];

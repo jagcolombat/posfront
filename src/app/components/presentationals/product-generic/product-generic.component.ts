@@ -5,7 +5,7 @@ import {ProductGeneric} from "../../../models/product-generic";
 @Component({
   selector: 'app-product-generic',
   templateUrl: './product-generic.component.html',
-  styleUrls: ['./product-generic.component.css']
+  styleUrls: ['./product-generic.component.scss']
 })
 export class ProductGenericComponent implements OnInit {
   @Input() title = 'Generic Product ';

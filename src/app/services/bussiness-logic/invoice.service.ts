@@ -2,8 +2,11 @@ import {EventEmitter, Injectable, Output} from '@angular/core';
 import {AuthService} from "../api/auth.service";
 import {ProductOrder} from "../../models/product-order.model";
 import {DataStorageService} from "../api/data-storage.service";
-import {Router} from "@angular/router";
-import {ProductOrderService} from "./product-order.service";
+import {Observable} from "rxjs";
+import {Product} from "../../models";
+import {InvoiceStatus} from "../../utils/invoice-status.enum";
+import {Invoice} from "../../models/invoice.model";
+import {map} from "rxjs/operators";
 
 @Injectable({
   providedIn: 'root'
@@ -11,39 +14,70 @@ import {ProductOrderService} from "./product-order.service";
 export class InvoiceService {
   receiptNumber: string;
   cashier: string;
+  // For manage numpadInput
   digits = '';
   numbers = 0;
   qty: number;
+  // Invoice
+  invoice: Invoice;
 
   @Output() evAddProd = new EventEmitter<ProductOrder>();
   @Output() evDelProd = new EventEmitter<any>();
   @Output() evDelAllProds = new EventEmitter<any>();
   @Output() evNumpadInput = new EventEmitter<any>();
   @Output() evAddProdByUPC = new EventEmitter<any>();
+  @Output() evChkPriceProdByUPC = new EventEmitter<any>();
 
   constructor(private authService: AuthService, private dataStorage: DataStorageService) { }
 
-  getCashier(): string{
+  getCashier(): string {
     return this.cashier = this.authService.token.username ? this.authService.token.username : ''
   }
 
   addProductOrder(po: ProductOrder){
     console.log('addProductOrder', po);
+    this.invoice.productsOrders.push(po);
     this.evAddProd.emit(po);
   }
 
   getReceiptNumber() {
-    return this.dataStorage.getInvoiceNextReceiptNumber().subscribe(num => this.receiptNumber = num);
+    return this.dataStorage.getInvoiceNextReceiptNumber().subscribe(num => {
+      this.receiptNumber = num;
+      this.invoice = new Invoice(num);
+      this.evDelAllProds.emit();
+    });
   }
 
   addProductByUpc(){
     // Consume servicio de PLU con this.digits eso devuelve ProductOrder
-    this.dataStorage.getProductByUpc(this.numbers).subscribe(prod => {
-      this.evAddProdByUPC.emit(prod);
-    }, error1 => {
-      console.log(error1);
-      /*this.prodService.qty = 1;
-      this.resetDigits();*/
-    });
+    this.getProductByUpc().subscribe(prod => { this.evAddProdByUPC.emit(prod); }, err => { console.log(err); });
+  }
+
+  holdOrder(): Observable<any> {
+    return this.dataStorage.saveInvoiceByStatus(this.invoice, InvoiceStatus.PENDENT_FOR_PAYMENT);
+  }
+
+  recallCheck(): Observable<Invoice[]> {
+    return this.dataStorage.getInvoicesByStatus(InvoiceStatus.PENDENT_FOR_PAYMENT).pipe(map(invoices => invoices));
+  }
+
+  recallCheckByOrder(): Observable<Invoice> {
+    console.log('Recall by InvoiceId: ', this.digits);
+    return this.dataStorage.getInvoiceById(this.digits);
+  }
+
+  getProductByUpc(): Observable<Product>{
+    return this.dataStorage.getProductByUpc(this.numbers);
+  }
+
+  setInvoice(inv: Invoice){
+    this.invoice = inv;
+    this.resetDigits();
+  }
+
+  resetDigits() {
+    console.log('resetDigits');
+    this.digits = '';
+    this.numbers = 0;
   }
 }

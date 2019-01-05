@@ -6,11 +6,11 @@ import {Router} from "@angular/router";
 @Component({
   selector: 'list-dpto',
   templateUrl: './list-dpto.component.html',
-  styleUrls: ['./list-dpto.component.css']
+  styleUrls: ['./list-dpto.component.scss']
 })
 export class ListDptoComponent implements OnInit {
-  dptos: Department[];
-  space = '10px';
+  dptos: Department[] = [];
+  page = 1;
 
   constructor(private router: Router, private stockService: StockService) {
     this.stockService.getDepartments().subscribe(dptos => {

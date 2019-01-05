@@ -4,7 +4,7 @@ import {OperationsService} from "../../../services/bussiness-logic/operations.se
 @Component({
   selector: 'operations',
   templateUrl: './operations.component.html',
-  styleUrls: ['./operations.component.css']
+  styleUrls: ['./operations.component.scss']
 })
 export class OperationsComponent implements OnInit {
   @Input() financeOperations = ['Manager Screen', 'Reprint', 'Hold Order', 'Review Check', 'Recall Check', 'Refund', 'Logout'];
@@ -27,10 +27,16 @@ export class OperationsComponent implements OnInit {
     switch (ev) {
       case 'Logout':
         this.operationService.logout();
-        break
+        break;
       case 'Manager Screen':
         this.operationService.manager();
-        break
+        break;
+      case 'Hold Order':
+        this.operationService.hold();
+        break;
+      case 'Recall Check':
+        this.operationService.recallCheck();
+        break;
     }
   }
 

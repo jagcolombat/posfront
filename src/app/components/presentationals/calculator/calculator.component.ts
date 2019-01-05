@@ -5,7 +5,7 @@ import {ValueCalculator} from "../../../models/value-calculator.model";
 @Component({
   selector: 'calculator',
   templateUrl: './calculator.component.html',
-  styleUrls: ['./calculator.component.css']
+  styleUrls: ['./calculator.component.scss']
 })
 export class CalculatorComponent implements OnInit {
   @Output() evKeys = new EventEmitter<any>();

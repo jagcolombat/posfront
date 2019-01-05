@@ -30,7 +30,6 @@ export class OperationsService {
     if(cont) this.counterInactivity();
   }
 
-
   clear() {
     console.log('clear');
     this.invoiceService.evDelProd.emit(true);
@@ -52,13 +51,18 @@ export class OperationsService {
 
   priceCheck() {
     console.log('priceCheck');
+    this.invoiceService.getProductByUpc().subscribe(prod => {
+      this.dialog.open(GenericInfoModalComponent, { width: '350px', height: '250px',
+        data: { title: 'Price Check', content: prod.name, price: prod.unitCost }})
+        .afterClosed().subscribe(ev => {
+          this.invoiceService.resetDigits();
+      });
+    });
     this.resetInactivity(true);
   }
 
-  logout() {
-    console.log('logout');
-    this.authService.logout();
-    this.resetInactivity(false);
+  numpadInput(ev) {
+    this.invoiceService.evNumpadInput.emit(ev)
   }
 
   manager() {
@@ -74,7 +78,42 @@ export class OperationsService {
     this.resetInactivity(true);
   }
 
-  numpadInput(ev) {
-    this.invoiceService.evNumpadInput.emit(ev)
+  hold() {
+    if (this.invoiceService.invoice.productsOrders.length > 0) {
+      this.invoiceService.holdOrder().
+      subscribe(result => this.successHoldOrder(result), error1 => this.errorHoldOrder (error1));
+    } else {
+      console.error('Not possible Hold Order without products this Invoice');
+      this.openGenericInfo('Error', 'Not possible Hold Order without products in this Invoice');
+    }
   }
+
+  recallCheck() {
+    this.invoiceService.digits ?
+      this.invoiceService.recallCheckByOrder().subscribe(inv => this.invoiceService.setInvoice(inv), err => console.log(err)) :
+      this.invoiceService.recallCheck();
+  }
+
+  logout() {
+    console.log('logout');
+    this.authService.logout();
+    this.resetInactivity(false);
+  }
+
+  successHoldOrder(resp: any) {
+    console.log(resp, typeof resp);
+    this.invoiceService.getReceiptNumber();
+  }
+
+  errorHoldOrder(e) {
+    console.log(e, typeof e);
+    this.openGenericInfo('Error', 'Can\'t complete hold order operation');
+  }
+
+  openGenericInfo(title: string, content?: string) {
+     this.dialog.open(GenericInfoModalComponent,{
+        width: '300px', height: '220px', data: {title: title ? title : 'Information', content: content}
+     });
+  }
+
 }

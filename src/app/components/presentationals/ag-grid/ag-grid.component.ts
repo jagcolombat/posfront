@@ -7,7 +7,7 @@ import { Subscription } from "rxjs";
 @Component({
   selector: 'ag-grid',
   templateUrl: './ag-grid.component.html',
-  styleUrls: ['./ag-grid.component.css']
+  styleUrls: ['./ag-grid.component.scss']
 })
 export class AgGridComponent implements OnInit, OnDestroy {
   @Output() updateData = new EventEmitter<boolean>();
@@ -51,7 +51,7 @@ export class AgGridComponent implements OnInit, OnDestroy {
       },
       {
         headerName: 'Price',
-        field: 'price',
+        field: 'unitCost',
         width: 90
       },
       {
@@ -61,7 +61,7 @@ export class AgGridComponent implements OnInit, OnDestroy {
       },
       {
         headerName: 'Amount',
-        field: 'amount',
+        field: 'total',
         width: 95
       }
     ];
@@ -85,11 +85,11 @@ export class AgGridComponent implements OnInit, OnDestroy {
     const newData = {
       number_item: data.product.upc,
       description: data.product.description,
-      price: data.unitCost,
+      unitCost: data.unitCost,
       quantity: data.quantity,
-      amount: data.total,
-      tax: data.tax/*,
-      product: data.product*/
+      total: data.total,
+      tax: data.tax,
+      product: data.product
     };
     //console.log('createNewRowData', newData);
     const res = this.gridOptions.api.updateRowData({ add: [newData] });
@@ -118,6 +118,15 @@ export class AgGridComponent implements OnInit, OnDestroy {
     const res = this.gridOptions.api.updateRowData({ remove: selectedData });
     // printResult(res);
     this.updateData.emit(true);
+    this.deleteOnInvoice();
+  }
+
+  deleteOnInvoice(){
+    console.log('before', this.invoiceService.invoice.productsOrders);
+    // this.invoiceService.invoice.productsOrders.length = 0;
+    // Object.assign(this.invoiceService.invoice.productsOrders, this.getRowData());
+    this.invoiceService.invoice.productsOrders = <ProductOrder[]>[...this.getRowData()];
+    console.log('later', this.invoiceService.invoice.productsOrders);
   }
 
   ngOnDestroy() {

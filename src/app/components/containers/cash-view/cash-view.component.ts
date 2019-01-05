@@ -4,7 +4,7 @@ import {InvoiceService} from "../../../services/bussiness-logic/invoice.service"
 @Component({
   selector: 'app-cash-view',
   templateUrl: './cash-view.component.html',
-  styleUrls: ['./cash-view.component.css'],
+  styleUrls: ['./cash-view.component.scss'],
   host: {
     '(document:keypress)': 'handleKeyboardEvent($event)'
   }

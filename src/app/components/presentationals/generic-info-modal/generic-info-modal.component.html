@@ -5,8 +5,10 @@
     <button mat-raised-button mat-dialog-close color="primary">&times;</button>
   </mat-toolbar>
   <div mat-dialog-content>
-    <p>{{ data.content }}</p>
-  </div><!--
+    <p class="content">{{ data.content }}</p>
+    <p *ngIf="data.price" class="price">{{ data.price | currency }}</p>
+  </div>
+  <!--
   <div mat-dialog-actions>
     <button mat-raised-button [mat-dialog-close]>Cancel</button>
   </div>-->

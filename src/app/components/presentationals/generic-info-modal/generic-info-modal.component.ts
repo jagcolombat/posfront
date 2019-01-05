@@ -4,7 +4,7 @@ import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 @Component({
   selector: 'app-generic-info-modal',
   templateUrl: './generic-info-modal.component.html',
-  styleUrls: ['./generic-info-modal.component.css']
+  styleUrls: ['./generic-info-modal.component.scss']
 })
 export class GenericInfoModalComponent implements OnInit {
 

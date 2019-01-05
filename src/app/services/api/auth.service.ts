@@ -6,6 +6,7 @@ import { Credentials, Token } from '../../models/index';
 import jwt_decode from 'jwt-decode';
 import { Url } from '../../utils/url.path.enum';
 import { Router } from "@angular/router";
+import {MatDialog} from "@angular/material";
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,7 @@ export class AuthService {
   credentials: Credentials;
   headers: HttpHeaders;
 
-  constructor(private http: HttpClient, private router: Router) {
+  constructor(private http: HttpClient, private router: Router, private dialog: MatDialog) {
     this.headers = new HttpHeaders({
       'Content-Type': 'application/json'
     });
@@ -33,7 +34,8 @@ export class AuthService {
   }
 
   private getToken() {
-    return this.http.post<any>(this.url + '/login/pos', this.credentials, { headers: this.headers, observe: 'response' }).pipe(
+    return this.http.post<any>(this.url + '/login/pos', this.credentials,
+      { headers: this.headers, observe: 'response' }).pipe(
       map(response => {
         console.log(response);
         const decoded = jwt_decode(response.body);
@@ -55,6 +57,7 @@ export class AuthService {
 
   logout()/*: Observable<any>*/ {
     this.token = {};
+    this.dialog.closeAll();
     this.router.navigateByUrl('/init');
     // return this.http.post(this.url, {});
   }

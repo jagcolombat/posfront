@@ -4,7 +4,7 @@ import {Router} from "@angular/router";
 @Component({
   selector: 'app-admin-options',
   templateUrl: './admin-options.component.html',
-  styleUrls: ['./admin-options.component.css']
+  styleUrls: ['./admin-options.component.scss']
 })
 export class AdminOptionsComponent implements OnInit {
   options = ['Empl Z','SYS Z','WTD Z','Change Printer','Close Browser','Apply Discount','Cancel Check','Remove a hold','Departments'];

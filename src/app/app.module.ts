@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './modules/app-routing/app-routing.module';
 import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
 import { AuthInterceptor } from "./services/interceptors/auth.interceptor";
-
+import { SlideshowModule } from 'ng-simple-slideshow';
 import { AppComponent } from './app.component';
 import { InitViewComponent } from './components/containers/init-view/init-view.component';
 import { LoginComponent } from "./components/presentationals/login/login.component";
@@ -14,6 +14,9 @@ import { ProductGenericComponent } from "./components/presentationals/product-ge
 import { AgeValidationComponent } from "./components/presentationals/age-validation/age-validation.component";
 import { GenericInfoModalComponent } from "./components/presentationals/generic-info-modal/generic-info-modal.component";
 import { DialogLoginComponent } from './components/containers/dialog-login/dialog-login.component';
+import { PosSlideshowComponent } from './components/presentationals/slideshow/slideshow.component';
+import { AnnounceComponent } from './components/presentationals/announce/announce.component';
+import { PromotionsComponent } from './components/presentationals/promotions/promotions.component';
 
 @NgModule({
   imports: [
@@ -22,7 +25,8 @@ import { DialogLoginComponent } from './components/containers/dialog-login/dialo
     AppRoutingModule,
     SharedModule,
     MaterialModule,
-    HttpClientModule
+    HttpClientModule,
+    SlideshowModule
   ],
   declarations: [
     AppComponent,
@@ -31,7 +35,10 @@ import { DialogLoginComponent } from './components/containers/dialog-login/dialo
     AgeValidationComponent,
     GenericInfoModalComponent,
     ProductGenericComponent,
-    DialogLoginComponent
+    DialogLoginComponent,
+    PosSlideshowComponent,
+    AnnounceComponent,
+    PromotionsComponent
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }

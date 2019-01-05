@@ -4,7 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 @Component({
   selector: 'app-age-validation',
   templateUrl: './age-validation.component.html',
-  styleUrls: ['./age-validation.component.css']
+  styleUrls: ['./age-validation.component.scss']
 })
 export class AgeValidationComponent implements OnInit {
   data = 'mm/dd/yyyy';

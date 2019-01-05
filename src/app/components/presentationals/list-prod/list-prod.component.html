@@ -1,5 +1,10 @@
-<button mat-button fxFlex="130px" [fxLayoutGap]="space" *ngFor="let i of prods" (click)="doAction(i)"
+<div class="page">
+  <button mat-button fxFlex="130px" [fxLayoutGap]="space" *ngFor="let i of prods | paginate: { itemsPerPage: 12, currentPage: page }"
+        (click)="doAction(i)"
         [ngClass]="i.generic ? 'generic' : 'normal'">
-  {{i.name | uppercase }}
-</button>
-<button mat-button [fxLayoutGap]="space" [routerLink]="['/cash/dptos']"> << DPTOS </button>
+    {{i.name | uppercase }}
+  </button>
+  <button mat-button [fxLayoutGap]="space" [routerLink]="['/cash/dptos']"> << DPTOS </button>
+</div>
+<pagination-controls *ngIf="prods.length > 12" class="my-pagination" maxSize="0" autoHide="false" (pageChange)="page = $event">
+</pagination-controls>

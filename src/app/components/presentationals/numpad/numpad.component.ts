@@ -3,7 +3,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 @Component({
   selector: 'numpad',
   templateUrl: './numpad.component.html',
-  styleUrls: ['./numpad.component.css']
+  styleUrls: ['./numpad.component.scss']
 })
 export class NumpadComponent implements OnInit {
   @Input() lastKey: string;
