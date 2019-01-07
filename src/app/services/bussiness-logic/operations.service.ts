@@ -38,7 +38,7 @@ export class OperationsService {
 
   void() {
     console.log('void');
-    this.invoiceService.evDelAllProds.emit(true);
+    this.authService.adminLogged() ? this.cancelCheck() : this.manager();
     this.resetInactivity(true);
   }
 
@@ -103,6 +103,17 @@ export class OperationsService {
     console.log('logout');
     this.authService.logout();
     this.resetInactivity(false);
+  }
+
+  cancelCheck() {
+    console.log('cancelar factura');
+    this.invoiceService.cancelInvoice().subscribe(next => {
+        this.invoiceService.createInvoice().subscribe(next => {
+          this.invoiceService.evDelAllProds.emit(true);
+        }, err => {
+          console.error('incomplete createCheck');
+        });
+    },err => console.error('incomplete cancelCheck'));
   }
 
   successHoldOrder(resp: any) {

@@ -34,9 +34,15 @@ export class InvoiceService {
     return this.cashier = this.authService.token.username ? this.authService.token.username : ''
   }
 
+  createInvoice(): Observable<Invoice>{
+    console.log('new invoice');
+    return this.dataStorage.saveInvoiceByStatus(this.invoice, InvoiceStatus.CREATED);
+  }
+
   addProductOrder(po: ProductOrder){
     console.log('addProductOrder', po);
     let tmpInvoice = Object.assign({}, this.invoice);
+    tmpInvoice.productsOrders.push(po);
     // Update invoice on database
     this.dataStorage.saveInvoice(tmpInvoice).subscribe(next => {
       this.invoice.productsOrders.push(po);
@@ -86,4 +92,10 @@ export class InvoiceService {
     this.digits = '';
     this.numbers = 0;
   }
+
+  cancelInvoice(): Observable<Invoice> {
+    return this.dataStorage.saveInvoiceByStatus(this.invoice, InvoiceStatus.CANCEL)
+  }
+
+
 }

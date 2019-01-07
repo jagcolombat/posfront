@@ -72,7 +72,7 @@ export class ProductOrderService {
   }
 
   private createProductOrder(prod: Product): ProductOrder {
-    let qty = this.quantityByProduct;
+    let qty = this.invoiceService.qty > 1 ? this.invoiceService.qty: this.quantityByProduct;
     let tax = this.getTax(prod);
     return new ProductOrder(qty, prod.unitCost, qty * prod.unitCost, tax, prod);
   }

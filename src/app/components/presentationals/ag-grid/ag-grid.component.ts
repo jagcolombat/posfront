@@ -91,10 +91,10 @@ export class AgGridComponent implements OnInit, OnDestroy {
       tax: data.tax,
       product: data.product
     };
-    //console.log('createNewRowData', newData);
+    console.log('onAddRow', this.gridOptions.api.getDisplayedRowCount());
     const res = this.gridOptions.api.updateRowData({ add: [newData] });
-    // printResult(res);
-    // this.getRowData();
+
+    this.gridOptions.api.ensureIndexVisible(this.gridOptions.api.getDisplayedRowCount()-1);
     this.updateData.emit(true);
   }
 
