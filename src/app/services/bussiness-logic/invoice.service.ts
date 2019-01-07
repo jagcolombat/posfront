@@ -35,8 +35,8 @@ export class InvoiceService {
   }
 
   createInvoice(): Observable<Invoice>{
-    console.log('new invoice');
-    return this.dataStorage.saveInvoiceByStatus(this.invoice, InvoiceStatus.CREATED);
+    this.setUserToInvoice();
+    return this.dataStorage.saveInvoiceByStatus(this.invoice, InvoiceStatus.IN_PROGRESS);
   }
 
   addProductOrder(po: ProductOrder){
@@ -57,6 +57,11 @@ export class InvoiceService {
       this.receiptNumber = num;
       this.invoice = new Invoice(num);
       this.evDelAllProds.emit();
+      this.createInvoice().subscribe(next => {
+        console.info('createCheck successfull');
+      }, err => {
+        console.error('createCheck failed');
+      });
     });
   }
 
@@ -66,6 +71,7 @@ export class InvoiceService {
   }
 
   holdOrder(): Observable<any> {
+    this.setUserToInvoice();
     return this.dataStorage.saveInvoiceByStatus(this.invoice, InvoiceStatus.PENDENT_FOR_PAYMENT);
   }
 
@@ -94,7 +100,12 @@ export class InvoiceService {
   }
 
   cancelInvoice(): Observable<Invoice> {
+    this.setUserToInvoice();
     return this.dataStorage.saveInvoiceByStatus(this.invoice, InvoiceStatus.CANCEL)
+  }
+
+  setUserToInvoice() {
+    this.invoice.applicationUserId = parseInt(this.authService.token.user_id);
   }
 
 

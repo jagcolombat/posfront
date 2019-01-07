@@ -86,9 +86,10 @@ export class OperationsService {
   hold() {
     if (this.invoiceService.invoice.productsOrders.length > 0) {
       this.invoiceService.holdOrder().
-      subscribe(result => this.successHoldOrder(result), error1 => this.errorHoldOrder (error1));
+      subscribe(
+        next => this.invoiceService.getReceiptNumber(),
+        err => this.openGenericInfo('Error', 'Can\'t complete hold order operation'));
     } else {
-      console.error('Not possible Hold Order without products this Invoice');
       this.openGenericInfo('Error', 'Not possible Hold Order without products in this Invoice');
     }
   }
@@ -108,23 +109,14 @@ export class OperationsService {
   cancelCheck() {
     console.log('cancelar factura');
     this.invoiceService.cancelInvoice().subscribe(next => {
-        this.invoiceService.createInvoice().subscribe(next => {
-          this.invoiceService.evDelAllProds.emit(true);
-        }, err => {
-          console.error('incomplete createCheck');
-        });
-    },err => console.error('incomplete cancelCheck'));
+      this.invoiceService.getReceiptNumber();
+    },err => console.error('cancelCheck failed'));
   }
 
-  successHoldOrder(resp: any) {
-    console.log(resp, typeof resp);
-    this.invoiceService.getReceiptNumber();
-  }
-
-  errorHoldOrder(e) {
+  /*errorHoldOrder(e) {
     console.log(e, typeof e);
     this.openGenericInfo('Error', 'Can\'t complete hold order operation');
-  }
+  }*/
 
   openGenericInfo(title: string, content?: string) {
      this.dialog.open(GenericInfoModalComponent,{
