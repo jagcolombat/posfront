@@ -3,6 +3,7 @@ import { SharedModule } from "../shared/shared.module";
 import { RouterModule, Routes } from "@angular/router";
 import { AgGridModule } from "ag-grid-angular";
 import { MaterialModule } from "../../modules/material/material.module";
+import {NgxPaginationModule} from "ngx-pagination";
 
 import { AgGridComponent } from '../../components/presentationals/ag-grid/ag-grid.component';
 import { CashViewComponent } from "../../components/containers/cash-view/cash-view.component";
@@ -16,7 +17,7 @@ import { InputCalculatorComponent } from "../../components/presentationals/input
 import { ListDptoComponent } from "../../components/presentationals/list-dpto/list-dpto.component";
 import {ListProdComponent} from "../../components/presentationals/list-prod/list-prod.component";
 import {AdminOptionsComponent} from "../../components/presentationals/admin-options/admin-options.component";
-import {NgxPaginationModule} from "ngx-pagination";
+import { PaginatorComponent } from '../../components/presentationals/paginator/paginator.component';
 
 const routes: Routes = [
   { path: '',  component: CashViewComponent,
@@ -49,10 +50,8 @@ const routes: Routes = [
     InputCalculatorComponent,
     ListDptoComponent,
     ListProdComponent,
-    AdminOptionsComponent
-    // AgeValidationComponent,
-    // ProductGenericComponent,
-    // GenericInfoModalComponent
+    AdminOptionsComponent,
+    PaginatorComponent
   ],
   entryComponents: []
 })

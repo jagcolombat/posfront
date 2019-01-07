@@ -1,4 +1,7 @@
-<button mat-button fxFlex="130px" *ngFor="let i of options" (click)="doAction(i)" class="normal">
-  {{ i | uppercase }}
-</button>
-<!--<button mat-button fxFlex="130px" class="normal" (click)="doAction('Departments')">Departments</button>-->
+<div class="page">
+  <button mat-button fxFlex="130px" *ngFor="let i of options | paginate: { itemsPerPage: sizePage, currentPage: page }"
+          (click)="doAction(i)" class="normal">
+    {{ i | uppercase }}
+  </button>
+</div>
+<pos-paginator [countElements]="options.length" [sizePage]="sizePage" (evSetPage)="page = $event">

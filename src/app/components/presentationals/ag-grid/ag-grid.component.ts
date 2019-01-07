@@ -45,8 +45,8 @@ export class AgGridComponent implements OnInit, OnDestroy {
         width: 150
       },
       {
-        headerName: 'Description',
-        field: 'description',
+        headerName: 'Name',
+        field: 'name',
         width: 210
       },
       {
@@ -84,7 +84,7 @@ export class AgGridComponent implements OnInit, OnDestroy {
   onAddRow(data: ProductOrder) {
     const newData = {
       number_item: data.product.upc,
-      description: data.product.description,
+      name: data.product.name,
       unitCost: data.unitCost,
       quantity: data.quantity,
       total: data.total,

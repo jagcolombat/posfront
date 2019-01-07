@@ -36,8 +36,14 @@ export class InvoiceService {
 
   addProductOrder(po: ProductOrder){
     console.log('addProductOrder', po);
-    this.invoice.productsOrders.push(po);
-    this.evAddProd.emit(po);
+    let tmpInvoice = Object.assign({}, this.invoice);
+    // Update invoice on database
+    this.dataStorage.saveInvoice(tmpInvoice).subscribe(next => {
+      this.invoice.productsOrders.push(po);
+      this.evAddProd.emit(po);
+    }, err => {
+      console.error('addProductOrder', err);
+    });
   }
 
   getReceiptNumber() {

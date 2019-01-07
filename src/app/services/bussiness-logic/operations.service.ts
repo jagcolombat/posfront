@@ -12,8 +12,8 @@ import {ProductOrderService} from "./product-order.service";
   providedIn: 'root'
 })
 export class OperationsService {
-  counter: number = 300;
-  interval: number;
+  inactivityTime: number = 300;
+  timer: number;
   constructor(private invoiceService: InvoiceService, private authService: AuthService, private dialog: MatDialog,
               private router: Router) {
     this.invoiceService.evAddProd.subscribe(() => this.resetInactivity(true));
@@ -21,12 +21,12 @@ export class OperationsService {
   }
 
   counterInactivity(){
-    this.interval = setTimeout(()=> this.logout(), this.counter * 1000);
+    this.timer = setTimeout(()=> this.logout(), this.inactivityTime * 1000);
   }
 
   resetInactivity(cont: boolean) {
     console.log('resetInactivity');
-    clearTimeout(this.interval);
+    clearTimeout(this.timer);
     if(cont) this.counterInactivity();
   }
 
@@ -67,14 +67,19 @@ export class OperationsService {
 
   manager() {
     console.log('manager');
-    const dialogRef = this.dialog.open(DialogLoginComponent, { width: '530px', height: '580px'});
-    dialogRef.afterClosed().subscribe(loginValid => {
-      console.log('The dialog was closed', loginValid);
-      if (loginValid) {
-        this.invoiceService.getCashier();
-        this.router.navigateByUrl('/cash/options');
-      }
-    });
+    if(!this.authService.adminLogged()){
+      const dialogRef = this.dialog.open(DialogLoginComponent, { width: '530px', height: '580px'});
+      dialogRef.afterClosed().subscribe(loginValid => {
+        console.log('The dialog was closed', loginValid);
+        if (loginValid) {
+          this.invoiceService.getCashier();
+          this.router.navigateByUrl('/cash/options');
+        }
+      });
+    } else {
+      this.router.navigateByUrl('/cash/options');
+    }
+
     this.resetInactivity(true);
   }
 

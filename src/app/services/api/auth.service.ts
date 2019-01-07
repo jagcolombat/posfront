@@ -7,6 +7,7 @@ import jwt_decode from 'jwt-decode';
 import { Url } from '../../utils/url.path.enum';
 import { Router } from "@angular/router";
 import {MatDialog} from "@angular/material";
+import {UserrolEnum} from "../../utils/userrol.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -60,5 +61,9 @@ export class AuthService {
     this.dialog.closeAll();
     this.router.navigateByUrl('/init');
     // return this.http.post(this.url, {});
+  }
+
+  adminLogged() {
+    return (this.token && this.token.rol === UserrolEnum.ADMIN)? true : false;
   }
 }

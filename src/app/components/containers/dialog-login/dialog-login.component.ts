@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {MatDialogRef} from "@angular/material";
+import {UserrolEnum} from "../../../utils/userrol.enum";
 
 @Component({
   selector: 'app-dialog-login',
@@ -7,7 +8,7 @@ import {MatDialogRef} from "@angular/material";
   styleUrls: ['./dialog-login.component.scss']
 })
 export class DialogLoginComponent implements OnInit {
-  rol: string = 'Administrator';
+  rol: string = UserrolEnum.ADMIN;
   constructor(public dialogRef: MatDialogRef<DialogLoginComponent>) { }
 
   ngOnInit() {

@@ -1,11 +1,15 @@
 :host {
-  flex-wrap: wrap;
-  align-items: start;
-  justify-content: flex-start;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  width: 100%;
 }
 
-button[mat-button] {
-
+div.page {
+  flex-wrap: wrap;
+  margin-left: 10px;
 }
 
 .normal {

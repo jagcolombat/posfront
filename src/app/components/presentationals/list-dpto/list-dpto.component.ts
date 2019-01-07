@@ -11,6 +11,7 @@ import {Router} from "@angular/router";
 export class ListDptoComponent implements OnInit {
   dptos: Department[] = [];
   page = 1;
+  sizePage = 12;
 
   constructor(private router: Router, private stockService: StockService) {
     this.stockService.getDepartments().subscribe(dptos => {
