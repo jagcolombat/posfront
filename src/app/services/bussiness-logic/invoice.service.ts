@@ -88,9 +88,13 @@ export class InvoiceService {
     // return this.dataStorage.createInvoice()
   }*/
 
-  addProductByUpc(){
+  addProductByUpc(scan: boolean){
     // Consume servicio de PLU con this.digits eso devuelve ProductOrder
-    this.getProductByUpc().subscribe(prod => { this.evAddProdByUPC.emit(prod); }, err => { console.log(err); });
+    this.getProductByUpc().subscribe(prod => {
+      this.evAddProdByUPC.emit(prod);
+      if(scan)
+        this.dataStorage.registryOperation({operationType: EOperationType.Scanner, entityName: prod.upc});
+      }, err => { console.log(err); });
   }
 
   holdOrder(): Observable<any> {

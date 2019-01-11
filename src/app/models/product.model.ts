@@ -1,6 +1,6 @@
 export interface Product {
     id?: number;
-    upc?: number;
+    upc?: string;
     name?: string;
     format?: string;
     unitInStock?: number;

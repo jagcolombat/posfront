@@ -89,8 +89,8 @@ export class DataStorageService {
   }
 
   // Journey
-  registryOperation(url: string, journey: Journey): Observable<Invoice> {
-    return this.journeyService.registryOperation(url, journey);
+  registryOperation(journey: Journey): Observable<Invoice> {
+    return this.journeyService.registryOperation(this.url, journey);
   }
 
 }

@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Department} from '../../../models/department.model';
 import {StockService} from "../../../services/bussiness-logic/stock.service";
 import {Router} from "@angular/router";
+import {EOperationType} from "../../../utils/operation.type.enum";
 
 @Component({
   selector: 'list-dpto',
@@ -36,6 +37,15 @@ export class ListDptoComponent implements OnInit {
       prods.filter(p => p.name === dpto.name)
       .map(pg =>  this.stockService.productOrderService.addProduct(pg));
     });
+  }
+
+  setPage(ev){
+    if(ev > this.page){
+      this.stockService.setOperation(EOperationType.PageNext, ev, 'products');
+    } else {
+      this.stockService.setOperation(EOperationType.PagePrevious, ev, 'products');
+    }
+    this.page = ev;
   }
 
 }

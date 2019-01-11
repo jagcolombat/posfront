@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Product } from '../../../models/product.model';
 import { StockService } from "../../../services/bussiness-logic/stock.service";
 import { ActivatedRoute } from "@angular/router";
+import {EOperationType} from "../../../utils/operation.type.enum";
 
 @Component({
   selector: 'app-list-prod',
@@ -25,5 +26,14 @@ export class ListProdComponent implements OnInit {
   doAction(prod: Product) {
     console.log('doAction', prod);
     this.stockService.productOrderService.addProduct(prod);
+  }
+
+  setPage(ev){
+    if(ev > this.page){
+      this.stockService.setOperation(EOperationType.PageNext, ev, 'departments');
+    } else {
+      this.stockService.setOperation(EOperationType.PagePrevious, ev, 'departments');
+    }
+    this.page = ev;
   }
 }

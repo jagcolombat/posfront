@@ -5,4 +5,4 @@
     {{ i.name | uppercase }}
   </button>
 </div>
-<pos-paginator [countElements]="dptos.length" [sizePage]="sizePage" (evSetPage)="page = $event">
+<pos-paginator [countElements]="dptos.length" [sizePage]="sizePage" (evSetPage)="setPage($event)">

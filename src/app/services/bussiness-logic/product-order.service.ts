@@ -41,13 +41,13 @@ export class ProductOrderService {
   }
 
   onAgeVerification() {
-    return this.dialog.open(AgeValidationComponent, { width: '480px', height: '650px' });
+    return this.dialog.open(AgeValidationComponent, { width: '480px', height: '650px', disableClose: true });
   }
 
   private invalidAge() {
     this.ageValidation=false;
     this.dialog.open(GenericInfoModalComponent,
-      { width:'300px', height:'220px', data: {title:'Error', content: 'Invalid age.'}});
+      { width:'300px', height:'220px', data: {title:'Error', content: 'Invalid age.'}, disableClose: true});
   }
 
   private onCreateProductOrder(product: Product): void {
@@ -61,7 +61,7 @@ export class ProductOrderService {
   private openDialogGenericProd(product: Product): void {
     const dialogRef = this.dialog.open(ProductGenericComponent,
       {
-        width: '480px', height: '650px', data: {name: product.name, unitCost: product.unitCost}
+        width: '480px', height: '650px', data: {name: product.name, unitCost: product.unitCost}, disableClose: true
       });
     dialogRef.afterClosed().subscribe( (data: ProductGeneric) => {
       if(data) {

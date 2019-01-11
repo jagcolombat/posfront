@@ -20,7 +20,7 @@ export class OperationsService {
   timer: number;
   constructor(private invoiceService: InvoiceService, private authService: AuthService, private dialog: MatDialog,
               private router: Router) {
-    this.invoiceService.evAddProd.subscribe(() => this.resetInactivity(true));
+    this.invoiceService.evAddProd.subscribe(() => this.onAddProduct());
     this.counterInactivity();
   }
 
@@ -49,7 +49,7 @@ export class OperationsService {
   plu() {
     console.log('plu');
     // Consume servicio de PLU con this.digits eso devuelve ProductOrder
-    this.invoiceService.addProductByUpc();
+    this.invoiceService.addProductByUpc(false);
     this.resetInactivity(true);
   }
 
@@ -57,11 +57,9 @@ export class OperationsService {
     console.log('priceCheck');
     this.invoiceService.getProductByUpc().subscribe(prod => {
       this.dialog.open(GenericInfoModalComponent, { width: '350px', height: '250px',
-        data: { title: 'Price Check', content: prod.name, price: prod.unitCost }})
-        .afterClosed().subscribe(ev => {
-          this.invoiceService.resetDigits();
-      });
-    });
+        data: { title: 'Price Check', content: prod.name, price: prod.unitCost }, disableClose: true});
+    }, err => { this.openGenericInfo('Error', 'Can\'t found this product '+ this.invoiceService.digits); });
+    this.invoiceService.resetDigits();
     this.resetInactivity(true);
   }
 
@@ -72,7 +70,7 @@ export class OperationsService {
   manager() {
     console.log('manager');
     if(!this.authService.adminLogged()){
-      const dialogRef = this.dialog.open(DialogLoginComponent, { width: '530px', height: '580px'});
+      const dialogRef = this.dialog.open(DialogLoginComponent, { width: '530px', height: '580px', disableClose: true});
       dialogRef.afterClosed().subscribe(loginValid => {
         console.log('The dialog was closed', loginValid);
         if (loginValid) {
@@ -96,17 +94,21 @@ export class OperationsService {
     } else {
       this.openGenericInfo('Error', 'Not possible Hold Order without products in this Invoice');
     }
+    this.resetInactivity(true);
   }
 
   recallCheck() {
+    this.resetInactivity(true);
     return this.invoiceService.digits ?
       this.getCheckById(EOperationType.RecallCheck) :
       this.invoiceService.getInvoicesByStatus(EOperationType.RecallCheck, InvoiceStatus.PENDENT_FOR_PAYMENT)
         .subscribe(next => this.openDialogInvoices(next),
         err => this.openGenericInfo('Error', 'Can\'t complete recall check operation'));
+
   }
 
   reviewCheck() {
+    this.resetInactivity(true);
     return this.invoiceService.digits ?
       this.getCheckById(EOperationType.ReviewCheck) :
       this.invoiceService.getInvoicesByStatus(EOperationType.ReviewCheck)
@@ -123,7 +125,7 @@ export class OperationsService {
       if (inv.length > 0) {
         const dialogRef = this.dialog.open(DialogInvoiceComponent,
           {
-            width: '700px', height: '450px', data: inv
+            width: '700px', height: '450px', data: inv, disableClose: true
           });
         dialogRef.afterClosed().subscribe(order => {
           console.log('The dialog was closed', order);
@@ -136,8 +138,12 @@ export class OperationsService {
 
   logout() {
     console.log('logout');
-    this.authService.logout();
-    this.invoiceService.resetDigits();
+    if(this.invoiceService.invoice.status === InvoiceStatus.IN_PROGRESS){
+      this.openGenericInfo('Error', 'Can\'t complete logout operation because this Invoice is opened')
+    } else {
+      this.authService.logout();
+      this.invoiceService.resetDigits();
+    }
     this.resetInactivity(false);
   }
 
@@ -146,11 +152,13 @@ export class OperationsService {
     this.invoiceService.cancelInvoice().subscribe(next => {
       this.invoiceService.createInvoice();
     },err => console.error('cancelCheck failed'));
+
+    this.resetInactivity(false);
   }
 
   openGenericInfo(title: string, content?: string) {
      this.dialog.open(GenericInfoModalComponent,{
-        width: '300px', height: '220px', data: {title: title ? title : 'Information', content: content}
+        width: '300px', height: '220px', data: {title: title ? title : 'Information', content: content}, disableClose: true
      });
   }
 
@@ -158,7 +166,7 @@ export class OperationsService {
     if (this.invoiceService.invoice.total > 0) {
       const dialogRef = this.dialog.open(CashOpComponent,
         {
-          width: '480px', height: '660px', data: this.invoiceService.invoice.total
+          width: '480px', height: '660px', data: this.invoiceService.invoice.total, disableClose: true
         }).afterClosed().subscribe(data => {
         console.log('The dialog was closed', data);
         // this.paymentData = data;
@@ -168,12 +176,14 @@ export class OperationsService {
         }
       });
     }
+
+    this.resetInactivity(false);
   }
 
   cashReturn(valueToReturn, payment) {
     const dialogRef = this.dialog.open(CashPaymentComponent,
       {
-        width: '300px', height: '200px', data: valueToReturn
+        width: '300px', height: '200px', data: valueToReturn, disableClose: true
       })
       .afterClosed().subscribe((result: string) => {
         if (result !== '') {
@@ -183,10 +193,22 @@ export class OperationsService {
   }
 
   reprint() {
+    this.resetInactivity(false);
     return this.invoiceService.digits ?
       this.getCheckById(EOperationType.Reprint) :
       this.invoiceService.getInvoicesByStatus(EOperationType.Reprint)
         .subscribe(next => this.openDialogInvoices(next),
           err => this.openGenericInfo('Error', 'Can\'t complete recall check operation'));
+  }
+
+  onAddProduct(){
+    this.resetInactivity(true);
+    this.invoiceService.invoice.status = InvoiceStatus.IN_PROGRESS;
+  }
+
+  scanProduct(){
+    this.invoiceService
+    this.invoiceService.addProductByUpc(true);
+    this.resetInactivity(false);
   }
 }
