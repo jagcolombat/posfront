@@ -1,14 +1,16 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {InvoiceService} from "./invoice.service";
 import {Router} from "@angular/router";
 import {AuthService} from "../api/auth.service";
 import {MatDialog} from "@angular/material";
 import {GenericInfoModalComponent} from "../../components/presentationals/generic-info-modal/generic-info-modal.component";
-import {LoginComponent} from "../../components/presentationals/login/login.component";
 import {DialogLoginComponent} from "../../components/containers/dialog-login/dialog-login.component";
-import {ProductOrderService} from "./product-order.service";
 import {Invoice} from "../../models/invoice.model";
 import {DialogInvoiceComponent} from "../../components/presentationals/dialog-invoice/dialog-invoice.component";
+import {CashOpComponent} from "../../components/presentationals/cash-op/cash-op.component";
+import {CashPaymentComponent} from "../../components/presentationals/cash-payment/cash-payment.component";
+import {InvoiceStatus} from "../../utils/invoice-status.enum";
+import {EOperationType} from "../../utils/operation.type.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -98,17 +100,26 @@ export class OperationsService {
 
   recallCheck() {
     return this.invoiceService.digits ?
-      this.recallCheckByOrder() :
-      this.invoiceService.recallCheck().subscribe(next => this.openDialogHoldOrders(next),
+      this.getCheckById(EOperationType.RecallCheck) :
+      this.invoiceService.getInvoicesByStatus(EOperationType.RecallCheck, InvoiceStatus.PENDENT_FOR_PAYMENT)
+        .subscribe(next => this.openDialogInvoices(next),
         err => this.openGenericInfo('Error', 'Can\'t complete recall check operation'));
   }
 
-  recallCheckByOrder() {
-    this.invoiceService.recallCheckByOrder().subscribe(next => this.invoiceService.setInvoice(next),
-        err => this.openGenericInfo('Error', 'Can\'t complete recall check operation'));
+  reviewCheck() {
+    return this.invoiceService.digits ?
+      this.getCheckById(EOperationType.ReviewCheck) :
+      this.invoiceService.getInvoicesByStatus(EOperationType.ReviewCheck)
+        .subscribe(next => this.openDialogInvoices(next),
+          err => this.openGenericInfo('Error', 'Can\'t complete review check operation'));
   }
 
-  openDialogHoldOrders(inv: Invoice[]) {
+  getCheckById(typeOp: EOperationType) {
+    this.invoiceService.getInvoicesById(typeOp).subscribe(next => this.invoiceService.setInvoice(next),
+        err => this.openGenericInfo('Error', 'Can\'t complete get check operation'));
+  }
+
+  openDialogInvoices(inv: Invoice[]) {
       if (inv.length > 0) {
         const dialogRef = this.dialog.open(DialogInvoiceComponent,
           {
@@ -121,7 +132,6 @@ export class OperationsService {
       } else {
         this.openGenericInfo('Information', 'Not exist hold orders');
       }
-
   }
 
   logout() {
@@ -138,15 +148,45 @@ export class OperationsService {
     },err => console.error('cancelCheck failed'));
   }
 
-  /*errorHoldOrder(e) {
-    console.log(e, typeof e);
-    this.openGenericInfo('Error', 'Can\'t complete hold order operation');
-  }*/
-
   openGenericInfo(title: string, content?: string) {
      this.dialog.open(GenericInfoModalComponent,{
         width: '300px', height: '220px', data: {title: title ? title : 'Information', content: content}
      });
   }
 
+  cash() {
+    if (this.invoiceService.invoice.total > 0) {
+      const dialogRef = this.dialog.open(CashOpComponent,
+        {
+          width: '480px', height: '660px', data: this.invoiceService.invoice.total
+        }).afterClosed().subscribe(data => {
+        console.log('The dialog was closed', data);
+        // this.paymentData = data;
+        if (data > 0) {
+          let valueToReturn = data - this.invoiceService.invoice.total;
+          this.cashReturn(valueToReturn, data);
+        }
+      });
+    }
+  }
+
+  cashReturn(valueToReturn, payment) {
+    const dialogRef = this.dialog.open(CashPaymentComponent,
+      {
+        width: '300px', height: '200px', data: valueToReturn
+      })
+      .afterClosed().subscribe((result: string) => {
+        if (result !== '') {
+          this.invoiceService.cash(payment);
+        }
+      });
+  }
+
+  reprint() {
+    return this.invoiceService.digits ?
+      this.getCheckById(EOperationType.Reprint) :
+      this.invoiceService.getInvoicesByStatus(EOperationType.Reprint)
+        .subscribe(next => this.openDialogInvoices(next),
+          err => this.openGenericInfo('Error', 'Can\'t complete recall check operation'));
+  }
 }

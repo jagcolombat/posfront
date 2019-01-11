@@ -11,9 +11,9 @@ import { ProductOrder } from 'src/app/models/product-order.model';
 })
 export class InvoiceService {
 
-  constructor(private _http: HttpClient) { }
-
   path = '/invoice';
+
+  constructor(private _http: HttpClient) { }
 
   create(url: string): Observable<Invoice> {
     return this._http.get<Invoice>(url + this.path + '/new');
@@ -49,7 +49,7 @@ export class InvoiceService {
   addProductOrder(url: string, product: ProductOrder, invoiceId: string, operation: EOperationType): Observable<any> {
     let params = new HttpParams();
     params = params.append('operationType', operation + '' );
-
+    product.product.id = 0;
     return this._http.post(url + this.path + '/' + invoiceId + '/productOrder', product, {params});
   }
 
@@ -65,6 +65,12 @@ export class InvoiceService {
     params = params.append('pageSize', pageSize + '' );
 
     return this._http.get<Invoice>(url + this.path, { params });
+  }
+
+  getAllWithoutPage = (url: string) => {
+    // let params = new HttpParams();
+    // params = params.append('pageNumber', page.page.toString()).append('pageSize', page.size.toString());
+    return this._http.get<Invoice[]>(url +  this.path);
   }
 
 }

@@ -37,6 +37,12 @@ export class OperationsComponent implements OnInit {
       case 'Recall Check':
         this.operationService.recallCheck();
         break;
+      case 'Review Check':
+        this.operationService.reviewCheck();
+        break;
+      case 'Reprint':
+        this.operationService.reprint();
+        break;
     }
   }
 
@@ -63,7 +69,13 @@ export class OperationsComponent implements OnInit {
 
   totalKey(ev) {}
 
-  paymentKey(ev) {}
+  paymentKey(ev) {
+    switch (ev) {
+      case 'Cash':
+        this.operationService.cash();
+        break;
+    }
+  }
 
 
 }

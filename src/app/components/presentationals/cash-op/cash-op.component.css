@@ -1,0 +1,17 @@
+mat-dialog-content p {
+  display: flex;
+  justify-content: space-between;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+mat-dialog-content {
+  max-height: 100%;
+}
+
+input {
+  padding: 0 10px;
+  font-size: xx-large;
+}

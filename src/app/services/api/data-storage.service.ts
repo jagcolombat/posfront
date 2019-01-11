@@ -13,7 +13,7 @@ import { ProductOrderService } from './product-order.service';
 import { PaymentService } from './payment.service';
 import { ProductOrder } from 'src/app/models/product-order.model';
 import { EOperationType } from 'src/app/utils/operation.type.enum';
-import { CashPayment } from 'src/app/models/cash-payment.model';
+import { ICashPayment } from 'src/app/models/cash-payment.model';
 import { Journey } from 'src/app/models/journey.model';
 import { JourneyService } from './journey.service';
 
@@ -69,6 +69,10 @@ export class DataStorageService {
     return this.invoiceService.getByDateRange(this.url, fromDate, toDate, pageNumber, pageSize);
   }
 
+  getInvoices (): Observable<Invoice[]> {
+    return this.invoiceService.getAllWithoutPage(this.url);
+  }
+
   // ProductOrder
 
   addProductOrderByInvoice(invoiceId: string, productOrder: ProductOrder, operationType: EOperationType): Observable<any> {
@@ -80,8 +84,8 @@ export class DataStorageService {
   }
 
   // Payment
-  paidByCash(url: string, cashPayment: CashPayment): Observable<any> {
-    return this.paymentService.paidByCash(url, cashPayment);
+  paidByCash(cashPayment: ICashPayment): Observable<any> {
+    return this.paymentService.paidByCash(this.url, cashPayment);
   }
 
   // Journey

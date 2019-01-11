@@ -1,0 +1,25 @@
+<div oncontextmenu="return false">
+  <mat-toolbar color="primary">
+    <p><label>Enter sale price. Total: {{data | currency}}</label></p>
+    <span class="flex-spacer"></span>
+  </mat-toolbar>
+  <form novalidate #cashForm="ngForm">
+    <mat-dialog-content>
+      <p>
+        <mat-form-field>
+          <input matInput placeholder="Price" type="text" [(ngModel)]="cost" name="price" #price="ngModel"
+                 required [maxlength]="maxlength" [size]="maxlength" appCashValidator="data" disabled/>
+          <mat-error *ngIf="price.errors?.required">Price is required</mat-error>
+        </mat-form-field>
+      </p>
+      <!--<app-input-price></app-input-price>-->
+      <generic-keyboard (evKeys)="getKeys($event)" [valid]="!valid"></generic-keyboard>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+      <span class="flex-spacer"></span>
+      <button mat-raised-button mat-dialog-close>Cancel</button>
+      <!--<button mat-raised-button class="background-primary text-floral-white"
+              [disabled]="productGenericForm.form.invalid" (click)="addGenericProd()">Add product</button>-->
+    </mat-dialog-actions>
+  </form>
+</div>

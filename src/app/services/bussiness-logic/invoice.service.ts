@@ -8,6 +8,7 @@ import {InvoiceStatus} from "../../utils/invoice-status.enum";
 import {Invoice} from "../../models/invoice.model";
 import {map} from "rxjs/operators";
 import {EOperationType} from "../../utils/operation.type.enum";
+import {CashPaymentModel} from "../../models/cash-payment.model";
 
 @Injectable({
   providedIn: 'root'
@@ -44,6 +45,7 @@ export class InvoiceService {
       this.receiptNumber = next.receiptNumber;
       this.invoice = next;
       this.evDelAllProds.emit();
+      this.setTotal();
     }, err => {
       console.error('createCheck failed');
     });
@@ -92,18 +94,25 @@ export class InvoiceService {
   }
 
   holdOrder(): Observable<any> {
-    this.setUserToInvoice();
+    // this.setUserToInvoice();
     return this.dataStorage.saveInvoiceByStatus(this.invoice, InvoiceStatus.PENDENT_FOR_PAYMENT, EOperationType.HoldOlder);
   }
 
-  recallCheck(): Observable<Invoice[]> {
+  /*recallCheck(): Observable<Invoice[]> {
     return this.dataStorage.getInvoicesByStatus(InvoiceStatus.PENDENT_FOR_PAYMENT, EOperationType.RecallCheck)
       .pipe(map(invoices => invoices));
+  }*/
+
+   getInvoicesByStatus(typeOp: EOperationType, status?: InvoiceStatus): Observable<Invoice[]> {
+    if(status)
+      return this.dataStorage.getInvoicesByStatus(status, typeOp).pipe(map(invoices => invoices));
+    else
+      return this.dataStorage.getInvoices().pipe(map(invoices => invoices));
   }
 
-  recallCheckByOrder(): Observable<Invoice> {
+  getInvoicesById(typeOp: EOperationType): Observable<Invoice> {
     console.log('Recall by InvoiceId: ', this.digits);
-    return this.dataStorage.getInvoiceById(this.digits, EOperationType.RecallCheck);
+    return this.dataStorage.getInvoiceById(this.digits, typeOp);
   }
 
   getProductByUpc(): Observable<Product>{
@@ -125,13 +134,23 @@ export class InvoiceService {
   }
 
   cancelInvoice(): Observable<Invoice> {
-    this.setUserToInvoice();
+    // this.setUserToInvoice();
     return this.dataStorage.saveInvoiceByStatus(this.invoice, InvoiceStatus.CANCEL, EOperationType.Void)
   }
 
-  setUserToInvoice() {
-    this.invoice.applicationUserId = parseInt(this.authService.token.user_id);
+  cash(payment: number) {
+    let cashPayment = new CashPaymentModel(this.invoice, payment);
+    return this.dataStorage.paidByCash(cashPayment)
+      .subscribe(data => {
+          // console.log(data);
+          this.createInvoice();
+        }
+        , err => console.log(err));
   }
+
+  /*setUserToInvoice() {
+    this.invoice.applicationUserId = parseInt(this.authService.token.user_id);
+  }*/
 
   setTotal() {
     let totalComputed = this.computeTotal();

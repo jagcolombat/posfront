@@ -17,6 +17,8 @@ import { DialogLoginComponent } from './components/containers/dialog-login/dialo
 import { AnnounceComponent } from './components/presentationals/announce/announce.component';
 import { PromotionsComponent } from './components/presentationals/promotions/promotions.component';
 import { DialogInvoiceComponent } from "./components/presentationals/dialog-invoice/dialog-invoice.component";
+import {CashPaymentComponent} from "./components/presentationals/cash-payment/cash-payment.component";
+import {CashOpComponent} from "./components/presentationals/cash-op/cash-op.component";
 
 @NgModule({
   imports: [
@@ -38,6 +40,8 @@ import { DialogInvoiceComponent } from "./components/presentationals/dialog-invo
     DialogLoginComponent,
     AnnounceComponent,
     PromotionsComponent,
+    CashOpComponent,
+    CashPaymentComponent,
     DialogInvoiceComponent
   ],
   providers: [
@@ -48,8 +52,8 @@ import { DialogInvoiceComponent } from "./components/presentationals/dialog-invo
     GenericInfoModalComponent,
     AgeValidationComponent,
     DialogLoginComponent,
-    /*CashOpComponent,
-    CashPaymentComponent,*/
+    CashOpComponent,
+    CashPaymentComponent,
     DialogInvoiceComponent
   ],
   bootstrap: [AppComponent]
