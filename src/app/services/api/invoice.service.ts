@@ -3,6 +3,8 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {InvoiceStatus} from '../../utils/invoice-status.enum';
 import {Invoice} from "../../models/invoice.model";
 import {Observable} from "rxjs";
+import { EOperationType } from 'src/app/utils/operation.type.enum';
+import { ProductOrder } from 'src/app/models/product-order.model';
 
 @Injectable({
   providedIn: 'root'
@@ -13,46 +15,56 @@ export class InvoiceService {
 
   path = '/invoice';
 
-  save(url: string, invoice: any) {
-    console.log(invoice);
-    return this._http.post(url + this.path, invoice);
+  create(url: string): Observable<Invoice> {
+    return this._http.get<Invoice>(url + this.path + '/new');
   }
 
-  saveByStatus(url: string, invoice: Invoice, status: InvoiceStatus): Observable<Invoice> {
+  saveByStatus(url: string, invoice: Invoice, status: InvoiceStatus, operationType: EOperationType): Observable<Invoice> {
     if (invoice.id) {
       console.log('Put', invoice);
-      return this._http.put<Invoice>(url + this.path + '/' + invoice.id, invoice);
-    } else {
-      console.log('Post', invoice, status);
-      return this._http.post<Invoice>(url + this.path + '/' + status, invoice);
+      let params = new HttpParams();
+      params = params.append('operationType', operationType + '');
+      return this._http.put<Invoice>(url + this.path + '/' + invoice.id, invoice, {params});
     }
   }
 
-  getAll = (url: string) => {
-    return this._http.get<Invoice[]>(url +  this.path);
-  }
-
-  getByStatus = (url: string, status: InvoiceStatus) => {
+  getByStatus = (url: string, status: InvoiceStatus, operationType: EOperationType) => {
     let params = new HttpParams();
     params = params
       .append('pageNumber', '1')
       .append('pageSize', '20')
-      .append('invoiceStatus',status.toString());
+      .append('invoiceStatus', status.toString())
+      .append('operationType', operationType + '');
     return this._http.get<Invoice[]>(url + this.path, { params });
   }
 
-  getById (url: string, id: string): Observable<Invoice> {
+  getById (url: string, id: string, operationType: EOperationType): Observable<Invoice> {
     let params = new HttpParams();
     params = params
-      .append('uniqueid', id);
+      .append('uniqueId', id)
+      .append('operationType', operationType + '');
     return this._http.get<Invoice>(url + this.path, { params });
   }
 
-  getNextReceiptNumber(url: string): Observable<string> {
-    return this._http.get<string>(url + this.path + '/next');
+  addProductOrder(url: string, product: ProductOrder, invoiceId: string, operation: EOperationType): Observable<any> {
+    let params = new HttpParams();
+    params = params.append('operationType', operation + '' );
+
+    return this._http.post(url + this.path + '/' + invoiceId + '/productOrder', product, {params});
   }
 
-  deleteProductOrderByInvoice(url: string, invoiceId: number, productOrderId: number): Observable<Invoice> {
-    return this._http.delete<Invoice>(url + this.path + '/' + invoiceId + '/productOrder/' + productOrderId);
+  deleteProductOrder(url: string, productOrderId: number, invoiceId: string): Observable<any> {
+    return this._http.delete(url + this.path + '/' + invoiceId + '/productOrder/' + productOrderId);
   }
+
+  getByDateRange(url: string, fromDate: Date, toDate: Date, pageNumber: number, pageSize: number) {
+    let params = new HttpParams();
+    params = params.append('fromDate', fromDate + '');
+    params = params.append('toDate', toDate + '' );
+    params = params.append('pageNumber', pageNumber + '');
+    params = params.append('pageSize', pageSize + '' );
+
+    return this._http.get<Invoice>(url + this.path, { params });
+  }
+
 }

@@ -7,6 +7,7 @@ import {Product} from "../../models";
 import {InvoiceStatus} from "../../utils/invoice-status.enum";
 import {Invoice} from "../../models/invoice.model";
 import {map} from "rxjs/operators";
+import {EOperationType} from "../../utils/operation.type.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -27,6 +28,8 @@ export class InvoiceService {
   @Output() evNumpadInput = new EventEmitter<any>();
   @Output() evAddProdByUPC = new EventEmitter<any>();
   @Output() evChkPriceProdByUPC = new EventEmitter<any>();
+  @Output() evUpdateTotals = new EventEmitter<any>();
+  @Output() evUpdateProds = new EventEmitter<ProductOrder[]>();
 
   constructor(private authService: AuthService, private dataStorage: DataStorageService) { }
 
@@ -34,25 +37,42 @@ export class InvoiceService {
     return this.cashier = this.authService.token.username ? this.authService.token.username : ''
   }
 
-  createInvoice(): Observable<Invoice>{
-    this.setUserToInvoice();
-    return this.dataStorage.saveInvoiceByStatus(this.invoice, InvoiceStatus.IN_PROGRESS);
-  }
-
-  addProductOrder(po: ProductOrder){
-    console.log('addProductOrder', po);
-    let tmpInvoice = Object.assign({}, this.invoice);
-    tmpInvoice.productsOrders.push(po);
-    // Update invoice on database
-    this.dataStorage.saveInvoice(tmpInvoice).subscribe(next => {
-      this.invoice.productsOrders.push(po);
-      this.evAddProd.emit(po);
+  createInvoice(){
+    // this.setUserToInvoice();
+    this.dataStorage.createInvoice().subscribe(next => {
+      console.info('createCheck successfull');
+      this.receiptNumber = next.receiptNumber;
+      this.invoice = next;
+      this.evDelAllProds.emit();
     }, err => {
-      console.error('addProductOrder', err);
+      console.error('createCheck failed');
     });
   }
 
-  getReceiptNumber() {
+  addProductOrder(po: ProductOrder){
+    this.addPO2Invoice(po);
+    // Update invoice on database
+    this.dataStorage.addProductOrderByInvoice(this.invoice.receiptNumber, po, EOperationType.Add).subscribe(next => {
+      console.log('addProductOrder-next', next);
+    }, err => {
+      console.error('addProductOrder', err);
+      this.delPOFromInvoice(po);
+    });
+  }
+
+  addPO2Invoice(po: ProductOrder){
+    this.invoice.productsOrders.push(po);
+    this.setTotal();
+    this.evAddProd.emit(po);
+  }
+
+  delPOFromInvoice(po: ProductOrder){
+    this.invoice.productsOrders.splice(this.invoice.productsOrders.indexOf(po),1);
+    this.setTotal();
+    this.evUpdateProds.emit(this.invoice.productsOrders);
+  }
+
+  /*getReceiptNumber() {
     return this.dataStorage.getInvoiceNextReceiptNumber().subscribe(num => {
       this.receiptNumber = num;
       this.invoice = new Invoice(num);
@@ -63,7 +83,8 @@ export class InvoiceService {
         console.error('createCheck failed');
       });
     });
-  }
+    // return this.dataStorage.createInvoice()
+  }*/
 
   addProductByUpc(){
     // Consume servicio de PLU con this.digits eso devuelve ProductOrder
@@ -72,24 +93,28 @@ export class InvoiceService {
 
   holdOrder(): Observable<any> {
     this.setUserToInvoice();
-    return this.dataStorage.saveInvoiceByStatus(this.invoice, InvoiceStatus.PENDENT_FOR_PAYMENT);
+    return this.dataStorage.saveInvoiceByStatus(this.invoice, InvoiceStatus.PENDENT_FOR_PAYMENT, EOperationType.HoldOlder);
   }
 
   recallCheck(): Observable<Invoice[]> {
-    return this.dataStorage.getInvoicesByStatus(InvoiceStatus.PENDENT_FOR_PAYMENT).pipe(map(invoices => invoices));
+    return this.dataStorage.getInvoicesByStatus(InvoiceStatus.PENDENT_FOR_PAYMENT, EOperationType.RecallCheck)
+      .pipe(map(invoices => invoices));
   }
 
   recallCheckByOrder(): Observable<Invoice> {
     console.log('Recall by InvoiceId: ', this.digits);
-    return this.dataStorage.getInvoiceById(this.digits);
+    return this.dataStorage.getInvoiceById(this.digits, EOperationType.RecallCheck);
   }
 
   getProductByUpc(): Observable<Product>{
-    return this.dataStorage.getProductByUpc(this.numbers);
+    return this.dataStorage.getProductByUpc(this.numbers.toString());
   }
 
   setInvoice(inv: Invoice){
     this.invoice = inv;
+    this.receiptNumber = this.invoice.receiptNumber;
+    this.setTotal();
+    this.evUpdateProds.emit(this.invoice.productsOrders);
     this.resetDigits();
   }
 
@@ -101,11 +126,37 @@ export class InvoiceService {
 
   cancelInvoice(): Observable<Invoice> {
     this.setUserToInvoice();
-    return this.dataStorage.saveInvoiceByStatus(this.invoice, InvoiceStatus.CANCEL)
+    return this.dataStorage.saveInvoiceByStatus(this.invoice, InvoiceStatus.CANCEL, EOperationType.Void)
   }
 
   setUserToInvoice() {
     this.invoice.applicationUserId = parseInt(this.authService.token.user_id);
+  }
+
+  setTotal() {
+    let totalComputed = this.computeTotal();
+    this.invoice.subtotal = totalComputed.total;
+    this.invoice.tax = totalComputed.taxes;
+    this.invoice.total = this.invoice.subtotal + this.invoice.tax;
+    this.evUpdateTotals.emit(true);
+  }
+
+  computeTotal() {
+    let total = 0;
+    let subtotal = 0;
+    let tax = 0;
+    let taxes = 0;
+    this.invoice.productsOrders.map(p => {
+      subtotal = p.unitCost * p.quantity;
+      total += subtotal;
+      if (p.tax > 0 ) {
+        // console.log(subtotal, p.tax);
+        tax = p.tax * subtotal / 100;
+        taxes += tax;
+      }
+    });
+    // console.log(total, taxes);
+    return { total: total, taxes: taxes };
   }
 
 

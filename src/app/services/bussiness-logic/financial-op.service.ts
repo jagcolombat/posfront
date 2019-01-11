@@ -1,3 +1,4 @@
+/*
 import {EventEmitter, Injectable, Output} from '@angular/core';
 import {ProductsService} from './products.service';
 import {Observable} from 'rxjs/index';
@@ -74,3 +75,4 @@ export class FinancialOpService {
     return this.prodService.products;
   }
 }
+*/

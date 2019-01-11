@@ -28,6 +28,7 @@ export class AgGridComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.invoiceService.evAddProd.subscribe(po => this.onAddRow(po)));
     this.subscriptions.push(this.invoiceService.evDelAllProds.subscribe(ev => this.clearData()));
     this.subscriptions.push(this.invoiceService.evDelProd.subscribe(ev => this.onRemoveSelected()));
+    this.subscriptions.push(this.invoiceService.evUpdateProds.subscribe(ev => this.updateItems(ev)));
   }
 
   ngOnInit() {
@@ -93,24 +94,16 @@ export class AgGridComponent implements OnInit, OnDestroy {
     };
     console.log('onAddRow', this.gridOptions.api.getDisplayedRowCount());
     const res = this.gridOptions.api.updateRowData({ add: [newData] });
-
     this.gridOptions.api.ensureIndexVisible(this.gridOptions.api.getDisplayedRowCount()-1);
     this.updateData.emit(true);
   }
 
-  updateItems() {
-    const itemsToUpdate = [];
-    this.gridApi.forEachNodeAfterFilterAndSort(function(rowNode, index) {
-      if (index >= 5) {
-        return;
-      }
-      const data = rowNode.data;
-      data.price = Math.floor(Math.random() * 20000 + 20000);
-      itemsToUpdate.push(data);
+  updateItems(arrPO: ProductOrder[]) {
+    this.clearData();
+    arrPO.map(data => {
+      console.log('updateItems', data);
+      this.onAddRow(data);
     });
-    const res = this.gridApi.updateRowData({ update: itemsToUpdate });
-    // printResult(res);
-    this.updateData.emit(true);
   }
 
   onRemoveSelected() {
@@ -122,11 +115,9 @@ export class AgGridComponent implements OnInit, OnDestroy {
   }
 
   deleteOnInvoice(){
-    console.log('before', this.invoiceService.invoice.productsOrders);
-    // this.invoiceService.invoice.productsOrders.length = 0;
-    // Object.assign(this.invoiceService.invoice.productsOrders, this.getRowData());
+    // console.log('before', this.invoiceService.invoice.productsOrders);
     this.invoiceService.invoice.productsOrders = <ProductOrder[]>[...this.getRowData()];
-    console.log('later', this.invoiceService.invoice.productsOrders);
+    // console.log('later', this.invoiceService.invoice.productsOrders);
   }
 
   ngOnDestroy() {

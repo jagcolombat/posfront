@@ -16,8 +16,9 @@
          required/>
         <mat-error *ngIf="!ageInput.valid && ageInput.touched">Date is required</mat-error>
       </mat-form-field>
+      <mat-error *ngIf="!isValid"><span class="fa fa-warning fa-lg"></span> Date is invalid</mat-error>
     </p>
     <!-- <mat-error *ngIf="!valid && tryValidation">Date is invalid</mat-error> -->
   </mat-dialog-content>
-  <generic-keyboard (evKeys)="getKeys($event)" ></generic-keyboard>
+  <generic-keyboard (evKeys)="getKeys($event)" [valid]="!isValid"></generic-keyboard>
 </form>

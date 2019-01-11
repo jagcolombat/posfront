@@ -1,0 +1,25 @@
+[mat-dialog-content] button {
+  background-color: #ed5f5f;
+  border-color: #913939;
+  color: white;
+}
+[mat-dialog-content] button /deep/ span {
+  font-size: 16px;
+  font-weight: normal;
+}
+[mat-dialog-content] button /deep/ span p {
+  font-size: 20px;
+  margin: 5px 0;
+}
+[mat-dialog-content] div.buttons {
+  flex-wrap: wrap;
+  height: 250px;
+  overflow: auto;
+}
+
+button[mat-raised-button] {
+  height: 90%;
+  font-size: 46px;
+  background-color: #9a61ff;
+  color: white;
+}

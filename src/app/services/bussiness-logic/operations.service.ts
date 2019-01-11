@@ -7,6 +7,8 @@ import {GenericInfoModalComponent} from "../../components/presentationals/generi
 import {LoginComponent} from "../../components/presentationals/login/login.component";
 import {DialogLoginComponent} from "../../components/containers/dialog-login/dialog-login.component";
 import {ProductOrderService} from "./product-order.service";
+import {Invoice} from "../../models/invoice.model";
+import {DialogInvoiceComponent} from "../../components/presentationals/dialog-invoice/dialog-invoice.component";
 
 @Injectable({
   providedIn: 'root'
@@ -87,7 +89,7 @@ export class OperationsService {
     if (this.invoiceService.invoice.productsOrders.length > 0) {
       this.invoiceService.holdOrder().
       subscribe(
-        next => this.invoiceService.getReceiptNumber(),
+        next => this.invoiceService.createInvoice(),
         err => this.openGenericInfo('Error', 'Can\'t complete hold order operation'));
     } else {
       this.openGenericInfo('Error', 'Not possible Hold Order without products in this Invoice');
@@ -95,21 +97,44 @@ export class OperationsService {
   }
 
   recallCheck() {
-    this.invoiceService.digits ?
-      this.invoiceService.recallCheckByOrder().subscribe(inv => this.invoiceService.setInvoice(inv), err => console.log(err)) :
-      this.invoiceService.recallCheck();
+    return this.invoiceService.digits ?
+      this.recallCheckByOrder() :
+      this.invoiceService.recallCheck().subscribe(next => this.openDialogHoldOrders(next),
+        err => this.openGenericInfo('Error', 'Can\'t complete recall check operation'));
+  }
+
+  recallCheckByOrder() {
+    this.invoiceService.recallCheckByOrder().subscribe(next => this.invoiceService.setInvoice(next),
+        err => this.openGenericInfo('Error', 'Can\'t complete recall check operation'));
+  }
+
+  openDialogHoldOrders(inv: Invoice[]) {
+      if (inv.length > 0) {
+        const dialogRef = this.dialog.open(DialogInvoiceComponent,
+          {
+            width: '700px', height: '450px', data: inv
+          });
+        dialogRef.afterClosed().subscribe(order => {
+          console.log('The dialog was closed', order);
+          if (order) { this.invoiceService.setInvoice(order); }
+        });
+      } else {
+        this.openGenericInfo('Information', 'Not exist hold orders');
+      }
+
   }
 
   logout() {
     console.log('logout');
     this.authService.logout();
+    this.invoiceService.resetDigits();
     this.resetInactivity(false);
   }
 
   cancelCheck() {
     console.log('cancelar factura');
     this.invoiceService.cancelInvoice().subscribe(next => {
-      this.invoiceService.getReceiptNumber();
+      this.invoiceService.createInvoice();
     },err => console.error('cancelCheck failed'));
   }
 

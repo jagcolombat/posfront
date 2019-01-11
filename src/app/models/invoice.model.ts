@@ -9,6 +9,8 @@ export interface IInvoice {
   productsOrders: ProductOrder[];
   applicationUserId?: number;
   clientAge?: number;
+  subtotal?: number;
+  tax?: number;
 }
 
 export class Invoice implements IInvoice {
@@ -18,6 +20,9 @@ export class Invoice implements IInvoice {
               public total = 0,
               public productsOrders = new Array<ProductOrder>(),
               public applicationUserId?: number,
-              public clientAge?: number) {
+              public clientAge?: number,
+              public subtotal?: number,
+              public tax?: number
+              ) {
   }
 }

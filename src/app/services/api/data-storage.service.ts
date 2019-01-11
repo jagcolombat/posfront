@@ -9,6 +9,13 @@ import {InvoiceStatus} from '../../utils/invoice-status.enum';
 import {Invoice} from '../../models/invoice.model';
 import {map} from 'rxjs/operators';
 import { Url } from '../../utils/url.path.enum';
+import { ProductOrderService } from './product-order.service';
+import { PaymentService } from './payment.service';
+import { ProductOrder } from 'src/app/models/product-order.model';
+import { EOperationType } from 'src/app/utils/operation.type.enum';
+import { CashPayment } from 'src/app/models/cash-payment.model';
+import { Journey } from 'src/app/models/journey.model';
+import { JourneyService } from './journey.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,10 +24,14 @@ export class DataStorageService {
 
   constructor(private departmentService: DepartmentService,
               private productService: ProductService,
-              private invoiceService: InvoiceService) { }
+              private invoiceService: InvoiceService,
+              private productOrderService: ProductOrderService,
+              private paymentService: PaymentService,
+              private journeyService: JourneyService) { }
 
   private url = Url.PATH;
 
+  // Departments
   getDepartments(): Observable<Department[]> {
     return this.departmentService.getAll(this.url);
   }
@@ -29,42 +40,53 @@ export class DataStorageService {
     return this.departmentService.getProductByDepartment(this.url, department).pipe();
   }
 
-  getProductByUpc(upc: number): Observable<Product> {
+  // Products
+  getProductByUpc(upc: string): Observable<Product> {
     return this.productService.getProductByUpc(this.url, upc).pipe(map(p => p[0]));
   }
 
-  saveInvoice( invoice: Invoice) {
-    // invoice.applicationUserId = 1;
-    console.log(invoice);
-    return this.invoiceService.save(this.url, invoice);
+  // Invoice
+  createInvoice(): Observable<Invoice> {
+    return this.invoiceService.create(this.url);
   }
 
-  saveInvoiceByStatus(invoice: Invoice, status: InvoiceStatus): Observable<Invoice> {
+  saveInvoiceByStatus(invoice: Invoice, status: InvoiceStatus, operationType: EOperationType): Observable<Invoice> {
     console.log(invoice);
     invoice.status = status;
-    invoice.applicationUserId = 1;
-    return this.invoiceService.saveByStatus(this.url, invoice, status);
+    return this.invoiceService.saveByStatus(this.url, invoice, status, operationType);
   }
 
-  getInvoices (): Observable<Invoice[]> {
-    return this.invoiceService.getAll(this.url);
+  getInvoicesByStatus(status: InvoiceStatus, operationType: EOperationType) {
+    return this.invoiceService.getByStatus(this.url, status, operationType);
   }
 
-  getInvoicesByStatus = (status: InvoiceStatus) => {
-    return this.invoiceService.getByStatus(this.url, status);
-  }
-
-  getInvoiceById(id: string): Observable<Invoice>  {
+  getInvoiceById(id: string, operationType: EOperationType): Observable<Invoice>  {
     console.log('getInvoiceById', id);
-    return this.invoiceService.getById(this.url, id)/*.subscribe(p=> console.log("getById", p))*/;
+    return this.invoiceService.getById(this.url, id, operationType);
   }
 
-  getInvoiceNextReceiptNumber() {
-    return this.invoiceService.getNextReceiptNumber(this.url);
+  getByDateRange(fromDate: Date, toDate: Date, pageNumber: number, pageSize: number) {
+    return this.invoiceService.getByDateRange(this.url, fromDate, toDate, pageNumber, pageSize);
   }
 
-  deleteProductOrderByInvoice(invoiceId: number, productOrderId: number): Observable<Invoice> {
-    return this.invoiceService.deleteProductOrderByInvoice(this.url, invoiceId, productOrderId);
+  // ProductOrder
+
+  addProductOrderByInvoice(invoiceId: string, productOrder: ProductOrder, operationType: EOperationType): Observable<any> {
+    return this.invoiceService.addProductOrder(this.url, productOrder, invoiceId, operationType);
+  }
+
+  deleteProductOrderByInvoice(invoiceId: string, productOrderId: number): Observable<any> {
+    return this.invoiceService.deleteProductOrder(this.url, productOrderId, invoiceId);
+  }
+
+  // Payment
+  paidByCash(url: string, cashPayment: CashPayment): Observable<any> {
+    return this.paymentService.paidByCash(url, cashPayment);
+  }
+
+  // Journey
+  registryOperation(url: string, journey: Journey): Observable<Invoice> {
+    return this.journeyService.registryOperation(url, journey);
   }
 
 }

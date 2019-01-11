@@ -16,6 +16,7 @@ import { GenericInfoModalComponent } from "./components/presentationals/generic-
 import { DialogLoginComponent } from './components/containers/dialog-login/dialog-login.component';
 import { AnnounceComponent } from './components/presentationals/announce/announce.component';
 import { PromotionsComponent } from './components/presentationals/promotions/promotions.component';
+import { DialogInvoiceComponent } from "./components/presentationals/dialog-invoice/dialog-invoice.component";
 
 @NgModule({
   imports: [
@@ -36,7 +37,8 @@ import { PromotionsComponent } from './components/presentationals/promotions/pro
     ProductGenericComponent,
     DialogLoginComponent,
     AnnounceComponent,
-    PromotionsComponent
+    PromotionsComponent,
+    DialogInvoiceComponent
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
@@ -47,8 +49,8 @@ import { PromotionsComponent } from './components/presentationals/promotions/pro
     AgeValidationComponent,
     DialogLoginComponent,
     /*CashOpComponent,
-    CashPaymentComponent,
-    DialogInvoiceComponent,*/
+    CashPaymentComponent,*/
+    DialogInvoiceComponent
   ],
   bootstrap: [AppComponent]
 })

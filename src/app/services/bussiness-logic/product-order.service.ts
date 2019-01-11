@@ -90,11 +90,13 @@ export class ProductOrderService {
 
   private ageVerification(product: Product) {
     this.onAgeVerification().afterClosed().subscribe(data => {
-      if (data.age && data.age >= AGE) {
-        this.ageValidation = true;
-        this.onCreateProductOrder(product);
-      } else {
-        this.invalidAge();
+      if (data.age) {
+        if (data.age >= AGE) {
+          this.ageValidation = true;
+          this.onCreateProductOrder(product);
+        } else {
+          this.invalidAge();
+        }
       }
     });
   }

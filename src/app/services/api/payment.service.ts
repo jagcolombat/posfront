@@ -2,18 +2,18 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Product} from '../../models';
+import { CashPayment } from 'src/app/models/cash-payment.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ProductService {
+export class PaymentService {
 
   constructor(private _http: HttpClient) {}
 
-  getProductByUpc(url: string, upc: string): Observable<Product[]> {
-    let params = new HttpParams();
-    params = params.append('value', upc );
-    return this._http.get<any>(url + '/products/attribute', { params });
+  paidByCash(url: string, cashPayment: CashPayment): Observable<any> {
+    console.log(cashPayment);
+    return this._http.post<any>(url + '/cash', cashPayment);
   }
 
 }
