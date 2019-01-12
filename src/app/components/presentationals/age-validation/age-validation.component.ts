@@ -1,5 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 
 @Component({
   selector: 'app-age-validation',
@@ -11,12 +12,22 @@ export class AgeValidationComponent implements OnInit {
   number = '00000000';
   maxlength = 10;
   index = 0;
-  regularExpretion = /^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/(19|20)\d{2}$/;
+  regularExpretion = /^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/((19\d{2})|(20(0[0-9]|1\d)))$/;
+  // regularExpretion = /^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/(19|20)\d{2}$/;
   isValid: boolean;
+
+  ageForm: FormGroup;
+  dateInput: AbstractControl;
 
   constructor(public dialogRef: MatDialogRef<AgeValidationComponent>) { }
 
   ngOnInit() {
+    this.ageForm = new FormGroup({
+      dateInput: new FormControl(null, [Validators.required,
+                                       Validators.pattern(this.regularExpretion)])
+    });
+
+    this.dateInput = this.ageForm.controls['dateInput'];
   }
 
   onAgeValidation() {
@@ -36,6 +47,11 @@ export class AgeValidationComponent implements OnInit {
 
       console.log(birthday + ':' + birthday.getTime());
       console.log(now + ':' + now.getTime());
+
+      /*if (birthday.getTime() > Date.now()) {
+        this.isValid = false;
+        return;
+      }*/
 
       const timediff = Math.abs(Date.now() - birthday.getTime());
       const age = Math.floor((timediff / (1000 * 3600 * 24)) / 365);

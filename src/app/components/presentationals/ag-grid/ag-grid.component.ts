@@ -85,6 +85,7 @@ export class AgGridComponent implements OnInit, OnDestroy {
 
   onAddRow(data: ProductOrder) {
     const newData = {
+      id: data.id,
       number_item: data.product.upc,
       name: data.product.name,
       unitCost: data.unitCost,
@@ -109,6 +110,8 @@ export class AgGridComponent implements OnInit, OnDestroy {
 
   onRemoveSelected() {
     const selectedData = this.gridOptions.api.getSelectedRows();
+    console.log('selectedData', selectedData);
+    this.invoiceService.delPOFromInvoice(selectedData);
     const res = this.gridOptions.api.updateRowData({ remove: selectedData });
     // printResult(res);
     this.invoiceService.setTotal();

@@ -16,7 +16,7 @@ import {EOperationType} from "../../utils/operation.type.enum";
   providedIn: 'root'
 })
 export class OperationsService {
-  inactivityTime: number = 300;
+  inactivityTime: number = 600;
   timer: number;
   constructor(private invoiceService: InvoiceService, private authService: AuthService, private dialog: MatDialog,
               private router: Router) {
@@ -36,6 +36,7 @@ export class OperationsService {
 
   clear() {
     console.log('clear');
+    // this.invoiceService.delPOFromInvoice()
     this.invoiceService.evDelProd.emit(true);
     this.invoiceService.setTotal();
     this.resetInactivity(true);
@@ -50,8 +51,14 @@ export class OperationsService {
   plu() {
     console.log('plu');
     // Consume servicio de PLU con this.digits eso devuelve ProductOrder
-    this.invoiceService.addProductByUpc(EOperationType.Plu);
-    this.resetInactivity(true);
+    this.invoiceService.addProductByUpc(EOperationType.Plu).subscribe(prod => {
+      this.invoiceService.evAddProdByUPC.emit(prod);
+    }, err => {
+      console.error('addProductByUpc', err);
+      this.openGenericInfo('Error', 'Can\'t complete get product by plu');
+      this.invoiceService.resetDigits();
+    });
+    this.resetInactivity(false);
   }
 
   priceCheck() {
@@ -229,7 +236,13 @@ export class OperationsService {
   }
 
   scanProduct(){
-    this.invoiceService.addProductByUpc(EOperationType.Scanner);
+    this.invoiceService.addProductByUpc(EOperationType.Scanner).subscribe(prod => {
+      this.invoiceService.evAddProdByUPC.emit(prod);
+    }, err => {
+      console.error('addProductByUpc', err);
+      this.invoiceService.resetDigits();
+      this.openGenericInfo('Error', 'Can\'t complete scan product operation');
+    });
     this.resetInactivity(false);
   }
 

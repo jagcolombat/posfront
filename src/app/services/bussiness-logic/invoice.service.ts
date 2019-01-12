@@ -52,14 +52,18 @@ export class InvoiceService {
   }
 
   addProductOrder(po: ProductOrder){
-    this.addPO2Invoice(po);
-    this.resetDigits();
+
     // Update invoice on database
     this.dataStorage.addProductOrderByInvoice(this.invoice.receiptNumber, po, EOperationType.Add).subscribe(next => {
       console.log('addProductOrder-next', next);
+      let countPO = next.productsOrders.length;
+      let lastPO = next.productsOrders[countPO-1];
+      lastPO.product = po.product;
+      this.addPO2Invoice(lastPO);
+      this.resetDigits();
     }, err => {
       console.error('addProductOrder', err);
-      this.delPOFromInvoice(po);
+      // this.delPOFromInvoice(po);
     });
   }
 
@@ -69,17 +73,20 @@ export class InvoiceService {
     this.evAddProd.emit(po);
   }
 
-  delPOFromInvoice(po: ProductOrder){
-    this.invoice.productsOrders.splice(this.invoice.productsOrders.indexOf(po),1);
+  delPOFromInvoice(po: ProductOrder[]){
+    po.map(prodOrder => {
+      this.invoice.productsOrders.splice(this.invoice.productsOrders.indexOf(prodOrder),1);
+      console.log('delPOFromInvoice', this.invoice.receiptNumber, prodOrder.id);
+      this.dataStorage.deleteProductOrderByInvoice(this.invoice.receiptNumber, prodOrder.id);
+    })
+    // this.invoice.productsOrders.splice(this.invoice.productsOrders.indexOf(po),1);
     this.setTotal();
-    this.evUpdateProds.emit(this.invoice.productsOrders);
+    // this.evUpdateProds.emit(this.invoice.productsOrders);
   }
 
-  addProductByUpc(typeOp: EOperationType){
+  addProductByUpc(typeOp: EOperationType): Observable<Product> {
     // Consume servicio de PLU con this.digits eso devuelve ProductOrder
-    this.getProductByUpc(typeOp).subscribe(prod => {
-      this.evAddProdByUPC.emit(prod);
-    });
+    return this.getProductByUpc(typeOp);
   }
 
   holdOrder(): Observable<any> {
