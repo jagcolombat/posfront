@@ -15,11 +15,5 @@
       <!--<app-input-price></app-input-price>-->
       <generic-keyboard (evKeys)="getKeys($event)" [valid]="!valid"></generic-keyboard>
     </mat-dialog-content>
-    <mat-dialog-actions>
-      <span class="flex-spacer"></span>
-      <button mat-raised-button mat-dialog-close>Cancel</button>
-      <!--<button mat-raised-button class="background-primary text-floral-white"
-              [disabled]="productGenericForm.form.invalid" (click)="addGenericProd()">Add product</button>-->
-    </mat-dialog-actions>
   </form>
 </div>

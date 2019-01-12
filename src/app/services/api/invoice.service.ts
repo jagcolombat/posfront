@@ -24,6 +24,7 @@ export class InvoiceService {
       console.log('Put', invoice);
       let params = new HttpParams();
       params = params.append('operationType', operationType + '');
+      invoice.productsOrders = null;
       return this._http.put<Invoice>(url + this.path + '/' + invoice.id, invoice, {params});
     }
   }
@@ -49,7 +50,6 @@ export class InvoiceService {
   addProductOrder(url: string, product: ProductOrder, invoiceId: string, operation: EOperationType): Observable<any> {
     let params = new HttpParams();
     params = params.append('operationType', operation + '' );
-    product.product.id = 0;
     return this._http.post(url + this.path + '/' + invoiceId + '/productOrder', product, {params});
   }
 
@@ -71,6 +71,10 @@ export class InvoiceService {
     // let params = new HttpParams();
     // params = params.append('pageNumber', page.page.toString()).append('pageSize', page.size.toString());
     return this._http.get<Invoice[]>(url +  this.path);
+  }
+
+  printInvoice(url: string, invoice: Invoice): Observable<Invoice[]> {
+    return this._http.post<Invoice[]>(url +  this.path +  '/' + invoice.receiptNumber + '/print', {});
   }
 
 }

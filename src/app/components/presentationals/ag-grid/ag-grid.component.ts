@@ -79,6 +79,7 @@ export class AgGridComponent implements OnInit, OnDestroy {
 
   clearData() {
     this.gridOptions.api.setRowData([]);
+    this.invoiceService.setTotal();
     this.updateData.emit(true);
   }
 
@@ -110,6 +111,7 @@ export class AgGridComponent implements OnInit, OnDestroy {
     const selectedData = this.gridOptions.api.getSelectedRows();
     const res = this.gridOptions.api.updateRowData({ remove: selectedData });
     // printResult(res);
+    this.invoiceService.setTotal();
     this.updateData.emit(true);
     this.deleteOnInvoice();
   }

@@ -7,7 +7,7 @@ import {OperationsService} from "../../../services/bussiness-logic/operations.se
   styleUrls: ['./operations.component.scss']
 })
 export class OperationsComponent implements OnInit {
-  @Input() financeOperations = ['Manager Screen', 'Reprint', 'Hold Order', 'Review Check', 'Recall Check', 'Refund', 'Logout'];
+  @Input() financeOperations = ['Manager Screen', 'Reprint', 'Hold Order', 'Review Check', 'Recall Check', 'Refund', 'Logout', 'Go Back'];
   @Input() financeColor = 'green';
   @Input() invoiceOperations = ['Clear', 'PLU', 'Price Check', 'Void'];
   @Input() invoiceColor = ['red', 'green', 'green', 'red'];
@@ -42,6 +42,9 @@ export class OperationsComponent implements OnInit {
         break;
       case 'Reprint':
         this.operationService.reprint();
+        break;
+      case 'Go Back':
+        this.operationService.goBack();
         break;
     }
   }

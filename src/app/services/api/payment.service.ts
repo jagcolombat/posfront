@@ -14,6 +14,7 @@ export class PaymentService {
 
   paidByCash(url: string, cashPayment: ICashPayment): Observable<any> {
     console.log(cashPayment);
+    cashPayment.invoice.productsOrders = null;
     return this._http.post<any>(url + this.path +'/cash', cashPayment);
   }
 

@@ -12,18 +12,16 @@ import {OperationsService} from "../../../services/bussiness-logic/operations.se
 })
 export class CashViewComponent implements OnInit {
 
-  constructor(private invoiceService: InvoiceService, private operationService: OperationsService) {
-
-  }
+  constructor(private invoiceService: InvoiceService, private operationService: OperationsService) { }
 
   ngOnInit() {
   }
 
   handleKeyboardEvent(ev: KeyboardEvent) {
-    console.log('inputKeyboard', ev);
+    console.log('inputKeyboard', ev, isNaN(parseInt(ev.key)));
     if((ev.key==='Enter' || ev.keyCode === 13) && this.invoiceService.digits){
       this.operationService.scanProduct();
-    } else {
+    } else if((ev.keyCode > 48 && ev.keyCode < 57) || !isNaN(parseInt(ev.key)) ){
       this.invoiceService.evNumpadInput.emit(ev.key);
     }
   }

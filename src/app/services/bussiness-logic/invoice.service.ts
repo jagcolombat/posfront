@@ -19,7 +19,7 @@ export class InvoiceService {
   // For manage numpadInput
   digits = '';
   numbers = 0;
-  qty: number;
+  qty: number = 1;
   // Invoice
   invoice: Invoice;
 
@@ -41,7 +41,7 @@ export class InvoiceService {
   createInvoice(){
     // this.setUserToInvoice();
     this.dataStorage.createInvoice().subscribe(next => {
-      console.info('createCheck successfull');
+      console.info('createCheck successfull', next);
       this.receiptNumber = next.receiptNumber;
       this.invoice = next;
       this.evDelAllProds.emit();
@@ -53,6 +53,7 @@ export class InvoiceService {
 
   addProductOrder(po: ProductOrder){
     this.addPO2Invoice(po);
+    this.resetDigits();
     // Update invoice on database
     this.dataStorage.addProductOrderByInvoice(this.invoice.receiptNumber, po, EOperationType.Add).subscribe(next => {
       console.log('addProductOrder-next', next);
@@ -74,27 +75,11 @@ export class InvoiceService {
     this.evUpdateProds.emit(this.invoice.productsOrders);
   }
 
-  /*getReceiptNumber() {
-    return this.dataStorage.getInvoiceNextReceiptNumber().subscribe(num => {
-      this.receiptNumber = num;
-      this.invoice = new Invoice(num);
-      this.evDelAllProds.emit();
-      this.createInvoice().subscribe(next => {
-        console.info('createCheck successfull');
-      }, err => {
-        console.error('createCheck failed');
-      });
-    });
-    // return this.dataStorage.createInvoice()
-  }*/
-
-  addProductByUpc(scan: boolean){
+  addProductByUpc(typeOp: EOperationType){
     // Consume servicio de PLU con this.digits eso devuelve ProductOrder
-    this.getProductByUpc().subscribe(prod => {
+    this.getProductByUpc(typeOp).subscribe(prod => {
       this.evAddProdByUPC.emit(prod);
-      if(scan)
-        this.dataStorage.registryOperation({operationType: EOperationType.Scanner, entityName: prod.upc});
-      }, err => { console.log(err); });
+    });
   }
 
   holdOrder(): Observable<any> {
@@ -119,8 +104,8 @@ export class InvoiceService {
     return this.dataStorage.getInvoiceById(this.digits, typeOp);
   }
 
-  getProductByUpc(): Observable<Product>{
-    return this.dataStorage.getProductByUpc(this.numbers.toString());
+  getProductByUpc(typeOp: EOperationType): Observable<Product>{
+    return this.dataStorage.getProductByUpc(this.numbers.toString(), typeOp);
   }
 
   setInvoice(inv: Invoice){
@@ -135,6 +120,7 @@ export class InvoiceService {
     console.log('resetDigits');
     this.digits = '';
     this.numbers = 0;
+    this.qty = 1;
   }
 
   cancelInvoice(): Observable<Invoice> {
@@ -150,6 +136,10 @@ export class InvoiceService {
           this.createInvoice();
         }
         , err => console.log(err));
+  }
+
+  print(invoice: Invoice) {
+    return this.dataStorage.printInvoices(invoice);
   }
 
   /*setUserToInvoice() {

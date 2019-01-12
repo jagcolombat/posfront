@@ -41,8 +41,8 @@ export class DataStorageService {
   }
 
   // Products
-  getProductByUpc(upc: string): Observable<Product> {
-    return this.productService.getProductByUpc(this.url, upc).pipe(map(p => p[0]));
+  getProductByUpc(upc: string, typeOp: EOperationType): Observable<Product> {
+    return this.productService.getProductByUpc(this.url, upc, typeOp).pipe(map(p => p[0]));
   }
 
   // Invoice
@@ -71,6 +71,10 @@ export class DataStorageService {
 
   getInvoices (): Observable<Invoice[]> {
     return this.invoiceService.getAllWithoutPage(this.url);
+  }
+
+  printInvoices (invoice: Invoice): Observable<Invoice[]> {
+    return this.invoiceService.printInvoice(this.url, invoice);
   }
 
   // ProductOrder

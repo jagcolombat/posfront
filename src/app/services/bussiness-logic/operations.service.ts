@@ -37,6 +37,7 @@ export class OperationsService {
   clear() {
     console.log('clear');
     this.invoiceService.evDelProd.emit(true);
+    this.invoiceService.setTotal();
     this.resetInactivity(true);
   }
 
@@ -49,13 +50,13 @@ export class OperationsService {
   plu() {
     console.log('plu');
     // Consume servicio de PLU con this.digits eso devuelve ProductOrder
-    this.invoiceService.addProductByUpc(false);
+    this.invoiceService.addProductByUpc(EOperationType.Plu);
     this.resetInactivity(true);
   }
 
   priceCheck() {
     console.log('priceCheck');
-    this.invoiceService.getProductByUpc().subscribe(prod => {
+    this.invoiceService.getProductByUpc(EOperationType.PriceCheck).subscribe(prod => {
       this.dialog.open(GenericInfoModalComponent, { width: '350px', height: '250px',
         data: { title: 'Price Check', content: prod.name, price: prod.unitCost }, disableClose: true});
     }, err => { this.openGenericInfo('Error', 'Can\'t found this product '+ this.invoiceService.digits); });
@@ -99,29 +100,38 @@ export class OperationsService {
 
   recallCheck() {
     this.resetInactivity(true);
-    return this.invoiceService.digits ?
-      this.getCheckById(EOperationType.RecallCheck) :
-      this.invoiceService.getInvoicesByStatus(EOperationType.RecallCheck, InvoiceStatus.PENDENT_FOR_PAYMENT)
-        .subscribe(next => this.openDialogInvoices(next),
-        err => this.openGenericInfo('Error', 'Can\'t complete recall check operation'));
-
+    if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS) {
+      this.invoiceService.digits ?
+        this.getCheckById(EOperationType.RecallCheck,i => this.invoiceService.setInvoice(i)) :
+        this.invoiceService.getInvoicesByStatus(EOperationType.RecallCheck, InvoiceStatus.PENDENT_FOR_PAYMENT)
+          .subscribe(next => this.openDialogInvoices(next, i => this.invoiceService.setInvoice(i)),
+          err => this.openGenericInfo('Error', 'Can\'t complete recall check operation'));
+    } else {
+      console.error('Can\'t complete recallw check operation');
+      this.openGenericInfo('Error', 'Can\'t complete recall check operation');
+    }
   }
 
   reviewCheck() {
     this.resetInactivity(true);
-    return this.invoiceService.digits ?
-      this.getCheckById(EOperationType.ReviewCheck) :
-      this.invoiceService.getInvoicesByStatus(EOperationType.ReviewCheck)
-        .subscribe(next => this.openDialogInvoices(next),
-          err => this.openGenericInfo('Error', 'Can\'t complete review check operation'));
+    if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS) {
+      this.invoiceService.digits ?
+        this.getCheckById(EOperationType.ReviewCheck, i => this.invoiceService.setInvoice(i)) :
+        this.invoiceService.getInvoicesByStatus(EOperationType.ReviewCheck)
+          .subscribe(next => this.openDialogInvoices(next, i => this.invoiceService.setInvoice(i)),
+            err => this.openGenericInfo('Error', 'Can\'t complete review check operation'));
+    } else {
+      console.error('Can\'t complete review check operation');
+      this.openGenericInfo('Error', 'Can\'t complete review check operation');
+    }
   }
 
-  getCheckById(typeOp: EOperationType) {
-    this.invoiceService.getInvoicesById(typeOp).subscribe(next => this.invoiceService.setInvoice(next),
+  getCheckById(typeOp: EOperationType, action: (i: Invoice) => void) {
+    this.invoiceService.getInvoicesById(typeOp).subscribe(next => action(next),
         err => this.openGenericInfo('Error', 'Can\'t complete get check operation'));
   }
 
-  openDialogInvoices(inv: Invoice[]) {
+  openDialogInvoices(inv: Invoice[], action: (i: Invoice) => void) {
       if (inv.length > 0) {
         const dialogRef = this.dialog.open(DialogInvoiceComponent,
           {
@@ -129,7 +139,7 @@ export class OperationsService {
           });
         dialogRef.afterClosed().subscribe(order => {
           console.log('The dialog was closed', order);
-          if (order) { this.invoiceService.setInvoice(order); }
+          if (order) { action(order); }
         });
       } else {
         this.openGenericInfo('Information', 'Not exist hold orders');
@@ -193,12 +203,24 @@ export class OperationsService {
   }
 
   reprint() {
-    this.resetInactivity(false);
-    return this.invoiceService.digits ?
-      this.getCheckById(EOperationType.Reprint) :
-      this.invoiceService.getInvoicesByStatus(EOperationType.Reprint)
-        .subscribe(next => this.openDialogInvoices(next),
-          err => this.openGenericInfo('Error', 'Can\'t complete recall check operation'));
+    if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS) {
+      this.invoiceService.digits ?
+        this.getCheckById(EOperationType.Reprint,i => {
+          this.invoiceService.print(i).subscribe(data => this.openGenericInfo('Print', 'Print is finish'),
+            err => this.openGenericInfo('Error', 'Can\'t complete print operation'));
+        })
+        :
+        this.invoiceService.getInvoicesByStatus(EOperationType.Reprint)
+          .subscribe(next => this.openDialogInvoices(next, i => {
+              this.invoiceService.print(i).subscribe(data => this.openGenericInfo('Print', 'Print is finish'),
+                err => this.openGenericInfo('Error', 'Can\'t complete print operation'));
+            }),
+            err => this.openGenericInfo('Error', 'Can\'t complete recall check operation'));
+    } else {
+      console.error('Can\'t complete print operation');
+      this.openGenericInfo('Error', 'Can\'t complete print operation');
+    }
+
   }
 
   onAddProduct(){
@@ -207,8 +229,11 @@ export class OperationsService {
   }
 
   scanProduct(){
-    this.invoiceService
-    this.invoiceService.addProductByUpc(true);
+    this.invoiceService.addProductByUpc(EOperationType.Scanner);
     this.resetInactivity(false);
+  }
+
+  goBack() {
+    this.invoiceService.createInvoice();
   }
 }
