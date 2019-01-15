@@ -1,4 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
+import { environment as env } from '../../../../environments/environment';
 
 @Component({
   selector: 'init-view',
@@ -6,7 +7,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
   styleUrls: ['./init-view.component.scss']
 })
 export class InitViewComponent implements OnInit, OnDestroy {
-
+  public env = env;
   constructor() { }
 
   ngOnInit() {

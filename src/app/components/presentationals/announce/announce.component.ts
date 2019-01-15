@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {IImage} from "ng-simple-slideshow";
 
 @Component({
@@ -7,11 +7,8 @@ import {IImage} from "ng-simple-slideshow";
   styleUrls: ['./announce.component.scss']
 })
 export class AnnounceComponent implements OnInit {
-  imagesUrl: (string | IImage)[] = [
-    { url: '/assets/anuncios/anuncio1.jpg', caption: 'The first slide'},
-    { url: '/assets/anuncios/anuncio2.jpg', caption: 'The second slide'},
-    { url: '/assets/anuncios/anuncio3.jpg', caption: 'The third slide'},
-  ];
+  @Input() path: string;
+  imagesUrl: (string | IImage)[];
   height: string = '330px';
   autoPlay: boolean = true;
   autoPlayInterval: number = 5000;
@@ -23,6 +20,11 @@ export class AnnounceComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    this.imagesUrl = [
+      { url: this.path + '/assets/anuncios/anuncio1.jpg', caption: 'The first slide'},
+      { url: this.path + '/assets/anuncios/anuncio2.jpg', caption: 'The second slide'},
+      { url: this.path + '/assets/anuncios/anuncio3.jpg', caption: 'The third slide'},
+    ];
   }
 
 }

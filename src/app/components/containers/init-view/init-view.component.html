@@ -1,16 +1,16 @@
 <div fxLayout="row" class="container" fxLayoutAlign="space-between">
   <div id="right" fxFlex.lg="64" fxFlex.lt-lg="54" fxLayout="column" fxLayoutAlign="space-between">
     <div id="logo" fxLayoutAlign="center center" fxFlex="55" class="border" >
-        <img src="/assets/supermarket1.jpg" fxFlex="100" alt="Logo"/>
+        <img src="{{env.myVarForImageURLS}}/assets/supermarket1.jpg" fxFlex="100" alt="Logo"/>
     </div>
     <div fxLayoutAlign="center center" fxFlex="45" class="border" >
-      <slide-announce></slide-announce>
+      <slide-announce [path]="env.myVarForImageURLS"></slide-announce>
     </div>
   </div>
 
   <div id="left" fxFlex.lg="35" fxFlex.lt-lg="45" fxLayout="column" fxLayoutAlign="space-between" class="border">
     <div fxLayoutAlign="center center" fxFlex="38" class="border">
-      <slide-promotions></slide-promotions>
+      <slide-promotions [path]="env.myVarForImageURLS"></slide-promotions>
     </div>
     <div fxLayoutAlign="center" fxLayout="column" fxFlex="65">
       <login fxLayout="column" fxFlex="100"></login>

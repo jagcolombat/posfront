@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {IImage} from "ng-simple-slideshow";
 
 @Component({
@@ -7,13 +7,8 @@ import {IImage} from "ng-simple-slideshow";
   styleUrls: ['./promotions.component.scss']
 })
 export class PromotionsComponent implements OnInit {
-  imagesUrl: (string | IImage)[] = [
-    { url: '/assets/promotions/promotions1.png', caption: 'The first slide'},
-    { url: '/assets/promotions/promotions2.png', caption: 'The second slide'},
-    { url: '/assets/promotions/promotions3.png', caption: 'The third slide'},
-    { url: '/assets/promotions/promotions4.png', caption: 'The four slide'},
-    { url: '/assets/promotions/promotions5.png', caption: 'The five slide'}
-  ];
+  @Input() path: string;
+  imagesUrl: (string | IImage)[];
   height: string = '280px';
   autoPlay: boolean = true;
   autoPlayInterval: number = 7000;
@@ -24,6 +19,13 @@ export class PromotionsComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    this.imagesUrl = [
+      { url: this.path + '/assets/promotions/promotions1.png', caption: 'The first slide'},
+      { url: this.path + '/assets/promotions/promotions2.png', caption: 'The second slide'},
+      { url: this.path + '/assets/promotions/promotions3.png', caption: 'The third slide'},
+      { url: this.path + '/assets/promotions/promotions4.png', caption: 'The four slide'},
+      { url: this.path + '/assets/promotions/promotions5.png', caption: 'The five slide'}
+    ];
   }
 
 }
