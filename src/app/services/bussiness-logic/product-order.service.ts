@@ -16,7 +16,7 @@ export const AGE = 18;
   providedIn: 'root'
 })
 export class ProductOrderService {
-  ageValidation: boolean;
+  // ageValidation: boolean;
   departments: Department[];
   quantityByProduct = 1;
   subscription: Subscription [] = [];
@@ -33,7 +33,7 @@ export class ProductOrderService {
       } else {
         this.onCreateProductOrder(product);
       }
-    } else if (product.ageVerification && !this.ageValidation) {
+    } else if (product.ageVerification && !this.invoiceService.invoice.clientAge) {
       this.ageVerification(product);
     } else {
       this.onCreateProductOrder(product);
@@ -45,7 +45,6 @@ export class ProductOrderService {
   }
 
   private invalidAge() {
-    this.ageValidation=false;
     this.dialog.open(GenericInfoModalComponent,
       { width:'300px', height:'220px', data: {title:'Error', content: 'Invalid age.'}, disableClose: true});
   }
@@ -72,7 +71,6 @@ export class ProductOrderService {
   }
 
   private createProductOrder(prod: Product): ProductOrder {
-    console.log('createProductOrder', this.invoiceService.qty, this.quantityByProduct);
     let qty = this.invoiceService.qty > 1 ? this.invoiceService.qty: this.quantityByProduct;
     let tax = this.getTax(prod);
     return new ProductOrder(qty, prod.unitCost, qty * prod.unitCost, tax, prod);
@@ -93,7 +91,7 @@ export class ProductOrderService {
     this.onAgeVerification().afterClosed().subscribe(data => {
       if (data.age) {
         if (data.age >= AGE) {
-          this.ageValidation = true;
+          this.invoiceService.invoice.clientAge = data.age;
           this.onCreateProductOrder(product);
         } else {
           this.invalidAge();
@@ -102,7 +100,7 @@ export class ProductOrderService {
     });
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     this.subscription.map(sub => sub.unsubscribe());
   }
 

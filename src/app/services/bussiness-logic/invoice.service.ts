@@ -77,8 +77,10 @@ export class InvoiceService {
     po.map(prodOrder => {
       this.invoice.productsOrders.splice(this.invoice.productsOrders.indexOf(prodOrder),1);
       console.log('delPOFromInvoice', this.invoice.receiptNumber, prodOrder.id);
-      this.dataStorage.deleteProductOrderByInvoice(this.invoice.receiptNumber, prodOrder.id);
-    })
+      this.dataStorage.deleteProductOrderByInvoice(this.invoice.receiptNumber, prodOrder.id)
+       .subscribe(data => console.log(data),
+                  err => console.log(err));
+    });
     // this.invoice.productsOrders.splice(this.invoice.productsOrders.indexOf(po),1);
     this.setTotal();
     // this.evUpdateProds.emit(this.invoice.productsOrders);

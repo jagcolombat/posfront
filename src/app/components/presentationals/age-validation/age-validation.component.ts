@@ -14,7 +14,8 @@ export class AgeValidationComponent implements OnInit {
   index = 0;
   regularExpretion = /^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/((19\d{2})|(20(0[0-9]|1\d)))$/;
   // regularExpretion = /^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/(19|20)\d{2}$/;
-  isValid: boolean;
+  valid: boolean;
+  tryValidation: boolean;
 
   ageForm: FormGroup;
   dateInput: AbstractControl;
@@ -34,6 +35,7 @@ export class AgeValidationComponent implements OnInit {
     console.log(this.data);
 
     try {
+      this.tryValidation = true;
       const birthday = new Date(this.data);
 
       // Validate correct day
@@ -48,10 +50,10 @@ export class AgeValidationComponent implements OnInit {
       console.log(birthday + ':' + birthday.getTime());
       console.log(now + ':' + now.getTime());
 
-      /*if (birthday.getTime() > Date.now()) {
-        this.isValid = false;
+      if (birthday.getTime() > Date.now()) {
+        this.valid = false;
         return;
-      }*/
+      }
 
       const timediff = Math.abs(Date.now() - birthday.getTime());
       const age = Math.floor((timediff / (1000 * 3600 * 24)) / 365);
@@ -59,11 +61,12 @@ export class AgeValidationComponent implements OnInit {
       this.dialogRef.close({age: age, date: birthday.getTime()});
     } catch (error) {
       console.log('This date is invalid');
-      this.isValid = false;
+      this.valid = false;
     }
   }
 
   getKeys(ev) {
+    this.tryValidation = false;
     if (ev.type === 1) {
       this.inputNumber(ev.value);
     } else if (ev.value === 'Clear') {
@@ -84,8 +87,8 @@ export class AgeValidationComponent implements OnInit {
       this.data = this.insertAt(this.data, 5, '/');
       this.index++;
       console.log(this.data);
-      this.isValid = this.regularExpretion.test(this.data);
-      console.log(this.isValid);
+      this.valid = this.regularExpretion.test(this.data);
+      console.log(this.valid);
     }
   }
 
@@ -99,8 +102,8 @@ export class AgeValidationComponent implements OnInit {
       this.data = this.insertAt(this.data, 5, '/');
       console.log(this.data);
 
-      this.isValid = this.regularExpretion.test(this.data);
-      console.log(this.isValid);
+      this.valid = this.regularExpretion.test(this.data);
+      console.log(this.valid);
     }
   }
 

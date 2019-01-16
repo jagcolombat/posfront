@@ -9,15 +9,15 @@
     <p fxLayoutAlign="space-between">
       <mat-form-field>
         <input matInput
-          type="text" 
+          type="text"
           id="dateInput"
           formControlName="dateInput"
           [(ngModel)]="data"
         />
         <mat-error *ngIf="!dateInput.valid">Date is invalid</mat-error>
       </mat-form-field>
+      <mat-error *ngIf="!valid && tryValidation"><span class="fa fa-warning fa-lg"></span>Date is invalid</mat-error>
     </p>
-    <!-- <mat-error *ngIf="!valid && tryValidation">Date is invalid</mat-error> -->
   </mat-dialog-content>
-  <generic-keyboard (evKeys)="getKeys($event)" [valid]="!isValid"></generic-keyboard>
+  <generic-keyboard (evKeys)="getKeys($event)" [valid]="!valid"></generic-keyboard>
 </form>
