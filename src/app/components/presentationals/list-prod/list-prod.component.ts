@@ -15,7 +15,7 @@ export class ListProdComponent implements OnInit {
   page: number = 1;
   sizePage = 8;
 
-  constructor( private route: ActivatedRoute, private stockService: StockService) { }
+  constructor( private route: ActivatedRoute, public stockService: StockService) { }
 
   ngOnInit() {
     this.route.params.subscribe(p => this.dptTax = p['tax']);

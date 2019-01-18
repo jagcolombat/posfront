@@ -22,6 +22,8 @@ import { JourneyService } from './journey.service';
 })
 export class DataStorageService {
 
+  disableOp = false;
+
   constructor(private departmentService: DepartmentService,
               private productService: ProductService,
               private invoiceService: InvoiceService,

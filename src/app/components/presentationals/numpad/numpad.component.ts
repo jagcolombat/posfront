@@ -8,6 +8,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 export class NumpadComponent implements OnInit {
   @Input() lastKey: string;
   @Input() colors: string | string[];
+  @Input() disableOp = false;
   @Output() evPressKeys = new EventEmitter<any>();
   numbers = [1,2,3,4,5,6,7,8,9,0,"00"];
 

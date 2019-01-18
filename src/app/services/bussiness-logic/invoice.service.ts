@@ -2,7 +2,7 @@ import {EventEmitter, Injectable, Output} from '@angular/core';
 import {AuthService} from "../api/auth.service";
 import {ProductOrder} from "../../models/product-order.model";
 import {DataStorageService} from "../api/data-storage.service";
-import {Observable} from "rxjs";
+import {BehaviorSubject, Observable} from "rxjs";
 import {Product} from "../../models";
 import {InvoiceStatus} from "../../utils/invoice-status.enum";
 import {Invoice} from "../../models/invoice.model";
@@ -31,6 +31,7 @@ export class InvoiceService {
   @Output() evChkPriceProdByUPC = new EventEmitter<any>();
   @Output() evUpdateTotals = new EventEmitter<any>();
   @Output() evUpdateProds = new EventEmitter<ProductOrder[]>();
+  evCreateInvoice = new BehaviorSubject<boolean>(true);
 
   constructor(private authService: AuthService, private dataStorage: DataStorageService) { }
 
@@ -46,8 +47,10 @@ export class InvoiceService {
       this.invoice = next;
       this.evDelAllProds.emit();
       this.setTotal();
+      this.evCreateInvoice.next(true);
     }, err => {
       console.error('createCheck failed');
+      this.evCreateInvoice.next(false);
     });
   }
 

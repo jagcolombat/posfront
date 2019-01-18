@@ -11,6 +11,8 @@ import {CashOpComponent} from "../../components/presentationals/cash-op/cash-op.
 import {CashPaymentComponent} from "../../components/presentationals/cash-payment/cash-payment.component";
 import {InvoiceStatus} from "../../utils/invoice-status.enum";
 import {EOperationType} from "../../utils/operation.type.enum";
+import {BehaviorSubject} from "rxjs";
+import {CashService} from "./cash.service";
 
 @Injectable({
   providedIn: 'root'
@@ -18,8 +20,10 @@ import {EOperationType} from "../../utils/operation.type.enum";
 export class OperationsService {
   inactivityTime: number = 600;
   timer: number;
-  constructor(private invoiceService: InvoiceService, private authService: AuthService, private dialog: MatDialog,
-              private router: Router) {
+  disableOp = false;
+
+  constructor(private invoiceService: InvoiceService, public cashService: CashService,
+              private authService: AuthService, private dialog: MatDialog, private router: Router) {
     this.invoiceService.evAddProd.subscribe(() => this.onAddProduct());
     this.counterInactivity();
   }
@@ -94,7 +98,9 @@ export class OperationsService {
   }
 
   hold() {
-    if (this.invoiceService.invoice.productsOrders.length > 0) {
+    if(this.disableOp){
+      this.openGenericInfo('Error', 'Not possible Hold Order over Review Check operation');
+    } else if (this.invoiceService.invoice.productsOrders.length > 0) {
       this.invoiceService.holdOrder().
       subscribe(
         next => this.invoiceService.createInvoice(),
@@ -121,14 +127,21 @@ export class OperationsService {
 
   reviewCheck() {
     this.resetInactivity(true);
+    this.cashService.resetEvents();
+    this.cashService.evEmitReviewCheck.emit();
+
     if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS) {
-      this.invoiceService.digits ?
-        this.getCheckById(EOperationType.ReviewCheck, i => this.invoiceService.setInvoice(i)) :
-        this.invoiceService.getInvoicesByStatus(EOperationType.ReviewCheck)
-          .subscribe(next => this.openDialogInvoices(next, i => this.invoiceService.setInvoice(i)),
-            err => this.openGenericInfo('Error', 'Can\'t complete review check operation'));
+      if(this.invoiceService.digits) {
+        this.disableOp = true;
+        this.getCheckById(EOperationType.ReviewCheck, i => this.invoiceService.setInvoice(i));
+        this.cashService.evReviewCheck.next(true);
+      } else {
+        this.openGenericInfo('Error', 'Please input receipt number of check');
+        this.cashService.evReviewCheck.next(false);
+      }
     } else {
       console.error('Can\'t complete review check operation');
+      this.cashService.evReviewCheck.next(false);
       this.openGenericInfo('Error', 'Can\'t complete review check operation');
     }
   }
@@ -160,6 +173,7 @@ export class OperationsService {
     } else {
       this.authService.logout();
       this.invoiceService.resetDigits();
+      this.disableOp = false;
     }
     this.resetInactivity(false);
   }
@@ -217,12 +231,7 @@ export class OperationsService {
             err => this.openGenericInfo('Error', 'Can\'t complete print operation'));
         })
         :
-        this.invoiceService.getInvoicesByStatus(EOperationType.Reprint)
-          .subscribe(next => this.openDialogInvoices(next, i => {
-              this.invoiceService.print(i).subscribe(data => this.openGenericInfo('Print', 'Print is finish'),
-                err => this.openGenericInfo('Error', 'Can\'t complete print operation'));
-            }),
-            err => this.openGenericInfo('Error', 'Can\'t complete recall check operation'));
+        this.openGenericInfo('Error', 'Please input receipt number of check');
     } else {
       console.error('Can\'t complete print operation');
       this.openGenericInfo('Error', 'Can\'t complete print operation');
@@ -247,6 +256,11 @@ export class OperationsService {
   }
 
   goBack() {
+    this.cashService.evEmitGoBack.emit();
+    this.invoiceService.evCreateInvoice.subscribe(resp => {
+      if(resp) { this.cashService.evGoBack.next(true); }
+      else this.openGenericInfo('Error', 'Can\'t complete go back operation')
+    });
     this.invoiceService.createInvoice();
   }
 }

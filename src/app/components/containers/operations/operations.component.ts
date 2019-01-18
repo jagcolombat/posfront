@@ -7,7 +7,7 @@ import {OperationsService} from "../../../services/bussiness-logic/operations.se
   styleUrls: ['./operations.component.scss']
 })
 export class OperationsComponent implements OnInit {
-  @Input() financeOperations = ['Manager Screen', 'Reprint', 'Hold Order', 'Review Check', 'Recall Check', 'Refund', 'Logout', 'Go Back'];
+  @Input() financeOperations = ['Manager Screen', 'Reprint', 'Hold Order', 'Review Check', 'Recall Check', 'Refund', 'Logout'];
   @Input() financeColor = 'green';
   @Input() invoiceOperations = ['Clear', 'PLU', 'Price Check', 'Void'];
   @Input() invoiceColor = ['red', 'green', 'green', 'red'];
@@ -17,10 +17,12 @@ export class OperationsComponent implements OnInit {
   @Input() cashOperations = ['Cash'];
   @Input() paymentOperations = ['Food Stamp', 'Debit Card', 'EBT Card', 'Credit Card', 'Cash'];
   @Input() paymentColor = ['yellow', 'blue', 'yellow', 'blue', 'green'];
+  // @Input() disableOp = true;
 
-  constructor(private operationService: OperationsService) { }
+  constructor(public operationService: OperationsService) { }
 
   ngOnInit() {
+    // this.disableOp = this.operationService.disableOp;
   }
 
   financeKey(ev) {
@@ -39,12 +41,25 @@ export class OperationsComponent implements OnInit {
         break;
       case 'Review Check':
         this.operationService.reviewCheck();
+        this.operationService.cashService.evReviewCheck.subscribe(resp => {
+          if(resp) {
+            this.financeOperations.push('Go Back');
+            this.operationService.cashService.evReviewCheck.complete();
+          }
+        });
         break;
       case 'Reprint':
         this.operationService.reprint();
         break;
       case 'Go Back':
         this.operationService.goBack();
+        this.operationService.cashService.evGoBack.subscribe(resp => {
+          if(resp) {
+            this.operationService.disableOp = false;
+            this.financeOperations.splice(this.financeOperations.indexOf('Go Back'), 1);
+            this.operationService.cashService.evGoBack.complete();
+          }
+        });
         break;
     }
   }

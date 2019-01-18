@@ -73,7 +73,9 @@ export class ProductOrderService {
   private createProductOrder(prod: Product): ProductOrder {
     let qty = this.invoiceService.qty > 1 ? this.invoiceService.qty: this.quantityByProduct;
     let tax = this.getTax(prod);
-    return new ProductOrder(qty, prod.unitCost, qty * prod.unitCost, tax, prod);
+    let price = parseFloat(prod.unitCost.toFixed(2));
+    let total = parseFloat((qty * price).toFixed(2));
+    return new ProductOrder(qty, price, total, tax, prod);
   }
 
   private getTax(product: Product){

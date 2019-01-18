@@ -1,4 +1,4 @@
 <div class="column" [ngClass]="layout">
   <button mat-button [class]="setColor(i)" fxLayoutGap="10px" fxFlex="100px" *ngFor="let i of operations"
-          (click)="pressKey(i)">{{i}}</button>
+          (click)="pressKey(i)" [disabled]="disableOp">{{i}}</button>
 </div>

@@ -10,6 +10,7 @@ export class OperationGroupComponent implements OnInit {
   @Input() colors: string | string[];
   @Input() layout: string;
   @Output() evPressKeys = new EventEmitter<any>();
+  @Input() disableOp = false;
 
   constructor() { }
 

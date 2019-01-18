@@ -3,6 +3,7 @@ import {Department} from '../../../models/department.model';
 import {StockService} from "../../../services/bussiness-logic/stock.service";
 import {Router} from "@angular/router";
 import {EOperationType} from "../../../utils/operation.type.enum";
+import {CashService} from "../../../services/bussiness-logic/cash.service";
 
 @Component({
   selector: 'list-dpto',
@@ -14,13 +15,13 @@ export class ListDptoComponent implements OnInit {
   page = 1;
   sizePage = 12;
 
-  constructor(private router: Router, private stockService: StockService) {
-    this.stockService.getDepartments().subscribe(dptos => {
-      this.stockService.productOrderService.departments = this.dptos = dptos;
-    });
+  constructor(private router: Router, public stockService: StockService) {
   }
 
   ngOnInit() {
+    this.stockService.getDepartments().subscribe(dptos => {
+      this.stockService.productOrderService.departments = this.dptos = dptos;
+    });
   }
 
   doAction(dpto: Department) {

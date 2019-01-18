@@ -2,10 +2,12 @@
                  class="border" (evPressKeys)="financeKey($event)"></operation-group>
 <div fxFlex.lg="40" fxFlex.lt-lg="53" class="border">
   <operation-group fxFlex="20" [operations]="invoiceOperations" [colors]="invoiceColor" class="border"
-                   (evPressKeys)="invoiceKey($event)"></operation-group>
-  <numpad lastKey="@/FOR" (evPressKeys)="numpadKey($event)"></numpad>
+                   (evPressKeys)="invoiceKey($event)" [disableOp]="operationService.disableOp"></operation-group>
+  <numpad lastKey="@/FOR" (evPressKeys)="numpadKey($event)" [disableOp]="operationService.disableOp"></numpad>
+
   <operation-group [operations]="totalsOperations" [colors]="totalColor" layout="two" class="border"
-                   (evPressKeys)="totalKey($event)" ></operation-group>
+                   (evPressKeys)="totalKey($event)" [disableOp]="operationService.disableOp"></operation-group>
 </div>
 <operation-group id="payment" fxFlex.lg="20" fxFlex.lt-lg="25" [operations]="paymentOperations" [colors]="paymentColor"
-                 layout="five" class="border" (evPressKeys)="paymentKey($event)"></operation-group>
+                 layout="five" class="border" (evPressKeys)="paymentKey($event)" [disableOp]="operationService.disableOp">
+</operation-group>
