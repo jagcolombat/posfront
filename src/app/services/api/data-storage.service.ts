@@ -75,6 +75,10 @@ export class DataStorageService {
     return this.invoiceService.getAllWithoutPage(this.url);
   }
 
+  getInvoiceById4Refund (id: string): Observable<Invoice> {
+    return this.invoiceService.getInvoiceById4Refund(this.url, id);
+  }
+
   printInvoices (invoice: Invoice): Observable<Invoice[]> {
     return this.invoiceService.printInvoice(this.url, invoice);
   }

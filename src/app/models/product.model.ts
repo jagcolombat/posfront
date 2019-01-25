@@ -10,5 +10,6 @@ export interface Product {
     followDepartment?: boolean;
     departmentId?: number;
     ageVerification?: boolean;
+    ageAllow?: number
     tax: number;
 }

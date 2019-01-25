@@ -13,6 +13,7 @@ import {InvoiceStatus} from "../../utils/invoice-status.enum";
 import {EOperationType} from "../../utils/operation.type.enum";
 import {BehaviorSubject} from "rxjs";
 import {CashService} from "./cash.service";
+import {Token} from "../../models";
 
 @Injectable({
   providedIn: 'root'
@@ -41,14 +42,20 @@ export class OperationsService {
   clear() {
     console.log('clear');
     // this.invoiceService.delPOFromInvoice()
-    this.invoiceService.evDelProd.emit(true);
-    this.invoiceService.setTotal();
+    //this.invoiceService.evDelProd.emit(true);
+    //this.invoiceService.setTotal();
+    if(!1){
+      this.invoiceService.evDelProd.emit(true);
+      this.invoiceService.setTotal();
+    } else {
+      this.authService.adminLogged() ? this.invoiceService.evDelProd.emit(true) : this.manager('clear');
+    }
     this.resetInactivity(true);
   }
 
   void() {
     console.log('void');
-    this.authService.adminLogged() ? this.cancelCheck() : this.manager();
+    this.authService.adminLogged() ? this.cancelCheck() : this.manager('void');
     this.resetInactivity(true);
   }
 
@@ -79,20 +86,31 @@ export class OperationsService {
     this.invoiceService.evNumpadInput.emit(ev)
   }
 
-  manager() {
+  manager(action?: string) {
     console.log('manager');
-    if(!this.authService.adminLogged()){
+    // if(!this.authService.adminLogged()){
       const dialogRef = this.dialog.open(DialogLoginComponent, { width: '530px', height: '580px', disableClose: true});
       dialogRef.afterClosed().subscribe(loginValid => {
         console.log('The dialog was closed', loginValid);
-        if (loginValid) {
-          this.invoiceService.getCashier();
-          this.router.navigateByUrl('/cash/options');
+        if(loginValid.valid) {
+          if(action){
+            switch (action) {
+              case 'void':
+                this.cancelCheckByAdmin(loginValid.token);
+                break;
+              case 'clear':
+                this.clearCheckByAdmin(loginValid.token);
+                break;
+            }
+          } else {
+            this.invoiceService.getCashier();
+            this.router.navigateByUrl('/cash/options');
+          }
         }
       });
-    } else {
+    /*} else {
       this.router.navigateByUrl('/cash/options');
-    }
+    }*/
 
     this.resetInactivity(true);
   }
@@ -121,7 +139,7 @@ export class OperationsService {
           err => this.openGenericInfo('Error', 'Can\'t complete recall check operation'));
     } else {
       console.error('Can\'t complete recallw check operation');
-      this.openGenericInfo('Error', 'Can\'t complete recall check operation');
+      this.openGenericInfo('Error', 'Can\'t complete recall check operation because check is in progress');
     }
   }
 
@@ -137,12 +155,14 @@ export class OperationsService {
         this.cashService.evReviewCheck.next(true);
       } else {
         this.openGenericInfo('Error', 'Please input receipt number of check');
+        this.invoiceService.resetDigits();
         this.cashService.evReviewCheck.next(false);
       }
     } else {
       console.error('Can\'t complete review check operation');
       this.cashService.evReviewCheck.next(false);
-      this.openGenericInfo('Error', 'Can\'t complete review check operation');
+      this.invoiceService.resetDigits();
+      this.openGenericInfo('Error', 'Can\'t complete review check operation because check is in progress');
     }
   }
 
@@ -166,10 +186,32 @@ export class OperationsService {
       }
   }
 
+  refund() {
+    if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS) {
+      this.invoiceService.digits ?
+        this.invoiceService.refund().subscribe(i => {
+            this.invoiceService.setInvoice(i);
+          },
+          err => {
+            console.error(err);
+            this.invoiceService.resetDigits();
+            this.openGenericInfo('Error', 'Can\'t complete refund operation');
+          }
+        )
+        :
+        this.openGenericInfo('Error', 'Please input receipt number of check');
+    } else {
+      console.error('Can\'t complete refund operation');
+      this.invoiceService.resetDigits();
+      this.openGenericInfo('Error', 'Can\'t complete refund operation because check is in progress');
+    }
+
+  }
+
   logout() {
     console.log('logout');
     if(this.invoiceService.invoice.status === InvoiceStatus.IN_PROGRESS){
-      this.openGenericInfo('Error', 'Can\'t complete logout operation because this Invoice is opened')
+      this.openGenericInfo('Error', 'Can\'t complete logout operation because check is in progress')
     } else {
       this.authService.logout();
       this.invoiceService.resetDigits();
@@ -184,6 +226,23 @@ export class OperationsService {
       this.invoiceService.createInvoice();
     },err => console.error('cancelCheck failed'));
 
+    this.resetInactivity(false);
+  }
+
+  cancelCheckByAdmin(t?: Token) {
+    console.log('cancelCheckByAdmin', t);
+    this.invoiceService.cancelInvoice().subscribe(next => {
+      this.authService.token = t;
+      this.invoiceService.createInvoice();
+    },err => console.error('cancelCheck failed'));
+    this.resetInactivity(false);
+  }
+
+  clearCheckByAdmin(t?: Token) {
+    console.log('clearCheckByAdmin', t);
+    this.invoiceService.evDelProd.emit(true);
+    this.invoiceService.setTotal();
+    this.authService.token = t;
     this.resetInactivity(false);
   }
 
@@ -225,16 +284,22 @@ export class OperationsService {
 
   reprint() {
     if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS) {
-      this.invoiceService.digits ?
+      if(this.invoiceService.digits) {
         this.getCheckById(EOperationType.Reprint,i => {
-          this.invoiceService.print(i).subscribe(data => this.openGenericInfo('Print', 'Print is finish'),
+          this.invoiceService.resetDigits();
+          this.invoiceService.print(i).subscribe(
+            data => this.openGenericInfo('Print', 'Print is finish'),
             err => this.openGenericInfo('Error', 'Can\'t complete print operation'));
         })
-        :
+      } else {
         this.openGenericInfo('Error', 'Please input receipt number of check');
+        this.invoiceService.resetDigits();
+      }
+
     } else {
       console.error('Can\'t complete print operation');
       this.openGenericInfo('Error', 'Can\'t complete print operation');
+      this.invoiceService.resetDigits();
     }
 
   }

@@ -73,8 +73,8 @@ export class ProductOrderService {
   private createProductOrder(prod: Product): ProductOrder {
     let qty = this.invoiceService.qty > 1 ? this.invoiceService.qty: this.quantityByProduct;
     let tax = this.getTax(prod);
-    let price = parseFloat(prod.unitCost.toFixed(2));
-    let total = parseFloat((qty * price).toFixed(2));
+    let price = Number(prod.unitCost.toFixed(2));
+    let total = Number((qty * price).toFixed(2));
     return new ProductOrder(qty, price, total, tax, prod);
   }
 
@@ -92,7 +92,7 @@ export class ProductOrderService {
   private ageVerification(product: Product) {
     this.onAgeVerification().afterClosed().subscribe(data => {
       if (data.age) {
-        if (data.age >= AGE) {
+        if (data.age >= product.ageAllow) {
           this.invoiceService.invoice.clientAge = data.age;
           this.onCreateProductOrder(product);
         } else {

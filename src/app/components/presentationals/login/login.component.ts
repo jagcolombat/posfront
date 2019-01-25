@@ -16,9 +16,7 @@ export class LoginComponent implements OnInit {
   valid: boolean;
   errorMsg: string;
 
-  constructor(private router: Router, private authService: AuthService/*,
-              public dialogRef: MatDialogRef<LoginComponent>, @Inject(MAT_DIALOG_DATA) public data: any*/) {
-    // if (data.rol) this.rol = this.data.rol;
+  constructor(private router: Router, private authService: AuthService) {
   }
 
   ngOnInit() {

@@ -51,6 +51,9 @@ export class OperationsComponent implements OnInit {
       case 'Reprint':
         this.operationService.reprint();
         break;
+      case 'Refund':
+        this.operationService.refund();
+        break;
       case 'Go Back':
         this.operationService.goBack();
         this.operationService.cashService.evGoBack.subscribe(resp => {

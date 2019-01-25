@@ -34,7 +34,6 @@
     "ngx-restangular": "^3.0.0",
     "ngx-webstorage": "2.0.1",
     "rxjs": "~6.2.0",
-    "screenfull": "latest",
     "validator": "latest",
     "zone.js": "~0.8.26"
   },

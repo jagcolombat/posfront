@@ -1,20 +1,30 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {MatDialogRef} from "@angular/material";
 import {UserrolEnum} from "../../../utils/userrol.enum";
+import {AuthService} from "../../../services/api/auth.service";
+import {Token} from "../../../models";
 
 @Component({
   selector: 'app-dialog-login',
   templateUrl: './dialog-login.component.html',
   styleUrls: ['./dialog-login.component.scss']
 })
-export class DialogLoginComponent implements OnInit {
+export class DialogLoginComponent implements OnInit, OnDestroy {
   rol: string = UserrolEnum.ADMIN;
-  constructor(public dialogRef: MatDialogRef<DialogLoginComponent>) { }
+  cashierToken: Token;
+
+  constructor(public dialogRef: MatDialogRef<DialogLoginComponent>, private authService: AuthService) {
+    this.cashierToken = this.authService.token;
+  }
 
   ngOnInit() {
   }
 
   closeDialog(){
-    this.dialogRef.close(true);
+    this.dialogRef.close({valid: true, token: this.cashierToken});
+  }
+
+  ngOnDestroy() {
+    this.cashierToken = null;
   }
 }
