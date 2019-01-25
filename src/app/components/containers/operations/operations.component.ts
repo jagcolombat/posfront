@@ -19,7 +19,7 @@ export class OperationsComponent implements OnInit {
   @Input() paymentColor = ['yellow', 'blue', 'yellow', 'blue', 'green'];
   // @Input() disableOp = true;
 
-  constructor(public operationService: OperationsService) { }
+  constructor(public operationService: OperationsService) {  }
 
   ngOnInit() {
     // this.disableOp = this.operationService.disableOp;

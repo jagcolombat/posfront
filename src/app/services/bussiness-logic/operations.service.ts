@@ -131,11 +131,15 @@ export class OperationsService {
 
   recallCheck() {
     this.resetInactivity(true);
-    if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS) {
+    if(this.disableOp){
+      this.openGenericInfo('Error', 'Not possible Recall Check over Review Check operation, please Go Back first.');
+    } else if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS) {
       this.invoiceService.digits ?
-        this.getCheckById(EOperationType.RecallCheck,i => this.invoiceService.setInvoice(i)) :
+        this.getCheckById(EOperationType.RecallCheck,i => {
+          this.invoiceService.setInvoice(i);}) :
         this.invoiceService.getInvoicesByStatus(EOperationType.RecallCheck, InvoiceStatus.PENDENT_FOR_PAYMENT)
-          .subscribe(next => this.openDialogInvoices(next, i => this.invoiceService.setInvoice(i)),
+          .subscribe(next => this.openDialogInvoices(next, i => {
+              this.invoiceService.setInvoice(i);}),
           err => this.openGenericInfo('Error', 'Can\'t complete recall check operation'));
     } else {
       console.error('Can\'t complete recallw check operation');
