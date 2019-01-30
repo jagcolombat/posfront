@@ -1,5 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {OperationsService} from "../../../services/bussiness-logic/operations.service";
+import {InvioceOpEnum , PaymentOpEnum, FinancialOpEnum, TotalsOpEnum} from "../../../utils/operations";
 
 @Component({
   selector: 'operations',
@@ -7,62 +8,54 @@ import {OperationsService} from "../../../services/bussiness-logic/operations.se
   styleUrls: ['./operations.component.scss']
 })
 export class OperationsComponent implements OnInit {
-  @Input() financeOperations = ['Manager Screen', 'Reprint', 'Hold Order', 'Review Check', 'Recall Check', 'Refund', 'Logout'];
+
+  @Input() financeOperations = [FinancialOpEnum.MANAGER, FinancialOpEnum.REPRINT, FinancialOpEnum.HOLD, FinancialOpEnum.REVIEW,
+    FinancialOpEnum.RECALL, FinancialOpEnum.REFUND, FinancialOpEnum.LOGOUT];
   @Input() financeColor = 'green';
-  @Input() invoiceOperations = ['Clear', 'PLU', 'Price Check', 'Void'];
+  @Input() financeDisabled: boolean | boolean []= this.operationService.cashService.disabledFinOp;
+
+  @Input() invoiceOperations = [InvioceOpEnum.CLEAR, InvioceOpEnum.PLU, InvioceOpEnum.PRICE, InvioceOpEnum.VOID];
   @Input() invoiceColor = ['red', 'green', 'green', 'red'];
-  @Input() totalsOperations = ['F/S Subtotal', 'Subtotal'];
+  @Input() invoiceDisabled : boolean | boolean []= this.operationService.cashService.disabledInvOp;
+
+  @Input() totalsOperations = [TotalsOpEnum.FS_SUBTOTAL, TotalsOpEnum.SUBTOTAL];
   @Input() totalColor = ['yellow', 'red'];
+  @Input() totalDisabled: boolean | boolean []= this.operationService.cashService.disabledTotalOp;
+
   @Input() numpadOption = '@/FOR';
-  @Input() cashOperations = ['Cash'];
-  @Input() paymentOperations = ['Food Stamp', 'Debit Card', 'EBT Card', 'Credit Card', 'Cash'];
+
+  @Input() paymentOperations = [PaymentOpEnum.FOOD_STAMP, PaymentOpEnum.DEBIT_CARD, PaymentOpEnum.EBT_CARD,
+    PaymentOpEnum.CREDIT_CARD, PaymentOpEnum.CASH];
   @Input() paymentColor = ['yellow', 'blue', 'yellow', 'blue', 'green'];
-  // @Input() disableOp = true;
+  @Input() paymentDisabled: boolean | boolean[] = this.operationService.cashService.disabledPayment;
 
   constructor(public operationService: OperationsService) {  }
 
   ngOnInit() {
-    // this.disableOp = this.operationService.disableOp;
   }
 
   financeKey(ev) {
     switch (ev) {
-      case 'Logout':
+      case FinancialOpEnum.LOGOUT:
         this.operationService.logout();
         break;
-      case 'Manager Screen':
+      case FinancialOpEnum.MANAGER:
         this.operationService.manager();
         break;
-      case 'Hold Order':
+      case FinancialOpEnum.HOLD:
         this.operationService.hold();
         break;
-      case 'Recall Check':
+      case FinancialOpEnum.RECALL:
         this.operationService.recallCheck();
         break;
-      case 'Review Check':
+      case FinancialOpEnum.REVIEW:
         this.operationService.reviewCheck();
-        this.operationService.cashService.evReviewCheck.subscribe(resp => {
-          if(resp) {
-            this.financeOperations.push('Go Back');
-            this.operationService.cashService.evReviewCheck.complete();
-          }
-        });
         break;
-      case 'Reprint':
+      case FinancialOpEnum.REPRINT:
         this.operationService.reprint();
         break;
-      case 'Refund':
+      case FinancialOpEnum.REFUND:
         this.operationService.refund();
-        break;
-      case 'Go Back':
-        this.operationService.goBack();
-        this.operationService.cashService.evGoBack.subscribe(resp => {
-          if(resp) {
-            this.operationService.disableOp = false;
-            this.financeOperations.splice(this.financeOperations.indexOf('Go Back'), 1);
-            this.operationService.cashService.evGoBack.complete();
-          }
-        });
         break;
     }
   }
@@ -88,7 +81,16 @@ export class OperationsComponent implements OnInit {
     this.operationService.numpadInput(ev);
   }
 
-  totalKey(ev) {}
+  totalKey(ev) {
+    switch (ev) {
+      case 'Subtotal':
+        this.operationService.subTotal();
+        break;
+      case 'F/S Subtotal':
+        this.operationService.fsSubTotal();
+        break;
+    }
+  }
 
   paymentKey(ev) {
     switch (ev) {

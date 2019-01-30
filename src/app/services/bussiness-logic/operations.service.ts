@@ -11,9 +11,9 @@ import {CashOpComponent} from "../../components/presentationals/cash-op/cash-op.
 import {CashPaymentComponent} from "../../components/presentationals/cash-payment/cash-payment.component";
 import {InvoiceStatus} from "../../utils/invoice-status.enum";
 import {EOperationType} from "../../utils/operation.type.enum";
-import {BehaviorSubject} from "rxjs";
 import {CashService} from "./cash.service";
 import {Token} from "../../models";
+import {FinancialOpEnum, TotalsOpEnum} from "../../utils/operations";
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +21,7 @@ import {Token} from "../../models";
 export class OperationsService {
   inactivityTime: number = 600;
   timer: number;
-  disableOp = false;
+  currentOperation: string;
 
   constructor(private invoiceService: InvoiceService, public cashService: CashService,
               private authService: AuthService, private dialog: MatDialog, private router: Router) {
@@ -41,26 +41,38 @@ export class OperationsService {
 
   clear() {
     console.log('clear');
-    // this.invoiceService.delPOFromInvoice()
-    //this.invoiceService.evDelProd.emit(true);
-    //this.invoiceService.setTotal();
-    if(!1){
-      this.invoiceService.evDelProd.emit(true);
-      this.invoiceService.setTotal();
+    // this.currentOperation = 'clear';
+    if(this.invoiceService.invoice.productsOrders.length <= 0 || this.currentOperation === FinancialOpEnum.REVIEW ||
+      this.currentOperation === TotalsOpEnum.FS_SUBTOTAL || this.currentOperation === TotalsOpEnum.SUBTOTAL){
+      this.clearOp(false);
     } else {
-      this.authService.adminLogged() ? this.invoiceService.evDelProd.emit(true) : this.manager('clear');
+      this.authService.adminLogged() ? this.clearOp() : this.manager('clear');
     }
     this.resetInactivity(true);
   }
 
+  clearOp(total:boolean = true){
+    this.invoiceService.evDelProd.emit(true);
+    if(total) this.invoiceService.setTotal();
+    if(this.currentOperation === FinancialOpEnum.REVIEW || this.currentOperation === TotalsOpEnum.FS_SUBTOTAL ||
+      this.currentOperation === TotalsOpEnum.SUBTOTAL){
+        this.cashService.resetEnableState();
+        if(this.currentOperation === FinancialOpEnum.REVIEW) {
+          this.invoiceService.createInvoice();
+        }
+    }
+  }
+
   void() {
     console.log('void');
+    this.currentOperation = 'void';
     this.authService.adminLogged() ? this.cancelCheck() : this.manager('void');
     this.resetInactivity(true);
   }
 
   plu() {
     console.log('plu');
+    this.currentOperation = 'plu';
     // Consume servicio de PLU con this.digits eso devuelve ProductOrder
     this.invoiceService.addProductByUpc(EOperationType.Plu).subscribe(prod => {
       this.invoiceService.evAddProdByUPC.emit(prod);
@@ -74,6 +86,7 @@ export class OperationsService {
 
   priceCheck() {
     console.log('priceCheck');
+    this.currentOperation = 'priceCheck';
     this.invoiceService.getProductByUpc(EOperationType.PriceCheck).subscribe(prod => {
       this.dialog.open(GenericInfoModalComponent, { width: '350px', height: '250px',
         data: { title: 'Price Check', content: prod.name, price: prod.unitCost }, disableClose: true});
@@ -88,6 +101,7 @@ export class OperationsService {
 
   manager(action?: string) {
     console.log('manager');
+    // this.currentOperation = 'manager';
     // if(!this.authService.adminLogged()){
       const dialogRef = this.dialog.open(DialogLoginComponent, { width: '530px', height: '580px', disableClose: true});
       dialogRef.afterClosed().subscribe(loginValid => {
@@ -108,17 +122,14 @@ export class OperationsService {
           }
         }
       });
-    /*} else {
-      this.router.navigateByUrl('/cash/options');
-    }*/
 
     this.resetInactivity(true);
   }
 
   hold() {
-    if(this.disableOp){
-      this.openGenericInfo('Error', 'Not possible Hold Order over Review Check operation');
-    } else if (this.invoiceService.invoice.productsOrders.length > 0) {
+    console.log('hold');
+    this.currentOperation = 'hold';
+    if (this.invoiceService.invoice.productsOrders.length > 0) {
       this.invoiceService.holdOrder().
       subscribe(
         next => this.invoiceService.createInvoice(),
@@ -130,10 +141,11 @@ export class OperationsService {
   }
 
   recallCheck() {
+    console.log('recallCheck');
+    this.currentOperation = 'recallCheck';
+
     this.resetInactivity(true);
-    if(this.disableOp){
-      this.openGenericInfo('Error', 'Not possible Recall Check over Review Check operation, please Go Back first.');
-    } else if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS) {
+    if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS) {
       this.invoiceService.digits ?
         this.getCheckById(EOperationType.RecallCheck,i => {
           this.invoiceService.setInvoice(i);}) :
@@ -148,26 +160,39 @@ export class OperationsService {
   }
 
   reviewCheck() {
+    console.log('reviewCheck');
+    this.currentOperation = FinancialOpEnum.REVIEW;
+
     this.resetInactivity(true);
-    this.cashService.resetEvents();
-    this.cashService.evEmitReviewCheck.emit();
 
     if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS) {
       if(this.invoiceService.digits) {
-        this.disableOp = true;
-        this.getCheckById(EOperationType.ReviewCheck, i => this.invoiceService.setInvoice(i));
-        this.cashService.evReviewCheck.next(true);
+        this.getCheckById(EOperationType.ReviewCheck, i => {
+          this.invoiceService.setInvoice(i);
+          this.cashService.reviewEnableState();
+        });
       } else {
         this.openGenericInfo('Error', 'Please input receipt number of check');
         this.invoiceService.resetDigits();
-        this.cashService.evReviewCheck.next(false);
       }
     } else {
       console.error('Can\'t complete review check operation');
-      this.cashService.evReviewCheck.next(false);
       this.invoiceService.resetDigits();
       this.openGenericInfo('Error', 'Can\'t complete review check operation because check is in progress');
     }
+  }
+
+  subTotal(){
+    console.log('subTotal');
+    this.currentOperation = TotalsOpEnum.SUBTOTAL;
+    this.cashService.totalsEnableState();
+  }
+
+  fsSubTotal(){
+    console.log('fsSubTotal');
+    this.currentOperation = TotalsOpEnum.FS_SUBTOTAL;
+    this.cashService.totalsEnableState(true);
+
   }
 
   getCheckById(typeOp: EOperationType, action: (i: Invoice) => void) {
@@ -191,6 +216,9 @@ export class OperationsService {
   }
 
   refund() {
+    console.log('refund');
+    this.currentOperation = 'refund';
+
     if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS) {
       this.invoiceService.digits ?
         this.invoiceService.refund().subscribe(i => {
@@ -214,12 +242,14 @@ export class OperationsService {
 
   logout() {
     console.log('logout');
+    this.currentOperation = 'logout';
+
     if(this.invoiceService.invoice.status === InvoiceStatus.IN_PROGRESS){
       this.openGenericInfo('Error', 'Can\'t complete logout operation because check is in progress')
     } else {
       this.authService.logout();
       this.invoiceService.resetDigits();
-      this.disableOp = false;
+      this.cashService.resetEnableState();
     }
     this.resetInactivity(false);
   }
@@ -244,8 +274,7 @@ export class OperationsService {
 
   clearCheckByAdmin(t?: Token) {
     console.log('clearCheckByAdmin', t);
-    this.invoiceService.evDelProd.emit(true);
-    this.invoiceService.setTotal();
+    this.clearOp();
     this.authService.token = t;
     this.resetInactivity(false);
   }
@@ -257,6 +286,9 @@ export class OperationsService {
   }
 
   cash() {
+    console.log('cash');
+    this.currentOperation = 'cash';
+
     if (this.invoiceService.invoice.total > 0) {
       const dialogRef = this.dialog.open(CashOpComponent,
         {
@@ -281,12 +313,21 @@ export class OperationsService {
       })
       .afterClosed().subscribe((result: string) => {
         if (result !== '') {
-          this.invoiceService.cash(payment);
+          this.invoiceService.cash(payment)
+            .subscribe(data => {
+                console.log(data);
+                this.invoiceService.createInvoice();
+              },
+              err => {console.log(err); this.openGenericInfo('Error', 'Can\'t complete cash operation')},
+              () => this.cashService.resetEnableState())
         }
       });
   }
 
   reprint() {
+    console.log('reprint');
+    this.currentOperation = 'reprint';
+
     if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS) {
       if(this.invoiceService.digits) {
         this.getCheckById(EOperationType.Reprint,i => {
@@ -324,12 +365,4 @@ export class OperationsService {
     this.resetInactivity(false);
   }
 
-  goBack() {
-    this.cashService.evEmitGoBack.emit();
-    this.invoiceService.evCreateInvoice.subscribe(resp => {
-      if(resp) { this.cashService.evGoBack.next(true); }
-      else this.openGenericInfo('Error', 'Can\'t complete go back operation')
-    });
-    this.invoiceService.createInvoice();
-  }
 }

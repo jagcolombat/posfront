@@ -15,7 +15,6 @@ import {CashOpComponent} from "../../components/presentationals/cash-op/cash-op.
 import {CashPaymentComponent} from "../../components/presentationals/cash-payment/cash-payment.component";
 import {DialogInvoiceComponent} from "../../components/presentationals/dialog-invoice/dialog-invoice.component";
 import {SharedModule} from "../shared/shared.module";
-import {MaterialModule} from "../material/material.module";
 
 @NgModule({
   imports: [
@@ -34,7 +33,14 @@ import {MaterialModule} from "../material/material.module";
     InitViewComponent,
     LoginComponent,
     AnnounceComponent,
-    PromotionsComponent
+    PromotionsComponent,
+    AgeValidationComponent,
+    GenericInfoModalComponent,
+    ProductGenericComponent,
+    DialogLoginComponent,
+    CashOpComponent,
+    CashPaymentComponent,
+    DialogInvoiceComponent
   ],
   entryComponents: [
     AgeValidationComponent,

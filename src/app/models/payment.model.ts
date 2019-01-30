@@ -1,6 +1,6 @@
-import {PaymentType} from '../utils/payment.enum';
+import {PaymentOpEnum} from '../utils/operations/payment.enum';
 
 export interface Payment {
-    type: PaymentType;
+    type: PaymentOpEnum;
     value: any;
 }

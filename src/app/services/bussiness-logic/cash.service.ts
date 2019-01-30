@@ -5,18 +5,30 @@ import {BehaviorSubject} from "rxjs";
   providedIn: 'root'
 })
 export class CashService {
-
-  evReviewCheck: BehaviorSubject<boolean>;
-  evGoBack: BehaviorSubject<boolean>;
-  evEmitReviewCheck = new EventEmitter<boolean>();
-  evEmitGoBack = new EventEmitter<boolean>();
+  disabledInput: boolean;
+  disabledFinOp: boolean | boolean[];
+  disabledInvOp: boolean | boolean[];
+  disabledTotalOp: boolean;
+  disabledPayment: boolean | boolean[];
 
   constructor() {
-    this.resetEvents();
+    this.resetEnableState();
   }
 
-  resetEvents(){
-    this.evReviewCheck = new BehaviorSubject<boolean>(true);
-    this.evGoBack = new BehaviorSubject<boolean>(true);
+  resetEnableState() {
+    this.disabledInput = this.disabledFinOp = this.disabledInvOp = this.disabledTotalOp = false;
+    this.disabledPayment = true;
   }
+
+  reviewEnableState() {
+    this.disabledInput = this.disabledFinOp = this.disabledTotalOp = this.disabledPayment = true;
+    this.disabledInvOp = [false, true, true, true];
+  }
+
+  totalsEnableState(fs = false) {
+    this.disabledInput = this.disabledFinOp = this.disabledTotalOp = true;
+    this.disabledInvOp = [false, true, true, true];
+    fs ? this.disabledPayment = [false, true, false, true, true] : this.disabledPayment = false;
+  }
+
 }

@@ -140,14 +140,9 @@ export class InvoiceService {
     return this.dataStorage.saveInvoiceByStatus(this.invoice, InvoiceStatus.CANCEL, EOperationType.Void)
   }
 
-  cash(payment: number) {
+  cash(payment: number): Observable<Invoice> {
     let cashPayment = new CashPaymentModel(this.invoice, payment);
-    return this.dataStorage.paidByCash(cashPayment)
-      .subscribe(data => {
-          // console.log(data);
-          this.createInvoice();
-        }
-        , err => console.log(err));
+    return this.dataStorage.paidByCash(cashPayment);
   }
 
   print(invoice: Invoice) {

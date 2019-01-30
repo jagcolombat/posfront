@@ -5,32 +5,15 @@ import {Department} from "../../models/department.model";
 import {Product} from "../../models";
 import {ProductOrderService} from "./product-order.service";
 import {EOperationType} from "../../utils/operation.type.enum";
-import {InvoiceService} from "./invoice.service";
 import {CashService} from "./cash.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class StockService {
-  disableOp = false;
 
   constructor(private dataStore: DataStorageService, public productOrderService: ProductOrderService,
-              private cashService: CashService) {
-    this.cashService.evEmitReviewCheck.subscribe(next => {
-      this.cashService.evReviewCheck.subscribe(resp => {
-        if(resp) {
-          this.disableOp = true;
-        }
-      });
-    });
-
-    this.cashService.evEmitReviewCheck.subscribe(next => {
-      this.cashService.evGoBack.subscribe(resp => {
-        if (resp) {
-          this.disableOp = false;
-        }
-      });
-    });
+              public cashService: CashService) {
   }
 
   getDepartments(): Observable<Department[]> {

@@ -1,9 +1,9 @@
 <div class="page">
   <button mat-button fxFlex="130px" *ngFor="let i of dptos | paginate: { itemsPerPage: sizePage, currentPage: page }"
           (click)="doAction(i)"
-          [ngClass]="i.generic ? 'generic' : 'normal'" [disabled]="stockService.disableOp">
+          [ngClass]="i.generic ? 'generic' : 'normal'" [disabled]="stockService.cashService.disabledInput">
     {{ i.name | uppercase }}
   </button>
 </div>
-<pos-paginator [hidden]="stockService.disableOp" [countElements]="dptos.length" [sizePage]="sizePage"
+<pos-paginator [hidden]="stockService.cashService.disabledInput" [countElements]="dptos.length" [sizePage]="sizePage"
                (evSetPage)="setPage($event)" >

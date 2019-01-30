@@ -19,7 +19,7 @@ export class CashViewComponent implements OnInit {
 
   handleKeyboardEvent(ev: KeyboardEvent) {
     console.log('inputKeyboard', ev, isNaN(parseInt(ev.key)));
-    if(this.operationService.disableOp){
+    if(this.operationService.cashService.disabledInput){
       this.operationService.openGenericInfo('Error', 'Not possible input keyboard over Review ' +
         'Check operation, please Go Back first.');
     } else if((ev.key==='Enter' || ev.keyCode === 13) && this.invoiceService.digits){
