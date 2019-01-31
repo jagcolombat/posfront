@@ -30,7 +30,12 @@ export class OperationsService {
   }
 
   counterInactivity(){
-    this.timer = setTimeout(()=> this.logout(), this.inactivityTime * 1000);
+    this.timer = setTimeout(()=> {
+      if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS)
+        this.logout();
+      else
+        this.resetInactivity(true)
+      },this.inactivityTime * 1000);
   }
 
   resetInactivity(cont: boolean) {
@@ -42,7 +47,7 @@ export class OperationsService {
   clear() {
     console.log('clear');
     // this.currentOperation = 'clear';
-    if(this.invoiceService.invoice.productsOrders.length <= 0 || this.currentOperation === FinancialOpEnum.REVIEW ||
+    if(!this.invoiceService.invoiceProductSelected || this.currentOperation === FinancialOpEnum.REVIEW ||
       this.currentOperation === TotalsOpEnum.FS_SUBTOTAL || this.currentOperation === TotalsOpEnum.SUBTOTAL){
       this.clearOp(false);
     } else {
@@ -79,8 +84,7 @@ export class OperationsService {
     }, err => {
       console.error('addProductByUpc', err);
       this.openGenericInfo('Error', 'Can\'t complete get product by plu');
-      this.invoiceService.resetDigits();
-    });
+    }, () => this.invoiceService.resetDigits());
     this.resetInactivity(false);
   }
 
@@ -365,4 +369,11 @@ export class OperationsService {
     this.resetInactivity(false);
   }
 
+  ebt() {
+    // this.invoiceService.invoice.productsOrders[0].product.
+  }
+
+  debit() {
+
+  }
 }

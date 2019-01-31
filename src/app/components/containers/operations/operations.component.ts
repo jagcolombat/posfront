@@ -94,8 +94,14 @@ export class OperationsComponent implements OnInit {
 
   paymentKey(ev) {
     switch (ev) {
-      case 'Cash':
+      case PaymentOpEnum.CASH:
         this.operationService.cash();
+        break;
+      case PaymentOpEnum.EBT_CARD:
+        this.operationService.ebt();
+        break;
+      case PaymentOpEnum.DEBIT_CARD:
+        this.operationService.debit();
         break;
     }
   }

@@ -22,6 +22,7 @@ export class InvoiceService {
   qty: number = 1;
   // Invoice
   invoice: Invoice;
+  invoiceProductSelected: boolean;
 
   @Output() evAddProd = new EventEmitter<ProductOrder>();
   @Output() evDelProd = new EventEmitter<any>();
