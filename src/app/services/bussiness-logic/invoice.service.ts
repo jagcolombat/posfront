@@ -18,7 +18,7 @@ export class InvoiceService {
   cashier: string;
   // For manage numpadInput
   digits = '';
-  numbers = '';
+  numbers = 0;
   qty: number = 1;
   // Invoice
   invoice: Invoice;
@@ -118,7 +118,7 @@ export class InvoiceService {
   }
 
   getProductByUpc(typeOp: EOperationType): Observable<Product>{
-    return this.dataStorage.getProductByUpc(this.numbers, typeOp);
+    return this.dataStorage.getProductByUpc(this.numbers.toString(), typeOp);
   }
 
   setInvoice(inv: Invoice){
@@ -132,7 +132,7 @@ export class InvoiceService {
   resetDigits() {
     console.log('resetDigits');
     this.digits = '';
-    this.numbers = '';
+    this.numbers = 0;
     this.qty = 1;
   }
 

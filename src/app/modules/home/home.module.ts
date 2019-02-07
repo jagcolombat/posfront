@@ -15,6 +15,7 @@ import {CashOpComponent} from "../../components/presentationals/cash-op/cash-op.
 import {CashPaymentComponent} from "../../components/presentationals/cash-payment/cash-payment.component";
 import {DialogInvoiceComponent} from "../../components/presentationals/dialog-invoice/dialog-invoice.component";
 import {SharedModule} from "../shared/shared.module";
+import {DebitCardComponent} from "../../components/presentationals/debit-card/debit-card.component";
 
 @NgModule({
   imports: [
@@ -40,7 +41,8 @@ import {SharedModule} from "../shared/shared.module";
     DialogLoginComponent,
     CashOpComponent,
     CashPaymentComponent,
-    DialogInvoiceComponent
+    DialogInvoiceComponent,
+    DebitCardComponent
   ],
   entryComponents: [
     AgeValidationComponent,
@@ -49,7 +51,8 @@ import {SharedModule} from "../shared/shared.module";
     DialogLoginComponent,
     CashOpComponent,
     CashPaymentComponent,
-    DialogInvoiceComponent
+    DialogInvoiceComponent,
+    DebitCardComponent
   ],
 })
 export class HomeModule { }
