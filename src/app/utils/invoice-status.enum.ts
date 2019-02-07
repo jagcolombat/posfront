@@ -1,8 +1,9 @@
 export enum InvoiceStatus {
     IN_PROGRESS = 1,
     PENDENT_FOR_AUTHORIZATION,
-    PENDENT_FOR_PAYMENT,
+    IN_HOLD,
     PAID,
     CANCEL,
-    CREATED
+    CREATED,
+    PENDENT_FOR_PAYMENT
 }

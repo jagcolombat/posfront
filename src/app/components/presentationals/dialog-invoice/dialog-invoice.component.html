@@ -7,7 +7,7 @@
   <div mat-dialog-content>
     <p>{{ subtitle }}</p>
     <div class="buttons">
-      <button mat-button fxFlex="150px" [fxLayoutGap]="space" *ngFor="let i of data"
+      <button mat-button fxFlex="170px" [fxLayoutGap]="space" *ngFor="let i of data"
               [mat-dialog-close]="i" cdkFocusInitial>
         {{i.receiptNumber }}<p>{{i.total | currency }}</p>
       </button>

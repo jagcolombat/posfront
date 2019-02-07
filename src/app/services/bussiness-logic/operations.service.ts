@@ -14,6 +14,7 @@ import {EOperationType} from "../../utils/operation.type.enum";
 import {CashService} from "./cash.service";
 import {Token} from "../../models";
 import {FinancialOpEnum, TotalsOpEnum} from "../../utils/operations";
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -48,7 +49,7 @@ export class OperationsService {
     console.log('clear');
     // this.currentOperation = 'clear';
     if(!this.invoiceService.invoiceProductSelected || this.currentOperation === FinancialOpEnum.REVIEW ||
-      this.currentOperation === TotalsOpEnum.FS_SUBTOTAL || this.currentOperation === TotalsOpEnum.SUBTOTAL){
+      this.currentOperation === TotalsOpEnum.FS_SUBTOTAL || this.currentOperation === TotalsOpEnum.SUBTOTAL) {
       this.clearOp(false);
     } else {
       this.authService.adminLogged() ? this.clearOp() : this.manager('clear');
@@ -153,7 +154,7 @@ export class OperationsService {
       this.invoiceService.digits ?
         this.getCheckById(EOperationType.RecallCheck,i => {
           this.invoiceService.setInvoice(i);}) :
-        this.invoiceService.getInvoicesByStatus(EOperationType.RecallCheck, InvoiceStatus.PENDENT_FOR_PAYMENT)
+        this.invoiceService.getInvoicesByStatus(EOperationType.RecallCheck, InvoiceStatus.IN_HOLD)
           .subscribe(next => this.openDialogInvoices(next, i => {
               this.invoiceService.setInvoice(i);}),
           err => this.openGenericInfo('Error', 'Can\'t complete recall check operation'));
@@ -188,8 +189,10 @@ export class OperationsService {
 
   subTotal(){
     console.log('subTotal');
-    this.currentOperation = TotalsOpEnum.SUBTOTAL;
-    this.cashService.totalsEnableState();
+    if (this.invoiceService.invoice.productsOrders.length > 0) {
+      this.currentOperation = TotalsOpEnum.SUBTOTAL;
+      this.cashService.totalsEnableState();
+    }
   }
 
   fsSubTotal(){
@@ -200,8 +203,10 @@ export class OperationsService {
   }
 
   getCheckById(typeOp: EOperationType, action: (i: Invoice) => void) {
-    this.invoiceService.getInvoicesById(typeOp).subscribe(next => action(next),
-        err => this.openGenericInfo('Error', 'Can\'t complete get check operation'));
+    this.invoiceService.getInvoicesById(typeOp)
+        .subscribe(next => action(next),
+                    (err: HttpErrorResponse) =>
+                       this.openGenericInfo('Error', 'Can\'t complete get check operation. ' + err.statusText));
   }
 
   openDialogInvoices(inv: Invoice[], action: (i: Invoice) => void) {
@@ -303,6 +308,8 @@ export class OperationsService {
         if (data > 0) {
           let valueToReturn = data - this.invoiceService.invoice.total;
           this.cashReturn(valueToReturn, data);
+        } else {
+          this.currentOperation = TotalsOpEnum.SUBTOTAL;
         }
       });
     }

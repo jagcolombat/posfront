@@ -9,7 +9,7 @@ import {Router} from "@angular/router";
 export class AdminOptionsComponent implements OnInit {
   options = ['Empl Z','SYS Z','WTD Z','Change Printer','Close Browser','Apply Discount','Cancel Check','Remove a hold','Departments'];
   page = 1;
-  sizePage = 8;
+  sizePage = 12;
 
   constructor(private router: Router) {
   }

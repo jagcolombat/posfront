@@ -1,0 +1,49 @@
+<div oncontextmenu="return false">
+  <mat-toolbar color="primary">
+    Debit Card
+    <span class="flex-spacer"></span>
+    <button mat-raised-button mat-dialog-close color="primary">&times;</button>
+  </mat-toolbar>
+  <form novalidate #debitForm="ngForm">
+    <mat-dialog-content>
+      <p *ngIf="cardInvalid">
+        <mat-form-field>
+          <input matInput placeholder="0000-0000-0000-0000" type="text" [(ngModel)]="input"
+                 name="card" #card="ngModel" required [minlength]="16" [maxlength]="16"/>
+          <mat-error *ngIf="card.errors?.required">Card is required</mat-error>
+          <mat-error *ngIf="card.errors?.minlength">Invalid card format</mat-error>
+          <mat-error *ngIf="card.errors?.maxlength">Invalid card format</mat-error>
+        </mat-form-field>
+      </p>
+      <p *ngIf="!cardInvalid">
+        <mat-form-field>
+          <input matInput placeholder="XXXX" type="password" [(ngModel)]="input"
+                 name="pin" #pin="ngModel" required [minlength]="4" [maxlength]="4"/>
+          <mat-error *ngIf="pin.errors?.required">Pin is required</mat-error>
+          <mat-error *ngIf="pin.errors?.minlength">Invalid pin format</mat-error>
+          <mat-error *ngIf="pin.errors?.maxlength">Invalid pin format</mat-error>
+        </mat-form-field>
+
+      </p>
+      <!--<app-input-price></app-input-price>-->
+      <generic-keyboard (evKeys)="getKeys($event)" [valid]="!debitForm.form.valid"></generic-keyboard>
+    </mat-dialog-content>
+  </form>
+</div>
+<!--<form [formGroup]="debitForm">
+  <mat-dialog-content>
+    <p fxLayoutAlign="space-between">
+      <mat-form-field>
+        <input matInput
+               type="text"
+               id="cardInput"
+               formControlName="cardInput"
+               [(ngModel)]="data"
+        />
+        <mat-error *ngIf="!dateInput.valid">Date is invalid</mat-error>
+      </mat-form-field>
+      <mat-error *ngIf="!valid && tryValidation"><span class="fa fa-warning fa-lg"></span>Date is invalid</mat-error>
+    </p>
+  </mat-dialog-content>
+  <generic-keyboard (evKeys)="getKeys($event)" [valid]="!valid"></generic-keyboard>
+</form>-->

@@ -1,8 +1,9 @@
-<div oncontextmenu="return false">
   <mat-toolbar color="primary">
     <p><label>Enter sale price. Total: {{data | currency}}</label></p>
     <span class="flex-spacer"></span>
+    <button mat-raised-button mat-dialog-close>&times;</button>
   </mat-toolbar>
+
   <form novalidate #cashForm="ngForm">
     <mat-dialog-content>
       <p>
@@ -16,4 +17,3 @@
       <generic-keyboard (evKeys)="getKeys($event)" [valid]="!valid"></generic-keyboard>
     </mat-dialog-content>
   </form>
-</div>
