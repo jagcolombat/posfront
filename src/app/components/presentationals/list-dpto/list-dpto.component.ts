@@ -13,7 +13,7 @@ import {CashService} from "../../../services/bussiness-logic/cash.service";
 export class ListDptoComponent implements OnInit {
   dptos: Department[] = [];
   page = 1;
-  sizePage = 12;
+  sizePage = 16;
 
   constructor(private router: Router, public stockService: StockService) {
   }

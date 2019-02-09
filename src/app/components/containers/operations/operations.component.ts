@@ -24,9 +24,8 @@ export class OperationsComponent implements OnInit {
 
   @Input() numpadOption = '@/FOR';
 
-  @Input() paymentOperations = [PaymentOpEnum.FOOD_STAMP, PaymentOpEnum.DEBIT_CARD, PaymentOpEnum.EBT_CARD,
-    PaymentOpEnum.CREDIT_CARD, PaymentOpEnum.CASH];
-  @Input() paymentColor = ['yellow', 'blue', 'yellow', 'blue', 'green'];
+  @Input() paymentOperations = [PaymentOpEnum.EBT_CARD, PaymentOpEnum.DEBIT_CARD, PaymentOpEnum.CREDIT_CARD, PaymentOpEnum.CASH];
+  @Input() paymentColor = ['yellow', 'blue', 'blue', 'green'];
   @Input() paymentDisabled: boolean | boolean[] = this.operationService.cashService.disabledPayment;
 
   constructor(public operationService: OperationsService) {  }

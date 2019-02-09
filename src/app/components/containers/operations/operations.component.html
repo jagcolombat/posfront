@@ -13,6 +13,6 @@
 </div>
 
 <operation-group id="payment" fxFlex.lg="20" fxFlex.lt-lg="25" [operations]="paymentOperations" [colors]="paymentColor"
-                 layout="five" class="border" (evPressKeys)="paymentKey($event)"
+                 layout="two" class="border" (evPressKeys)="paymentKey($event)"
                  [disable]="operationService.cashService.disabledPayment">
 </operation-group>

@@ -39,6 +39,10 @@
   max-width: 205px !important;
 }
 
+.five > button[mat-button]:first-of-type {
+  height: 175px;
+}
+
 /*button[mat-button].left:last-of-type{
   background-color: #ed5f5f;
   border-color: #913939;

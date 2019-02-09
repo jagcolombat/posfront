@@ -13,7 +13,7 @@ export class ListProdComponent implements OnInit {
   prods: Product[] = [];
   dptTax: number;
   page: number = 1;
-  sizePage = 8;
+  sizePage = 16;
 
   constructor( private route: ActivatedRoute, public stockService: StockService) { }
 
