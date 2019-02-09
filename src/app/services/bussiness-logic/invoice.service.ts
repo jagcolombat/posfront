@@ -60,11 +60,17 @@ export class InvoiceService {
     // Update invoice on database
     this.dataStorage.addProductOrderByInvoice(this.invoice.receiptNumber, po, EOperationType.Add).subscribe(next => {
       console.log('addProductOrder-next', next);
-      let countPO = next.productsOrders.length;
+      /*let countPO = next.productsOrders.length;
       let lastPO = next.productsOrders[countPO-1];
       lastPO.product = po.product;
       this.addPO2Invoice(lastPO);
-      this.resetDigits();
+      this.resetDigits();*/
+      if(next.receiptNumber[0] === 'R') {
+        next.total = next.total * -1;
+        next.subTotal = next.subTotal * -1;
+        next.tax = next.tax * -1;
+      }
+      this.setInvoice(next);
     }, err => {
       console.error('addProductOrder', err);
       // this.delPOFromInvoice(po);
@@ -72,8 +78,8 @@ export class InvoiceService {
   }
 
   addPO2Invoice(po: ProductOrder){
-    this.invoice.productsOrders.push(po);
-    this.setTotal();
+    // this.invoice.productsOrders.push(po);
+    // this.setTotal();
     this.evAddProd.emit(po);
   }
 
@@ -159,10 +165,10 @@ export class InvoiceService {
   }*/
 
   setTotal() {
-    let totalComputed = this.computeTotal();
+    /*let totalComputed = this.computeTotal();
     this.invoice.subtotal = totalComputed.total;
     this.invoice.tax = totalComputed.taxes;
-    this.invoice.total = this.invoice.subtotal + this.invoice.tax;
+    this.invoice.total = this.invoice.subtotal + this.invoice.tax;*/
     this.evUpdateTotals.emit(true);
   }
 

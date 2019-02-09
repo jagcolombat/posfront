@@ -362,7 +362,7 @@ export class OperationsService {
 
   onAddProduct(){
     this.resetInactivity(true);
-    this.invoiceService.invoice.status = InvoiceStatus.IN_PROGRESS;
+    // this.invoiceService.invoice.status = InvoiceStatus.IN_PROGRESS;
   }
 
   scanProduct(){

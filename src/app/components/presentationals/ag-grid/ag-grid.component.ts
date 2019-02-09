@@ -19,6 +19,7 @@ export class AgGridComponent implements OnInit, OnDestroy {
     this.gridOptions = <GridOptions>{
       rowData: [],
       rowSelection: 'multiple',
+      rowMultiSelectWithClick: true,
       columnDefs: this.createColumnDefs(),
       onGridReady: () => {
         this.gridOptions.api.sizeColumnsToFit();
@@ -26,9 +27,9 @@ export class AgGridComponent implements OnInit, OnDestroy {
       onRowSelected: (ev) => {
         this.invoiceService.invoiceProductSelected = this.gridOptions.api.getSelectedRows().length > 0;
       },
-      rowHeight: 42
+      rowHeight: 60
     };
-    this.subscriptions.push(this.invoiceService.evAddProd.subscribe(po => this.onAddRow(po)));
+    // this.subscriptions.push(this.invoiceService.evAddProd.subscribe(po => this.onAddRow(po)));
     this.subscriptions.push(this.invoiceService.evDelAllProds.subscribe(ev => this.clearData()));
     this.subscriptions.push(this.invoiceService.evDelProd.subscribe(ev => this.onRemoveSelected()));
     this.subscriptions.push(this.invoiceService.evUpdateProds.subscribe(ev => this.updateItems(ev)));
