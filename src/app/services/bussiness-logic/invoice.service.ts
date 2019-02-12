@@ -58,7 +58,7 @@ export class InvoiceService {
   addProductOrder(po: ProductOrder){
 
     // Update invoice on database
-    this.dataStorage.addProductOrderByInvoice(this.invoice.receiptNumber, po, EOperationType.Add).subscribe(next => {
+    this.dataStorage.addProductOrderByInvoice(this.invoice.receiptNumber, po, EOperationType.Add, this.invoice.isRefund).subscribe(next => {
       console.log('addProductOrder-next', next);
       /*let countPO = next.productsOrders.length;
       let lastPO = next.productsOrders[countPO-1];
@@ -85,9 +85,9 @@ export class InvoiceService {
 
   delPOFromInvoice(po: ProductOrder[]){
     po.map(prodOrder => {
-      this.invoice.productsOrders.splice(this.invoice.productsOrders.indexOf(prodOrder),1);
+      this.invoice.productOrders.splice(this.invoice.productOrders.indexOf(prodOrder),1);
       console.log('delPOFromInvoice', this.invoice.receiptNumber, prodOrder.id);
-      this.dataStorage.deleteProductOrderByInvoice(this.invoice.receiptNumber, prodOrder.id)
+      this.dataStorage.deleteProductOrderByInvoice(this.invoice.receiptNumber, prodOrder.id, this.invoice.isRefund)
        .subscribe(data => console.log(data),
                   err => console.log(err));
     });
@@ -103,7 +103,7 @@ export class InvoiceService {
 
   holdOrder(): Observable<any> {
     // this.setUserToInvoice();
-    return this.dataStorage.saveInvoiceByStatus(this.invoice, InvoiceStatus.IN_HOLD, EOperationType.HoldOlder);
+    return this.dataStorage.changeInvoiceToHold(this.invoice);
   }
 
   /*recallCheck(): Observable<Invoice[]> {
@@ -111,11 +111,12 @@ export class InvoiceService {
       .pipe(map(invoices => invoices));
   }*/
 
-   getInvoicesByStatus(typeOp: EOperationType, status?: InvoiceStatus): Observable<Invoice[]> {
-    if(status)
-      return this.dataStorage.getInvoicesByStatus(status, typeOp).pipe(map(invoices => invoices));
-    else
+  getInvoiceInHold(typeOp: EOperationType, status?: InvoiceStatus): Observable<Invoice[]> {
+    if (status) {
+      return this.dataStorage.getInvoiceInHold().pipe(map(invoices => invoices));
+    } else {
       return this.dataStorage.getInvoices().pipe(map(invoices => invoices));
+    }
   }
 
   getInvoicesById(typeOp: EOperationType): Observable<Invoice> {
@@ -131,7 +132,7 @@ export class InvoiceService {
     this.invoice = inv;
     this.receiptNumber = this.invoice.receiptNumber;
     this.setTotal();
-    this.evUpdateProds.emit(this.invoice.productsOrders);
+    this.evUpdateProds.emit(this.invoice.productOrders);
     this.resetDigits();
   }
 
@@ -144,11 +145,11 @@ export class InvoiceService {
 
   cancelInvoice(): Observable<Invoice> {
     // this.setUserToInvoice();
-    return this.dataStorage.saveInvoiceByStatus(this.invoice, InvoiceStatus.CANCEL, EOperationType.Void)
+    return this.dataStorage.changeInvoiceToVoid(this.invoice)
   }
 
   cash(payment: number): Observable<Invoice> {
-    let cashPayment = new CashPaymentModel(this.invoice, payment);
+    const cashPayment = new CashPaymentModel(this.invoice.receiptNumber, payment);
     return this.dataStorage.paidByCash(cashPayment);
   }
 
@@ -177,7 +178,7 @@ export class InvoiceService {
     let subtotal = 0;
     let tax = 0;
     let taxes = 0;
-    this.invoice.productsOrders.map(p => {
+    this.invoice.productOrders.map(p => {
       subtotal = p.unitCost * p.quantity;
       total += subtotal;
       if (p.tax > 0 ) {

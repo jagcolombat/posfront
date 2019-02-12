@@ -11,6 +11,7 @@ export interface IInvoice {
   clientAge?: number;
   subTotal?: number;
   tax?: number;
+  isRefund?: boolean;
 }
 
 export class Invoice implements IInvoice {
@@ -21,8 +22,9 @@ export class Invoice implements IInvoice {
               public productOrders = new Array<ProductOrder>(),
               public applicationUserId?: string,
               public clientAge?: number,
-              public subtotal?: number,
-              public tax?: number
+              public subTotal?: number,
+              public tax?: number,
+              public isRefund?: boolean
               ) {
   }
 }

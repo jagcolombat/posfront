@@ -136,7 +136,7 @@ export class OperationsService {
   hold() {
     console.log('hold');
     this.currentOperation = 'hold';
-    if (this.invoiceService.invoice.productsOrders.length > 0) {
+    if (this.invoiceService.invoice.productOrders.length > 0) {
       this.invoiceService.holdOrder().
       subscribe(
         next => this.invoiceService.createInvoice(),
@@ -156,7 +156,7 @@ export class OperationsService {
       this.invoiceService.digits ?
         this.getCheckById(EOperationType.RecallCheck,i => {
           this.invoiceService.setInvoice(i);}) :
-        this.invoiceService.getInvoicesByStatus(EOperationType.RecallCheck, InvoiceStatus.IN_HOLD)
+        this.invoiceService.getInvoiceInHold(EOperationType.RecallCheck, InvoiceStatus.IN_HOLD)
           .subscribe(next => this.openDialogInvoices(next, i => {
               this.invoiceService.setInvoice(i);}),
           err => this.openGenericInfo('Error', 'Can\'t complete recall check operation'));
@@ -191,7 +191,7 @@ export class OperationsService {
 
   subTotal(){
     console.log('subTotal');
-    if (this.invoiceService.invoice.productsOrders.length > 0) {
+    if (this.invoiceService.invoice.productOrders.length > 0) {
       this.currentOperation = TotalsOpEnum.SUBTOTAL;
       this.cashService.totalsEnableState();
     }

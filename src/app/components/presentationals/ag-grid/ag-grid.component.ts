@@ -93,13 +93,13 @@ export class AgGridComponent implements OnInit, OnDestroy {
   onAddRow(data: ProductOrder) {
     const newData = {
       id: data.id,
-      number_item: data.product.upc,
-      name: data.product.name,
+      number_item: data.productUpc,
+      name: data.productName,
       unitCost: data.unitCost,
       quantity: data.quantity,
       total: data.total,
       tax: data.tax,
-      product: data.product
+      // product: data.product
     };
     console.log('onAddRow', this.gridOptions.api.getDisplayedRowCount());
     const res = this.gridOptions.api.updateRowData({ add: [newData] });
@@ -128,7 +128,7 @@ export class AgGridComponent implements OnInit, OnDestroy {
 
   deleteOnInvoice(){
     // console.log('before', this.invoiceService.invoice.productsOrders);
-    this.invoiceService.invoice.productsOrders = <ProductOrder[]>[...this.getRowData()];
+    this.invoiceService.invoice.productOrders = <ProductOrder[]>[...this.getRowData()];
     // console.log('later', this.invoiceService.invoice.productsOrders);
   }
 

@@ -75,7 +75,7 @@ export class ProductOrderService {
     let tax = this.getTax(prod);
     let price = Number(prod.unitCost.toFixed(2));
     let total = Number((qty * price).toFixed(2));
-    return new ProductOrder(qty, price, total, tax, prod);
+    return new ProductOrder(qty, prod.unitCost, total, tax, 0, prod.id, prod.upc, prod.name);
   }
 
   private getTax(product: Product){
