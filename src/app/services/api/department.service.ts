@@ -13,10 +13,10 @@ export class DepartmentService {
   constructor(private _http: HttpClient) { }
 
   getAll(url: string): Observable<Department[]> {
-    return this._http.get<Department[]>(url + '/department').pipe(map(data => data));
+    return this._http.get<Department[]>(url + '/departments').pipe(map(data => data));
   }
 
-  getProductByDepartment(url: string, department: number): Observable<Product[]> {
-    return this._http.get<Product[]>(url + '/department/' + department + '/products');
+  getProductByDepartment(url: string, department: string): Observable<Product[]> {
+    return this._http.get<Product[]>(url + '/departments/' + department + '/products');
   }
 }

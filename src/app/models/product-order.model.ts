@@ -1,22 +1,29 @@
 /**
  * Created by tony on 23/10/2018.
  */
-import {Product} from "./product.model";
 
-export interface IProductOrder {
-  id: number;
+ export interface IProductOrder {
+  id: string;
   quantity: number;
-  unitCost: number;
   total: number;
   tax: number;
-  product: Product;
+  subTotal: number;
+  productId: string;
+  productUpc: string;
+  productName: string;
 
 }
 
 export class ProductOrder implements IProductOrder {
-  id: number;
-  constructor(public quantity: number, public unitCost: number, public total: number,
-              public tax: number, public product: Product) {
+  id: string;
+  constructor(public quantity: number,
+              public unitCost: number,
+              public total: number,
+              public tax: number,
+              public subTotal: number,
+              public productId: string,
+              public productUpc: string,
+              public productName: string) {
 
   }
 }

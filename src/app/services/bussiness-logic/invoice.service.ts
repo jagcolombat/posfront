@@ -157,7 +157,7 @@ export class InvoiceService {
   }
 
   refund(): Observable<Invoice>{
-    return this.dataStorage.getInvoiceById4Refund(this.digits);
+    return this.dataStorage.getInvoiceByIdRefund(this.digits);
   }
 
   /*setUserToInvoice() {

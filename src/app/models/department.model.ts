@@ -1,5 +1,5 @@
 export interface Department {
-  id: number;
+  id: string;
   name: string;
   priorityOrder: number;
   generic: boolean;

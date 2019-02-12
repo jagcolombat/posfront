@@ -1,27 +1,27 @@
-import {InvoiceStatus} from "../utils/invoice-status.enum";
-import {ProductOrder} from "./product-order.model";
+import {InvoiceStatus} from '../utils/invoice-status.enum';
+import {ProductOrder} from './product-order.model';
 
 export interface IInvoice {
-  id: number;
+  id: string;
   receiptNumber: string;
   status: InvoiceStatus;
   total: number;
-  productsOrders: ProductOrder[];
-  applicationUserId?: number;
+  productOrders: ProductOrder[];
+  applicationUserId?: string;
   clientAge?: number;
   subTotal?: number;
   tax?: number;
 }
 
 export class Invoice implements IInvoice {
-  id: number;
+  id: string;
   constructor(public receiptNumber: string,
               public status = InvoiceStatus.IN_PROGRESS,
               public total = 0,
-              public productsOrders = new Array<ProductOrder>(),
-              public applicationUserId?: number,
+              public productOrders = new Array<ProductOrder>(),
+              public applicationUserId?: string,
               public clientAge?: number,
-              public subTotal?: number,
+              public subtotal?: number,
               public tax?: number
               ) {
   }

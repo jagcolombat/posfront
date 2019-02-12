@@ -1,5 +1,5 @@
 export interface Product {
-    id?: number;
+    id?: string;
     upc?: string;
     name?: string;
     format?: string;
@@ -8,7 +8,7 @@ export interface Product {
     unitCost?: number;
     applyTax?: boolean;
     followDepartment?: boolean;
-    departmentId?: number;
+    departmentId?: string;
     ageVerification?: boolean;
     ageAllow?: number;
     foodStamp?: boolean;

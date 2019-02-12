@@ -5,17 +5,17 @@ import {Department} from '../../models/department.model';
 import {Product} from '../../models/product.model';
 import {ProductService} from './product.service';
 import {InvoiceService} from './invoice.service';
-import {InvoiceStatus} from '../../utils/invoice-status.enum';
 import {Invoice} from '../../models/invoice.model';
 import {map} from 'rxjs/operators';
 import { Url } from '../../utils/url.path.enum';
-import { ProductOrderService } from './product-order.service';
 import { PaymentService } from './payment.service';
 import { ProductOrder } from 'src/app/models/product-order.model';
 import { EOperationType } from 'src/app/utils/operation.type.enum';
 import { ICashPayment } from 'src/app/models/cash-payment.model';
 import { Journey } from 'src/app/models/journey.model';
 import { JourneyService } from './journey.service';
+import { CreditCard } from 'src/app/models';
+import { InvoiceRefundService } from './invoice.refund.service';
 
 @Injectable({
   providedIn: 'root'
@@ -27,9 +27,9 @@ export class DataStorageService {
   constructor(private departmentService: DepartmentService,
               private productService: ProductService,
               private invoiceService: InvoiceService,
-              private productOrderService: ProductOrderService,
               private paymentService: PaymentService,
-              private journeyService: JourneyService) { }
+              private journeyService: JourneyService,
+              private invoiceRefundService: InvoiceRefundService) { }
 
   private url = Url.PATH;
 
@@ -38,7 +38,7 @@ export class DataStorageService {
     return this.departmentService.getAll(this.url);
   }
 
-  getProductsByDepartment(department: number): Observable<Product[]> {
+  getProductsByDepartment(department: string): Observable<Product[]> {
     return this.departmentService.getProductByDepartment(this.url, department).pipe();
   }
 
@@ -52,14 +52,22 @@ export class DataStorageService {
     return this.invoiceService.create(this.url);
   }
 
-  saveInvoiceByStatus(invoice: Invoice, status: InvoiceStatus, operationType: EOperationType): Observable<Invoice> {
+  changeInvoiceToHold(invoice: Invoice): Observable<Invoice> {
     console.log(invoice);
-    invoice.status = status;
-    return this.invoiceService.saveByStatus(this.url, invoice, status, operationType);
+    return this.invoiceService.changeInvoiceToHold(this.url, invoice);
   }
 
-  getInvoicesByStatus(status: InvoiceStatus, operationType: EOperationType) {
-    return this.invoiceService.getByStatus(this.url, status, operationType);
+  changeInvoiceToVoid(invoice: Invoice, isRefund = false): Observable<Invoice> {
+    console.log(invoice);
+    if (!isRefund) {
+      return this.invoiceService.changeInvoiceToVoid(this.url, invoice);
+    } else {
+      return this.invoiceRefundService.changeInvoiceToVoid(this.url, invoice);
+    }
+  }
+
+  getInvoiceInHold() {
+    return this.invoiceService.getInvoiceInHold(this.url);
   }
 
   getInvoiceById(id: string, operationType: EOperationType): Observable<Invoice>  {
@@ -75,8 +83,8 @@ export class DataStorageService {
     return this.invoiceService.getAllWithoutPage(this.url);
   }
 
-  getInvoiceById4Refund (id: string): Observable<Invoice> {
-    return this.invoiceService.getInvoiceById4Refund(this.url, id);
+  getInvoiceByIdRefund (id: string): Observable<Invoice> {
+    return this.invoiceService.getInvoiceByIdRefund(this.url, id);
   }
 
   printInvoices (invoice: Invoice): Observable<Invoice[]> {
@@ -85,17 +93,38 @@ export class DataStorageService {
 
   // ProductOrder
 
-  addProductOrderByInvoice(invoiceId: string, productOrder: ProductOrder, operationType: EOperationType): Observable<any> {
-    return this.invoiceService.addProductOrder(this.url, productOrder, invoiceId, operationType);
+  addProductOrderByInvoice(invoiceId: string, productOrder: ProductOrder, operationType: EOperationType,
+                             isRefund = false): Observable<Invoice> {
+    if (!isRefund) {
+      return this.invoiceService.addProductOrder(this.url, productOrder, invoiceId, operationType);
+    } else {
+      return this.invoiceRefundService.addProductOrder(this.url, productOrder, invoiceId, operationType);
+    }
   }
 
-  deleteProductOrderByInvoice(invoiceId: string, productOrderId: number): Observable<any> {
-    return this.invoiceService.deleteProductOrder(this.url, productOrderId, invoiceId);
+  deleteProductOrderByInvoice(invoiceId: string, productOrderId: string, isRefund = false): Observable<Invoice> {
+    if (!isRefund) {
+      return this.invoiceService.deleteProductOrder(this.url, productOrderId, invoiceId);
+    } else {
+      return this.invoiceRefundService.deleteProductOrder(this.url, productOrderId, invoiceId);
+    }
   }
 
   // Payment
   paidByCash(cashPayment: ICashPayment): Observable<any> {
     return this.paymentService.paidByCash(this.url, cashPayment);
+  }
+
+  paidByCreditCard(cashPayment: CreditCard): Observable<any> {
+    return this.paymentService.paidByCreditCard(this.url, cashPayment);
+  }
+
+  paidByDeditCard(cashPayment: CreditCard): Observable<any> {
+    return this.paymentService.paidByCreditCard(this.url, cashPayment);
+  }
+
+  paidByEBTCard(cashPayment: CreditCard): Observable<any> {
+    return this.paymentService.paidByEBTCard(this.url, cashPayment);
   }
 
   // Journey
