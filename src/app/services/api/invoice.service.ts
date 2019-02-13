@@ -44,9 +44,8 @@ export class InvoiceService {
   getById (url: string, id: string, operationType: EOperationType): Observable<Invoice> {
     let params = new HttpParams();
     params = params
-      .append('uniqueId', id)
       .append('operationType', operationType + '');
-    return this._http.get<Invoice>(url + this.path, { params });
+    return this._http.get<Invoice>(url + this.path + '/receiptNumber/' + id, { params });
   }
 
   addProductOrder(url: string, product: ProductOrder, invoiceId: string, operation: EOperationType): Observable<any> {
@@ -81,7 +80,7 @@ export class InvoiceService {
   }
 
   getInvoiceByIdRefund (url: string, id: string): Observable<Invoice> {
-    return this._http.post<Invoice>(url + this.path + '/' + id + '/status/refound', {});
+    return this._http.post<Invoice>(url + this.path + '/' + id + '/status/refund', {});
   }
 
 }

@@ -300,7 +300,7 @@ export class OperationsService {
     console.log('cash');
     this.currentOperation = 'cash';
 
-    if (this.invoiceService.invoice.total > 0) {
+    if (this.invoiceService.invoice.total !== 0) {
       const dialogRef = this.dialog.open(CashOpComponent,
         {
           width: '480px', height: '660px', data: this.invoiceService.invoice.total, disableClose: true

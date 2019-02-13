@@ -65,7 +65,7 @@ export class InvoiceService {
       lastPO.product = po.product;
       this.addPO2Invoice(lastPO);
       this.resetDigits();*/
-      if(next.receiptNumber[0] === 'R') {
+      if (next.isRefund) {
         next.total = next.total * -1;
         next.subTotal = next.subTotal * -1;
         next.tax = next.tax * -1;
