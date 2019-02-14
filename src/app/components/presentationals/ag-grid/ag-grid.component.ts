@@ -57,16 +57,19 @@ export class AgGridComponent implements OnInit, OnDestroy {
       {
         headerName: 'Price',
         field: 'unitCost',
+        type: 'numericColumn',
         width: 90
       },
       {
         headerName: 'Quantity',
         field: 'quantity',
+        type: 'numericColumn',
         width: 95
       },
       {
         headerName: 'Amount',
         field: 'total',
+        type: 'numericColumn',
         width: 95
       }
     ];
