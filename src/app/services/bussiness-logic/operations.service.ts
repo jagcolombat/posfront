@@ -58,14 +58,16 @@ export class OperationsService {
   }
 
   clearOp(total:boolean = true){
-    this.invoiceService.evDelProd.emit(true);
-    if(total) this.invoiceService.setTotal();
     if(this.currentOperation === FinancialOpEnum.REVIEW || this.currentOperation === TotalsOpEnum.FS_SUBTOTAL ||
       this.currentOperation === TotalsOpEnum.SUBTOTAL){
         this.cashService.resetEnableState();
         if(this.currentOperation === FinancialOpEnum.REVIEW) {
           this.invoiceService.createInvoice();
         }
+        this.currentOperation = '';
+    } else {
+      this.invoiceService.evDelProd.emit(true);
+      if(total) this.invoiceService.setTotal();
     }
   }
 
