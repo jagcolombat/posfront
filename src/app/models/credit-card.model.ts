@@ -4,3 +4,8 @@ export interface CreditCard {
     cvv?: string;
     expDate?: string;
 }
+
+export class CreditCardModel implements CreditCard{
+  constructor(public name: string, public cc: string) {}
+}
+
