@@ -1,5 +1,6 @@
 import { Component, HostListener, OnInit, OnDestroy } from '@angular/core';
 import { HubConnection, HubConnectionBuilder } from '@aspnet/signalr';
+import { Url } from './utils/url.path.enum';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -15,7 +16,7 @@ export class AppComponent implements OnInit, OnDestroy {
   private _hubConnection: HubConnection;
 
   ngOnInit(): void {
-    this._hubConnection = new HubConnectionBuilder().withUrl('http://localhost:5000/events').build();
+    this._hubConnection = new HubConnectionBuilder().withUrl(Url.WEBSOCKET).build();
     this._hubConnection
       .start()
       .then(() => console.log('Connection started!'))
