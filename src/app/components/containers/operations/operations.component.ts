@@ -112,16 +112,16 @@ export class OperationsComponent implements OnInit {
   otherKey(ev) {
     switch (ev) {
       case 'Print Last Receipt':
-        this.operationService.subTotal();
+        this.operationService.openGenericInfo('Print Last Receipt', 'Sending event');
         break;
       case 'No Sale':
-        this.operationService.fsSubTotal();
+        this.operationService.openGenericInfo('No Sale', 'Sending event');
         break;
       case 'Paid Out':
-        this.operationService.fsSubTotal();
+        this.operationService.openGenericInfo('Paid Out', 'Sending event');
         break;
       case 'House Charge':
-        this.operationService.fsSubTotal();
+        this.operationService.openGenericInfo('House Charge', 'Sending event');
         break;
     }
   }

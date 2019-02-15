@@ -308,7 +308,7 @@ export class OperationsService {
 
   openGenericInfo(title: string, content?: string) {
      this.dialog.open(GenericInfoModalComponent,{
-        width: '300px', height: '220px', data: {title: title ? title : 'Information', content: content}, disableClose: true
+        width: '350px', height: '220px', data: {title: title ? title : 'Information', content: content}, disableClose: true
      });
   }
 
@@ -395,7 +395,18 @@ export class OperationsService {
   }
 
   ebt() {
-    // this.invoiceService.invoice.productsOrders[0].product.
+    /*this.invoiceService.cash(49)
+      .subscribe(data => {
+          console.log(data);
+          this.invoiceService.createInvoice();
+        },
+        err => {console.log(err); this.openGenericInfo('Error', 'Can\'t complete ebt operation')},
+        () => this.cashService.resetEnableState())*/
+    this.invoiceService.invoice.fsSubtotal = 0;
+    this.invoiceService.invoice.fsTax = 0;
+    this.invoiceService.invoice.fsTotal = 0;
+    this.invoiceService.evUpdateTotals.emit();
+    this.cashService.resetEnableState();
   }
 
   debit() {
