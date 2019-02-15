@@ -199,8 +199,24 @@ export class OperationsService {
 
   fsSubTotal(){
     console.log('fsSubTotal');
-    this.currentOperation = TotalsOpEnum.FS_SUBTOTAL;
-    this.cashService.totalsEnableState(true);
+    if (this.invoiceService.invoice.productOrders.length > 0) {
+      this.currentOperation = TotalsOpEnum.FS_SUBTOTAL;
+      this.cashService.totalsEnableState(true);
+      this.invoiceService.invoice.productOrders.filter(po => {
+        if(po.foodStamp){
+          this.invoiceService.invoice.fsSubtotal = this.invoiceService.invoice.fsSubtotal ?
+            this.invoiceService.invoice.fsSubtotal + po.subTotal : 0 + po.subTotal;
+          this.invoiceService.invoice.subTotal = this.invoiceService.invoice.subTotal - po.subTotal;
+          this.invoiceService.invoice.fsTax = this.invoiceService.invoice.fsTax ?
+            this.invoiceService.invoice.fsTax + po.tax : 0 + po.tax;
+          this.invoiceService.invoice.tax -= po.tax;
+          this.invoiceService.invoice.fsTotal = this.invoiceService.invoice.fsTotal ?
+            this.invoiceService.invoice.fsTotal + po.total : 0 + po.total;
+          this.invoiceService.invoice.total -= po.total;
+          this.invoiceService.evUpdateTotals.emit();
+        }
+      })
+    }
 
   }
 

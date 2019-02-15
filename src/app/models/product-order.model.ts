@@ -11,7 +11,7 @@
   productId: string;
   productUpc: string;
   productName: string;
-
+  foodStamp: boolean;
 }
 
 export class ProductOrder implements IProductOrder {
@@ -23,7 +23,8 @@ export class ProductOrder implements IProductOrder {
               public subTotal: number,
               public productId: string,
               public productUpc: string,
-              public productName: string) {
+              public productName: string,
+              public foodStamp: boolean) {
 
   }
 }

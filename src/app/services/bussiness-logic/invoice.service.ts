@@ -70,6 +70,7 @@ export class InvoiceService {
         next.subTotal = next.subTotal * -1;
         next.tax = next.tax * -1;
       }
+      next.productOrders[next.productOrders.length-1].foodStamp = po.foodStamp;
       this.setInvoice(next);
     }, err => {
       console.error('addProductOrder', err);

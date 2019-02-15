@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {OperationsService} from "../../../services/bussiness-logic/operations.service";
 import {InvioceOpEnum , PaymentOpEnum, FinancialOpEnum, TotalsOpEnum} from "../../../utils/operations";
+import {OtherOpEnum} from "../../../utils/operations/other.enum";
 
 @Component({
   selector: 'operations',
@@ -27,6 +28,9 @@ export class OperationsComponent implements OnInit {
   @Input() paymentOperations = [PaymentOpEnum.EBT_CARD, PaymentOpEnum.DEBIT_CARD, PaymentOpEnum.CREDIT_CARD, PaymentOpEnum.CASH];
   @Input() paymentColor = ['yellow', 'blue', 'blue', 'green'];
   @Input() paymentDisabled: boolean | boolean[] = this.operationService.cashService.disabledPayment;
+
+  @Input() otherOperations = [OtherOpEnum.PRINT_LAST, OtherOpEnum.NO_SALE, OtherOpEnum.PAID_OUT, OtherOpEnum.HOUSE_CHARGE];
+  @Input() otherColor = ['yellow', 'blue', 'blue', 'green'];
 
   constructor(public operationService: OperationsService) {  }
 
@@ -105,5 +109,20 @@ export class OperationsComponent implements OnInit {
     }
   }
 
-
+  otherKey(ev) {
+    switch (ev) {
+      case 'Print Last Receipt':
+        this.operationService.subTotal();
+        break;
+      case 'No Sale':
+        this.operationService.fsSubTotal();
+        break;
+      case 'Paid Out':
+        this.operationService.fsSubTotal();
+        break;
+      case 'House Charge':
+        this.operationService.fsSubTotal();
+        break;
+    }
+  }
 }

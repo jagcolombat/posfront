@@ -27,7 +27,8 @@ export class AgGridComponent implements OnInit, OnDestroy {
       onRowSelected: (ev) => {
         this.invoiceService.invoiceProductSelected = this.gridOptions.api.getSelectedRows().length > 0;
       },
-      rowHeight: 60
+      rowHeight: 60,
+      rowStyle: {'font-size': 'large'}
     };
     // this.subscriptions.push(this.invoiceService.evAddProd.subscribe(po => this.onAddRow(po)));
     this.subscriptions.push(this.invoiceService.evDelAllProds.subscribe(ev => this.clearData()));
@@ -52,7 +53,7 @@ export class AgGridComponent implements OnInit, OnDestroy {
       {
         headerName: 'Name',
         field: 'name',
-        width: 210
+        width: 200
       },
       {
         headerName: 'Price',
