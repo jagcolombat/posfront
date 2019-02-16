@@ -106,22 +106,25 @@ export class OperationsComponent implements OnInit {
       case PaymentOpEnum.DEBIT_CARD:
         this.operationService.debit();
         break;
+      case PaymentOpEnum.CREDIT_CARD:
+        this.operationService.credit();
+        break;
     }
   }
 
   otherKey(ev) {
     switch (ev) {
       case 'Print Last Receipt':
-        this.operationService.openGenericInfo('Print Last Receipt', 'Sending event');
+        this.operationService.cashService.openGenericInfo('Print Last Receipt', 'Sending event');
         break;
       case 'No Sale':
-        this.operationService.openGenericInfo('No Sale', 'Sending event');
+        this.operationService.cashService.openGenericInfo('No Sale', 'Sending event');
         break;
       case 'Paid Out':
-        this.operationService.openGenericInfo('Paid Out', 'Sending event');
+        this.operationService.cashService.openGenericInfo('Paid Out', 'Sending event');
         break;
       case 'House Charge':
-        this.operationService.openGenericInfo('House Charge', 'Sending event');
+        this.operationService.cashService.openGenericInfo('House Charge', 'Sending event');
         break;
     }
   }

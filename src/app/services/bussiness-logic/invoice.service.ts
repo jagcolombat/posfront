@@ -3,7 +3,7 @@ import {AuthService} from "../api/auth.service";
 import {ProductOrder} from "../../models/product-order.model";
 import {DataStorageService} from "../api/data-storage.service";
 import {BehaviorSubject, Observable} from "rxjs";
-import {Product} from "../../models";
+import {Product, CreditCardModel} from "../../models";
 import {InvoiceStatus} from "../../utils/invoice-status.enum";
 import {Invoice} from "../../models/invoice.model";
 import {map} from "rxjs/operators";
@@ -154,6 +154,21 @@ export class InvoiceService {
   cash(payment: number): Observable<Invoice> {
     const cashPayment = new CashPaymentModel(this.invoice.receiptNumber, payment);
     return this.dataStorage.paidByCash(cashPayment);
+  }
+
+  debit(payment: number): Observable<Invoice> {
+    const debitPayment = new CreditCardModel('Raydel', '12345678');
+    return this.dataStorage.paidByDeditCard(debitPayment);
+  }
+
+  credit(payment: number): Observable<Invoice> {
+    const debitPayment = new CreditCardModel('Raydel', '12345678');
+    return this.dataStorage.paidByCreditCard(debitPayment);
+  }
+
+  ebt(payment: number): Observable<Invoice> {
+    const debitPayment = new CreditCardModel('Raydel', '12345678');
+    return this.dataStorage.paidByEBTCard(debitPayment);
   }
 
   print(invoice: Invoice) {

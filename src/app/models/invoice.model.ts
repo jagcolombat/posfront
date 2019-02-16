@@ -7,15 +7,12 @@ export interface IInvoice {
   status: InvoiceStatus;
   total: number;
   productOrders: ProductOrder[];
-  fsSubtotal: number;
-  fsTax: number;
-  fsTotal: number;
   applicationUserId?: string;
   clientAge?: number;
   subTotal?: number;
   tax?: number;
   isRefund?: boolean;
-
+  fsTotal?: number;
 }
 
 export class Invoice implements IInvoice {
@@ -29,9 +26,7 @@ export class Invoice implements IInvoice {
               public subTotal?: number,
               public tax?: number,
               public isRefund?: boolean,
-              public fsSubtotal: number = 0,
-              public fsTax: number = 0,
-              public fsTotal: number = 0,
+              public fsTotal?: number,
               ) {
   }
 }

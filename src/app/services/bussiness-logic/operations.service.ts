@@ -13,6 +13,7 @@ import {CashService} from "./cash.service";
 import {Token} from "../../models";
 import {FinancialOpEnum, TotalsOpEnum} from "../../utils/operations";
 import { HttpErrorResponse } from '@angular/common/http';
+import {GenericInfoEventsComponent} from "../../components/presentationals/generic-info-events/generic-info-events.component";
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +23,7 @@ export class OperationsService {
   timer: number;
   currentOperation: string;
 
-  constructor(private invoiceService: InvoiceService, private cashService: CashService,
+  constructor(private invoiceService: InvoiceService, public cashService: CashService,
               private authService: AuthService, private router: Router) {
     this.invoiceService.evAddProd.subscribe(() => this.onAddProduct());
     this.counterInactivity();
@@ -199,13 +200,11 @@ export class OperationsService {
     if (this.invoiceService.invoice.productOrders.length > 0) {
       this.currentOperation = TotalsOpEnum.FS_SUBTOTAL;
       this.cashService.totalsEnableState(true);
+      // Send invoice for calculate totals
+      // Receive updated invoice and execute this.invoiceService.setInvoice
       this.invoiceService.invoice.productOrders.filter(po => {
         if(po.foodStamp){
-          this.invoiceService.invoice.fsSubtotal = this.invoiceService.invoice.fsSubtotal ?
-            this.invoiceService.invoice.fsSubtotal + po.subTotal : 0 + po.subTotal;
           this.invoiceService.invoice.subTotal = this.invoiceService.invoice.subTotal - po.subTotal;
-          this.invoiceService.invoice.fsTax = this.invoiceService.invoice.fsTax ?
-            this.invoiceService.invoice.fsTax + po.tax : 0 + po.tax;
           this.invoiceService.invoice.tax -= po.tax;
           this.invoiceService.invoice.fsTotal = this.invoiceService.invoice.fsTotal ?
             this.invoiceService.invoice.fsTotal + po.total : 0 + po.total;
@@ -214,7 +213,7 @@ export class OperationsService {
         }
       })
     }
-
+    this.resetInactivity(true);
   }
 
   getCheckById(typeOp: EOperationType, action: (i: Invoice) => void) {
@@ -303,11 +302,12 @@ export class OperationsService {
     this.resetInactivity(false);
   }
 
-  /*openGenericInfo(title: string, content?: string) {
-     this.dialog.open(GenericInfoModalComponent,{
-        width: '350px', height: '220px', data: {title: title ? title : 'Information', content: content}, disableClose: true
-     });
-  }*/
+  openInfoEventDialog(title: string) {
+    this.cashService.dialog.open(GenericInfoEventsComponent,{
+       width: '300px', height: '220px', data: {title: title ? title : 'Information'}, disableClose: true
+    })
+    .afterClosed().subscribe(() => this.cashService.resetEnableState());
+  }
 
   cash() {
     console.log('cash');
@@ -400,14 +400,63 @@ export class OperationsService {
         },
         err => {console.log(err); this.openGenericInfo('Error', 'Can\'t complete ebt operation')},
         () => this.cashService.resetEnableState())*/
-    this.invoiceService.invoice.fsSubtotal = 0;
+
+    /*this.invoiceService.invoice.fsSubtotal = 0;
     this.invoiceService.invoice.fsTax = 0;
     this.invoiceService.invoice.fsTotal = 0;
     this.invoiceService.evUpdateTotals.emit();
-    this.cashService.resetEnableState();
+    this.cashService.resetEnableState();*/
+
+    console.log('EBT Card');
+    this.currentOperation = 'EBT Card';
+
+    if (this.invoiceService.invoice.total > 0 || this.invoiceService.invoice.fsTotal > 0) {
+      this.openInfoEventDialog('EBT Card');
+      this.invoiceService.ebt(this.invoiceService.invoice.total)
+        .subscribe(data => {
+          console.log(data);
+          this.invoiceService.createInvoice();
+          },err => {
+          console.log(err); this.cashService.openGenericInfo('Error', 'Can\'t complete ebt operation');
+          this.cashService.resetEnableState();
+        });
+    }
+    this.resetInactivity(false);
   }
 
   debit() {
+    this.currentOperation = 'debit';
 
+    if (this.invoiceService.invoice.total > 0) {
+      this.openInfoEventDialog('Debit Card');
+      this.invoiceService.debit(this.invoiceService.invoice.total)
+        .subscribe(data => {
+          console.log(data);
+          this.invoiceService.createInvoice();
+        },err => {
+            console.log(err); this.cashService.openGenericInfo('Error', 'Can\'t complete debit operation');
+            this.cashService.resetEnableState();
+        });
+    }
+    this.resetInactivity(false);
+  }
+
+  credit() {
+    console.log('Credit Card');
+    this.currentOperation = 'Credit Card';
+
+    if (this.invoiceService.invoice.total > 0) {
+      this.openInfoEventDialog('Credit Card');
+      this.invoiceService.credit(this.invoiceService.invoice.total)
+        .subscribe(data => {
+          console.log(data);
+          this.invoiceService.createInvoice();
+          },
+        err => {
+          console.log(err); this.cashService.openGenericInfo('Error', 'Can\'t complete credit operation');
+          this.cashService.resetEnableState();
+        });
+      }
+    this.resetInactivity(false);
   }
 }

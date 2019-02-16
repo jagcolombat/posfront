@@ -6,28 +6,8 @@ import { Url } from './utils/url.path.enum';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements OnInit {
   title = 'pos-front';
 
-  /*@HostListener('document: keypress', ['$event'])
-  handleKeyboardEvent(event: KeyboardEvent) {
-    console.log('handleKeyboardEvent', event);
-  }*/
-  private _hubConnection: HubConnection;
-
-  ngOnInit(): void {
-    this._hubConnection = new HubConnectionBuilder().withUrl(Url.WEBSOCKET).build();
-    this._hubConnection
-      .start()
-      .then(() => console.log('Connection started!'))
-      .catch(err => console.log('Error while establishing connection :('));
-
-    this._hubConnection.on('paid-credit', (data) => {
-      console.log(data);
-    });
-  }
-
-  ngOnDestroy(): void {
-    this._hubConnection.stop();
-  }
+  ngOnInit(): void {}
 }
