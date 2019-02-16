@@ -9,6 +9,7 @@ import {Invoice} from "../../models/invoice.model";
 import {map} from "rxjs/operators";
 import {EOperationType} from "../../utils/operation.type.enum";
 import {CashPaymentModel} from "../../models/cash-payment.model";
+import {CashService} from "./cash.service";
 
 @Injectable({
   providedIn: 'root'
@@ -34,7 +35,7 @@ export class InvoiceService {
   @Output() evUpdateProds = new EventEmitter<ProductOrder[]>();
   evCreateInvoice = new BehaviorSubject<boolean>(true);
 
-  constructor(private authService: AuthService, private dataStorage: DataStorageService) { }
+  constructor(private authService: AuthService, private dataStorage: DataStorageService, private cashService: CashService) { }
 
   getCashier(): string {
     return this.cashier = this.authService.token.username ? this.authService.token.username : ''
@@ -75,6 +76,7 @@ export class InvoiceService {
     }, err => {
       console.error('addProductOrder', err);
       // this.delPOFromInvoice(po);
+      this.cashService.openGenericInfo('Error', err.error);
     });
   }
 

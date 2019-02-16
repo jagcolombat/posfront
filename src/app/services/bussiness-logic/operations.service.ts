@@ -2,8 +2,6 @@ import {Injectable} from '@angular/core';
 import {InvoiceService} from "./invoice.service";
 import {Router} from "@angular/router";
 import {AuthService} from "../api/auth.service";
-import {MatDialog} from "@angular/material";
-import {GenericInfoModalComponent} from "../../components/presentationals/generic-info-modal/generic-info-modal.component";
 import {DialogLoginComponent} from "../../components/containers/dialog-login/dialog-login.component";
 import {Invoice} from "../../models/invoice.model";
 import {DialogInvoiceComponent} from "../../components/presentationals/dialog-invoice/dialog-invoice.component";
@@ -24,8 +22,8 @@ export class OperationsService {
   timer: number;
   currentOperation: string;
 
-  constructor(private invoiceService: InvoiceService, public cashService: CashService,
-              private authService: AuthService, private dialog: MatDialog, private router: Router) {
+  constructor(private invoiceService: InvoiceService, private cashService: CashService,
+              private authService: AuthService, private router: Router) {
     this.invoiceService.evAddProd.subscribe(() => this.onAddProduct());
     this.counterInactivity();
   }
@@ -86,7 +84,7 @@ export class OperationsService {
       this.invoiceService.evAddProdByUPC.emit(prod);
     }, err => {
       console.error('addProductByUpc', err);
-      this.openGenericInfo('Error', 'Can\'t complete get product by plu');
+      this.cashService.openGenericInfo('Error', 'Can\'t complete get product by plu');
     }, () => this.invoiceService.resetDigits());
     this.resetInactivity(false);
   }
@@ -95,9 +93,8 @@ export class OperationsService {
     console.log('priceCheck');
     this.currentOperation = 'priceCheck';
     this.invoiceService.getProductByUpc(EOperationType.PriceCheck).subscribe(prod => {
-      this.dialog.open(GenericInfoModalComponent, { width: '350px', height: '250px',
-        data: { title: 'Price Check', content: prod.name, price: prod.unitCost }, disableClose: true});
-    }, err => { this.openGenericInfo('Error', 'Can\'t found this product '+ this.invoiceService.digits); });
+      this.cashService.openGenericInfo('Price Check', prod.name, prod.unitCost);
+    }, err => { this.cashService.openGenericInfo('Error', 'Can\'t found this product '+ this.invoiceService.digits); });
     this.invoiceService.resetDigits();
     this.resetInactivity(true);
   }
@@ -110,7 +107,7 @@ export class OperationsService {
     console.log('manager');
     // this.currentOperation = 'manager';
     // if(!this.authService.adminLogged()){
-      const dialogRef = this.dialog.open(DialogLoginComponent, { width: '530px', height: '580px', disableClose: true});
+      const dialogRef = this.cashService.dialog.open(DialogLoginComponent, { width: '530px', height: '580px', disableClose: true});
       dialogRef.afterClosed().subscribe(loginValid => {
         console.log('The dialog was closed', loginValid);
         if(loginValid.valid) {
@@ -140,9 +137,9 @@ export class OperationsService {
       this.invoiceService.holdOrder().
       subscribe(
         next => this.invoiceService.createInvoice(),
-        err => this.openGenericInfo('Error', 'Can\'t complete hold order operation'));
+        err => this.cashService.openGenericInfo('Error', 'Can\'t complete hold order operation'));
     } else {
-      this.openGenericInfo('Error', 'Not possible Hold Order without products in this Invoice');
+      this.cashService.openGenericInfo('Error', 'Not possible Hold Order without products in this Invoice');
     }
     this.resetInactivity(true);
   }
@@ -159,10 +156,10 @@ export class OperationsService {
         this.invoiceService.getInvoiceInHold(EOperationType.RecallCheck, InvoiceStatus.IN_HOLD)
           .subscribe(next => this.openDialogInvoices(next, i => {
               this.invoiceService.setInvoice(i);}),
-          err => this.openGenericInfo('Error', 'Can\'t complete recall check operation'));
+          err => this.cashService.openGenericInfo('Error', 'Can\'t complete recall check operation'));
     } else {
       console.error('Can\'t complete recallw check operation');
-      this.openGenericInfo('Error', 'Can\'t complete recall check operation because check is in progress');
+      this.cashService.openGenericInfo('Error', 'Can\'t complete recall check operation because check is in progress');
     }
   }
 
@@ -179,13 +176,13 @@ export class OperationsService {
           this.cashService.reviewEnableState();
         });
       } else {
-        this.openGenericInfo('Error', 'Please input receipt number of check');
+        this.cashService.openGenericInfo('Error', 'Please input receipt number of check');
         this.invoiceService.resetDigits();
       }
     } else {
       console.error('Can\'t complete review check operation');
       this.invoiceService.resetDigits();
-      this.openGenericInfo('Error', 'Can\'t complete review check operation because check is in progress');
+      this.cashService.openGenericInfo('Error', 'Can\'t complete review check operation because check is in progress');
     }
   }
 
@@ -224,12 +221,12 @@ export class OperationsService {
     this.invoiceService.getInvoicesById(typeOp)
         .subscribe(next => action(next),
                     (err: HttpErrorResponse) =>
-                       this.openGenericInfo('Error', 'Can\'t complete get check operation. ' + err.statusText));
+                       this.cashService.openGenericInfo('Error', 'Can\'t complete get check operation. ' + err.statusText));
   }
 
   openDialogInvoices(inv: Invoice[], action: (i: Invoice) => void) {
       if (inv.length > 0) {
-        const dialogRef = this.dialog.open(DialogInvoiceComponent,
+        const dialogRef = this.cashService.dialog.open(DialogInvoiceComponent,
           {
             width: '700px', height: '450px', data: inv, disableClose: true
           });
@@ -238,7 +235,7 @@ export class OperationsService {
           if (order) { action(order); }
         });
       } else {
-        this.openGenericInfo('Information', 'Not exist hold orders');
+        this.cashService.openGenericInfo('Information', 'Not exist hold orders');
       }
   }
 
@@ -254,15 +251,15 @@ export class OperationsService {
           err => {
             console.error(err);
             this.invoiceService.resetDigits();
-            this.openGenericInfo('Error', 'Can\'t complete refund operation');
+            this.cashService.openGenericInfo('Error', 'Can\'t complete refund operation');
           }
         )
         :
-        this.openGenericInfo('Error', 'Please input receipt number of check');
+        this.cashService.openGenericInfo('Error', 'Please input receipt number of check');
     } else {
       console.error('Can\'t complete refund operation');
       this.invoiceService.resetDigits();
-      this.openGenericInfo('Error', 'Can\'t complete refund operation because check is in progress');
+      this.cashService.openGenericInfo('Error', 'Can\'t complete refund operation because check is in progress');
     }
 
   }
@@ -272,7 +269,7 @@ export class OperationsService {
     this.currentOperation = 'logout';
 
     if(this.invoiceService.invoice.status === InvoiceStatus.IN_PROGRESS){
-      this.openGenericInfo('Error', 'Can\'t complete logout operation because check is in progress')
+      this.cashService.openGenericInfo('Error', 'Can\'t complete logout operation because check is in progress')
     } else {
       this.authService.logout();
       this.invoiceService.resetDigits();
@@ -306,18 +303,18 @@ export class OperationsService {
     this.resetInactivity(false);
   }
 
-  openGenericInfo(title: string, content?: string) {
+  /*openGenericInfo(title: string, content?: string) {
      this.dialog.open(GenericInfoModalComponent,{
         width: '350px', height: '220px', data: {title: title ? title : 'Information', content: content}, disableClose: true
      });
-  }
+  }*/
 
   cash() {
     console.log('cash');
     this.currentOperation = 'cash';
 
     if (this.invoiceService.invoice.total !== 0) {
-      const dialogRef = this.dialog.open(CashOpComponent,
+      const dialogRef = this.cashService.dialog.open(CashOpComponent,
         {
           width: '480px', height: '660px', data: this.invoiceService.invoice.total, disableClose: true
         }).afterClosed().subscribe(data => {
@@ -336,7 +333,7 @@ export class OperationsService {
   }
 
   cashReturn(valueToReturn, payment) {
-    const dialogRef = this.dialog.open(CashPaymentComponent,
+    const dialogRef = this.cashService.dialog.open(CashPaymentComponent,
       {
         width: '300px', height: '200px', data: valueToReturn, disableClose: true
       })
@@ -347,7 +344,8 @@ export class OperationsService {
                 console.log(data);
                 this.invoiceService.createInvoice();
               },
-              err => {console.log(err); this.openGenericInfo('Error', 'Can\'t complete cash operation')},
+              err => {console.log(err); this.cashService.openGenericInfo('Error',
+                'Can\'t complete cash operation')},
               () => this.cashService.resetEnableState())
         }
       });
@@ -362,17 +360,17 @@ export class OperationsService {
         this.getCheckById(EOperationType.Reprint,i => {
           this.invoiceService.resetDigits();
           this.invoiceService.print(i).subscribe(
-            data => this.openGenericInfo('Print', 'Print is finish'),
-            err => this.openGenericInfo('Error', 'Can\'t complete print operation'));
+            data => this.cashService.openGenericInfo('Print', 'Print is finish'),
+            err => this.cashService.openGenericInfo('Error', 'Can\'t complete print operation'));
         })
       } else {
-        this.openGenericInfo('Error', 'Please input receipt number of check');
+        this.cashService.openGenericInfo('Error', 'Please input receipt number of check');
         this.invoiceService.resetDigits();
       }
 
     } else {
       console.error('Can\'t complete print operation');
-      this.openGenericInfo('Error', 'Can\'t complete print operation');
+      this.cashService.openGenericInfo('Error', 'Can\'t complete print operation');
       this.invoiceService.resetDigits();
     }
 
@@ -389,7 +387,7 @@ export class OperationsService {
     }, err => {
       console.error('addProductByUpc', err);
       this.invoiceService.resetDigits();
-      this.openGenericInfo('Error', 'Can\'t complete scan product operation');
+      this.cashService.openGenericInfo('Error', 'Can\'t complete scan product operation');
     });
     this.resetInactivity(false);
   }
