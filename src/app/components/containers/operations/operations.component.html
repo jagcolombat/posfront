@@ -12,12 +12,14 @@
                    (evPressKeys)="totalKey($event)" [disable]="operationService.cashService.disabledTotalOp"></operation-group>
 </div>
 
-<operation-group id="payment" fxFlex.lg="18" fxFlex.lt-lg="25" [operations]="paymentOperations" [colors]="paymentColor"
-                 layout="two" class="border" (evPressKeys)="paymentKey($event)"
-                 [disable]="operationService.cashService.disabledPayment" style="padding-left: 5px;">
-</operation-group>
+<div fxFlex.lg="40" fxFlex.lt-lg="25" class="border">
+  <operation-group id="payment" fxFlex="22" [operations]="paymentOperations" [colors]="paymentColor"
+                   class="border" (evPressKeys)="paymentKey($event)"
+                   [disable]="operationService.cashService.disabledPayment" style="padding-left: 5px;">
+  </operation-group>
 
-<operation-group id="other" fxFlex.lg="20" fxFlex.lt-lg="25" [operations]="otherOperations" [colors]="otherColor"
-                 class="border" (evPressKeys)="otherKey($event)"
-                 [disable]="operationService.cashService.disabledFinOp" style="padding-left: 5px;">
-</operation-group>
+  <operation-group id="other" fxFlex="22" [operations]="otherOperations" [colors]="otherColor"
+                   class="border" (evPressKeys)="otherKey($event)"
+                   [disable]="operationService.cashService.disabledFinOp" style="padding-left: 5px;">
+  </operation-group>
+</div>
