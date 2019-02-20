@@ -3,9 +3,10 @@ export interface CreditCard {
     cc?: string;
     cvv?: string;
     expDate?: string;
+    receiptNumber: string;
 }
 
 export class CreditCardModel implements CreditCard{
-  constructor(public name: string, public cc: string) {}
+  constructor(public name: string, public cc: string, public receiptNumber) {}
 }
 

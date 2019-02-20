@@ -79,8 +79,17 @@ export class InvoiceService {
     return this._http.post<Invoice[]>(url +  this.path +  '/' + invoice.receiptNumber + '/print', {});
   }
 
+  printLastInvoice(url: string): Observable<Invoice[]> {
+    return this._http.post<Invoice[]>(url +  this.path +  '/print/last', {});
+  }
+
   getInvoiceByIdRefund (url: string, id: string): Observable<Invoice> {
     return this._http.post<Invoice>(url + this.path + '/' + id + '/status/refund', {});
+  }
+
+  updateInvoice (url: string, invoice: Invoice, property: string, value: any) {
+    const documentPacth =  [{op: 'replace', path: '/' + property, value: value}];
+    return this._http.patch<Invoice>(url + this.path + '/' + invoice.receiptNumber, documentPacth);
   }
 
 }

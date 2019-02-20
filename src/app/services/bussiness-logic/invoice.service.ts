@@ -66,18 +66,24 @@ export class InvoiceService {
       lastPO.product = po.product;
       this.addPO2Invoice(lastPO);
       this.resetDigits();*/
-      if (next.isRefund) {
+      /*if (next.isRefund) {
         next.total = next.total * -1;
         next.subTotal = next.subTotal * -1;
         next.tax = next.tax * -1;
-      }
-      next.productOrders[next.productOrders.length-1].foodStamp = po.foodStamp;
+      }*/
+      // next.productOrders[next.productOrders.length-1].foodStamp = po.foodStamp;
       this.setInvoice(next);
     }, err => {
       console.error('addProductOrder', err);
       // this.delPOFromInvoice(po);
       this.cashService.openGenericInfo('Error', err.error);
     });
+  }
+
+  updateClientAge(clientAge: number) {
+    this.invoice.clientAge = clientAge;
+    this.dataStorage.updateInvoice(this.invoice, 'clientAge', clientAge)
+    .subscribe( data => console.log(data), err => console.log(err) );
   }
 
   addPO2Invoice(po: ProductOrder){
@@ -157,17 +163,17 @@ export class InvoiceService {
   }
 
   debit(payment: number): Observable<Invoice> {
-    const debitPayment = new CreditCardModel('Raydel', '12345678');
+    const debitPayment = new CreditCardModel('Raydel', '12345678', this.invoice.receiptNumber);
     return this.dataStorage.paidByDeditCard(debitPayment);
   }
 
   credit(payment: number): Observable<Invoice> {
-    const debitPayment = new CreditCardModel('Raydel', '12345678');
+    const debitPayment = new CreditCardModel('Raydel', '12345678', this.invoice.receiptNumber);
     return this.dataStorage.paidByCreditCard(debitPayment);
   }
 
   ebt(payment: number): Observable<Invoice> {
-    const debitPayment = new CreditCardModel('Raydel', '12345678');
+    const debitPayment = new CreditCardModel('Raydel', '12345678', this.invoice.receiptNumber);
     return this.dataStorage.paidByEBTCard(debitPayment);
   }
 

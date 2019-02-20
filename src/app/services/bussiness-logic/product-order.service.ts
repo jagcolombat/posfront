@@ -93,7 +93,7 @@ export class ProductOrderService {
     this.onAgeVerification().afterClosed().subscribe(data => {
       if (data.age) {
         if (data.age >= product.ageAllow) {
-          this.invoiceService.invoice.clientAge = data.age;
+          this.invoiceService.updateClientAge(data.age);
           this.onCreateProductOrder(product);
         } else {
           this.invalidAge();

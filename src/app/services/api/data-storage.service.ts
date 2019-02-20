@@ -91,6 +91,14 @@ export class DataStorageService {
     return this.invoiceService.printInvoice(this.url, invoice);
   }
 
+  printLastInvoice (): Observable<any> {
+    return this.invoiceService.printLastInvoice(this.url);
+  }
+
+  updateInvoice (invoice: Invoice, property: string, value: any) {
+    return this.invoiceService.updateInvoice(this.url, invoice, property, value);
+  }
+
   // ProductOrder
 
   addProductOrderByInvoice(invoiceId: string, productOrder: ProductOrder, operationType: EOperationType,
