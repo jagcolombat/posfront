@@ -115,7 +115,7 @@ export class OperationsComponent implements OnInit {
   otherKey(ev) {
     switch (ev) {
       case 'Print Last Receipt':
-        this.operationService.cashService.openGenericInfo('Print Last Receipt', 'Sending event');
+        this.operationService.printLast();
         break;
       case 'No Sale':
         this.operationService.cashService.openGenericInfo('No Sale', 'Sending event');

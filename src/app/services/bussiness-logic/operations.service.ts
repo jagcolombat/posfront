@@ -22,6 +22,7 @@ export class OperationsService {
   inactivityTime: number = 600;
   timer: number;
   currentOperation: string;
+  invTotalsBeforeFSSubTotal = {total: 0, tax: 0, subtotal: 0};
 
   constructor(private invoiceService: InvoiceService, public cashService: CashService,
               private authService: AuthService, private router: Router) {
@@ -62,6 +63,9 @@ export class OperationsService {
         this.cashService.resetEnableState();
         if(this.currentOperation === FinancialOpEnum.REVIEW) {
           this.invoiceService.createInvoice();
+        }
+        if(this.currentOperation === TotalsOpEnum.FS_SUBTOTAL) {
+          this.resetTotalFromFS();
         }
         this.currentOperation = '';
     } else {
@@ -199,9 +203,9 @@ export class OperationsService {
     console.log('fsSubTotal');
     if (this.invoiceService.invoice.productOrders.length > 0) {
       this.currentOperation = TotalsOpEnum.FS_SUBTOTAL;
-      this.cashService.totalsEnableState(true);
       // Send invoice for calculate totals
       // Receive updated invoice and execute this.invoiceService.setInvoice
+      this.saveStateTotals();
       this.invoiceService.invoice.productOrders.filter(po => {
         if(po.foodStamp){
           this.invoiceService.invoice.subTotal = this.invoiceService.invoice.subTotal - po.subTotal;
@@ -210,6 +214,12 @@ export class OperationsService {
             this.invoiceService.invoice.fsTotal + po.total : 0 + po.total;
           this.invoiceService.invoice.total -= po.total;
           this.invoiceService.evUpdateTotals.emit();
+        }
+        console.log('fsTotal', this.invoiceService.invoice.fsTotal);
+        if(!this.invoiceService.invoice.fsTotal){
+          this.cashService.totalsEnableState();
+        } else {
+          this.cashService.totalsEnableState(true);
         }
       })
     }
@@ -393,32 +403,25 @@ export class OperationsService {
   }
 
   ebt() {
-    /*this.invoiceService.cash(49)
-      .subscribe(data => {
-          console.log(data);
-          this.invoiceService.createInvoice();
-        },
-        err => {console.log(err); this.openGenericInfo('Error', 'Can\'t complete ebt operation')},
-        () => this.cashService.resetEnableState())*/
-
-    /*this.invoiceService.invoice.fsSubtotal = 0;
-    this.invoiceService.invoice.fsTax = 0;
-    this.invoiceService.invoice.fsTotal = 0;
-    this.invoiceService.evUpdateTotals.emit();
-    this.cashService.resetEnableState();*/
-
     console.log('EBT Card');
     this.currentOperation = 'EBT Card';
 
     if (this.invoiceService.invoice.total > 0 || this.invoiceService.invoice.fsTotal > 0) {
-      this.openInfoEventDialog('EBT Card');
+      // this.openInfoEventDialog('EBT Card');
       this.invoiceService.ebt(this.invoiceService.invoice.total)
         .subscribe(data => {
           console.log(data);
-          this.invoiceService.createInvoice();
-          },err => {
-          console.log(err); this.cashService.openGenericInfo('Error', 'Can\'t complete ebt operation');
-          this.cashService.resetEnableState();
+          if(this.invoiceService.invoice.total === 0) {
+            this.invoiceService.createInvoice();
+            this.cashService.resetEnableState();
+          } else {
+            this.invoiceService.setInvoice(data);
+            this.cashService.ebtEnableState();
+          }
+        },err => {
+          console.log(err);
+          this.cashService.openGenericInfo('Error', 'Can\'t complete ebt operation');
+          this.cashService.resetEnableState()
         });
     }
     this.resetInactivity(false);
@@ -458,5 +461,23 @@ export class OperationsService {
         });
       }
     this.resetInactivity(false);
+  }
+
+  private resetTotalFromFS() {
+    this.invoiceService.invoice.fsTotal = 0;
+    this.invoiceService.invoice.total = this.invTotalsBeforeFSSubTotal.total;
+    this.invoiceService.invoice.subTotal = this.invTotalsBeforeFSSubTotal.subtotal;
+    this.invoiceService.invoice.tax = this.invTotalsBeforeFSSubTotal.tax;
+    this.invoiceService.evUpdateTotals.emit();
+  }
+
+  private saveStateTotals() {
+    this.invTotalsBeforeFSSubTotal['total'] = this.invoiceService.invoice.total;
+    this.invTotalsBeforeFSSubTotal['subtotal']  = this.invoiceService.invoice.subTotal;
+    this.invTotalsBeforeFSSubTotal['tax']  = this.invoiceService.invoice.tax;
+  }
+
+  public printLast() {
+    this.invoiceService.printLastInvoice();
   }
 }

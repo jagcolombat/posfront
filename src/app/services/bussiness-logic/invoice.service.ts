@@ -66,11 +66,6 @@ export class InvoiceService {
       lastPO.product = po.product;
       this.addPO2Invoice(lastPO);
       this.resetDigits();*/
-      /*if (next.isRefund) {
-        next.total = next.total * -1;
-        next.subTotal = next.subTotal * -1;
-        next.tax = next.tax * -1;
-      }*/
       // next.productOrders[next.productOrders.length-1].foodStamp = po.foodStamp;
       this.setInvoice(next);
     }, err => {
@@ -216,4 +211,7 @@ export class InvoiceService {
   }
 
 
+  printLastInvoice() {
+    this.dataStorage.printLastInvoice();
+  }
 }

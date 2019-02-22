@@ -10,7 +10,7 @@ export class CashService {
   disabledInput: boolean;
   disabledFinOp: boolean | boolean[];
   disabledInvOp: boolean | boolean[];
-  disabledTotalOp: boolean;
+  disabledTotalOp: boolean | boolean[];
   disabledPayment: boolean | boolean[];
 
   constructor(public dialog: MatDialog) {
@@ -28,9 +28,15 @@ export class CashService {
   }
 
   totalsEnableState(fs = false) {
+    console.log(fs);
     this.disabledInput = this.disabledFinOp = this.disabledTotalOp = true;
     this.disabledInvOp = [false, true, true, true];
     fs ? this.disabledPayment = [false, true, true, true] : this.disabledPayment = [true, false, false, false];
+  }
+
+  ebtEnableState() {
+    this.disabledTotalOp = [true, false];
+    this.disabledPayment = true;
   }
 
   openGenericInfo(title: string, content?: string, content2?: any) {
