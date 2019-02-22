@@ -17,9 +17,6 @@
   overflow: auto;
 }
 
-/*button[mat-raised-button] {
-  height: 90%;
-  font-size: 46px;
-  background-color: #9a61ff;
-  color: white;
-}*/
+button[mat-raised-button] {
+  cursor: default !important;
+}
