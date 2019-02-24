@@ -17,6 +17,7 @@ import {DialogInvoiceComponent} from "../../components/presentationals/dialog-in
 import {SharedModule} from "../shared/shared.module";
 import {DebitCardComponent} from "../../components/presentationals/debit-card/debit-card.component";
 import { GenericInfoEventsComponent } from 'src/app/components/presentationals/generic-info-events/generic-info-events.component';
+import {CustomHeaderComponent} from "../../components/presentationals/ag-grid/custom-header.component";
 
 @NgModule({
   imports: [
@@ -44,7 +45,8 @@ import { GenericInfoEventsComponent } from 'src/app/components/presentationals/g
     CashPaymentComponent,
     DialogInvoiceComponent,
     DebitCardComponent,
-    GenericInfoEventsComponent
+    GenericInfoEventsComponent,
+    CustomHeaderComponent
   ],
   entryComponents: [
     AgeValidationComponent,
@@ -55,7 +57,8 @@ import { GenericInfoEventsComponent } from 'src/app/components/presentationals/g
     CashPaymentComponent,
     DialogInvoiceComponent,
     DebitCardComponent,
-    GenericInfoEventsComponent
+    GenericInfoEventsComponent,
+    CustomHeaderComponent
   ],
 })
 export class HomeModule { }

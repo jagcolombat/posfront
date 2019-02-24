@@ -3,6 +3,7 @@ import { GridOptions, GridApi } from 'ag-grid-community';
 import { InvoiceService } from "../../../services/bussiness-logic/invoice.service";
 import { ProductOrder } from "../../../models/product-order.model";
 import { Subscription } from "rxjs";
+import {CustomHeaderComponent} from "./custom-header.component";
 
 @Component({
   selector: 'ag-grid',
@@ -13,6 +14,7 @@ export class AgGridComponent implements OnInit, OnDestroy {
   @Output() updateData = new EventEmitter<boolean>();
   public gridOptions: GridOptions;
   private gridApi: GridApi;
+  private context: any;
   private subscriptions: Subscription[] = [];
 
   constructor(private invoiceService: InvoiceService) {
@@ -30,6 +32,7 @@ export class AgGridComponent implements OnInit, OnDestroy {
       rowHeight: 60,
       rowStyle: {'font-size': 'large'}
     };
+    this.context = { componentParent: this };
     // this.subscriptions.push(this.invoiceService.evAddProd.subscribe(po => this.onAddRow(po)));
     this.subscriptions.push(this.invoiceService.evDelAllProds.subscribe(ev => this.clearData()));
     this.subscriptions.push(this.invoiceService.evDelProd.subscribe(ev => this.onRemoveSelected()));
@@ -43,32 +46,37 @@ export class AgGridComponent implements OnInit, OnDestroy {
   private createColumnDefs() {
     return [
       {
-        headerName: 'Number Item',
         field: 'number_item',
         headerCheckboxSelection: true,
         headerCheckboxSelectionFilteredOnly: true,
         checkboxSelection: true,
-        width: 150
+        width: 150,
+        headerComponentFramework: CustomHeaderComponent,
+        headerComponentParams: { displayName: 'Number Item' }
       },
       {
-        headerName: 'Name',
+        headerComponentFramework: CustomHeaderComponent,
+        headerComponentParams: { displayName: 'Name' },
         field: 'name',
         width: 200
       },
       {
-        headerName: 'Price',
+        headerComponentFramework: CustomHeaderComponent,
+        headerComponentParams: { displayName: 'Price' },
         field: 'unitCost',
         type: 'numericColumn',
         width: 90
       },
       {
-        headerName: 'Quantity',
+        headerComponentFramework: CustomHeaderComponent,
+        headerComponentParams: { displayName: 'Quantity' },
         field: 'quantity',
         type: 'numericColumn',
         width: 95
       },
       {
-        headerName: 'Amount',
+        headerComponentFramework: CustomHeaderComponent,
+        headerComponentParams: { displayName: 'Amount' },
         field: 'total',
         type: 'numericColumn',
         width: 95
@@ -131,6 +139,14 @@ export class AgGridComponent implements OnInit, OnDestroy {
     // console.log('before', this.invoiceService.invoice.productsOrders);
     this.invoiceService.invoice.productOrders = <ProductOrder[]>[...this.getRowData()];
     // console.log('later', this.invoiceService.invoice.productsOrders);
+  }
+
+  selectOrDeselectAll() {
+    if (this.gridOptions.api.getSelectedNodes().length !== this.gridOptions.api.getDisplayedRowCount()) {
+      this.gridOptions.api.selectAll();
+    } else {
+      this.gridOptions.api.deselectAll();
+    }
   }
 
   ngOnDestroy() {
