@@ -393,6 +393,7 @@ export class OperationsService {
 
   scanProduct(){
     this.invoiceService.addProductByUpc(EOperationType.Scanner).subscribe(prod => {
+      console.log('scanProduct', prod);
       this.invoiceService.evAddProdByUPC.emit(prod);
     }, err => {
       console.error('addProductByUpc', err);

@@ -27,8 +27,9 @@ export class ProductOrderService {
 
   addProduct(product: Product): void {
     if ( product.followDepartment ) {
-      const isAgeVerification = this.departments.find(dpto => dpto.id === product.departmentId).ageVerification;
-      if (isAgeVerification && !this.invoiceService.invoice.clientAge) {
+      const dpto = this.departments.find(dpto => dpto.id === product.departmentId);
+      // const isAgeVerification = this.departments.find(dpto => dpto.id === product.departmentId).ageVerification;
+      if (dpto && dpto.ageVerification && !this.invoiceService.invoice.clientAge) {
         this.ageVerification(product);
       } else {
         this.onCreateProductOrder(product);

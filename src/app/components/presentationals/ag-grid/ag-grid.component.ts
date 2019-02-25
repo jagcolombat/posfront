@@ -3,7 +3,7 @@ import { GridOptions, GridApi } from 'ag-grid-community';
 import { InvoiceService } from "../../../services/bussiness-logic/invoice.service";
 import { ProductOrder } from "../../../models/product-order.model";
 import { Subscription } from "rxjs";
-import {CustomHeaderComponent} from "./custom-header.component";
+import { CustomHeaderComponent } from "./custom-header.component";
 
 @Component({
   selector: 'ag-grid',
@@ -29,6 +29,9 @@ export class AgGridComponent implements OnInit, OnDestroy {
       onRowSelected: (ev) => {
         this.invoiceService.invoiceProductSelected = this.gridOptions.api.getSelectedRows().length > 0;
       },
+      onBodyScroll: (ev) => {
+        this.gridOptions.api.sizeColumnsToFit();
+      },
       rowHeight: 60,
       rowStyle: {'font-size': 'large'}
     };
@@ -48,7 +51,6 @@ export class AgGridComponent implements OnInit, OnDestroy {
       {
         field: 'number_item',
         headerCheckboxSelection: true,
-        headerCheckboxSelectionFilteredOnly: true,
         checkboxSelection: true,
         width: 150,
         headerComponentFramework: CustomHeaderComponent,
