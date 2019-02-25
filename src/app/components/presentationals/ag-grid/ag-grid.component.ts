@@ -33,7 +33,7 @@ export class AgGridComponent implements OnInit, OnDestroy {
         this.gridOptions.api.sizeColumnsToFit();
       },
       rowHeight: 60,
-      rowStyle: {'font-size': 'large'}
+      rowStyle: {'font-size': '16px'}
     };
     this.context = { componentParent: this };
     // this.subscriptions.push(this.invoiceService.evAddProd.subscribe(po => this.onAddRow(po)));
@@ -52,7 +52,7 @@ export class AgGridComponent implements OnInit, OnDestroy {
         field: 'number_item',
         headerCheckboxSelection: true,
         checkboxSelection: true,
-        width: 150,
+        width: 170,
         headerComponentFramework: CustomHeaderComponent,
         headerComponentParams: { displayName: 'Number Item' }
       },
@@ -60,7 +60,7 @@ export class AgGridComponent implements OnInit, OnDestroy {
         headerComponentFramework: CustomHeaderComponent,
         headerComponentParams: { displayName: 'Name' },
         field: 'name',
-        width: 200
+        width: 180
       },
       {
         headerComponentFramework: CustomHeaderComponent,
