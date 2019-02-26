@@ -8,7 +8,6 @@ import {InvoiceService} from './invoice.service';
 import {Invoice} from '../../models/invoice.model';
 import {map} from 'rxjs/operators';
 import { baseURL } from '../../utils/url.path.enum';
-import { Url } from '../../utils/url.path.enum';
 import { PaymentService } from './payment.service';
 import { ProductOrder } from 'src/app/models/product-order.model';
 import { EOperationType } from 'src/app/utils/operation.type.enum';
