@@ -106,10 +106,10 @@ export class AgGridComponent implements OnInit, OnDestroy {
       id: data.id,
       number_item: data.productUpc,
       name: data.productName,
-      unitCost: data.unitCost,
+      unitCost: Number(data.unitCost).toFixed(2),
       quantity: data.quantity,
-      total: data.total,
-      tax: data.tax,
+      total: Number(data.total).toFixed(2),
+      tax: Number(data.tax).toFixed(2),
       // product: data.product
     };
     console.log('onAddRow', this.gridOptions.api.getDisplayedRowCount());

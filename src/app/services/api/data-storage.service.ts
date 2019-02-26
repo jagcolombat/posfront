@@ -7,6 +7,7 @@ import {ProductService} from './product.service';
 import {InvoiceService} from './invoice.service';
 import {Invoice} from '../../models/invoice.model';
 import {map} from 'rxjs/operators';
+import { baseURL } from '../../utils/url.path.enum';
 import { Url } from '../../utils/url.path.enum';
 import { PaymentService } from './payment.service';
 import { ProductOrder } from 'src/app/models/product-order.model';
@@ -24,14 +25,14 @@ export class DataStorageService {
 
   disableOp = false;
 
+  private url = baseURL;
+
   constructor(private departmentService: DepartmentService,
               private productService: ProductService,
               private invoiceService: InvoiceService,
               private paymentService: PaymentService,
               private journeyService: JourneyService,
               private invoiceRefundService: InvoiceRefundService) { }
-
-  private url = Url.PATH;
 
   // Departments
   getDepartments(): Observable<Department[]> {

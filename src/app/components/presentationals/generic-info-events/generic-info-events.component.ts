@@ -1,5 +1,6 @@
 import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { HubConnection, HubConnectionBuilder } from '@aspnet/signalr';
+import { WEBSOCKET } from 'src/app/utils/url.path.enum';
 import { Url } from 'src/app/utils/url.path.enum';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
@@ -19,7 +20,7 @@ export class GenericInfoEventsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this._hubConnection = new HubConnectionBuilder()
-      .withUrl(Url.WEBSOCKET)
+      .withUrl(WEBSOCKET)
       .build();
     this._hubConnection
       .start()

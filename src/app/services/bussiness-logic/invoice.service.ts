@@ -212,6 +212,7 @@ export class InvoiceService {
 
 
   printLastInvoice() {
-    this.dataStorage.printLastInvoice();
+    this.dataStorage.printLastInvoice()
+      .subscribe(data => data);
   }
 }

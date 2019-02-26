@@ -1,6 +1,5 @@
 import { Component, HostListener, OnInit, OnDestroy } from '@angular/core';
 import { HubConnection, HubConnectionBuilder } from '@aspnet/signalr';
-import { Url } from './utils/url.path.enum';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',

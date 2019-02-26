@@ -5,6 +5,8 @@ import {Invoice} from '../../models/invoice.model';
 import {Observable} from 'rxjs';
 import { EOperationType } from 'src/app/utils/operation.type.enum';
 import { ProductOrder } from 'src/app/models/product-order.model';
+import { catchError } from 'rxjs/operators';
+import { ProcessHTTPMSgService } from './ProcessHTTPMSg.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +15,7 @@ export class InvoiceService {
 
   path = '/invoices';
 
-  constructor(private _http: HttpClient) { }
+  constructor(private _http: HttpClient, private processHttpMsgService: ProcessHTTPMSgService) { }
 
   create(url: string): Observable<Invoice> {
     return this._http.get<Invoice>(url + this.path + '/status/created');
@@ -80,7 +82,8 @@ export class InvoiceService {
   }
 
   printLastInvoice(url: string): Observable<Invoice[]> {
-    return this._http.post<Invoice[]>(url +  this.path +  '/print/last', {});
+    return this._http.post<Invoice[]>(url +  this.path +  '/print/last', {})
+      .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
   getInvoiceByIdRefund (url: string, id: string): Observable<Invoice> {
