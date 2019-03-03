@@ -5,6 +5,8 @@ import {Invoice} from '../../models/invoice.model';
 import {Observable} from 'rxjs';
 import { EOperationType } from 'src/app/utils/operation.type.enum';
 import { ProductOrder } from 'src/app/models/product-order.model';
+import { ProcessHTTPMSgService } from './ProcessHTTPMSg.service';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +15,7 @@ export class InvoiceRefundService {
 
   path = '/invoices';
 
-  constructor(private _http: HttpClient) { }
+  constructor(private _http: HttpClient, private processHttpMsgService: ProcessHTTPMSgService) { }
 
   changeInvoiceToVoid(url: string, invoice: Invoice): Observable<Invoice> {
     if (invoice.id) {
@@ -31,5 +33,10 @@ export class InvoiceRefundService {
 
   deleteProductOrder(url: string, productOrderId: string, invoiceId: string): Observable<any> {
     return this._http.delete(url + this.path + '/refund/' + invoiceId + '/product/' + productOrderId);
+  }
+
+  deleteProductOrders(url: string, productOrderIds: Array<string>, invoiceId: string): Observable<any> {
+    return this._http.request('delete', url + this.path + '/refund/' + invoiceId + '/product', {body: productOrderIds})
+      .pipe(catchError(this.processHttpMsgService.handleError));
   }
 }

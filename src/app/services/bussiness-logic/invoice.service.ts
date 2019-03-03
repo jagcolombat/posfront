@@ -88,15 +88,24 @@ export class InvoiceService {
   }
 
   delPOFromInvoice(po: ProductOrder[]){
-    po.map(prodOrder => {
-      this.invoice.productOrders.splice(this.invoice.productOrders.indexOf(prodOrder),1);
-      console.log('delPOFromInvoice', this.invoice.receiptNumber, prodOrder.id);
-      this.dataStorage.deleteProductOrderByInvoice(this.invoice.receiptNumber, prodOrder.id, this.invoice.isRefund)
-       .subscribe(data => console.log(data),
-                  err => console.log(err));
+    const productOrdersIds = po.map(prodOrder => {
+      // this.invoice.productOrders.splice(this.invoice.productOrders.indexOf(prodOrder),1);
+      // console.log('delPOFromInvoice', this.invoice.receiptNumber, prodOrder.id);
+      return prodOrder.id;
     });
+
+    this.dataStorage.deleteProductOrdersByInvoice(this.invoice.receiptNumber, productOrdersIds, this.invoice.isRefund)
+      .subscribe(data => {
+        console.log(data);
+        this.setInvoice(data);
+      },
+      err => {
+        console.log(err);
+        this.cashService.openGenericInfo('Error', err.error);
+      });
+
     // this.invoice.productsOrders.splice(this.invoice.productsOrders.indexOf(po),1);
-    this.setTotal();
+    // this.setTotal();
     // this.evUpdateProds.emit(this.invoice.productsOrders);
   }
 

@@ -118,6 +118,14 @@ export class DataStorageService {
     }
   }
 
+  deleteProductOrdersByInvoice(invoiceId: string, productOrderId: Array<string>, isRefund = false): Observable<Invoice> {
+    if (!isRefund) {
+      return this.invoiceService.deleteProductOrders(this.url, productOrderId, invoiceId);
+    } else {
+      return this.invoiceRefundService.deleteProductOrders(this.url, productOrderId, invoiceId);
+    }
+  }
+
   // Payment
   paidByCash(cashPayment: ICashPayment): Observable<any> {
     return this.paymentService.paidByCash(this.url, cashPayment);
