@@ -20,7 +20,7 @@ import {GenericInfoEventsComponent} from "../../components/presentationals/gener
 })
 export class OperationsService {
   inactivityTime: number = 600;
-  timer: number;
+  timer: any;
   currentOperation: string;
   invTotalsBeforeFSSubTotal = {total: 0, tax: 0, subtotal: 0};
 
@@ -321,9 +321,11 @@ export class OperationsService {
 
   cash() {
     console.log('cash');
-    this.currentOperation = 'cash';
-
-    if (this.invoiceService.invoice.total !== 0) {
+    if (this.invoiceService.invoice.total < 0 && this.currentOperation === 'refund') {
+      console.log('paid refund, open cash!!!');
+      this.cashService.openGenericInfo('Open Cash', 'Paid Refund').afterClosed()
+        .subscribe(() => this.invoiceService.createInvoice());
+    } else if (this.invoiceService.invoice.total > 0) {
       const dialogRef = this.cashService.dialog.open(CashOpComponent,
         {
           width: '480px', height: '660px', data: this.invoiceService.invoice.total, disableClose: true
@@ -338,7 +340,7 @@ export class OperationsService {
         }
       });
     }
-
+    this.currentOperation = 'cash';
     this.resetInactivity(false);
   }
 
