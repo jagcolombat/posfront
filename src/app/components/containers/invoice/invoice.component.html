@@ -1,0 +1,14 @@
+<div fxLayout="row" class="header">
+  <info-pos title="Cashier" [value]="invoiceService.cashier" fxFlex="25" class="title-header"></info-pos>
+  <info-pos title="Receipt Number" [value]="invoiceService.receiptNumber" fxFlex="25" class="title-header"></info-pos>
+  <input-calculator [data]="invoiceService.digits" fxFlex="50" class="title-header"></input-calculator>
+</div>
+
+<ag-grid #productstable class="container" fxFlex="100"></ag-grid>
+
+<div fxLayout="row" class="total">
+  <info-pos title="Subtotal" [value]="subtotal" format="currency" fxFlex="28"></info-pos>
+  <info-pos title="Tax" [value]="tax" format="currency" fxFlex="19"></info-pos>
+  <info-pos title="Total" [value]="total" format="currency" fxFlex="28"></info-pos>
+  <info-pos *ngIf="fsTotal > 0" title="EBT Total" [value]="fsTotal" align="end" format="currency" fxFlex="25"></info-pos>
+</div>
