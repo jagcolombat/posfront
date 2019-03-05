@@ -320,11 +320,14 @@ export class OperationsService {
   }
 
   cash() {
-    console.log('cash');
-    if (this.invoiceService.invoice.total < 0 && this.currentOperation === 'refund') {
+    console.log('cash', this.invoiceService.invoice.total, this.currentOperation);
+    if (this.invoiceService.invoice.total < 0 /*&& this.currentOperation === 'refund'*/) {
       console.log('paid refund, open cash!!!');
       this.cashService.openGenericInfo('Open Cash', 'Paid Refund').afterClosed()
-        .subscribe(() => this.invoiceService.createInvoice());
+        .subscribe(() => {
+          this.invoiceService.createInvoice();
+          this.cashService.resetEnableState();
+        });
     } else if (this.invoiceService.invoice.total > 0) {
       const dialogRef = this.cashService.dialog.open(CashOpComponent,
         {
