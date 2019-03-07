@@ -15,7 +15,6 @@ import { ICashPayment } from 'src/app/models/cash-payment.model';
 import { Journey } from 'src/app/models/journey.model';
 import { JourneyService } from './journey.service';
 import { CreditCard } from 'src/app/models';
-import { InvoiceRefundService } from './invoice.refund.service';
 
 @Injectable({
   providedIn: 'root'
@@ -30,8 +29,7 @@ export class DataStorageService {
               private productService: ProductService,
               private invoiceService: InvoiceService,
               private paymentService: PaymentService,
-              private journeyService: JourneyService,
-              private invoiceRefundService: InvoiceRefundService) { }
+              private journeyService: JourneyService) { }
 
   // Departments
   getDepartments(): Observable<Department[]> {
@@ -59,11 +57,7 @@ export class DataStorageService {
 
   changeInvoiceToVoid(invoice: Invoice, isRefund = false): Observable<Invoice> {
     console.log(invoice);
-    if (!isRefund) {
       return this.invoiceService.changeInvoiceToVoid(this.url, invoice);
-    } else {
-      return this.invoiceRefundService.changeInvoiceToVoid(this.url, invoice);
-    }
   }
 
   getInvoiceInHold() {
@@ -103,27 +97,16 @@ export class DataStorageService {
 
   addProductOrderByInvoice(invoiceId: string, productOrder: ProductOrder, operationType: EOperationType,
                              isRefund = false): Observable<Invoice> {
-    if (!isRefund) {
       return this.invoiceService.addProductOrder(this.url, productOrder, invoiceId, operationType);
-    } else {
-      return this.invoiceRefundService.addProductOrder(this.url, productOrder, invoiceId, operationType);
-    }
+
   }
 
   deleteProductOrderByInvoice(invoiceId: string, productOrderId: string, isRefund = false): Observable<Invoice> {
-    if (!isRefund) {
       return this.invoiceService.deleteProductOrder(this.url, productOrderId, invoiceId);
-    } else {
-      return this.invoiceRefundService.deleteProductOrder(this.url, productOrderId, invoiceId);
-    }
   }
 
   deleteProductOrdersByInvoice(invoiceId: string, productOrderId: Array<string>, isRefund = false): Observable<Invoice> {
-    if (!isRefund) {
       return this.invoiceService.deleteProductOrders(this.url, productOrderId, invoiceId);
-    } else {
-      return this.invoiceRefundService.deleteProductOrders(this.url, productOrderId, invoiceId);
-    }
   }
 
   // Payment

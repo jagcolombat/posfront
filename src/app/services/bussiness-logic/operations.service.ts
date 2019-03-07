@@ -36,7 +36,7 @@ export class OperationsService {
         this.logout();
       else
         this.resetInactivity(true)
-      },this.inactivityTime * 1000);
+    },this.inactivityTime * 1000);
   }
 
   resetInactivity(cont: boolean) {
@@ -112,25 +112,28 @@ export class OperationsService {
     console.log('manager');
     // this.currentOperation = 'manager';
     // if(!this.authService.adminLogged()){
-      const dialogRef = this.cashService.dialog.open(DialogLoginComponent, { width: '530px', height: '580px', disableClose: true});
-      dialogRef.afterClosed().subscribe(loginValid => {
-        console.log('The dialog was closed', loginValid);
-        if(loginValid.valid) {
-          if(action){
-            switch (action) {
-              case 'void':
-                this.cancelCheckByAdmin(loginValid.token);
-                break;
-              case 'clear':
-                this.clearCheckByAdmin(loginValid.token);
-                break;
-            }
-          } else {
-            this.invoiceService.getCashier();
-            this.router.navigateByUrl('/cash/options');
+    const dialogRef = this.cashService.dialog.open(DialogLoginComponent, { width: '530px', height: '580px', disableClose: true});
+    dialogRef.afterClosed().subscribe(loginValid => {
+      console.log('The dialog was closed', loginValid);
+      if(loginValid.valid) {
+        if(action){
+          switch (action) {
+            case 'void':
+              this.cancelCheckByAdmin(loginValid.token);
+              break;
+            case 'clear':
+              this.clearCheckByAdmin(loginValid.token);
+              break;
+            case 'refund':
+              this.refundCheckByAdmin(loginValid.token);
+              break;
           }
+        } else {
+          this.invoiceService.getCashier();
+          this.router.navigateByUrl('/cash/options');
         }
-      });
+      }
+    });
 
     this.resetInactivity(true);
   }
@@ -161,7 +164,7 @@ export class OperationsService {
         this.invoiceService.getInvoiceInHold(EOperationType.RecallCheck, InvoiceStatus.IN_HOLD)
           .subscribe(next => this.openDialogInvoices(next, i => {
               this.invoiceService.setInvoice(i);}),
-          err => this.cashService.openGenericInfo('Error', 'Can\'t complete recall check operation'));
+            err => this.cashService.openGenericInfo('Error', 'Can\'t complete recall check operation'));
     } else {
       console.error('Can\'t complete recallw check operation');
       this.cashService.openGenericInfo('Error', 'Can\'t complete recall check operation because check is in progress');
@@ -228,33 +231,33 @@ export class OperationsService {
 
   getCheckById(typeOp: EOperationType, action: (i: Invoice) => void) {
     this.invoiceService.getInvoicesById(typeOp)
-        .subscribe(next => action(next),
-                    (err: HttpErrorResponse) =>
-                       this.cashService.openGenericInfo('Error', 'Can\'t complete get check operation. ' + err.statusText));
+      .subscribe(next => action(next),
+        (err: HttpErrorResponse) =>
+          this.cashService.openGenericInfo('Error', 'Can\'t complete get check operation. ' + err.statusText));
   }
 
   openDialogInvoices(inv: Invoice[], action: (i: Invoice) => void) {
-      if (inv.length > 0) {
-        const dialogRef = this.cashService.dialog.open(DialogInvoiceComponent,
-          {
-            width: '700px', height: '450px', data: inv, disableClose: true
-          });
-        dialogRef.afterClosed().subscribe(order => {
-          console.log('The dialog was closed', order);
-          if (order) { action(order); }
+    if (inv.length > 0) {
+      const dialogRef = this.cashService.dialog.open(DialogInvoiceComponent,
+        {
+          width: '700px', height: '450px', data: inv, disableClose: true
         });
-      } else {
-        this.cashService.openGenericInfo('Information', 'Not exist hold orders');
-      }
+      dialogRef.afterClosed().subscribe(order => {
+        console.log('The dialog was closed', order);
+        if (order) { action(order); }
+      });
+    } else {
+      this.cashService.openGenericInfo('Information', 'Not exist hold orders');
+    }
   }
 
   refund() {
     console.log('refund');
     this.currentOperation = 'refund';
-
     if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS) {
       this.invoiceService.digits ?
-        this.invoiceService.refund().subscribe(i => {
+        this.authService.adminLogged() ? this.refundOp() : this.manager('refund')
+        /*this.invoiceService.refund().subscribe(i => {
             this.invoiceService.setInvoice(i);
           },
           err => {
@@ -262,7 +265,7 @@ export class OperationsService {
             this.invoiceService.resetDigits();
             this.cashService.openGenericInfo('Error', 'Can\'t complete refund operation');
           }
-        )
+        )*/
         :
         this.cashService.openGenericInfo('Error', 'Please input receipt number of check');
     } else {
@@ -271,6 +274,18 @@ export class OperationsService {
       this.cashService.openGenericInfo('Error', 'Can\'t complete refund operation because check is in progress');
     }
 
+  }
+
+  refundOp() {
+    this.invoiceService.refund().subscribe(i => {
+        this.invoiceService.setInvoice(i);
+      },
+      err => {
+        console.error(err);
+        this.invoiceService.resetDigits();
+        this.cashService.openGenericInfo('Error', 'Can\'t complete refund operation');
+      }
+    )
   }
 
   logout() {
@@ -312,31 +327,46 @@ export class OperationsService {
     this.resetInactivity(false);
   }
 
+  refundCheckByAdmin(t?: Token) {
+    console.log('refundCheckByAdmin', t);
+    this.refundOp();
+    this.authService.token = t;
+    this.resetInactivity(false);
+  }
+
   openInfoEventDialog(title: string) {
     this.cashService.dialog.open(GenericInfoEventsComponent,{
-       width: '300px', height: '220px', data: {title: title ? title : 'Information'}, disableClose: true
+      width: '300px', height: '220px', data: {title: title ? title : 'Information'}, disableClose: true
     })
-    .afterClosed().subscribe(() => this.cashService.resetEnableState());
+      .afterClosed().subscribe(() => this.cashService.resetEnableState());
   }
 
   cash() {
-    console.log('cash', this.invoiceService.invoice.total, this.currentOperation);
-    if (this.invoiceService.invoice.total < 0 /*&& this.currentOperation === 'refund'*/) {
+    console.log('cash');
+    const totalToPaid = this.invoiceService.invoice.total;
+    if (totalToPaid < 0  && this.invoiceService.invoice.isRefund) {
       console.log('paid refund, open cash!!!');
-      this.cashService.openGenericInfo('Open Cash', 'Paid Refund').afterClosed()
-        .subscribe(() => {
-          this.invoiceService.createInvoice();
-          this.cashService.resetEnableState();
-        });
-    } else if (this.invoiceService.invoice.total > 0) {
+      this.cashService.openGenericInfo('Open Cash', 'Paid Refund: ' + totalToPaid)
+        .afterClosed()
+        .subscribe(
+          () => this.invoiceService.cash(totalToPaid)
+            .subscribe(
+              data =>
+              {
+                console.log(data);
+                this.invoiceService.createInvoice();
+              },
+              err => this.cashService.openGenericInfo('Error', 'Error in refund paid'),
+              () => this.cashService.resetEnableState()));
+    } else if (totalToPaid > 0) {
       const dialogRef = this.cashService.dialog.open(CashOpComponent,
         {
-          width: '480px', height: '660px', data: this.invoiceService.invoice.total, disableClose: true
+          width: '480px', height: '660px', data: totalToPaid, disableClose: true
         }).afterClosed().subscribe(data => {
         console.log('The dialog was closed', data);
         // this.paymentData = data;
         if (data > 0) {
-          let valueToReturn = data - this.invoiceService.invoice.total;
+          let valueToReturn = data - totalToPaid;
           this.cashReturn(valueToReturn, data);
         } else {
           this.currentOperation = TotalsOpEnum.SUBTOTAL;
@@ -359,8 +389,9 @@ export class OperationsService {
                 console.log(data);
                 this.invoiceService.createInvoice();
               },
-              err => {console.log(err); this.cashService.openGenericInfo('Error',
-                'Can\'t complete cash operation')},
+              err => {
+                console.log(err); this.cashService.openGenericInfo('Error', 'Can\'t complete cash operation')
+              },
               () => this.cashService.resetEnableState())
         }
       });
@@ -443,8 +474,8 @@ export class OperationsService {
           console.log(data);
           this.invoiceService.createInvoice();
         },err => {
-            console.log(err); this.cashService.openGenericInfo('Error', 'Can\'t complete debit operation');
-            this.cashService.resetEnableState();
+          console.log(err); this.cashService.openGenericInfo('Error', 'Can\'t complete debit operation');
+          this.cashService.resetEnableState();
         });
     }
     this.resetInactivity(false);
@@ -458,14 +489,14 @@ export class OperationsService {
       this.openInfoEventDialog('Credit Card');
       this.invoiceService.credit(this.invoiceService.invoice.total)
         .subscribe(data => {
-          console.log(data);
-          this.invoiceService.createInvoice();
+            console.log(data);
+            this.invoiceService.createInvoice();
           },
-        err => {
-          console.log(err); this.cashService.openGenericInfo('Error', 'Can\'t complete credit operation');
-          this.cashService.resetEnableState();
-        });
-      }
+          err => {
+            console.log(err); this.cashService.openGenericInfo('Error', 'Can\'t complete credit operation');
+            this.cashService.resetEnableState();
+          });
+    }
     this.resetInactivity(false);
   }
 

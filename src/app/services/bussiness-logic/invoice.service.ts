@@ -71,7 +71,7 @@ export class InvoiceService {
     }, err => {
       console.error('addProductOrder', err);
       // this.delPOFromInvoice(po);
-      this.cashService.openGenericInfo('Error', err.error);
+      this.cashService.openGenericInfo('Error', err);
     });
   }
 
@@ -89,8 +89,6 @@ export class InvoiceService {
 
   delPOFromInvoice(po: ProductOrder[]){
     const productOrdersIds = po.map(prodOrder => {
-      // this.invoice.productOrders.splice(this.invoice.productOrders.indexOf(prodOrder),1);
-      // console.log('delPOFromInvoice', this.invoice.receiptNumber, prodOrder.id);
       return prodOrder.id;
     });
 
@@ -103,10 +101,6 @@ export class InvoiceService {
         console.log(err);
         this.cashService.openGenericInfo('Error', err.error);
       });
-
-    // this.invoice.productsOrders.splice(this.invoice.productsOrders.indexOf(po),1);
-    // this.setTotal();
-    // this.evUpdateProds.emit(this.invoice.productsOrders);
   }
 
   addProductByUpc(typeOp: EOperationType): Observable<Product> {

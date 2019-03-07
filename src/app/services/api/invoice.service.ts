@@ -54,16 +54,18 @@ export class InvoiceService {
     let params = new HttpParams();
     params = params.append('operationType', operation + '' );
     const productDto = {productId: product.productId, quantity: product.quantity, unitCost: product.unitCost};
-    return this._http.post(url + this.path + '/' + invoiceId + '/product', productDto, {params});
+    return this._http.post(url + this.path + '/' + invoiceId + '/product', productDto, {params})
+      .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
   deleteProductOrder(url: string, productOrderId: string, invoiceId: string): Observable<any> {
-    return this._http.delete(url + this.path + '/' + invoiceId + '/product/' + productOrderId);
+    return this._http.delete(url + this.path + '/' + invoiceId + '/product/' + productOrderId)
+    .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
   deleteProductOrders(url: string, productOrderIds: Array<string>, invoiceId: string): Observable<any> {
     return this._http.request('delete', url + this.path + '/' + invoiceId + '/product', {body: productOrderIds})
-      .pipe(catchError(this.processHttpMsgService.handleError));
+    .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
   getByDateRange(url: string, fromDate: Date, toDate: Date, pageNumber: number, pageSize: number) {
