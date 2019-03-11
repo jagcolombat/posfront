@@ -9,4 +9,12 @@ img {
   height: 100%;
 }
 
+slide-announce /deep/ a, slide-announce /deep/ .arrow-container {
+  cursor: none !important;
+}
+
+slide-promotions /deep/ a, slide-promotions /deep/ .arrow-container {
+  cursor: none !important;
+}
+
 
