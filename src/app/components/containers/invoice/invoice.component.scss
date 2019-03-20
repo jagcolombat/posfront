@@ -22,12 +22,11 @@ info-pos {
 
 .title-header {
   background-color: lightyellow;
-}
 
-.title-header /deep/ span {
-  /*border-top: 1px solid gray ;*/
-  padding-top: 5px;
-  font-weight: bold;
+  &/deep/ span {
+    padding-top: 5px;
+    font-weight: bold;
+  }
 }
 
 div.header {
@@ -37,4 +36,7 @@ div.header {
 
 .header, .total {
   height: 80px;
+  & /deep/ * {
+    cursor: none !important;
+  }
 }

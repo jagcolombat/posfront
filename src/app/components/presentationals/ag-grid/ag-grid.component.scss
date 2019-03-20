@@ -3,3 +3,7 @@ ag-grid-angular /deep/ .customHeaderLabel {
   width: 100% !important;
   font-size: 14px !important;
 }
+
+ag-grid-angular /deep/ * {
+  cursor: none !important;
+}
