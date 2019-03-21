@@ -14,7 +14,7 @@ export class AgGridComponent implements OnInit, OnDestroy {
   @Output() updateData = new EventEmitter<boolean>();
   public gridOptions: GridOptions;
   private gridApi: GridApi;
-  private context: any;
+  public context: any;
   private subscriptions: Subscription[] = [];
 
   constructor(private invoiceService: InvoiceService) {
@@ -108,7 +108,7 @@ export class AgGridComponent implements OnInit, OnDestroy {
       name: data.productName,
       unitCost: Number(data.unitCost).toFixed(2),
       quantity: data.quantity,
-      total: Number(data.total).toFixed(2),
+      total: Number(data.subTotal).toFixed(2),
       tax: Number(data.tax).toFixed(2),
       // product: data.product
     };

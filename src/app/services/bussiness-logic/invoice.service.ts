@@ -71,6 +71,7 @@ export class InvoiceService {
     }, err => {
       console.error('addProductOrder', err);
       // this.delPOFromInvoice(po);
+      this.resetDigits();
       this.cashService.openGenericInfo('Error', err);
     });
   }

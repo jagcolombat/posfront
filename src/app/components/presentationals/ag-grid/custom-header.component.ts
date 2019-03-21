@@ -5,7 +5,7 @@ import {ICellRendererAngularComp, IHeaderAngularComp} from 'ag-grid-angular';
   selector: 'app-loading-overlay',
   template: `
       <div>
-          <div #headerButton class="customHeaderLabel" (click)="onMenuClicked($event)">{{ params.displayName }}</div>
+          <div #headerButton class="customHeaderLabel" (click)="onMenuClicked()">{{ params.displayName }}</div>
       </div>`,
   styles: [`
       .customHeaderLabel {
