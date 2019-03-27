@@ -15,6 +15,8 @@ import { ICashPayment } from 'src/app/models/cash-payment.model';
 import { Journey } from 'src/app/models/journey.model';
 import { JourneyService } from './journey.service';
 import { CreditCard } from 'src/app/models';
+import { ConfigurationService } from './configuration.service';
+import { Configuration } from 'src/app/models/configuration.model';
 
 @Injectable({
   providedIn: 'root'
@@ -29,7 +31,8 @@ export class DataStorageService {
               private productService: ProductService,
               private invoiceService: InvoiceService,
               private paymentService: PaymentService,
-              private journeyService: JourneyService) { }
+              private journeyService: JourneyService,
+              private configurationService: ConfigurationService) { }
 
   // Departments
   getDepartments(): Observable<Department[]> {
@@ -129,6 +132,11 @@ export class DataStorageService {
   // Journey
   registryOperation(journey: Journey): Observable<Invoice> {
     return this.journeyService.registryOperation(this.url, journey);
+  }
+
+  // Configuration
+  getConfiguration(): Observable<Configuration> {
+    return this.configurationService.getAll(this.url);
   }
 
 }
