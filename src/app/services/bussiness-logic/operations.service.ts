@@ -68,6 +68,9 @@ export class OperationsService {
           this.resetTotalFromFS();
         }
         this.currentOperation = '';
+    } else if(!this.invoiceService.invoiceProductSelected && !this.invoiceService.digits &&
+      this.currentOperation === FinancialOpEnum.RECALL){
+      this.invoiceService.createInvoice();
     } else {
       this.invoiceService.evDelProd.emit(true);
       if(total) this.invoiceService.setTotal();
@@ -154,7 +157,7 @@ export class OperationsService {
 
   recallCheck() {
     console.log('recallCheck');
-    this.currentOperation = 'recallCheck';
+    this.currentOperation = FinancialOpEnum.RECALL;
 
     this.resetInactivity(true);
     if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS) {
@@ -516,5 +519,19 @@ export class OperationsService {
 
   public printLast() {
     this.invoiceService.printLastInvoice();
+  }
+
+  scanInvoice() {
+    /*if(this.invoiceService.digits) {
+      this.getCheckById(EOperationType.ReviewCheck, i => {
+        if (i.status === InvoiceStatus.IN_PROGRESS) {
+          this.cashService.reviewEnableState();
+        } else if (i.status === InvoiceStatus.PAID) {
+          this.cashService.reviewPaidEnableState();
+        } else if (i.status === InvoiceStatus.IN_HOLD) {
+          this.cashService.reviewEnableState();
+        } else this.cashService.reviewEnableState();
+      });
+    }*/
   }
 }
