@@ -122,7 +122,7 @@ export class DataStorageService {
   }
 
   paidByDeditCard(cashPayment: CreditCard): Observable<any> {
-    return this.paymentService.paidByCreditCard(this.url, cashPayment);
+    return this.paymentService.paidByDebitCard(this.url, cashPayment);
   }
 
   paidByEBTCard(cashPayment: CreditCard): Observable<any> {
