@@ -52,7 +52,12 @@ export class OperationsService {
       this.currentOperation === TotalsOpEnum.FS_SUBTOTAL || this.currentOperation === TotalsOpEnum.SUBTOTAL) {
       this.clearOp(false);
     } else {
-      this.authService.adminLogged() ? this.clearOp() : this.manager('clear');
+      this.invoiceService.getSystemConfig().subscribe(config => {
+        config.allowClear ? this.clearOp() :
+          this.authService.adminLogged() ? this.clearOp() : this.manager('clear');
+      }, err => { this.cashService.openGenericInfo('Error', 'Can\'t get configuration'); });
+      /*this.cashService.systemConfig.allowClear ? this.clearOp() :
+        this.authService.adminLogged() ? this.clearOp() : this.manager('clear');*/
     }
     this.resetInactivity(true);
   }

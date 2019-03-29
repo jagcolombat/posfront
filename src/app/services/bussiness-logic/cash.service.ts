@@ -1,7 +1,7 @@
-import {EventEmitter, Injectable} from '@angular/core';
-import {BehaviorSubject} from "rxjs";
+import {Injectable} from '@angular/core';
 import {GenericInfoModalComponent} from "../../components/presentationals/generic-info-modal/generic-info-modal.component";
 import {MatDialog} from "@angular/material";
+import {Configuration} from "../../models/configuration.model";
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +12,7 @@ export class CashService {
   disabledInvOp: boolean | boolean[];
   disabledTotalOp: boolean | boolean[];
   disabledPayment: boolean | boolean[];
+  systemConfig: Configuration;
 
   constructor(public dialog: MatDialog) {
     this.resetEnableState();

@@ -35,7 +35,9 @@ export class InvoiceService {
   @Output() evUpdateProds = new EventEmitter<ProductOrder[]>();
   evCreateInvoice = new BehaviorSubject<boolean>(true);
 
-  constructor(private authService: AuthService, private dataStorage: DataStorageService, private cashService: CashService) { }
+  constructor(private authService: AuthService, private dataStorage: DataStorageService, private cashService: CashService) {
+    this.setSystemConfig();
+  }
 
   getCashier(): string {
     return this.cashier = this.authService.token.username ? this.authService.token.username : ''
@@ -214,9 +216,24 @@ export class InvoiceService {
     return { total: total, taxes: taxes };
   }
 
-
   printLastInvoice() {
     this.dataStorage.printLastInvoice()
       .subscribe(data => data);
+  }
+
+  setSystemConfig(prop?: string){
+    // this.setUserToInvoice();
+    this.dataStorage.getConfiguration().subscribe(next => {
+      console.info('getConfig successfull', next);
+      this.cashService.systemConfig = next;
+      // return prop ? next[prop]: next;
+    }, err => {
+      console.error('getConfig failed');
+      this.cashService.openGenericInfo('Error', 'Can\'t get configuration');
+    });
+  }
+
+  getSystemConfig(){
+    return this.dataStorage.getConfiguration();
   }
 }
