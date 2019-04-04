@@ -1,2 +1,3 @@
-export const baseURL = '/api/1.0';
-export const WEBSOCKET = '/events';
+import {environment} from "../../environments/environment";
+export const baseURL = environment.baseURL;
+export const WEBSOCKET = environment.WEBSOCKET;

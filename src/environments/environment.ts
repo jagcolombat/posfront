@@ -4,7 +4,9 @@
 
 export const environment = {
   production: false,
-  myVarForImageURLS: ''
+  myVarForImageURLS: '',
+  baseURL:  '/api/1.0',
+  WEBSOCKET: '/events'
 };
 
 /*
