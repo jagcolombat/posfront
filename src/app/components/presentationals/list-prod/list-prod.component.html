@@ -1,6 +1,6 @@
 <div class="page">
   <button mat-button fxFlex="130px" *ngFor="let i of prods | paginate: { itemsPerPage: sizePage, currentPage: page }"
-        (click)="doAction(i)"
+        (click)="doAction($event,i)"
         [ngClass]="i.generic ? 'generic' : 'normal'" [disabled]="stockService.cashService.disabledInput">
     {{i.name | uppercase }}
   </button>

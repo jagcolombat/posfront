@@ -24,8 +24,9 @@ export class ListDptoComponent implements OnInit {
     });
   }
 
-  doAction(dpto: Department) {
+  doAction(ev, dpto: Department) {
     console.log('doAction', dpto);
+    ev.target.blur();
     if (dpto.generic) {
       this.getGenericProdByDpto(dpto);
     } else {

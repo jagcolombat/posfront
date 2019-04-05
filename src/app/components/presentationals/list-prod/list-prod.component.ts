@@ -23,8 +23,9 @@ export class ListProdComponent implements OnInit {
       subscribe(prods => this.prods = prods));
   }
 
-  doAction(prod: Product) {
-    console.log('doAction', prod);
+  doAction(ev, prod: Product) {
+    console.log('doAction', ev, prod);
+    ev.target.blur();
     this.stockService.productOrderService.addProduct(prod);
   }
 

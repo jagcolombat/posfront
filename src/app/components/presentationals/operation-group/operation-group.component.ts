@@ -22,8 +22,9 @@ export class OperationGroupComponent implements OnInit, OnChanges {
 
   ngOnInit() { }
 
-  pressKey(val: string | number) {
+  pressKey(ev, val: string | number) {
     console.log(val);
+    ev.target.blur();
     this.evPressKeys.emit(val);
   }
 

@@ -18,8 +18,9 @@ export class NumpadComponent implements OnInit {
     this.numbers.push(this.lastKey);
   }
 
-  pressKey(val: string | number) {
+  pressKey(ev, val: string | number) {
     console.log(val);
+    ev.target.blur();
     this.evPressKeys.emit(val);
   }
 
