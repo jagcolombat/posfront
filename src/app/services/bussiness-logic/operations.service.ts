@@ -12,7 +12,7 @@ import {EOperationType} from "../../utils/operation.type.enum";
 import {CashService} from "./cash.service";
 import {Token} from "../../models";
 import {FinancialOpEnum, TotalsOpEnum} from "../../utils/operations";
-import { HttpErrorResponse } from '@angular/common/http';
+import {HttpErrorResponse} from '@angular/common/http';
 import {GenericInfoEventsComponent} from "../../components/presentationals/generic-info-events/generic-info-events.component";
 
 @Injectable({
@@ -168,7 +168,9 @@ export class OperationsService {
     if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS) {
       this.invoiceService.digits ?
         this.getCheckById(EOperationType.RecallCheck,i => {
-          this.invoiceService.setInvoice(i);}) :
+          i.status === InvoiceStatus.IN_HOLD ? this.invoiceService.setInvoice(i) :
+            this.cashService.openGenericInfo('Error', 'Can\'t complete recall check operation because invoice is not in hold');
+        }) :
         this.invoiceService.getInvoiceInHold(EOperationType.RecallCheck, InvoiceStatus.IN_HOLD)
           .subscribe(next => this.openDialogInvoices(next, i => {
               this.invoiceService.setInvoice(i);}),
