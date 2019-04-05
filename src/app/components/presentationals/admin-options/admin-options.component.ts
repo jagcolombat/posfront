@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {Router} from "@angular/router";
+import {AdminOptionsService} from "../../../services/bussiness-logic/admin-options.service";
+import {leaveFocusOnButton} from "../../../utils/functions/functions";
 
 @Component({
   selector: 'app-admin-options',
@@ -11,14 +13,31 @@ export class AdminOptionsComponent implements OnInit {
   page = 1;
   sizePage = 12;
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private adminOpService: AdminOptionsService ) {
   }
 
   ngOnInit() {
   }
 
-  doAction(opt: string) {
+  doAction(ev, opt: string) {
     console.log('doAction', opt);
-    if(opt === 'Departments') this.router.navigateByUrl('/cash/dptos');
+    leaveFocusOnButton(ev);
+    switch (opt) {
+      case 'Departments':
+        this.router.navigateByUrl('/cash/dptos');
+        break;
+      case 'Apply Discount':
+        this.adminOpService.applyDiscount();
+        break;
+      case 'Empl Z':
+
+        break;
+      case 'SYS Z':
+
+        break;
+      case 'Cancel Check':
+
+        break;
+    }
   }
 }

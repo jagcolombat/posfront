@@ -19,6 +19,7 @@ import {DebitCardComponent} from "../../components/presentationals/debit-card/de
 import { GenericInfoEventsComponent } from 'src/app/components/presentationals/generic-info-events/generic-info-events.component';
 import {CustomHeaderComponent} from "../../components/presentationals/ag-grid/custom-header.component";
 import {PaidOutComponent} from "../../components/presentationals/paid-out/paid-out.component";
+import {ApplyDiscountComponent} from "../../components/presentationals/apply-discount/apply-discount.component";
 
 @NgModule({
   imports: [
@@ -47,7 +48,9 @@ import {PaidOutComponent} from "../../components/presentationals/paid-out/paid-o
     DialogInvoiceComponent,
     DebitCardComponent,
     GenericInfoEventsComponent,
-    CustomHeaderComponent
+    CustomHeaderComponent,
+    PaidOutComponent,
+    ApplyDiscountComponent
   ],
   entryComponents: [
     AgeValidationComponent,
@@ -60,7 +63,8 @@ import {PaidOutComponent} from "../../components/presentationals/paid-out/paid-o
     DebitCardComponent,
     GenericInfoEventsComponent,
     CustomHeaderComponent,
-    PaidOutComponent
+    PaidOutComponent,
+    ApplyDiscountComponent
   ],
 })
 export class HomeModule { }
