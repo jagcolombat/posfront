@@ -1,4 +1,5 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {leaveFocusOnButton} from "../../../utils/functions/functions";
 
 @Component({
   selector: 'operation-group',
@@ -24,7 +25,7 @@ export class OperationGroupComponent implements OnInit, OnChanges {
 
   pressKey(ev, val: string | number) {
     console.log(val);
-    ev.target.blur();
+    leaveFocusOnButton(ev);
     this.evPressKeys.emit(val);
   }
 

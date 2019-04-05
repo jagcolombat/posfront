@@ -3,6 +3,7 @@ import { Product } from '../../../models/product.model';
 import { StockService } from "../../../services/bussiness-logic/stock.service";
 import { ActivatedRoute } from "@angular/router";
 import {EOperationType} from "../../../utils/operation.type.enum";
+import {leaveFocusOnButton} from "../../../utils/functions/functions";
 
 @Component({
   selector: 'app-list-prod',
@@ -25,7 +26,7 @@ export class ListProdComponent implements OnInit {
 
   doAction(ev, prod: Product) {
     console.log('doAction', ev, prod);
-    ev.target.blur();
+    leaveFocusOnButton(ev);
     this.stockService.productOrderService.addProduct(prod);
   }
 

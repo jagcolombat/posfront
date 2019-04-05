@@ -4,6 +4,7 @@ import {StockService} from "../../../services/bussiness-logic/stock.service";
 import {Router} from "@angular/router";
 import {EOperationType} from "../../../utils/operation.type.enum";
 import {CashService} from "../../../services/bussiness-logic/cash.service";
+import {leaveFocusOnButton} from "../../../utils/functions/functions";
 
 @Component({
   selector: 'list-dpto',
@@ -26,7 +27,7 @@ export class ListDptoComponent implements OnInit {
 
   doAction(ev, dpto: Department) {
     console.log('doAction', dpto);
-    ev.target.blur();
+    leaveFocusOnButton(ev);
     if (dpto.generic) {
       this.getGenericProdByDpto(dpto);
     } else {

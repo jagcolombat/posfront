@@ -1,4 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {leaveFocusOnButton} from "../../../utils/functions/functions";
 
 @Component({
   selector: 'numpad',
@@ -20,7 +21,7 @@ export class NumpadComponent implements OnInit {
 
   pressKey(ev, val: string | number) {
     console.log(val);
-    ev.target.blur();
+    leaveFocusOnButton(ev);
     this.evPressKeys.emit(val);
   }
 

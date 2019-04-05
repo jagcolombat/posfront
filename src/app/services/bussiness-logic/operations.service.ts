@@ -176,7 +176,7 @@ export class OperationsService {
               this.invoiceService.setInvoice(i);}),
             err => this.cashService.openGenericInfo('Error', 'Can\'t complete recall check operation'));
     } else {
-      console.error('Can\'t complete recallw check operation');
+      console.error('Can\'t complete recall check operation');
       this.cashService.openGenericInfo('Error', 'Can\'t complete recall check operation because check is in progress');
     }
   }
