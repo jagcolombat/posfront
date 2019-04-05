@@ -18,6 +18,7 @@ import {SharedModule} from "../shared/shared.module";
 import {DebitCardComponent} from "../../components/presentationals/debit-card/debit-card.component";
 import { GenericInfoEventsComponent } from 'src/app/components/presentationals/generic-info-events/generic-info-events.component';
 import {CustomHeaderComponent} from "../../components/presentationals/ag-grid/custom-header.component";
+import {PaidOutComponent} from "../../components/presentationals/paid-out/paid-out.component";
 
 @NgModule({
   imports: [
@@ -58,7 +59,8 @@ import {CustomHeaderComponent} from "../../components/presentationals/ag-grid/cu
     DialogInvoiceComponent,
     DebitCardComponent,
     GenericInfoEventsComponent,
-    CustomHeaderComponent
+    CustomHeaderComponent,
+    PaidOutComponent
   ],
 })
 export class HomeModule { }

@@ -14,6 +14,7 @@ import {Token} from "../../models";
 import {FinancialOpEnum, TotalsOpEnum} from "../../utils/operations";
 import {HttpErrorResponse} from '@angular/common/http';
 import {GenericInfoEventsComponent} from "../../components/presentationals/generic-info-events/generic-info-events.component";
+import {PaidOutComponent} from "../../components/presentationals/paid-out/paid-out.component";
 
 @Injectable({
   providedIn: 'root'
@@ -540,5 +541,13 @@ export class OperationsService {
         } else this.cashService.reviewEnableState();
       });
     }*/
+  }
+
+  paidOut() {
+    const dialogRef = this.cashService.dialog.open(PaidOutComponent,
+      {
+        width: '480px', height: '600px', disableClose: true
+      })
+      .afterClosed().subscribe((data: string) => { console.log('paided out', data) });
   }
 }
