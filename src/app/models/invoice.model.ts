@@ -13,6 +13,8 @@ export interface IInvoice {
   tax?: number;
   isRefund?: boolean;
   fsTotal?: number;
+  date?: Date;
+  productsCount?: number;
 }
 
 export class Invoice implements IInvoice {
@@ -27,6 +29,8 @@ export class Invoice implements IInvoice {
               public tax?: number,
               public isRefund?: boolean,
               public fsTotal?: number,
+              public date?: Date,
+              public productsCount?: number
               ) {
   }
 }

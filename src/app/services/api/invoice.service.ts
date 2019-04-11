@@ -102,4 +102,8 @@ export class InvoiceService {
     return this._http.patch<Invoice>(url + this.path + '/' + invoice.receiptNumber, documentPacth);
   }
 
+  applyDiscountInvoice (url: string, id: string, discount: number): Observable<Invoice> {
+    return this._http.post<Invoice>(url + this.path + '/' + id + '/discount/' + discount, {});
+  }
+
 }

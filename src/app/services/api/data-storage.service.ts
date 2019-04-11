@@ -6,7 +6,7 @@ import {Product} from '../../models/product.model';
 import {ProductService} from './product.service';
 import {InvoiceService} from './invoice.service';
 import {Invoice} from '../../models/invoice.model';
-import {map} from 'rxjs/operators';
+import {map, catchError} from 'rxjs/operators';
 import { baseURL } from '../../utils/url.path.enum';
 import { PaymentService } from './payment.service';
 import { ProductOrder } from 'src/app/models/product-order.model';
@@ -14,9 +14,11 @@ import { EOperationType } from 'src/app/utils/operation.type.enum';
 import { ICashPayment } from 'src/app/models/cash-payment.model';
 import { Journey } from 'src/app/models/journey.model';
 import { JourneyService } from './journey.service';
-import { CreditCard } from 'src/app/models';
+import { CreditCard, User, Payment } from 'src/app/models';
 import { ConfigurationService } from './configuration.service';
 import { Configuration } from 'src/app/models/configuration.model';
+import { AdminOperationService } from './admin.operation.service';
+import { PaidOut } from 'src/app/models/paid-out.model';
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +34,8 @@ export class DataStorageService {
               private invoiceService: InvoiceService,
               private paymentService: PaymentService,
               private journeyService: JourneyService,
-              private configurationService: ConfigurationService) { }
+              private configurationService: ConfigurationService,
+              private adminOperationService: AdminOperationService) { }
 
   // Departments
   getDepartments(): Observable<Department[]> {
@@ -112,6 +115,10 @@ export class DataStorageService {
       return this.invoiceService.deleteProductOrders(this.url, productOrderId, invoiceId);
   }
 
+  applyDiscountInvoice (id: string, discount: number): Observable<Invoice> {
+    return this.invoiceService.applyDiscountInvoice(this.url, id, discount);
+  }
+
   // Payment
   paidByCash(cashPayment: ICashPayment): Observable<any> {
     return this.paymentService.paidByCash(this.url, cashPayment);
@@ -137,6 +144,23 @@ export class DataStorageService {
   // Configuration
   getConfiguration(): Observable<Configuration> {
     return this.configurationService.getAll(this.url);
+  }
+
+  // Admin Operations
+  getApplicationUsers(): Observable<User[]> {
+    return this.adminOperationService.getApplicationUsers(this.url);
+  }
+
+  addPaidOut(paidOut: PaidOut): Observable<any> {
+    return this.adminOperationService.addPaidOut(this.url, paidOut);
+  }
+
+  getInvoiceByUser(id: string): Observable<Invoice[]> {
+    return this.adminOperationService.getInvoiceByUser(this.url, id);
+  }
+
+  getPaymentByType(): Observable<Payment[]> {
+    return this.adminOperationService.getPaymentByType(this.url);
   }
 
 }
