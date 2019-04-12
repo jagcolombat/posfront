@@ -99,6 +99,10 @@ export class DataStorageService {
     return this.invoiceService.updateInvoice(this.url, invoice, property, value);
   }
 
+  recallCheck (id: string): Observable<Invoice> {
+    return this.invoiceService.recallCheck(this.url, id);
+  }
+
   // ProductOrder
 
   addProductOrderByInvoice(invoiceId: string, productOrder: ProductOrder, operationType: EOperationType,

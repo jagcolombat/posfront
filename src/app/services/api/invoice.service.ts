@@ -103,7 +103,13 @@ export class InvoiceService {
   }
 
   applyDiscountInvoice (url: string, id: string, discount: number): Observable<Invoice> {
-    return this._http.post<Invoice>(url + this.path + '/' + id + '/discount/' + discount, {});
+    return this._http.post<Invoice>(url + this.path + '/' + id + '/discount/' + discount, {})
+      .pipe(catchError(this.processHttpMsgService.handleError));
+  }
+
+  recallCheck (url: string, id: string): Observable<Invoice> {
+    return this._http.get<Invoice>(url + this.path + '/recallcheck/' + id)
+      .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
 }
