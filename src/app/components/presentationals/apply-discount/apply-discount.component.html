@@ -8,10 +8,11 @@
     <mat-dialog-content>
       <p>
         <mat-form-field>
-          <input matInput placeholder="Discount" type="text" [(ngModel)]="cost" name="price" #price="ngModel"
+          <input matInput placeholder="Discount (percent)" type="text" [(ngModel)]="cost" name="price" #price="ngModel"
                  required [min]="1" [max]="100" disabled/>
           <mat-error *ngIf="price.errors?.required">Discount is required</mat-error>
         </mat-form-field>
+        <mat-error *ngIf="!valid && tryValidation "><span class="fa fa-warning fa-lg"></span> {{errorMsg}}</mat-error>
       </p>
       <generic-keyboard (evKeys)="getKeys($event)" ></generic-keyboard>
     </mat-dialog-content>
