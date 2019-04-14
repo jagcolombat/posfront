@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve --proxy-config proxy.conf.json",
     "build": "ng build --base-href='/posfront/' --deploy-url='/posfront/' --prod",
+    "serve:prod": "ng serve --base-href=/posfront/ --deploy-url=/posfront/ --prod",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
