@@ -67,7 +67,11 @@ export class DataStorageService {
   }
 
   getInvoiceInHold() {
-    return this.invoiceService.getInvoiceInHold(this.url);
+    return this.invoiceService.getInvoiceByStatus(this.url, 'inHold');
+  }
+
+  getInvoiceCancelled() {
+    return this.invoiceService.getInvoiceByStatus(this.url, 'cancel');
   }
 
   getInvoiceById(id: string, operationType: EOperationType): Observable<Invoice>  {

@@ -179,7 +179,7 @@ export class OperationsService {
             this.cashService.openGenericInfo('Error', 'Can\'t complete recall check operation because invoice is not in hold');
         })
         :
-        this.invoiceService.getInvoiceInHold(EOperationType.RecallCheck, InvoiceStatus.IN_HOLD)
+        this.invoiceService.getInvoiceByStatus(EOperationType.RecallCheck, InvoiceStatus.IN_HOLD)
           .subscribe(next => this.openDialogInvoices(next, i => {
               this.invoiceService.setInvoice(i);}),
             err => this.cashService.openGenericInfo('Error', 'Can\'t complete recall check operation'));

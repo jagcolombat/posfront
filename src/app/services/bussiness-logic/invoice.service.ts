@@ -3,7 +3,7 @@ import {AuthService} from "../api/auth.service";
 import {ProductOrder} from "../../models/product-order.model";
 import {DataStorageService} from "../api/data-storage.service";
 import {BehaviorSubject, Observable} from "rxjs";
-import {Product, CreditCardModel} from "../../models";
+import {CreditCardModel, Product} from "../../models";
 import {InvoiceStatus} from "../../utils/invoice-status.enum";
 import {Invoice} from "../../models/invoice.model";
 import {map} from "rxjs/operators";
@@ -125,9 +125,11 @@ export class InvoiceService {
     return this.dataStorage.recallCheck(this.digits);
   }
 
-  getInvoiceInHold(typeOp: EOperationType, status?: InvoiceStatus): Observable<Invoice[]> {
-    if (status) {
+  getInvoiceByStatus(typeOp: EOperationType, status?: InvoiceStatus): Observable<Invoice[]> {
+    if (status === InvoiceStatus.IN_HOLD) {
       return this.dataStorage.getInvoiceInHold().pipe(map(invoices => invoices));
+    } else if (status === InvoiceStatus.CANCEL) {
+      return this.dataStorage.getInvoiceCancelled().pipe(map(invoices => invoices));
     } else {
       return this.dataStorage.getInvoices().pipe(map(invoices => invoices));
     }

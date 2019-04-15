@@ -35,12 +35,12 @@ export class InvoiceService {
     }
   }
 
-  getInvoiceInHold = (url: string) => {
+  getInvoiceByStatus = (url: string, status: string) => {
     let params = new HttpParams();
     params = params
       .append('pageNumber', '1')
       .append('pageSize', '20');
-    return this._http.get<Invoice[]>(url + this.path + '/status/inHold', { params });
+    return this._http.get<Invoice[]>(url + this.path + '/status/'+status, { params });
   }
 
   getById (url: string, id: string, operationType: EOperationType): Observable<Invoice> {

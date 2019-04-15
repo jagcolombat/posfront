@@ -36,7 +36,7 @@ export class AdminOptionsComponent implements OnInit {
 
         break;
       case 'Cancel Check':
-
+        this.adminOpService.cancelCheck();
         break;
     }
   }
