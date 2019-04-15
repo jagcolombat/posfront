@@ -11,7 +11,7 @@ import {InvoiceStatus} from "../../utils/invoice-status.enum";
 import {EOperationType} from "../../utils/operation.type.enum";
 import {CashService} from "./cash.service";
 import {Token} from "../../models";
-import {FinancialOpEnum, TotalsOpEnum} from "../../utils/operations";
+import {FinancialOpEnum, PaymentOpEnum, TotalsOpEnum} from "../../utils/operations";
 import {HttpErrorResponse} from '@angular/common/http';
 import {GenericInfoEventsComponent} from "../../components/presentationals/generic-info-events/generic-info-events.component";
 import {PaidOutComponent} from "../../components/presentationals/paid-out/paid-out.component";
@@ -50,7 +50,8 @@ export class OperationsService {
     console.log('clear');
     // this.currentOperation = 'clear';
     if(!this.invoiceService.invoiceProductSelected || this.currentOperation === FinancialOpEnum.REVIEW ||
-      this.currentOperation === TotalsOpEnum.FS_SUBTOTAL || this.currentOperation === TotalsOpEnum.SUBTOTAL) {
+      this.currentOperation === TotalsOpEnum.FS_SUBTOTAL || this.currentOperation === TotalsOpEnum.SUBTOTAL ||
+      this.currentOperation === PaymentOpEnum.CASH || this.currentOperation === PaymentOpEnum.EBT_CARD) {
       this.clearOp(false);
     } else {
       this.invoiceService.getSystemConfig().subscribe(config => {
@@ -65,7 +66,8 @@ export class OperationsService {
 
   clearOp(total:boolean = true){
     if(this.currentOperation === FinancialOpEnum.REVIEW || this.currentOperation === TotalsOpEnum.FS_SUBTOTAL ||
-      this.currentOperation === TotalsOpEnum.SUBTOTAL){
+      this.currentOperation === TotalsOpEnum.SUBTOTAL || this.currentOperation === PaymentOpEnum.CASH ||
+      this.currentOperation === PaymentOpEnum.EBT_CARD ){
         this.cashService.resetEnableState();
         if(this.currentOperation === FinancialOpEnum.REVIEW) {
           this.invoiceService.createInvoice();
@@ -77,7 +79,7 @@ export class OperationsService {
     } else if(!this.invoiceService.invoiceProductSelected && !this.invoiceService.digits &&
       this.currentOperation === FinancialOpEnum.RECALL){
       this.invoiceService.createInvoice();
-    } else {
+    } else if(this.invoiceService.invoiceProductSelected || this.invoiceService.digits){
       this.invoiceService.evDelProd.emit(true);
       if(total) this.invoiceService.setTotal();
     }
@@ -389,7 +391,7 @@ export class OperationsService {
         }
       });
     }
-    this.currentOperation = 'cash';
+    this.currentOperation = PaymentOpEnum.CASH;
     this.resetInactivity(false);
   }
 
