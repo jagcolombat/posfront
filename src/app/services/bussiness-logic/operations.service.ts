@@ -296,6 +296,7 @@ export class OperationsService {
 
   refundOp() {
     this.invoiceService.refund().subscribe(i => {
+      console.log('refund', i);
         this.invoiceService.setInvoice(i);
       },
       err => {
@@ -555,6 +556,14 @@ export class OperationsService {
       {
         width: '480px', height: '600px', disableClose: true
       })
-      .afterClosed().subscribe((data: string) => { console.log('paided out', data) });
+      .afterClosed().subscribe((data: string) => {
+        console.log('paided out modal', data);
+        this.invoiceService.addPaidOut(data).subscribe(next => {
+          console.log('paided out service', data);
+        }, error1 => {
+          console.error('paid out', error1);
+          this.cashService.openGenericInfo('Error', 'Can\'t complete paid out operation')
+        });
+      });
   }
 }

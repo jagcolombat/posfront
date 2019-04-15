@@ -20,6 +20,7 @@ import { GenericInfoEventsComponent } from 'src/app/components/presentationals/g
 import {CustomHeaderComponent} from "../../components/presentationals/ag-grid/custom-header.component";
 import {PaidOutComponent} from "../../components/presentationals/paid-out/paid-out.component";
 import {ApplyDiscountComponent} from "../../components/presentationals/apply-discount/apply-discount.component";
+import {GenericSalesComponent} from "../../components/presentationals/generic-sales/generic-sales.component";
 
 @NgModule({
   imports: [
@@ -50,7 +51,8 @@ import {ApplyDiscountComponent} from "../../components/presentationals/apply-dis
     GenericInfoEventsComponent,
     CustomHeaderComponent,
     PaidOutComponent,
-    ApplyDiscountComponent
+    ApplyDiscountComponent,
+    GenericSalesComponent
   ],
   entryComponents: [
     AgeValidationComponent,
@@ -64,7 +66,8 @@ import {ApplyDiscountComponent} from "../../components/presentationals/apply-dis
     GenericInfoEventsComponent,
     CustomHeaderComponent,
     PaidOutComponent,
-    ApplyDiscountComponent
+    ApplyDiscountComponent,
+    GenericSalesComponent
   ],
 })
 export class HomeModule { }

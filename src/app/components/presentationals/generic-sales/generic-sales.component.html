@@ -1,0 +1,28 @@
+<div oncontextmenu="return false">
+  <mat-toolbar color="primary">
+    {{ data.title }}
+    <span class="flex-spacer"></span>
+    <button mat-raised-button mat-dialog-close color="primary">&times;</button>
+  </mat-toolbar>
+  <div mat-dialog-content>
+    <p class="content" *ngIf="data.empl">
+      <select (change)="getSales($event)">
+        <option *ngFor="let empl of data.empl" value="{{empl.id}}">{{empl.userName}}</option>
+      </select>
+    </p>
+    <ul *ngIf="data.content">
+      <li *ngFor="let sale of sales">
+        <i>{{sale.type}}: </i><label>{{sale.total | currency}}</label>
+      </li>
+    </ul>
+    <table *ngIf="salesByUser">
+      <caption>Sales by user</caption>
+      <thead>
+        <td>Receipt Number</td><td>Total</td><td>Date</td>
+      </thead>
+      <tr *ngFor="let sale of salesByUser">
+        <td>{{sale.receiptNumber}}</td><td>{{sale.total}}</td><td>{{sale.date}}</td>
+      </tr>
+    </table>
+  </div>
+</div>

@@ -46,7 +46,7 @@ export class PaidOutComponent implements OnInit {
     // console.log("addGenericProd", this.data);
     console.log("open cash", this.cost);
     console.log("print paid out", this.cost);
-    this.dialogRef.close();
+    this.dialogRef.close(this.cost);
   }
 
   back() {

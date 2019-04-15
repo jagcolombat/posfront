@@ -30,10 +30,10 @@ export class AdminOptionsComponent implements OnInit {
         this.adminOpService.applyDiscount();
         break;
       case 'Empl Z':
-
+        this.adminOpService.emplZ();
         break;
       case 'SYS Z':
-
+        this.adminOpService.sysZ();
         break;
       case 'Cancel Check':
         this.adminOpService.cancelCheck();

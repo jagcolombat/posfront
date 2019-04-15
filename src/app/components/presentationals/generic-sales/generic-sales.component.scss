@@ -1,0 +1,23 @@
+.content {
+  font-size: 18px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.price {
+  font-size: 24px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+[mat-dialog-content] {
+  flex-direction: column;
+}
+
+button[mat-raised-button] {
+  cursor: default !important;
+}

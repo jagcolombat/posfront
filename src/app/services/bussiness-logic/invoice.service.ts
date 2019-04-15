@@ -10,6 +10,7 @@ import {map} from "rxjs/operators";
 import {EOperationType} from "../../utils/operation.type.enum";
 import {CashPaymentModel} from "../../models/cash-payment.model";
 import {CashService} from "./cash.service";
+import {PaidOut} from "../../models/paid-out.model";
 
 @Injectable({
   providedIn: 'root'
@@ -245,5 +246,9 @@ export class InvoiceService {
 
   applyDiscountInvoice (discount: number): Observable<Invoice> {
     return this.dataStorage.applyDiscountInvoice(this.invoice.receiptNumber, discount);
+  }
+
+  addPaidOut(data: string) {
+    return this.dataStorage.addPaidOut(new PaidOut(+data))
   }
 }
