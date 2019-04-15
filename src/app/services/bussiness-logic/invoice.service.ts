@@ -121,6 +121,10 @@ export class InvoiceService {
       .pipe(map(invoices => invoices));
   }*/
 
+  recallCheck(): Observable<Invoice> {
+    return this.dataStorage.recallCheck(this.digits);
+  }
+
   getInvoiceInHold(typeOp: EOperationType, status?: InvoiceStatus): Observable<Invoice[]> {
     if (status) {
       return this.dataStorage.getInvoiceInHold().pipe(map(invoices => invoices));

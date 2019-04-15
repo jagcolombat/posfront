@@ -45,11 +45,11 @@ export class InvoiceComponent implements OnInit, OnDestroy {
       // this.showDigits = true;
       // console.log(this.prodService.digits, this.prodService.qty, val.value );
       this.invoiceService.digits += number.toString();
-      this.invoiceService.numbers = parseInt(this.invoiceService.numbers + '' + number.toString());
+      this.invoiceService.numbers = this.invoiceService.numbers + number.toString();
     } else {
-      if (this.invoiceService.qty === 1) this.invoiceService.qty = this.invoiceService.numbers;
+      if (this.invoiceService.qty === 1) this.invoiceService.qty = +this.invoiceService.numbers;
       this.invoiceService.digits += ' @ ';
-      this.invoiceService.numbers = 0;
+      this.invoiceService.numbers = '';
     }
   }
 

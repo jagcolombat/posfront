@@ -168,10 +168,15 @@ export class OperationsService {
     this.resetInactivity(true);
     if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS) {
       this.invoiceService.digits ?
-        this.getCheckById(EOperationType.RecallCheck,i => {
+        /*this.getCheckById(EOperationType.RecallCheck,i => {
           i.status === InvoiceStatus.IN_HOLD ? this.invoiceService.setInvoice(i) :
             this.cashService.openGenericInfo('Error', 'Can\'t complete recall check operation because invoice is not in hold');
-        }) :
+        })*/
+        this.invoiceService.recallCheck().subscribe(i => {
+          i.status === InvoiceStatus.IN_HOLD ? this.invoiceService.setInvoice(i) :
+            this.cashService.openGenericInfo('Error', 'Can\'t complete recall check operation because invoice is not in hold');
+        })
+        :
         this.invoiceService.getInvoiceInHold(EOperationType.RecallCheck, InvoiceStatus.IN_HOLD)
           .subscribe(next => this.openDialogInvoices(next, i => {
               this.invoiceService.setInvoice(i);}),
