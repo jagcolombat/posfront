@@ -1,9 +1,10 @@
-import { Component, EventEmitter, OnInit, Output, OnDestroy } from '@angular/core';
+import {Component, EventEmitter, OnInit, Output, OnDestroy, Input} from '@angular/core';
 import { GridOptions, GridApi } from 'ag-grid-community';
 import { InvoiceService } from "../../../services/bussiness-logic/invoice.service";
 import { ProductOrder } from "../../../models/product-order.model";
 import { Subscription } from "rxjs";
 import { CustomHeaderComponent } from "./custom-header.component";
+import {CashService} from "../../../services/bussiness-logic/cash.service";
 
 @Component({
   selector: 'ag-grid',
@@ -16,30 +17,17 @@ export class AgGridComponent implements OnInit, OnDestroy {
   private gridApi: GridApi;
   public context: any;
   private subscriptions: Subscription[] = [];
+  public selectableProd = true;
+  columnDefs: any;
 
-  constructor(private invoiceService: InvoiceService) {
-    this.gridOptions = <GridOptions>{
-      rowData: [],
-      rowSelection: 'multiple',
-      rowMultiSelectWithClick: true,
-      columnDefs: this.createColumnDefs(),
-      onGridReady: () => {
-        this.gridOptions.api.sizeColumnsToFit();
-      },
-      onRowSelected: (ev) => {
-        this.invoiceService.invoiceProductSelected = this.gridOptions.api.getSelectedRows().length > 0;
-      },
-      onBodyScroll: (ev) => {
-        this.gridOptions.api.sizeColumnsToFit();
-      },
-      rowHeight: 60,
-      rowStyle: {'font-size': '16px'}
-    };
+  constructor(private invoiceService: InvoiceService, private cashService: CashService) {
+    this.updateGridOptions();
     this.context = { componentParent: this };
     // this.subscriptions.push(this.invoiceService.evAddProd.subscribe(po => this.onAddRow(po)));
     this.subscriptions.push(this.invoiceService.evDelAllProds.subscribe(ev => this.clearData()));
     this.subscriptions.push(this.invoiceService.evDelProd.subscribe(ev => this.onRemoveSelected()));
     this.subscriptions.push(this.invoiceService.evUpdateProds.subscribe(ev => this.updateItems(ev)));
+    this.subscriptions.push(this.cashService.evReviewEnableState.subscribe(ev => this.updateSelectable(ev)));
   }
 
   ngOnInit() {
@@ -47,11 +35,11 @@ export class AgGridComponent implements OnInit, OnDestroy {
   }
 
   private createColumnDefs() {
-    return [
+    this.columnDefs = [
       {
         field: 'number_item',
-        headerCheckboxSelection: true,
-        checkboxSelection: true,
+        headerCheckboxSelection: this.selectableProd,
+        checkboxSelection: this.selectableProd,
         width: 170,
         headerComponentFramework: CustomHeaderComponent,
         headerComponentParams: { displayName: 'Number Item' }
@@ -80,8 +68,7 @@ export class AgGridComponent implements OnInit, OnDestroy {
         headerComponentFramework: CustomHeaderComponent,
         headerComponentParams: { displayName: 'Amount' },
         field: 'total',
-        type: 'numericColumn',
-        width: 95
+        type: 'numericColumn'
       }
     ];
   }
@@ -129,7 +116,8 @@ export class AgGridComponent implements OnInit, OnDestroy {
   onRemoveSelected() {
     const selectedData = this.gridOptions.api.getSelectedRows();
     console.log('selectedData', selectedData);
-    if(selectedData.length > 0){
+    if(selectedData.length > 0 && this.selectableProd){
+      console.log('remove selected');
       this.invoiceService.delPOFromInvoice(selectedData);
       const res = this.gridOptions.api.updateRowData({ remove: selectedData });
       // printResult(res);
@@ -146,15 +134,42 @@ export class AgGridComponent implements OnInit, OnDestroy {
   }
 
   selectOrDeselectAll() {
-    if (this.gridOptions.api.getSelectedNodes().length !== this.gridOptions.api.getDisplayedRowCount()) {
-      this.gridOptions.api.selectAll();
-    } else {
-      this.gridOptions.api.deselectAll();
+    if(this.selectableProd){
+      if (this.gridOptions.api.getSelectedNodes().length !== this.gridOptions.api.getDisplayedRowCount()) {
+        this.gridOptions.api.selectAll();
+      } else {
+        this.gridOptions.api.deselectAll();
+      }
     }
+  }
+
+  updateGridOptions(){
+    this.gridOptions = <GridOptions>{
+      rowData: [],
+      rowSelection: 'multiple',
+      onGridReady: () => {
+        this.gridOptions.api.sizeColumnsToFit();
+      },
+      onRowSelected: (ev) => {
+          this.invoiceService.invoiceProductSelected = this.gridOptions.api.getSelectedRows().length > 0;
+      },
+      onBodyScroll: (ev) => {
+        this.gridOptions.api.sizeColumnsToFit();
+      },
+      rowHeight: 60,
+      rowStyle: {'font-size': '16px'}
+    };
+    this.createColumnDefs();
+  }
+
+  private updateSelectable(ev) {
+    console.log('updateSelectable', !ev);
+    this.selectableProd = !ev;
+    this.createColumnDefs();
+    this.gridOptions.api.sizeColumnsToFit();
   }
 
   ngOnDestroy() {
     this.subscriptions.map(sub => sub.unsubscribe());
   }
-
 }

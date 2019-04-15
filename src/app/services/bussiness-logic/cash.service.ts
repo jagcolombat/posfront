@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {EventEmitter, Injectable, Output} from '@angular/core';
 import {GenericInfoModalComponent} from "../../components/presentationals/generic-info-modal/generic-info-modal.component";
 import {MatDialog} from "@angular/material";
 import {Configuration} from "../../models/configuration.model";
@@ -13,6 +13,7 @@ export class CashService {
   disabledTotalOp: boolean | boolean[];
   disabledPayment: boolean | boolean[];
   systemConfig: Configuration;
+  @Output() evReviewEnableState = new EventEmitter<boolean>();
 
   constructor(public dialog: MatDialog) {
     this.resetEnableState();
@@ -21,11 +22,13 @@ export class CashService {
   resetEnableState() {
     this.disabledInput = this.disabledFinOp = this.disabledInvOp = this.disabledTotalOp = false;
     this.disabledPayment = true;
+    this.evReviewEnableState.emit(false);
   }
 
   reviewEnableState() {
     this.disabledInput = this.disabledFinOp = this.disabledTotalOp = this.disabledPayment = true;
     this.disabledInvOp = [false, true, true, true];
+    this.evReviewEnableState.emit(true);
   }
 
   reviewPaidEnableState() {
