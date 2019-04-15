@@ -240,4 +240,8 @@ export class InvoiceService {
   getSystemConfig(){
     return this.dataStorage.getConfiguration();
   }
+
+  applyDiscountInvoice (discount: number): Observable<Invoice> {
+    return this.dataStorage.applyDiscountInvoice(this.invoice.receiptNumber, discount);
+  }
 }

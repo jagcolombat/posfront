@@ -15,6 +15,13 @@ export class AdminOptionsService {
       {
         width: '480px', height: '600px', disableClose: true
       })
-      .afterClosed().subscribe((data: string) => { console.log('apply discount', data) });
+      .afterClosed().subscribe((data: string) => {
+        console.log('apply discount', data);
+        this.invoiceService.applyDiscountInvoice(+data).subscribe(next => {
+          this.invoiceService.setInvoice(next);
+        }, err => {
+          this.cashService.openGenericInfo('Error', 'Can\'t apply discount')
+        })
+      });
   }
 }

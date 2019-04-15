@@ -46,10 +46,12 @@ export class ApplyDiscountComponent implements OnInit {
   }
 
   applyDiscount() {
-    console.log("apply discount", this.valid, this.tryValidation);
-    console.log("apply discount", this.cost);
+    //console.log("apply discount", this.valid, this.tryValidation);
+    //console.log("apply discount", this.cost);
     this.validate(parseInt(this.digits));
-    if(this.valid && this.tryValidation) this.dialogRef.close();
+    if(this.valid && this.tryValidation) {
+      this.dialogRef.close(this.cost);
+    }
   }
 
   back() {
