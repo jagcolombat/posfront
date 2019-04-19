@@ -51,7 +51,7 @@ const routes: Routes = [
     ListDptoComponent,
     ListProdComponent,
     AdminOptionsComponent,
-    PaginatorComponent,
+    PaginatorComponent
   ],
   entryComponents: []
 })

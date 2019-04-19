@@ -156,6 +156,9 @@ export class AgGridComponent implements OnInit, OnDestroy {
       onBodyScroll: (ev) => {
         this.gridOptions.api.sizeColumnsToFit();
       },
+      onGridColumnsChanged: () => {
+        this.gridOptions.api.sizeColumnsToFit();
+      },
       rowHeight: 60,
       rowStyle: {'font-size': '16px'}
     };
