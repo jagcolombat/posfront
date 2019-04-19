@@ -119,33 +119,44 @@ export class OperationsService {
     this.invoiceService.evNumpadInput.emit(ev)
   }
 
+  actionByManager(action: string, token: any){
+    switch (action) {
+      case 'void':
+        this.cancelCheckByAdmin(token);
+        break;
+      case 'clear':
+        this.clearCheckByAdmin(token);
+        break;
+      case 'refund':
+        this.refundCheckByAdmin(token);
+        break;
+    }
+  }
+
   manager(action?: string) {
     console.log('manager');
     // this.currentOperation = 'manager';
-    // if(!this.authService.adminLogged()){
-    const dialogRef = this.cashService.dialog.open(DialogLoginComponent, { width: '530px', height: '580px', disableClose: true});
-    dialogRef.afterClosed().subscribe(loginValid => {
-      console.log('The dialog was closed', loginValid);
-      if(loginValid.valid) {
-        if(action){
-          switch (action) {
-            case 'void':
-              this.cancelCheckByAdmin(loginValid.token);
-              break;
-            case 'clear':
-              this.clearCheckByAdmin(loginValid.token);
-              break;
-            case 'refund':
-              this.refundCheckByAdmin(loginValid.token);
-              break;
-          }
-        } else {
-          this.invoiceService.getCashier();
-          this.router.navigateByUrl('/cash/options');
-        }
+    if(this.authService.adminLogged()){
+      if(action){
+        this.actionByManager(action, this.authService.token);
+      } else {
+        this.router.navigateByUrl('/cash/options');
       }
-    });
-
+    } else {
+      this.cashService.dialog.open(DialogLoginComponent, { width: '530px', height: '580px', disableClose: true})
+        .afterClosed()
+        .subscribe(loginValid => {
+          console.log('The dialog was closed', loginValid);
+          if (loginValid.valid) {
+            if (action) {
+              this.actionByManager(action, loginValid.token);
+            } else {
+              this.invoiceService.getCashier();
+              this.router.navigateByUrl('/cash/options');
+            }
+          }
+        });
+    }
     this.resetInactivity(true);
   }
 
