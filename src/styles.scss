@@ -47,3 +47,8 @@ button[mat-button] /deep/ span {
   display: flex;
   height: 100%;
 }
+
+.refund-prod {
+  background: #edc0b8 !important;
+  text-decoration: line-through !important;
+}
