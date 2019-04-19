@@ -19,6 +19,7 @@ import { ConfigurationService } from './configuration.service';
 import { Configuration } from 'src/app/models/configuration.model';
 import { AdminOperationService } from './admin.operation.service';
 import { PaidOut } from 'src/app/models/paid-out.model';
+import { InvoiceStatus } from 'src/app/utils/invoice-status.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -66,12 +67,16 @@ export class DataStorageService {
       return this.invoiceService.changeInvoiceToVoid(this.url, invoice);
   }
 
-  getInvoiceInHold() {
+  /*getInvoiceInHold() {
     return this.invoiceService.getInvoiceByStatus(this.url, 'inHold');
   }
 
   getInvoiceCancelled() {
     return this.invoiceService.getInvoiceByStatus(this.url, 'cancel');
+  }*/
+
+  getInvoiceByStatus(status: InvoiceStatus) {
+    return this.invoiceService.getInvoiceByStatus(this.url, status);
   }
 
   getInvoiceById(id: string, operationType: EOperationType): Observable<Invoice>  {

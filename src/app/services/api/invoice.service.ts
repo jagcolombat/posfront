@@ -35,7 +35,7 @@ export class InvoiceService {
     }
   }
 
-  getInvoiceByStatus = (url: string, status: string) => {
+  getInvoiceByStatus = (url: string, status: InvoiceStatus) => {
     let params = new HttpParams();
     params = params
       .append('pageNumber', '1')

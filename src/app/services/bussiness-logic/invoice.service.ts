@@ -127,10 +127,8 @@ export class InvoiceService {
   }
 
   getInvoiceByStatus(typeOp: EOperationType, status?: InvoiceStatus): Observable<Invoice[]> {
-    if (status === InvoiceStatus.IN_HOLD) {
-      return this.dataStorage.getInvoiceInHold().pipe(map(invoices => invoices));
-    } else if (status === InvoiceStatus.CANCEL) {
-      return this.dataStorage.getInvoiceCancelled().pipe(map(invoices => invoices));
+    if (status === InvoiceStatus.IN_HOLD || status === InvoiceStatus.CANCEL) {
+      return this.dataStorage.getInvoiceByStatus(status).pipe(map(invoices => invoices));
     } else {
       return this.dataStorage.getInvoices().pipe(map(invoices => invoices));
     }
@@ -166,7 +164,7 @@ export class InvoiceService {
   }
 
   cash(payment: number): Observable<Invoice> {
-    const cashPayment = new CashPaymentModel(this.invoice.receiptNumber, payment);
+    const cashPayment = new CashPaymentModel(this.invoice.receiptNumber, payment, this.invoice.total);
     return this.dataStorage.paidByCash(cashPayment);
   }
 
