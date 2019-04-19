@@ -97,6 +97,7 @@ export class AgGridComponent implements OnInit, OnDestroy {
       quantity: data.quantity,
       total: Number(data.subTotal).toFixed(2),
       tax: Number(data.tax).toFixed(2),
+      isRefund: data.isRefund,
       // product: data.product
     };
     console.log('onAddRow', this.gridOptions.api.getDisplayedRowCount());
@@ -147,6 +148,7 @@ export class AgGridComponent implements OnInit, OnDestroy {
     this.gridOptions = <GridOptions>{
       rowData: [],
       rowSelection: 'multiple',
+      rowClassRules: { 'refund-prod': 'data.isRefund === true' },
       onGridReady: () => {
         this.gridOptions.api.sizeColumnsToFit();
       },

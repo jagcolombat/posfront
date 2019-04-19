@@ -21,6 +21,9 @@ import {CustomHeaderComponent} from "../../components/presentationals/ag-grid/cu
 import {PaidOutComponent} from "../../components/presentationals/paid-out/paid-out.component";
 import {ApplyDiscountComponent} from "../../components/presentationals/apply-discount/apply-discount.component";
 import {GenericSalesComponent} from "../../components/presentationals/generic-sales/generic-sales.component";
+import {AppComponent} from "../../app.component";
+import {SalesShopComponent} from "../../components/presentationals/sales-shop/sales-shop.component";
+import {SalesEmplComponent} from "../../components/presentationals/sales-empl/sales-empl.component";
 
 @NgModule({
   imports: [
@@ -52,7 +55,9 @@ import {GenericSalesComponent} from "../../components/presentationals/generic-sa
     CustomHeaderComponent,
     PaidOutComponent,
     ApplyDiscountComponent,
-    GenericSalesComponent
+    GenericSalesComponent,
+    SalesShopComponent,
+    SalesEmplComponent
   ],
   entryComponents: [
     AgeValidationComponent,

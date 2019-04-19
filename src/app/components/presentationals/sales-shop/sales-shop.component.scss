@@ -1,0 +1,33 @@
+table {
+  width: 90%;
+  margin-left: 30px;
+  border-collapse: collapse;
+
+  caption {
+    background: lightblue;
+    padding: 10px;
+  }
+
+  thead {
+    background: lightcyan;
+    padding: 10px;
+
+    td {
+      padding: 8px;
+      font-weight: bold;
+
+      &:last-of-type {
+        text-align: end;
+      }
+    }
+  }
+
+  tbody td {
+    padding: 8px;
+    border-bottom: 1px solid gray;
+
+    &:last-of-type {
+      text-align: end;
+    }
+  }
+}

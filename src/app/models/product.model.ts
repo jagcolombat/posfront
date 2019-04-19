@@ -12,5 +12,6 @@ export interface Product {
     ageVerification?: boolean;
     ageAllow?: number;
     foodStamp?: boolean;
+    isRefund?: boolean;
     tax: number;
 }

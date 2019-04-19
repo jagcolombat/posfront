@@ -37,7 +37,7 @@ export class GenericSalesComponent implements OnInit {
 
   getSales(ev){
     console.log('getSales', ev);
-    this.dataStorage.getInvoiceByUser(ev.target.value).subscribe(next => {
+    this.dataStorage.getInvoiceByUser(ev).subscribe(next => {
       console.log(next);
       this.salesByUser = next;
     }, error1 => {

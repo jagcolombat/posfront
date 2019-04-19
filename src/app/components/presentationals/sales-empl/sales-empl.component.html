@@ -1,0 +1,19 @@
+<mat-form-field>
+  <mat-label>Select a employed:</mat-label>
+  <mat-select (selectionChange)="select($event)" [(value)] = 'emplSel'>
+    <mat-option>None</mat-option>
+    <mat-option *ngFor="let empl of employes" value="{{empl.id}}">{{empl.userName}}</mat-option>
+  </mat-select>
+</mat-form-field>
+<table *ngIf="sales && sales.length > 0">
+  <caption>Sales by user</caption>
+  <thead>
+  <td>Receipt Number</td><td>Total</td>
+  </thead>
+  <tr *ngFor="let sale of sales">
+    <td>{{sale.receiptNumber}}</td><td>{{sale.total}}</td>
+  </tr>
+</table>
+<i class="no-sale" *ngIf="sales && sales.length === 0 && emplSel !== undefined">
+  This employ haven't sold anything yet today
+</i>

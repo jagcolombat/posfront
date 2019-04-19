@@ -24,7 +24,8 @@ export class ProductOrder implements IProductOrder {
               public productId: string,
               public productUpc: string,
               public productName: string,
-              public foodStamp: boolean) {
+              public foodStamp: boolean,
+              public isRefund: boolean) {
 
   }
 }

@@ -1,0 +1,11 @@
+<table *ngIf="sales; else no_sale_shop">
+  <caption>Sales by payment type</caption>
+  <thead>
+  <td>Payment</td><td>Total</td>
+  </thead>
+  <tr *ngFor="let sale of sales">
+    <td>{{sale.type}}</td><td>{{sale.total | currency}}</td>
+  </tr>
+</table>
+<ng-template #no_sale_shop>This shop haven't sales yet today</ng-template>
+
