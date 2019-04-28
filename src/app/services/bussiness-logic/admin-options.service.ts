@@ -9,6 +9,7 @@ import {FinancialOpEnum} from "../../utils/operations";
 import {PaidOutComponent} from "../../components/presentationals/paid-out/paid-out.component";
 import {DataStorageService} from "../api/data-storage.service";
 import {GenericSalesComponent} from "../../components/presentationals/generic-sales/generic-sales.component";
+import {environment} from "../../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
@@ -64,5 +65,9 @@ export class AdminOptionsService {
     }, error1 => {
       this.cashService.openGenericInfo('Error', 'Can\'t complete emplZ operation')
     });
+  }
+
+  systemVersion() {
+    this.cashService.openGenericInfo('System Version', environment.version);
   }
 }

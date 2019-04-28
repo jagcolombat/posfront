@@ -148,7 +148,7 @@ export class AgGridComponent implements OnInit, OnDestroy {
     this.gridOptions = <GridOptions>{
       rowData: [],
       rowSelection: 'multiple',
-      rowClassRules: { 'refund-prod': 'data.isRefund === true' },
+      rowClassRules: { 'refund-prod': 'data.isRefund !== true' },
       onGridReady: () => {
         this.gridOptions.api.sizeColumnsToFit();
       },

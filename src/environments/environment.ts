@@ -6,7 +6,8 @@ export const environment = {
   production: false,
   myVarForImageURLS: '',
   baseURL:  '/api/1.0',
-  WEBSOCKET: '/events'
+  WEBSOCKET: '/events',
+  version: '1.18.1'
 };
 
 /*
