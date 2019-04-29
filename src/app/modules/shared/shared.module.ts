@@ -4,7 +4,9 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CalculatorComponent } from "../../components/presentationals/calculator/calculator.component";
 import { GenericKeyboardComponent } from "../../components/presentationals/generic-keyboard/generic-keyboard.component";
-import {MaterialModule} from "../material/material.module";
+import { MaterialModule } from "../material/material.module";
+import { AgGridModule } from 'ag-grid-angular';
+
 
 @NgModule({
   imports: [
@@ -13,6 +15,7 @@ import {MaterialModule} from "../material/material.module";
     ReactiveFormsModule,
     FlexLayoutModule,
     MaterialModule,
+    AgGridModule.withComponents([null]),
   ],
   exports: [
     CommonModule,
@@ -20,6 +23,7 @@ import {MaterialModule} from "../material/material.module";
     ReactiveFormsModule,
     FlexLayoutModule,
     MaterialModule,
+    AgGridModule,
     GenericKeyboardComponent,
     CalculatorComponent
   ],

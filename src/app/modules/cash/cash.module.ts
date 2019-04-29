@@ -1,9 +1,8 @@
 import { NgModule } from '@angular/core';
 import { SharedModule } from "../shared/shared.module";
 import { RouterModule, Routes } from "@angular/router";
-import { AgGridModule } from "ag-grid-angular";
 import { MaterialModule } from "../../modules/material/material.module";
-import {NgxPaginationModule} from "ngx-pagination";
+import { NgxPaginationModule } from "ngx-pagination";
 
 import { AgGridComponent } from '../../components/presentationals/ag-grid/ag-grid.component';
 import { CashViewComponent } from "../../components/containers/cash-view/cash-view.component";
@@ -35,7 +34,6 @@ const routes: Routes = [
     SharedModule,
     MaterialModule,
     NgxPaginationModule,
-    AgGridModule.withComponents([null]),
     RouterModule.forChild(routes)
   ],
   declarations: [

@@ -4,6 +4,8 @@ import {PaymentMethodEnum} from "../../../utils/operations/payment-method.enum";
 import {Payment} from "../../../models";
 import {DataStorageService} from "../../../services/api/data-storage.service";
 import {CashService} from "../../../services/bussiness-logic/cash.service";
+import {InvoiceService} from "../../../services/bussiness-logic/invoice.service";
+import {OperationsService} from "../../../services/bussiness-logic/operations.service";
 
 @Component({
   selector: 'app-generic-sales',
@@ -17,7 +19,7 @@ export class GenericSalesComponent implements OnInit {
 
   constructor( public dialogRef: MatDialogRef<GenericSalesComponent>,
                @Inject(MAT_DIALOG_DATA) public data: any, private dataStorage: DataStorageService,
-               private cashService: CashService) {
+               private cashService: CashService, private invoiceService: InvoiceService, private operationService: OperationsService) {
     console.log(data);
     if(this.data.content) this.populateSales(this.data.content);
   }
@@ -44,6 +46,12 @@ export class GenericSalesComponent implements OnInit {
       console.error('getSales', error1);
       this.cashService.openGenericInfo('Error', 'Can´t get sales by this user');
     });
+  }
+
+  reviewCheck(receiptNumber: string){
+    this.invoiceService.digits = receiptNumber;
+    this.operationService.reviewCheck();
+    this.dialogRef.close();
   }
 
 }

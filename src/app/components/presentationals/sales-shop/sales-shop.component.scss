@@ -1,33 +1,22 @@
-table {
-  width: 90%;
-  margin-left: 30px;
-  border-collapse: collapse;
+:host {
+  font-size: 18px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 10px;
+}
 
-  caption {
-    background: lightblue;
-    padding: 10px;
-  }
+ag-grid-angular {
+  width: 400px;
+  height: 350px;
+}
 
-  thead {
-    background: lightcyan;
-    padding: 10px;
+.show {
+  display: initial;
+}
 
-    td {
-      padding: 8px;
-      font-weight: bold;
-
-      &:last-of-type {
-        text-align: end;
-      }
-    }
-  }
-
-  tbody td {
-    padding: 8px;
-    border-bottom: 1px solid gray;
-
-    &:last-of-type {
-      text-align: end;
-    }
-  }
+.hide {
+  display: none;
 }

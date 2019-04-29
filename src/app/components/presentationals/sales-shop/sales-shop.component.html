@@ -1,11 +1,19 @@
-<table *ngIf="sales; else no_sale_shop">
+<!--<table *ngIf="sales; else no_sale_shop">
   <caption>Sales by payment type</caption>
   <thead>
   <td>Payment</td><td>Total</td>
   </thead>
-  <tr *ngFor="let sale of sales">
-    <td>{{sale.type}}</td><td>{{sale.total | currency}}</td>
-  </tr>
-</table>
-<ng-template #no_sale_shop>This shop haven't sales yet today</ng-template>
+  <tbody>
+    <tr *ngFor="let sale of sales">
+      <td>{{sale.type}}</td><td>{{sale.total | currency}}</td>
+    </tr>
+  </tbody>
+</table>-->
+<ag-grid-angular [ngClass]="(sales) ? 'show': 'hide'"
+                 class="ag-theme-material"
+                 [gridOptions]="gridOptions"
+                 [columnDefs]="columnDefs"
+>
+</ag-grid-angular>
+<ng-template *ngIf="!sales">This shop haven't sales yet today</ng-template>
 

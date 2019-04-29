@@ -4,7 +4,7 @@ import { InvoiceService } from "../../../services/bussiness-logic/invoice.servic
 import { ProductOrder } from "../../../models/product-order.model";
 import { Subscription } from "rxjs";
 import { CustomHeaderComponent } from "./custom-header.component";
-import {CashService} from "../../../services/bussiness-logic/cash.service";
+import { CashService } from "../../../services/bussiness-logic/cash.service";
 
 @Component({
   selector: 'ag-grid',
@@ -148,7 +148,7 @@ export class AgGridComponent implements OnInit, OnDestroy {
     this.gridOptions = <GridOptions>{
       rowData: [],
       rowSelection: 'multiple',
-      rowClassRules: { 'refund-prod': 'data.isRefund !== true' },
+      rowClassRules: { 'refund-prod': 'data.isRefund === true' },
       onGridReady: () => {
         this.gridOptions.api.sizeColumnsToFit();
       },
