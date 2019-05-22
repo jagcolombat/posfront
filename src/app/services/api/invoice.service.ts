@@ -99,7 +99,8 @@ export class InvoiceService {
 
   updateInvoice (url: string, invoice: Invoice, property: string, value: any) {
     const documentPacth =  [{op: 'replace', path: '/' + property, value: value}];
-    return this._http.patch<Invoice>(url + this.path + '/' + invoice.receiptNumber, documentPacth);
+    //return this._http.patch<Invoice>(url + this.path + '/' + invoice.receiptNumber, documentPacth);
+    return this._http.post<Invoice>(url + this.path + '/' + invoice.receiptNumber + '/' + property + '/' + value, {});
   }
 
   applyDiscountInvoice (url: string, id: string, discount: number): Observable<Invoice> {
