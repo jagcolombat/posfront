@@ -14,6 +14,10 @@ export class GenericInfoModalComponent implements OnInit {
   ngOnInit() {
   }
 
+  onConfirm(): void {
+    this.dialogRef.close({confirm: true});
+  }
+
   onNoClick(): void {
     this.dialogRef.close();
   }

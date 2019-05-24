@@ -103,13 +103,18 @@ export class InvoiceService {
     return this._http.post<Invoice>(url + this.path + '/' + invoice.receiptNumber + '/' + property + '/' + value, {});
   }
 
-  applyDiscountInvoice (url: string, id: string, discount: number): Observable<Invoice> {
-    return this._http.post<Invoice>(url + this.path + '/' + id + '/discount/' + discount, {})
+  applyDiscountInvoice (url: string, id: string, discount: number, productOrderIds: Array<string>): Observable<Invoice> {
+    return this._http.post<Invoice>(url + this.path + '/' + id + '/discount/' + discount, productOrderIds, {})
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
   recallCheck (url: string, id: string): Observable<Invoice> {
     return this._http.get<Invoice>(url + this.path + '/recallcheck/' + id)
+      .pipe(catchError(this.processHttpMsgService.handleError));
+  }
+
+  reviewCheck (url: string, id: string): Observable<Invoice> {
+      return this._http.get<Invoice>(url + this.path + '/reviewcheck/' + id)
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 

@@ -18,6 +18,10 @@
   flex-direction: column;
 }
 
+[mat-dialog-actions] {
+  justify-content: center;
+}
+
 button[mat-raised-button] {
   cursor: default !important;
 }

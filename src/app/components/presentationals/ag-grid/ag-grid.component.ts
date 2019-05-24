@@ -153,7 +153,7 @@ export class AgGridComponent implements OnInit, OnDestroy {
         this.gridOptions.api.sizeColumnsToFit();
       },
       onRowSelected: (ev) => {
-          this.invoiceService.invoiceProductSelected = this.gridOptions.api.getSelectedRows().length > 0;
+          this.invoiceService.invoiceProductSelected = this.gridOptions.api.getSelectedRows();
       },
       onBodyScroll: (ev) => {
         this.gridOptions.api.sizeColumnsToFit();

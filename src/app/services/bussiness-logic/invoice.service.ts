@@ -24,7 +24,7 @@ export class InvoiceService {
   qty: number = 1;
   // Invoice
   invoice: Invoice;
-  invoiceProductSelected: boolean;
+  invoiceProductSelected: any[] = [];
 
   @Output() evAddProd = new EventEmitter<ProductOrder>();
   @Output() evDelProd = new EventEmitter<any>();
@@ -243,7 +243,10 @@ export class InvoiceService {
   }
 
   applyDiscountInvoice (discount: number): Observable<Invoice> {
-    return this.dataStorage.applyDiscountInvoice(this.invoice.receiptNumber, discount);
+    let idProdOrders = new Array<string>();
+    idProdOrders = this.invoiceProductSelected.map(v => v.id);
+    console.log('applyDiscountInvoice', this.invoiceProductSelected, idProdOrders);
+    return this.dataStorage.applyDiscountInvoice(this.invoice.receiptNumber, discount, idProdOrders);
   }
 
   addPaidOut(data: string) {

@@ -49,9 +49,14 @@ export class CashService {
     this.disabledPayment = true;
   }
 
-  openGenericInfo(title: string, content?: string, content2?: any) {
+  openGenericInfo(title: string, content?: string, content2?: any, confirm?: boolean) {
     return this.dialog.open(GenericInfoModalComponent,{
-      width: '350px', height: '220px', data: {title: title ? title : 'Information', content: content, content2: content2 },
+      width: '350px', height: '220px', data: {
+        title: title ? title : 'Information',
+        content: content,
+        content2: content2,
+        confirm: confirm
+      },
       disableClose: true
     });
   }

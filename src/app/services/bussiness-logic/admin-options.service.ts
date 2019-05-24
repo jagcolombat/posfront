@@ -10,13 +10,14 @@ import {PaidOutComponent} from "../../components/presentationals/paid-out/paid-o
 import {DataStorageService} from "../api/data-storage.service";
 import {GenericSalesComponent} from "../../components/presentationals/generic-sales/generic-sales.component";
 import {environment} from "../../../environments/environment";
+import {AuthService} from "../api/auth.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdminOptionsService {
 
-  constructor(private invoiceService: InvoiceService, private cashService: CashService,
+  constructor(private invoiceService: InvoiceService, private cashService: CashService, private auth: AuthService,
               private operationService: OperationsService, private dataStorage: DataStorageService) { }
 
   applyDiscount(){
@@ -69,5 +70,10 @@ export class AdminOptionsService {
 
   systemVersion() {
     this.cashService.openGenericInfo('System Version', environment.version);
+  }
+
+  backToUser() {
+    this.auth.restoreInitialLogin();
+    this.invoiceService.getCashier();
   }
 }

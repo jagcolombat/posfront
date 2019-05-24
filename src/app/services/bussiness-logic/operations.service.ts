@@ -49,18 +49,23 @@ export class OperationsService {
   clear() {
     console.log('clear');
     // this.currentOperation = 'clear';
-    if(!this.invoiceService.invoiceProductSelected || this.currentOperation === FinancialOpEnum.REVIEW ||
-      this.currentOperation === TotalsOpEnum.FS_SUBTOTAL || this.currentOperation === TotalsOpEnum.SUBTOTAL ||
-      this.currentOperation === PaymentOpEnum.CASH || this.currentOperation === PaymentOpEnum.EBT_CARD) {
-      this.clearOp(false);
-    } else {
-      this.invoiceService.getSystemConfig().subscribe(config => {
-        config.allowClear ? this.clearOp() :
-          this.authService.adminLogged() ? this.clearOp() : this.manager('clear');
-      }, err => { this.cashService.openGenericInfo('Error', 'Can\'t get configuration'); });
-      /*this.cashService.systemConfig.allowClear ? this.clearOp() :
-        this.authService.adminLogged() ? this.clearOp() : this.manager('clear');*/
-    }
+    this.cashService.openGenericInfo('Confirm', 'Do you want clear?', null,true)
+      .afterClosed().subscribe(next => {
+      if (next !== undefined && next.confirm) {
+        if (this.invoiceService.invoiceProductSelected.length <= 0 || this.currentOperation === FinancialOpEnum.REVIEW ||
+          this.currentOperation === TotalsOpEnum.FS_SUBTOTAL || this.currentOperation === TotalsOpEnum.SUBTOTAL ||
+          this.currentOperation === PaymentOpEnum.CASH || this.currentOperation === PaymentOpEnum.EBT_CARD) {
+          this.clearOp(false);
+        } else {
+          this.invoiceService.getSystemConfig().subscribe(config => {
+            config.allowClear ? this.clearOp() :
+              this.authService.adminLogged() ? this.clearOp() : this.manager('clear');
+          }, err => {
+            this.cashService.openGenericInfo('Error', 'Can\'t get configuration');
+          });
+        }
+      }
+    });
     this.resetInactivity(true);
   }
 
@@ -76,10 +81,10 @@ export class OperationsService {
           this.resetTotalFromFS();
         }
         this.currentOperation = '';
-    } else if(!this.invoiceService.invoiceProductSelected && !this.invoiceService.digits &&
+    } else if(this.invoiceService.invoiceProductSelected.length <= 0 && !this.invoiceService.digits &&
       this.currentOperation === FinancialOpEnum.RECALL){
       this.invoiceService.createInvoice();
-    } else if(this.invoiceService.invoiceProductSelected || this.invoiceService.digits){
+    } else if(this.invoiceService.invoiceProductSelected.length > 0 || this.invoiceService.digits){
       this.invoiceService.evDelProd.emit(true);
       if(total) this.invoiceService.setTotal();
     }
@@ -87,8 +92,13 @@ export class OperationsService {
 
   void() {
     console.log('void');
-    this.currentOperation = 'void';
-    this.authService.adminLogged() ? this.cancelCheck() : this.manager('void');
+    this.cashService.openGenericInfo('Confirm', 'Do you want void?', null,true)
+      .afterClosed().subscribe(next => {
+        if (next !== undefined && next.confirm) {
+          this.currentOperation = 'void';
+          this.authService.adminLogged() ? this.cancelCheck() : this.manager('void');
+        }
+    });
     this.resetInactivity(true);
   }
 
@@ -143,6 +153,7 @@ export class OperationsService {
         this.router.navigateByUrl('/cash/options');
       }
     } else {
+      this.authService.initialLogin = this.authService.token;
       this.cashService.dialog.open(DialogLoginComponent, { width: '530px', height: '580px', disableClose: true})
         .afterClosed()
         .subscribe(loginValid => {
@@ -325,9 +336,16 @@ export class OperationsService {
     if(this.invoiceService.invoice.status === InvoiceStatus.IN_PROGRESS){
       this.cashService.openGenericInfo('Error', 'Can\'t complete logout operation because check is in progress')
     } else {
-      this.authService.logout();
-      this.invoiceService.resetDigits();
-      this.cashService.resetEnableState();
+      this.cashService.openGenericInfo('Confirm', 'Do you want logout?', null,true)
+        .afterClosed().subscribe(next => {
+          console.log(next);
+          if(next !== undefined && next.confirm ) {
+            // Logout
+            this.authService.logout();
+            this.invoiceService.resetDigits();
+            this.cashService.resetEnableState();
+          }
+      });
     }
     this.resetInactivity(false);
   }
@@ -337,7 +355,6 @@ export class OperationsService {
     this.invoiceService.cancelInvoice().subscribe(next => {
       this.invoiceService.createInvoice();
     },err => console.error('cancelCheck failed'));
-
     this.resetInactivity(false);
   }
 

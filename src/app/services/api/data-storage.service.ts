@@ -128,8 +128,8 @@ export class DataStorageService {
       return this.invoiceService.deleteProductOrders(this.url, productOrderId, invoiceId);
   }
 
-  applyDiscountInvoice (id: string, discount: number): Observable<Invoice> {
-    return this.invoiceService.applyDiscountInvoice(this.url, id, discount);
+  applyDiscountInvoice (id: string, discount: number, productOrderIds: Array<string>): Observable<Invoice> {
+    return this.invoiceService.applyDiscountInvoice(this.url, id, discount, productOrderIds);
   }
 
   // Payment
