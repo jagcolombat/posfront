@@ -23,6 +23,7 @@ import {ApplyDiscountComponent} from "../../components/presentationals/apply-dis
 import {GenericSalesComponent} from "../../components/presentationals/generic-sales/generic-sales.component";
 import {SalesShopComponent} from "../../components/presentationals/sales-shop/sales-shop.component";
 import {SalesEmplComponent} from "../../components/presentationals/sales-empl/sales-empl.component";
+import {AdminConfigComponent} from "../../components/presentationals/admin-config/admin-config.component";
 
 @NgModule({
   imports: [
@@ -56,7 +57,8 @@ import {SalesEmplComponent} from "../../components/presentationals/sales-empl/sa
     ApplyDiscountComponent,
     GenericSalesComponent,
     SalesShopComponent,
-    SalesEmplComponent
+    SalesEmplComponent,
+    AdminConfigComponent
   ],
   entryComponents: [
     AgeValidationComponent,
@@ -71,7 +73,8 @@ import {SalesEmplComponent} from "../../components/presentationals/sales-empl/sa
     CustomHeaderComponent,
     PaidOutComponent,
     ApplyDiscountComponent,
-    GenericSalesComponent
+    GenericSalesComponent,
+    AdminConfigComponent
   ],
 })
 export class HomeModule { }

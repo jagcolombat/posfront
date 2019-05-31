@@ -11,6 +11,7 @@ import {DataStorageService} from "../api/data-storage.service";
 import {GenericSalesComponent} from "../../components/presentationals/generic-sales/generic-sales.component";
 import {environment} from "../../../environments/environment";
 import {AuthService} from "../api/auth.service";
+import {AdminConfigComponent} from "../../components/presentationals/admin-config/admin-config.component";
 
 @Injectable({
   providedIn: 'root'
@@ -21,18 +22,23 @@ export class AdminOptionsService {
               private operationService: OperationsService, private dataStorage: DataStorageService) { }
 
   applyDiscount(){
-    const dialogRef = this.cashService.dialog.open(ApplyDiscountComponent,
-      {
-        width: '480px', height: '600px', disableClose: true
-      })
-      .afterClosed().subscribe((data: string) => {
-        console.log('apply discount', data);
-        this.invoiceService.applyDiscountInvoice(+data).subscribe(next => {
-          this.invoiceService.setInvoice(next);
-        }, err => {
-          this.cashService.openGenericInfo('Error', 'Can\'t apply discount')
+    if(this.invoiceService.invoice.productOrders.length > 0){
+      const dialogRef = this.cashService.dialog.open(ApplyDiscountComponent,
+        {
+          width: '480px', height: '600px', disableClose: true
         })
-      });
+        .afterClosed().subscribe((data: string) => {
+          console.log('apply discount', data);
+          this.invoiceService.applyDiscountInvoice(+data).subscribe(next => {
+            this.invoiceService.setInvoice(next);
+          }, err => {
+            this.cashService.openGenericInfo('Error', 'Can\'t apply discount')
+          })
+        });
+    } else {
+      this.cashService.openGenericInfo('Error', 'Can\'t apply discount without products')
+    }
+
   }
 
   cancelCheck() {
@@ -80,10 +86,10 @@ export class AdminOptionsService {
   configOption() {
     this.dataStorage.getConfiguration().subscribe(next =>  {
       console.log('configOption', next);
-      /*this.cashService.dialog.open(GenericSalesComponent,
+      this.cashService.dialog.open(AdminConfigComponent,
         {
-          width: '480px', height: '600px', disableClose: true, data: {title: 'EMPL Z', empl: next }
-        })*/
+          width: '480px', height: '600px', disableClose: true, data: {title: 'Configuration'}
+        })
     }, error1 => {
       this.cashService.openGenericInfo('Error', 'Can\'t complete Configuration operation', error1);
     });

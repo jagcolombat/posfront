@@ -10,7 +10,7 @@ import {leaveFocusOnButton} from "../../../utils/functions/functions";
 })
 export class AdminOptionsComponent implements OnInit {
   options = ['Empl Z','SYS Z','WTD Z','Change Printer','Close Browser','Apply Discount','Cancel Check','Remove a hold',
-    'Departments', 'Back User', 'Configuration','System Version'];
+    'Departments', 'Back User', 'Config','System Version'];
   page = 1;
   sizePage = 12;
 

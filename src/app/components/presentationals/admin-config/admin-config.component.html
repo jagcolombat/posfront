@@ -1,0 +1,23 @@
+<div oncontextmenu="return false">
+  <mat-toolbar color="primary">
+    {{ data.title }}
+    <span class="flex-spacer"></span>
+    <button mat-raised-button mat-dialog-close color="primary">&times;</button>
+  </mat-toolbar>
+  <div mat-dialog-content class="content">
+    <!--<mat-form-field>
+      <mat-label>Admin privileges for Clear and Void:</mat-label>
+      <mat-checkbox [(value)] = 'adminClearVoid' (change)="setAdmin4ClearVoid($event)"></mat-checkbox>
+    </mat-form-field>-->
+    <mat-form-field>
+      <mat-label>Inactivity time for Logout (min):</mat-label>
+      <mat-select (selectionChange)="setTime4Logout($event)" [(value)] = 'timeLogout'>
+        <mat-option>None</mat-option>
+        <mat-option value="5">10</mat-option>
+        <mat-option value="5">5</mat-option>
+        <mat-option value="5">3</mat-option>
+        <mat-option value="5">1</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+</div>
