@@ -12,7 +12,8 @@
   productUpc: string;
   productName: string;
   foodStamp: boolean;
-  isRefund?: boolean
+  isRefund?: boolean;
+  discount?: number;
 }
 
 export class ProductOrder implements IProductOrder {
@@ -26,7 +27,8 @@ export class ProductOrder implements IProductOrder {
               public productUpc: string,
               public productName: string,
               public foodStamp: boolean,
-              public isRefund?: boolean) {
+              public isRefund?: boolean,
+              public discount?: number) {
 
   }
 }

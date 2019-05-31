@@ -4,6 +4,13 @@ ag-grid-angular /deep/ .customHeaderLabel {
   font-size: 14px !important;
 }
 
+ag-grid-angular /deep/ [col-id='total'] {
+  & /deep/ .customHeaderLabel {
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+
 ag-grid-angular /deep/ * {
   cursor: none !important;
 }

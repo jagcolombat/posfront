@@ -49,9 +49,9 @@ export class OperationsService {
   clear() {
     console.log('clear');
     // this.currentOperation = 'clear';
-    this.cashService.openGenericInfo('Confirm', 'Do you want clear?', null,true)
+    /*this.cashService.openGenericInfo('Confirm', 'Do you want clear?', null,true)
       .afterClosed().subscribe(next => {
-      if (next !== undefined && next.confirm) {
+      if (next !== undefined && next.confirm) {*/
         if (this.invoiceService.invoiceProductSelected.length <= 0 || this.currentOperation === FinancialOpEnum.REVIEW ||
           this.currentOperation === TotalsOpEnum.FS_SUBTOTAL || this.currentOperation === TotalsOpEnum.SUBTOTAL ||
           this.currentOperation === PaymentOpEnum.CASH || this.currentOperation === PaymentOpEnum.EBT_CARD) {
@@ -64,8 +64,8 @@ export class OperationsService {
             this.cashService.openGenericInfo('Error', 'Can\'t get configuration');
           });
         }
-      }
-    });
+      /*}
+    })*/;
     this.resetInactivity(true);
   }
 
@@ -85,8 +85,13 @@ export class OperationsService {
       this.currentOperation === FinancialOpEnum.RECALL){
       this.invoiceService.createInvoice();
     } else if(this.invoiceService.invoiceProductSelected.length > 0 || this.invoiceService.digits){
-      this.invoiceService.evDelProd.emit(true);
-      if(total) this.invoiceService.setTotal();
+      this.cashService.openGenericInfo('Confirm', 'Do you want clear?', null,true)
+        .afterClosed().subscribe(next => {
+        if (next !== undefined && next.confirm) {
+          this.invoiceService.evDelProd.emit(true);
+          if (total) this.invoiceService.setTotal();
+        }
+      });
     }
   }
 
@@ -490,8 +495,8 @@ export class OperationsService {
     console.log('EBT Card');
     this.currentOperation = 'EBT Card';
 
-    if (this.invoiceService.invoice.total > 0 || this.invoiceService.invoice.fsTotal > 0) {
-      // this.openInfoEventDialog('EBT Card');
+    if (this.invoiceService.invoice.total !== 0 || this.invoiceService.invoice.fsTotal !== 0) {
+      this.openInfoEventDialog('EBT Card');
       this.invoiceService.ebt(this.invoiceService.invoice.total)
         .subscribe(data => {
           console.log(data);
@@ -514,7 +519,7 @@ export class OperationsService {
   debit() {
     this.currentOperation = 'debit';
 
-    if (this.invoiceService.invoice.total > 0) {
+    if (this.invoiceService.invoice.total !== 0) {
       this.openInfoEventDialog('Debit Card');
       this.invoiceService.debit(this.invoiceService.invoice.total)
         .subscribe(data => {
@@ -532,7 +537,7 @@ export class OperationsService {
     console.log('Credit Card');
     this.currentOperation = 'Credit Card';
 
-    if (this.invoiceService.invoice.total > 0) {
+    if (this.invoiceService.invoice.total !== 0) {
       this.openInfoEventDialog('Credit Card');
       this.invoiceService.credit(this.invoiceService.invoice.total)
         .subscribe(data => {

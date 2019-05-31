@@ -1,5 +1,5 @@
 import {Component, EventEmitter, OnInit, Output, OnDestroy, Input} from '@angular/core';
-import { GridOptions, GridApi } from 'ag-grid-community';
+import { GridOptions, GridApi, ColDef } from 'ag-grid-community';
 import { InvoiceService } from "../../../services/bussiness-logic/invoice.service";
 import { ProductOrder } from "../../../models/product-order.model";
 import { Subscription } from "rxjs";
@@ -62,13 +62,21 @@ export class AgGridComponent implements OnInit, OnDestroy {
         headerComponentParams: { displayName: 'Quantity' },
         field: 'quantity',
         type: 'numericColumn',
-        width: 95
+        width: 90
+      },
+      {
+        headerComponentFramework: CustomHeaderComponent,
+        headerComponentParams: { displayName: 'Discount' },
+        field: 'discount',
+        type: 'numericColumn',
+        width: 80
       },
       {
         headerComponentFramework: CustomHeaderComponent,
         headerComponentParams: { displayName: 'Amount' },
         field: 'total',
-        type: 'numericColumn'
+        type: 'numericColumn',
+        width: 100
       }
     ];
   }
@@ -84,6 +92,7 @@ export class AgGridComponent implements OnInit, OnDestroy {
 
   clearData() {
     this.gridOptions.api.setRowData([]);
+    this.showDiscount(false);
     this.invoiceService.setTotal();
     this.updateData.emit(true);
   }
@@ -98,9 +107,10 @@ export class AgGridComponent implements OnInit, OnDestroy {
       total: Number(data.subTotal).toFixed(2),
       tax: Number(data.tax).toFixed(2),
       isRefund: data.isRefund,
-      // product: data.product
+      discount: data.discount
     };
     console.log('onAddRow', this.gridOptions.api.getDisplayedRowCount());
+    (newData.discount !== undefined) ? this.showDiscount(true) : this.showDiscount(false);
     const res = this.gridOptions.api.updateRowData({ add: [newData] });
     this.gridOptions.api.ensureIndexVisible(this.gridOptions.api.getDisplayedRowCount()-1);
     this.updateData.emit(true);
@@ -151,6 +161,7 @@ export class AgGridComponent implements OnInit, OnDestroy {
       rowClassRules: { 'refund-prod': 'data.isRefund === true' },
       onGridReady: () => {
         this.gridOptions.api.sizeColumnsToFit();
+        this.showDiscount(false);
       },
       onRowSelected: (ev) => {
           this.invoiceService.invoiceProductSelected = this.gridOptions.api.getSelectedRows();
@@ -171,6 +182,11 @@ export class AgGridComponent implements OnInit, OnDestroy {
     console.log('updateSelectable', !ev);
     this.selectableProd = !ev;
     this.createColumnDefs();
+    this.gridOptions.api.sizeColumnsToFit();
+  }
+
+  showDiscount(show: boolean) {
+    this.gridOptions.columnApi.setColumnVisible('discount', show);
     this.gridOptions.api.sizeColumnsToFit();
   }
 

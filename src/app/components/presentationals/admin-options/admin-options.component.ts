@@ -10,7 +10,7 @@ import {leaveFocusOnButton} from "../../../utils/functions/functions";
 })
 export class AdminOptionsComponent implements OnInit {
   options = ['Empl Z','SYS Z','WTD Z','Change Printer','Close Browser','Apply Discount','Cancel Check','Remove a hold',
-    'Departments', 'Back User', 'System Version'];
+    'Departments', 'Back User', 'Configuration','System Version'];
   page = 1;
   sizePage = 12;
 
@@ -42,6 +42,10 @@ export class AdminOptionsComponent implements OnInit {
       case 'Back User':
         this.adminOpService.backToUser();
         this.router.navigateByUrl('/cash/dptos');
+        break;
+      case 'Configuration':
+        this.adminOpService.configOption();
+        // this.router.navigateByUrl('/cash/dptos');
         break;
       case 'System Version':
         this.adminOpService.systemVersion();

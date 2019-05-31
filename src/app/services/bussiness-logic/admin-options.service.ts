@@ -76,4 +76,16 @@ export class AdminOptionsService {
     this.auth.restoreInitialLogin();
     this.invoiceService.getCashier();
   }
+
+  configOption() {
+    this.dataStorage.getConfiguration().subscribe(next =>  {
+      console.log('configOption', next);
+      /*this.cashService.dialog.open(GenericSalesComponent,
+        {
+          width: '480px', height: '600px', disableClose: true, data: {title: 'EMPL Z', empl: next }
+        })*/
+    }, error1 => {
+      this.cashService.openGenericInfo('Error', 'Can\'t complete Configuration operation', error1);
+    });
+  }
 }

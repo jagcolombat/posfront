@@ -12,7 +12,7 @@ export class ApplyDiscountComponent implements OnInit {
   digits = '';
   cost = 0;
   maxlength = 3;
-  min = 1;
+  min = 0;
   max = 100;
   tryValidation = false;
   valid = false;
@@ -48,6 +48,7 @@ export class ApplyDiscountComponent implements OnInit {
   applyDiscount() {
     //console.log("apply discount", this.valid, this.tryValidation);
     //console.log("apply discount", this.cost);
+    if(!this.digits) this.digits = this.cost+'';
     this.validate(parseInt(this.digits));
     if(this.valid && this.tryValidation) {
       this.dialogRef.close(this.cost);

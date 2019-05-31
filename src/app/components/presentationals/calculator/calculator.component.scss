@@ -41,12 +41,16 @@ button[mat-button].right:last-of-type, button[mat-button].right:first-of-type{
 }
 
 button[mat-button].numbers{
-  font-size: x-large;
+  & /deep/ span {
+    font-size: 20px !important;
+  }
 }
 
 button[mat-button].numbers:last-of-type{
   background-color: lightgrey;
   border-color: darkgray;
   color: black;
-  font-size: inherit;
+  & /deep/ span {
+    font-size: 18px !important;
+  }
 }
