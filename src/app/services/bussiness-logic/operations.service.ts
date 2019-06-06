@@ -53,6 +53,7 @@ export class OperationsService {
       .afterClosed().subscribe(next => {
       if (next !== undefined && next.confirm) {*/
         if (this.invoiceService.invoiceProductSelected.length <= 0 || this.currentOperation === FinancialOpEnum.REVIEW ||
+          this.currentOperation === FinancialOpEnum.REPRINT ||
           this.currentOperation === TotalsOpEnum.FS_SUBTOTAL || this.currentOperation === TotalsOpEnum.SUBTOTAL ||
           this.currentOperation === PaymentOpEnum.CASH || this.currentOperation === PaymentOpEnum.EBT_CARD) {
           this.clearOp(false);
@@ -70,11 +71,13 @@ export class OperationsService {
   }
 
   clearOp(total:boolean = true){
-    if(this.currentOperation === FinancialOpEnum.REVIEW || this.currentOperation === TotalsOpEnum.FS_SUBTOTAL ||
+    if(this.currentOperation === FinancialOpEnum.REVIEW ||
+      this.currentOperation === FinancialOpEnum.REPRINT ||
+      this.currentOperation === TotalsOpEnum.FS_SUBTOTAL ||
       this.currentOperation === TotalsOpEnum.SUBTOTAL || this.currentOperation === PaymentOpEnum.CASH ||
       this.currentOperation === PaymentOpEnum.EBT_CARD ){
         this.cashService.resetEnableState();
-        if(this.currentOperation === FinancialOpEnum.REVIEW) {
+        if(this.currentOperation === FinancialOpEnum.REVIEW || this.currentOperation === FinancialOpEnum.REPRINT) {
           this.invoiceService.createInvoice();
         }
         if(this.currentOperation === TotalsOpEnum.FS_SUBTOTAL) {
@@ -451,16 +454,16 @@ export class OperationsService {
 
   reprint() {
     console.log('reprint');
-    this.currentOperation = 'reprint';
+    this.currentOperation = FinancialOpEnum.REPRINT;
 
     if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS) {
       if(this.invoiceService.digits) {
         this.getCheckById(EOperationType.Reprint,i => {
           this.invoiceService.resetDigits();
-          this.invoiceService.print(i).subscribe(
-            data => this.cashService.openGenericInfo('Print', 'Print is finish'),
-            err => this.cashService.openGenericInfo('Error', 'Can\'t complete print operation'));
+          this.print(i);
         })
+      } else if(this.currentOperation === FinancialOpEnum.REPRINT){
+        this.print(this.invoiceService.invoice);
       } else {
         this.cashService.openGenericInfo('Error', 'Please input receipt number of check');
         this.invoiceService.resetDigits();
@@ -472,6 +475,12 @@ export class OperationsService {
       this.invoiceService.resetDigits();
     }
 
+  }
+
+  private print (i: Invoice){
+    this.invoiceService.print(i).subscribe(
+      data => this.cashService.openGenericInfo('Print', 'Print is finish'),
+      err => this.cashService.openGenericInfo('Error', 'Can\'t complete print operation'));
   }
 
   onAddProduct(){

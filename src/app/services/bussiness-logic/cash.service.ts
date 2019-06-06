@@ -26,7 +26,8 @@ export class CashService {
   }
 
   reviewEnableState() {
-    this.disabledInput = this.disabledFinOp = this.disabledTotalOp = this.disabledPayment = true;
+    this.disabledInput = this.disabledTotalOp = this.disabledPayment = true;
+    this.disabledFinOp = [true, false, true, true, true, true, true];
     this.disabledInvOp = [false, true, true, true];
     this.evReviewEnableState.emit(true);
   }

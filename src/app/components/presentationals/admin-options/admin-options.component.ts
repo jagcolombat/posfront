@@ -43,7 +43,7 @@ export class AdminOptionsComponent implements OnInit {
         this.adminOpService.backToUser();
         this.router.navigateByUrl('/cash/dptos');
         break;
-      case 'Configuration':
+      case 'Config':
         this.adminOpService.configOption();
         // this.router.navigateByUrl('/cash/dptos');
         break;
