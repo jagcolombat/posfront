@@ -22,14 +22,14 @@ export class CashViewComponent implements OnInit {
     if(this.operationService.cashService.disabledInput){
       this.operationService.cashService.openGenericInfo('Error', 'Not possible input keyboard over Review ' +
         'Check operation, please Go Back first.');
-    } else if((ev.key==='Enter' || ev.keyCode === 13) && this.invoiceService.digits){
+    } /*else if((ev.key==='Enter' || ev.keyCode === 13) && this.invoiceService.digits){
       if(this.invoiceService.digits.startsWith('I') || this.invoiceService.digits.startsWith('R')){
         this.operationService.scanInvoice();
       } else {
         this.operationService.scanProduct();
       }
 
-    } else if((ev.keyCode > 48 && ev.keyCode < 57) || (ev.keyCode === 73  || ev.keyCode === 82) || !isNaN(parseInt(ev.key)) ){
+    }*/ else if((ev.keyCode > 48 && ev.keyCode < 57) || (ev.keyCode === 73  || ev.keyCode === 82) || !isNaN(parseInt(ev.key)) ){
       this.invoiceService.evNumpadInput.emit(ev.key);
     }
   }

@@ -22,7 +22,7 @@ export class AdminOptionsService {
               private operationService: OperationsService, private dataStorage: DataStorageService) { }
 
   applyDiscount(){
-    if(this.invoiceService.invoice.productOrders.length > 0){
+    // if(this.invoiceService.invoice.productOrders.length > 0){
       const dialogRef = this.cashService.dialog.open(ApplyDiscountComponent,
         {
           width: '480px', height: '600px', disableClose: true
@@ -35,9 +35,9 @@ export class AdminOptionsService {
             this.cashService.openGenericInfo('Error', 'Can\'t apply discount')
           })
         });
-    } else {
+    /*} else {
       this.cashService.openGenericInfo('Error', 'Can\'t apply discount without products')
-    }
+    }*/
 
   }
 
