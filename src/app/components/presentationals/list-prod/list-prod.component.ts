@@ -32,9 +32,9 @@ export class ListProdComponent implements OnInit {
 
   setPage(ev){
     if(ev > this.page){
-      this.stockService.setOperation(EOperationType.PageNext, ev, 'departments');
+      this.stockService.setOperation(EOperationType.PageNext, ev, 'products');
     } else {
-      this.stockService.setOperation(EOperationType.PagePrevious, ev, 'departments');
+      this.stockService.setOperation(EOperationType.PagePrevious, ev, 'products');
     }
     this.page = ev;
   }

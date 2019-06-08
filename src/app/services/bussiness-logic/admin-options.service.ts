@@ -31,6 +31,7 @@ export class AdminOptionsService {
           console.log('apply discount', data);
           this.invoiceService.applyDiscountInvoice(+data).subscribe(next => {
             this.invoiceService.setInvoice(next);
+            this.invoiceService.invoiceProductSelected.splice(0);
           }, err => {
             this.cashService.openGenericInfo('Error', 'Can\'t apply discount')
           })

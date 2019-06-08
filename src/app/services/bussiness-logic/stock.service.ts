@@ -11,6 +11,7 @@ import {CashService} from "./cash.service";
   providedIn: 'root'
 })
 export class StockService {
+  actualPage: number;
 
   constructor(private dataStore: DataStorageService, public productOrderService: ProductOrderService,
               public cashService: CashService) {

@@ -23,6 +23,7 @@ export class ListDptoComponent implements OnInit {
     this.stockService.getDepartments().subscribe(dptos => {
       this.stockService.productOrderService.departments = this.dptos = dptos;
     });
+    this.page = this.stockService.actualPage;
   }
 
   doAction(ev, dpto: Department) {
@@ -44,11 +45,11 @@ export class ListDptoComponent implements OnInit {
 
   setPage(ev){
     if(ev > this.page){
-      this.stockService.setOperation(EOperationType.PageNext, ev, 'products');
+      this.stockService.setOperation(EOperationType.PageNext, ev, 'departments');
     } else {
-      this.stockService.setOperation(EOperationType.PagePrevious, ev, 'products');
+      this.stockService.setOperation(EOperationType.PagePrevious, ev, 'departments');
     }
-    this.page = ev;
+    this.page = this.stockService.actualPage = ev;
   }
 
 }
