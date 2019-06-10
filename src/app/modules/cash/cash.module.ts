@@ -41,8 +41,6 @@ const routes: Routes = [
     InvoiceComponent,
     StockComponent,
     OperationsComponent,
-    OperationGroupComponent,
-    NumpadComponent,
     AgGridComponent,
     InfoPosComponent,
     InputCalculatorComponent,

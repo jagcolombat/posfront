@@ -6,6 +6,8 @@ import { CalculatorComponent } from "../../components/presentationals/calculator
 import { GenericKeyboardComponent } from "../../components/presentationals/generic-keyboard/generic-keyboard.component";
 import { MaterialModule } from "../material/material.module";
 import { AgGridModule } from 'ag-grid-angular';
+import {NumpadComponent} from "../../components/presentationals/numpad/numpad.component";
+import {OperationGroupComponent} from "../../components/presentationals/operation-group/operation-group.component";
 
 
 @NgModule({
@@ -25,8 +27,10 @@ import { AgGridModule } from 'ag-grid-angular';
     MaterialModule,
     AgGridModule,
     GenericKeyboardComponent,
-    CalculatorComponent
+    CalculatorComponent,
+    NumpadComponent,
+    OperationGroupComponent
   ],
-  declarations: [CalculatorComponent, GenericKeyboardComponent ]
+  declarations: [CalculatorComponent, GenericKeyboardComponent, NumpadComponent, OperationGroupComponent ]
 })
 export class SharedModule { }

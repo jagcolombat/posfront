@@ -1,4 +1,4 @@
 <div class="column">
-  <button mat-button fxFlex="100px" fxLayoutGap="10px" *ngFor="let j of numbers" (click)="pressKey($event, j)"
+  <button mat-button [fxFlex]="widthKey" fxLayoutGap="10px" *ngFor="let j of numbers" (click)="pressKey($event, j)"
           [disabled]="disableOp">{{j}}</button>
 </div>

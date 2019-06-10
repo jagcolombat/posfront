@@ -9,7 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
 import { MatGridListModule } from '@angular/material/grid-list';
-import {MatSelectModule} from "@angular/material";
+import { MatSelectModule } from "@angular/material";
 
 @NgModule({
   imports: [

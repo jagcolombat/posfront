@@ -1,4 +1,4 @@
-<ng-content id="right"></ng-content>
+<ng-content select=".filter"></ng-content>
 <pagination-controls *ngIf="countElements > sizePage" class="my-pagination" maxSize="0" autoHide="false"
                      (pageChange)="setPage($event)">
 </pagination-controls>

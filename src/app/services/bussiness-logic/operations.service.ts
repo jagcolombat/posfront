@@ -127,7 +127,15 @@ export class OperationsService {
     console.log('priceCheck');
     this.currentOperation = 'priceCheck';
     this.invoiceService.getProductByUpc(EOperationType.PriceCheck).subscribe(prod => {
-      this.cashService.openGenericInfo('Price Check', prod.name, prod.unitCost);
+      this.cashService.openGenericInfo('Price check', 'Do you want add '+prod.name+' to the invoice',
+        prod.unitCost, true)
+        .afterClosed().subscribe(next => {
+        console.log(next);
+        if(next !== undefined && next.confirm ) {
+          // Logout
+          this.invoiceService.evAddProdByUPC.emit(prod);
+        }
+      });
     }, err => { this.cashService.openGenericInfo('Error', 'Can\'t found this product '+ this.invoiceService.digits); });
     this.invoiceService.resetDigits();
     this.resetInactivity(true);

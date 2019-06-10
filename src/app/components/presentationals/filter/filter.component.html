@@ -1,0 +1,25 @@
+<div oncontextmenu="return false">
+  <mat-toolbar color="primary">
+    Filter
+    <span class="flex-spacer"></span>
+    <button mat-raised-button mat-dialog-close color="primary">&times;</button>
+  </mat-toolbar>
+  <mat-dialog-content>
+    <form novalidate #loginForm="ngForm" fxFlex="100" fxLayout="column" fxLayoutAlign="space-between">
+      <div class="form-field" fxFlex="60" fxLayoutAlign="start center">
+        <mat-form-field fxFlex="60">
+          <input matInput placeholder="Text to search" type="text" [(ngModel)]="input"
+                 name="filter" #filter="ngModel" required [minlength]="2" (input)="tryValidation = false"/>
+          <mat-error *ngIf="filter.errors?.required">Text to search is required</mat-error>
+        </mat-form-field>
+        <mat-error *ngIf="!valid && tryValidation "><span class="fa fa-warning fa-lg"></span> {{errorMsg}}</mat-error>
+      </div>
+      <!--<generic-keyboard (evKeys)="getKeys($event)" [valid]="loginForm.form.invalid"></generic-keyboard>-->
+      <div style="display: flex">
+        <numpad [numbers]="numbers" lastKey="Space" widthKey="80px" (evPressKeys)="getKeys($event)"></numpad>
+        <operation-group [operations]="operations" [colors]="opColor" layout="three" (evPressKeys)="getKeys($event)">
+        </operation-group>
+      </div>
+    </form>
+  </mat-dialog-content>
+</div>

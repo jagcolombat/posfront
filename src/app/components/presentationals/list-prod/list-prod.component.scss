@@ -25,9 +25,10 @@ div.page {
 pos-paginator {
   display: flex;
   align-items: center;
+  margin-left: 8px;
 
-  button.dpto {
-    width: 130px;
+  button.dpto, button.filter {
+    width: 120px;
     height: 85px;
     background-color: #5b4cab;
   }

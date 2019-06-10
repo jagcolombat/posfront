@@ -8,6 +8,7 @@
 <div class="paginator">
   <pos-paginator [hidden]="stockService.cashService.disabledInput" [countElements]="prods.length" [sizePage]="sizePage"
                  (evSetPage)="setPage($event)">
+    <button class="filter" mat-button (click)="filter()"> FILTER - </button>
     <button class="dpto" mat-button [routerLink]="['/cash/dptos']"> << DPTOS </button>
   </pos-paginator>
 </div>

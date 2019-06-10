@@ -4,6 +4,7 @@ import { StockService } from "../../../services/bussiness-logic/stock.service";
 import { ActivatedRoute } from "@angular/router";
 import {EOperationType} from "../../../utils/operation.type.enum";
 import {leaveFocusOnButton} from "../../../utils/functions/functions";
+import {FilterComponent} from "../filter/filter.component";
 
 @Component({
   selector: 'app-list-prod',
@@ -37,5 +38,11 @@ export class ListProdComponent implements OnInit {
       this.stockService.setOperation(EOperationType.PagePrevious, ev, 'products');
     }
     this.page = ev;
+  }
+
+  filter() {
+    this.stockService.cashService.dialog.open(FilterComponent, { width: '1024px', height: '600px', disableClose: true})
+      .afterClosed()
+      .subscribe(next => { console.log('filterDialog', next) });
   }
 }
