@@ -8,6 +8,8 @@ import { MaterialModule } from "../material/material.module";
 import { AgGridModule } from 'ag-grid-angular';
 import {NumpadComponent} from "../../components/presentationals/numpad/numpad.component";
 import {OperationGroupComponent} from "../../components/presentationals/operation-group/operation-group.component";
+import {AdminConfigComponent} from "../../components/presentationals/admin-config/admin-config.component";
+import {FilterComponent} from "../../components/presentationals/filter/filter.component";
 
 
 @NgModule({
@@ -29,8 +31,10 @@ import {OperationGroupComponent} from "../../components/presentationals/operatio
     GenericKeyboardComponent,
     CalculatorComponent,
     NumpadComponent,
-    OperationGroupComponent
+    OperationGroupComponent,
+    FilterComponent
   ],
-  declarations: [CalculatorComponent, GenericKeyboardComponent, NumpadComponent, OperationGroupComponent ]
+  declarations: [CalculatorComponent, GenericKeyboardComponent, NumpadComponent, OperationGroupComponent,
+    FilterComponent ]
 })
 export class SharedModule { }

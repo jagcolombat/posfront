@@ -249,7 +249,7 @@ export class InvoiceService {
     return this.dataStorage.applyDiscountInvoice(this.invoice.receiptNumber, discount, idProdOrders);
   }
 
-  addPaidOut(data: string) {
+  addPaidOut(data: string, descrip?: string) {
     return this.dataStorage.addPaidOut(new PaidOut(+data))
   }
 }

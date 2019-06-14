@@ -5,6 +5,7 @@ import { ActivatedRoute } from "@angular/router";
 import {EOperationType} from "../../../utils/operation.type.enum";
 import {leaveFocusOnButton} from "../../../utils/functions/functions";
 import {FilterComponent} from "../filter/filter.component";
+import {DialogFilterComponent} from "../../containers/dialog-filter/dialog-filter.component";
 
 @Component({
   selector: 'app-list-prod',
@@ -45,7 +46,7 @@ export class ListProdComponent implements OnInit {
   }
 
   filter() {
-    this.stockService.cashService.dialog.open(FilterComponent, { width: '1024px', height: '600px', disableClose: true})
+    this.stockService.cashService.dialog.open(DialogFilterComponent, { width: '1024px', height: '600px', disableClose: true})
       .afterClosed()
       .subscribe(next => {
         console.log('filterDialog', next);

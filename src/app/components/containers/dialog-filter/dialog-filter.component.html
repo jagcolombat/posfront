@@ -1,0 +1,10 @@
+<div oncontextmenu="return false">
+  <mat-toolbar color="primary">
+    Filter
+    <span class="flex-spacer"></span>
+    <button mat-raised-button mat-dialog-close color="primary">&times;</button>
+  </mat-toolbar>
+  <mat-dialog-content>
+    <app-filter (evFilter)="closeDialog($event)"></app-filter>
+  </mat-dialog-content>
+</div>

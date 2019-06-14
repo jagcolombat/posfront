@@ -11,10 +11,11 @@ import {InvoiceStatus} from "../../utils/invoice-status.enum";
 import {EOperationType} from "../../utils/operation.type.enum";
 import {CashService} from "./cash.service";
 import {Token} from "../../models";
-import {FinancialOpEnum, PaymentOpEnum, TotalsOpEnum} from "../../utils/operations";
+import {FinancialOpEnum, InvioceOpEnum, PaymentOpEnum, TotalsOpEnum} from "../../utils/operations";
 import {HttpErrorResponse} from '@angular/common/http';
 import {GenericInfoEventsComponent} from "../../components/presentationals/generic-info-events/generic-info-events.component";
 import {PaidOutComponent} from "../../components/presentationals/paid-out/paid-out.component";
+import {DialogPaidoutComponent} from "../../components/containers/dialog-paidout/dialog-paidout.component";
 
 @Injectable({
   providedIn: 'root'
@@ -112,7 +113,7 @@ export class OperationsService {
 
   plu() {
     console.log('plu');
-    this.currentOperation = 'plu';
+    this.currentOperation = InvioceOpEnum.PLU;
     // Consume servicio de PLU con this.digits eso devuelve ProductOrder
     this.invoiceService.addProductByUpc(EOperationType.Plu).subscribe(prod => {
       this.invoiceService.evAddProdByUPC.emit(prod);
@@ -125,19 +126,22 @@ export class OperationsService {
 
   priceCheck() {
     console.log('priceCheck');
-    this.currentOperation = 'priceCheck';
-    this.invoiceService.getProductByUpc(EOperationType.PriceCheck).subscribe(prod => {
-      this.cashService.openGenericInfo('Price check', 'Do you want add '+prod.name+' to the invoice',
-        prod.unitCost, true)
-        .afterClosed().subscribe(next => {
-        console.log(next);
-        if(next !== undefined && next.confirm ) {
-          // Logout
-          this.invoiceService.evAddProdByUPC.emit(prod);
-        }
-      });
-    }, err => { this.cashService.openGenericInfo('Error', 'Can\'t found this product '+ this.invoiceService.digits); });
-    this.invoiceService.resetDigits();
+    (this.currentOperation !== InvioceOpEnum.PRICE)? this.currentOperation = InvioceOpEnum.PRICE: this.currentOperation = "";
+    //this.currentOperation = InvioceOpEnum.PRICE;
+    if(this.invoiceService.digits){
+      this.invoiceService.getProductByUpc(EOperationType.PriceCheck).subscribe(prod => {
+        this.cashService.openGenericInfo('Price check', 'Do you want add '+prod.name+' to the invoice',
+          prod.unitCost, true)
+          .afterClosed().subscribe(next => {
+          console.log(next);
+          if(next !== undefined && next.confirm ) {
+            // Logout
+            this.invoiceService.evAddProdByUPC.emit(prod);
+          }
+        });
+      }, err => { this.cashService.openGenericInfo('Error', 'Can\'t found this product '+ this.invoiceService.digits); });
+      this.invoiceService.resetDigits();
+    }
     this.resetInactivity(true);
   }
 
@@ -602,18 +606,26 @@ export class OperationsService {
   }
 
   paidOut() {
-    const dialogRef = this.cashService.dialog.open(PaidOutComponent,
+    this.cashService.dialog.open(PaidOutComponent,
       {
         width: '480px', height: '600px', disableClose: true
       })
       .afterClosed().subscribe((data: string) => {
         console.log('paided out modal', data);
-        this.invoiceService.addPaidOut(data).subscribe(next => {
-          console.log('paided out service', data);
-        }, error1 => {
-          console.error('paid out', error1);
-          this.cashService.openGenericInfo('Error', 'Can\'t complete paid out operation')
-        });
+        if(data) {
+          this.cashService.dialog.open(DialogPaidoutComponent,
+            {
+              width: '1024px', height: '600px', disableClose: true
+            })
+            .afterClosed().subscribe(next => {
+              this.invoiceService.addPaidOut(data, next.text).subscribe(next => {
+                console.log('paided out service', data);
+              }, error1 => {
+                console.error('paid out', error1);
+                this.cashService.openGenericInfo('Error', 'Can\'t complete paid out operation')
+              });
+          });
+        };
       });
   }
 }

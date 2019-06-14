@@ -24,7 +24,9 @@ import {GenericSalesComponent} from "../../components/presentationals/generic-sa
 import {SalesShopComponent} from "../../components/presentationals/sales-shop/sales-shop.component";
 import {SalesEmplComponent} from "../../components/presentationals/sales-empl/sales-empl.component";
 import {AdminConfigComponent} from "../../components/presentationals/admin-config/admin-config.component";
+import {DialogFilterComponent} from "../../components/containers/dialog-filter/dialog-filter.component";
 import {FilterComponent} from "../../components/presentationals/filter/filter.component";
+import {DialogPaidoutComponent} from "../../components/containers/dialog-paidout/dialog-paidout.component";
 
 @NgModule({
   imports: [
@@ -60,7 +62,8 @@ import {FilterComponent} from "../../components/presentationals/filter/filter.co
     SalesShopComponent,
     SalesEmplComponent,
     AdminConfigComponent,
-    FilterComponent
+    DialogFilterComponent,
+    DialogPaidoutComponent
   ],
   entryComponents: [
     AgeValidationComponent,
@@ -77,7 +80,9 @@ import {FilterComponent} from "../../components/presentationals/filter/filter.co
     ApplyDiscountComponent,
     GenericSalesComponent,
     AdminConfigComponent,
-    FilterComponent
+    FilterComponent,
+    DialogFilterComponent,
+    DialogPaidoutComponent
   ],
 })
 export class HomeModule { }

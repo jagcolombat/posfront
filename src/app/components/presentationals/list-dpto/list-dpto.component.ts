@@ -14,7 +14,7 @@ import {leaveFocusOnButton} from "../../../utils/functions/functions";
 export class ListDptoComponent implements OnInit {
   dptos: Department[] = [];
   page = 1;
-  sizePage = 16;
+  sizePage = 20;
 
   constructor(private router: Router, public stockService: StockService) {
   }

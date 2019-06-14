@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {MatDialogRef} from "@angular/material";
 
 @Component({
@@ -17,8 +17,9 @@ export class FilterComponent implements OnInit {
     'V', 'B','N', 'M'];
   operations = ['Back', 'Clear', 'Enter'];
   opColor = ['yellow','yellow', 'red'];
+  @Output() evFilter = new EventEmitter<string>();
 
-  constructor(public dialogRef: MatDialogRef<FilterComponent>) { }
+  constructor() { }
 
   ngOnInit() {
   }
@@ -50,15 +51,11 @@ export class FilterComponent implements OnInit {
     }
   }
 
-  closeDialog(text: string){
-    this.dialogRef.close({text: text});
-  }
-
   private filter() {
     let text = this.input.trim();
     console.log('filter', text);
-    (text.length > 1 && text.length <= 100) ? this.closeDialog(text):
-      this.invalid('Search text must have between 2 and 100 characters');
+    (text.length > 1 && text.length <= 100) ? this.evFilter.emit(text):
+      this.invalid('Text must have between 2 and 100 characters');
   }
 
   invalid(msg?: string) {
