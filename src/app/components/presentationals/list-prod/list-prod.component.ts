@@ -13,16 +13,20 @@ import {FilterComponent} from "../filter/filter.component";
 })
 export class ListProdComponent implements OnInit {
   prods: Product[] = [];
+  prodsByDpto: Product[] = [];
   dptTax: number;
   page: number = 1;
-  sizePage = 16;
+  sizePage = 20;
 
   constructor( private route: ActivatedRoute, public stockService: StockService) { }
 
   ngOnInit() {
     this.route.params.subscribe(p => this.dptTax = p['tax']);
     this.route.params.subscribe(p => this.stockService.getProductsByDepartment(p['dpto']).
-      subscribe(prods => this.prods = prods));
+      subscribe(prods => {
+      Object.assign(this.prods, prods);
+      Object.assign(this.prodsByDpto, prods);
+    }));
   }
 
   doAction(ev, prod: Product) {
@@ -43,6 +47,9 @@ export class ListProdComponent implements OnInit {
   filter() {
     this.stockService.cashService.dialog.open(FilterComponent, { width: '1024px', height: '600px', disableClose: true})
       .afterClosed()
-      .subscribe(next => { console.log('filterDialog', next) });
+      .subscribe(next => {
+        console.log('filterDialog', next);
+        this.prods = this.prodsByDpto.filter(p => p.name.includes(next.text));
+      });
   }
 }

@@ -8,7 +8,9 @@
 <div class="paginator">
   <pos-paginator [hidden]="stockService.cashService.disabledInput" [countElements]="prods.length" [sizePage]="sizePage"
                  (evSetPage)="setPage($event)">
-    <button class="filter" mat-button (click)="filter()"> FILTER - </button>
+    <button class="filter" mat-button *ngIf="prods.length > sizePage" (click)="filter()">
+      <span class="fa fa-search fa-lg"></span> FILTER
+    </button>
     <button class="dpto" mat-button [routerLink]="['/cash/dptos']"> << DPTOS </button>
   </pos-paginator>
 </div>

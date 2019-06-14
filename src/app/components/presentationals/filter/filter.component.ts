@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {MatDialogRef} from "@angular/material";
 
 @Component({
   selector: 'app-filter',
@@ -10,21 +11,26 @@ export class FilterComponent implements OnInit {
   tryValidation:boolean;
   valid: boolean;
   errorMsg: string;
-  numbers = [1,2,3,4,5,6,7,8,9,0,'A', 'B','C', 'D','E', 'F','G', 'H','I', 'J','K', 'L','M', 'N','O', 'P','Q', 'R'
-    ,'S', 'T','U', 'V','W', 'X','Y', 'Z'];
+  numbers = [1,2,3,4,5,6,7,8,9,0,
+    'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 'A',
+    'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'Z', 'X', 'C',
+    'V', 'B','N', 'M'];
   operations = ['Back', 'Clear', 'Enter'];
   opColor = ['yellow','yellow', 'red'];
 
-  constructor() { }
+  constructor(public dialogRef: MatDialogRef<FilterComponent>) { }
 
   ngOnInit() {
   }
 
   getKeys(ev) {
     console.log(ev, this.numbers.slice(-3));
-    if(!this.operations.includes(ev)) {
+    if(!this.operations.includes(ev) && ev !== 'Space') {
       this.input += ev;
       this.tryValidation = false;
+    }
+    else if(ev=== 'Space') {
+      this.input += " ";
     }
     else if(ev=== 'Clear') {
       this.input = "";
@@ -44,7 +50,20 @@ export class FilterComponent implements OnInit {
     }
   }
 
-  private filter() {
+  closeDialog(text: string){
+    this.dialogRef.close({text: text});
+  }
 
+  private filter() {
+    let text = this.input.trim();
+    console.log('filter', text);
+    (text.length > 1 && text.length <= 100) ? this.closeDialog(text):
+      this.invalid('Search text must have between 2 and 100 characters');
+  }
+
+  invalid(msg?: string) {
+    this.valid = false;
+    this.tryValidation = true;
+    this.errorMsg = msg ? msg : ''
   }
 }
