@@ -53,6 +53,8 @@ export class ProductOrderService {
   private onCreateProductOrder(product: Product): void {
     if (product.generic) {
       this.openDialogGenericProd(product);
+    } else if (product.scalable) {
+      this.openDialogScalableProd(product);
     } else {
       this.invoiceService.addProductOrder(this.createProductOrder(product));
     }
@@ -67,6 +69,20 @@ export class ProductOrderService {
       if(data) {
         product.unitCost = data.unitCost;
         this.invoiceService.addProductOrder(this.createProductOrder(product));
+      }
+    });
+  }
+
+  private openDialogScalableProd(product: Product): void {
+    const dialogRef = this.dialog.open(ProductGenericComponent,
+      {
+        width: '480px', height: '650px', data: {name: product.name, unitCost: 0}, disableClose: true
+      });
+    dialogRef.afterClosed().subscribe( (data: ProductGeneric) => {
+      if(data) {
+        this.quantityByProduct = data.unitCost;
+        this.invoiceService.addProductOrder(this.createProductOrder(product));
+        this.quantityByProduct = 1;
       }
     });
   }
