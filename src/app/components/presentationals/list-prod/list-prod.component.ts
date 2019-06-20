@@ -49,8 +49,15 @@ export class ListProdComponent implements OnInit {
     this.stockService.cashService.dialog.open(DialogFilterComponent, { width: '1024px', height: '600px', disableClose: true})
       .afterClosed()
       .subscribe(next => {
-        console.log('filterDialog', next);
-        this.prods = this.prodsByDpto.filter(p => p.name.includes(next.text));
+        if (next) {
+          console.log('filterDialog', next, this.prodsByDpto);
+          let prods = this.prodsByDpto.filter(p => p.name.includes(next.text));
+          prods.length <= 0 ?
+            this.stockService.cashService.openGenericInfo('Information', 'Not match any products with the specified filter')
+            :
+            this.prods = prods;
+            this.page = 1;
+        }
       });
   }
 }

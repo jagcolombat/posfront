@@ -8,9 +8,9 @@
     <mat-dialog-content>
       <p>
         <mat-form-field>
-          <input matInput placeholder="Price" type="text" [(ngModel)]="cost" name="price" #price="ngModel"
+          <input matInput placeholder="{{label}}" type="text" [(ngModel)]="cost" name="price" #price="ngModel"
                  required [maxlength]="maxlength" [size]="maxlength" disabled/>
-          <mat-error *ngIf="price.errors?.required">Price is required</mat-error>
+          <mat-error *ngIf="price.errors?.required">{{label}} is required</mat-error>
         </mat-form-field>
       </p>
       <!--<app-input-price></app-input-price>-->

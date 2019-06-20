@@ -619,7 +619,7 @@ export class OperationsService {
             })
             .afterClosed().subscribe(next => {
               this.invoiceService.addPaidOut(data, next.text).subscribe(next => {
-                console.log('paided out service', data);
+                console.log('paided out service', data, next);
               }, error1 => {
                 console.error('paid out', error1);
                 this.cashService.openGenericInfo('Error', 'Can\'t complete paid out operation')

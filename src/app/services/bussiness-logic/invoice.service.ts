@@ -250,6 +250,6 @@ export class InvoiceService {
   }
 
   addPaidOut(data: string, descrip?: string) {
-    return this.dataStorage.addPaidOut(new PaidOut(+data))
+    return this.dataStorage.addPaidOut(new PaidOut(+data, descrip))
   }
 }

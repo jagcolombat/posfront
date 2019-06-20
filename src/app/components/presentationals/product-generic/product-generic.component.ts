@@ -9,6 +9,7 @@ import {ProductGeneric} from "../../../models/product-generic";
 })
 export class ProductGenericComponent implements OnInit {
   @Input() title = 'Generic Product ';
+  @Input() label = 'Price';
   inputDigits: boolean;
   digits = '';
   cost = '';
@@ -20,6 +21,9 @@ export class ProductGenericComponent implements OnInit {
     this.cost = this.data.unitCost.toString();
     if (this.data.name) {
       this.title = this.data.name;
+    }
+    if (this.data.label) {
+      this.label = this.data.label;
     }
   }
 
