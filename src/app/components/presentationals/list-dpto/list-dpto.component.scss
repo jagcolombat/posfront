@@ -21,3 +21,15 @@ div.page {
   background-color: #ff9b3e;
   border-color: #ffac41;
 }
+
+pos-paginator {
+  display: flex;
+  align-items: center;
+  margin-left: 8px;
+
+  button.filter {
+    width: 120px;
+    height: 85px;
+    background-color: #5b4cab;
+  }
+}

@@ -5,5 +5,11 @@
     {{ i.name | uppercase }}
   </button>
 </div>
-<pos-paginator [hidden]="stockService.cashService.disabledInput" [countElements]="dptos.length" [sizePage]="sizePage"
-               (evSetPage)="setPage($event)" >
+<div class="paginator">
+  <pos-paginator [hidden]="stockService.cashService.disabledInput" [countElements]="dptos.length" [sizePage]="sizePage"
+                 (evSetPage)="setPage($event)">
+    <button class="filter" mat-button (click)="filter()">
+      <span class="fa fa-search fa-lg"></span> FILTER
+    </button>
+  </pos-paginator>
+</div>

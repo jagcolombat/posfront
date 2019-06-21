@@ -25,7 +25,8 @@ const routes: Routes = [
       { path: 'options', component: AdminOptionsComponent },
       { path: 'dptos', component: ListDptoComponent },
       { path: 'products', component: ListProdComponent },
-      { path: 'products/:dpto/:tax', component: ListProdComponent }
+      { path: 'products/:dpto/:tax', component: ListProdComponent },
+      { path: 'filteredproducts/:filter', component: ListProdComponent },
     ]   }
 ];
 

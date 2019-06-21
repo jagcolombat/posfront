@@ -52,6 +52,10 @@ export class DataStorageService {
     return this.productService.getProductByUpc(this.url, upc, typeOp).pipe(map(p => p[0]));
   }
 
+  getProductsByUpc(upc: string, typeOp: EOperationType): Observable<Product[]> {
+    return this.productService.getProductByUpc(this.url, upc, typeOp).pipe();
+  }
+
   // Invoice
   createInvoice(): Observable<Invoice> {
     return this.invoiceService.create(this.url);

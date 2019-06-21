@@ -16,6 +16,7 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {GenericInfoEventsComponent} from "../../components/presentationals/generic-info-events/generic-info-events.component";
 import {PaidOutComponent} from "../../components/presentationals/paid-out/paid-out.component";
 import {DialogPaidoutComponent} from "../../components/containers/dialog-paidout/dialog-paidout.component";
+import {DialogFilterComponent} from "../../components/containers/dialog-filter/dialog-filter.component";
 
 @Injectable({
   providedIn: 'root'
@@ -244,8 +245,9 @@ export class OperationsService {
           this.cashService.reviewEnableState();
         });
       } else {
-        this.cashService.openGenericInfo('Error', 'Please input receipt number of check');
-        this.invoiceService.resetDigits();
+        /*this.cashService.openGenericInfo('Error', 'Please input receipt number of check');
+        this.invoiceService.resetDigits();*/
+        this.keyboard(FinancialOpEnum.REVIEW);
       }
     } else {
       console.error('Can\'t complete review check operation');
@@ -327,7 +329,9 @@ export class OperationsService {
           }
         )*/
         :
-        this.cashService.openGenericInfo('Error', 'Please input receipt number of check');
+        this.keyboard(FinancialOpEnum.REFUND);
+        // this.cashService.openGenericInfo('Error', 'Please input receipt number of check');
+
     } else {
       console.error('Can\'t complete refund operation');
       this.invoiceService.resetDigits();
@@ -477,8 +481,9 @@ export class OperationsService {
       } else if(this.currentOperation === FinancialOpEnum.REPRINT){
         this.print(this.invoiceService.invoice);
       } else {
-        this.cashService.openGenericInfo('Error', 'Please input receipt number of check');
-        this.invoiceService.resetDigits();
+        /*this.cashService.openGenericInfo('Error', 'Please input receipt number of check');
+        this.invoiceService.resetDigits();*/
+        this.keyboard(FinancialOpEnum.REPRINT);
       }
 
     } else {
@@ -626,6 +631,30 @@ export class OperationsService {
               });
           });
         };
+      });
+  }
+
+  keyboard(action?: FinancialOpEnum){
+    this.cashService.dialog.open(DialogFilterComponent, { width: '1024px', height: '600px', disableClose: true})
+      .afterClosed()
+      .subscribe(next => {
+        if (next) {
+          console.log('keyboard', next);
+          this.invoiceService.digits = next.text;
+          if(action !== undefined){
+            switch (action) {
+              case FinancialOpEnum.REFUND:
+                this.refundOp();
+                break;
+              case FinancialOpEnum.REVIEW:
+                this.reviewCheck();
+                break;
+              case FinancialOpEnum.REPRINT:
+                this.reprint();
+                break;
+            }
+          }
+        }
       });
   }
 }

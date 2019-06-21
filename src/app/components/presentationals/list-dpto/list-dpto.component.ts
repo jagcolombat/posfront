@@ -3,8 +3,8 @@ import {Department} from '../../../models/department.model';
 import {StockService} from "../../../services/bussiness-logic/stock.service";
 import {Router} from "@angular/router";
 import {EOperationType} from "../../../utils/operation.type.enum";
-import {CashService} from "../../../services/bussiness-logic/cash.service";
 import {leaveFocusOnButton} from "../../../utils/functions/functions";
+import {DialogFilterComponent} from "../../containers/dialog-filter/dialog-filter.component";
 
 @Component({
   selector: 'list-dpto',
@@ -50,6 +50,17 @@ export class ListDptoComponent implements OnInit {
       this.stockService.setOperation(EOperationType.PagePrevious, ev, 'departments');
     }
     this.page = this.stockService.actualPage = ev;
+  }
+
+  filter() {
+    this.stockService.cashService.dialog.open(DialogFilterComponent, { width: '1024px', height: '600px', disableClose: true})
+      .afterClosed()
+      .subscribe(next => {
+        if (next) {
+          console.log('filterDialog', next);
+          this.router.navigateByUrl('/cash/filteredproducts/' + next.text);
+        }
+      });
   }
 
 }

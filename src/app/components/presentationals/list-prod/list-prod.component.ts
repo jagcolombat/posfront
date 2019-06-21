@@ -2,10 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Product } from '../../../models/product.model';
 import { StockService } from "../../../services/bussiness-logic/stock.service";
 import { ActivatedRoute } from "@angular/router";
-import {EOperationType} from "../../../utils/operation.type.enum";
-import {leaveFocusOnButton} from "../../../utils/functions/functions";
-import {FilterComponent} from "../filter/filter.component";
-import {DialogFilterComponent} from "../../containers/dialog-filter/dialog-filter.component";
+import { EOperationType } from "../../../utils/operation.type.enum";
+import { leaveFocusOnButton } from "../../../utils/functions/functions";
+import { DialogFilterComponent } from "../../containers/dialog-filter/dialog-filter.component";
 
 @Component({
   selector: 'app-list-prod',
@@ -22,12 +21,22 @@ export class ListProdComponent implements OnInit {
   constructor( private route: ActivatedRoute, public stockService: StockService) { }
 
   ngOnInit() {
-    this.route.params.subscribe(p => this.dptTax = p['tax']);
-    this.route.params.subscribe(p => this.stockService.getProductsByDepartment(p['dpto']).
-      subscribe(prods => {
-      Object.assign(this.prods, prods);
-      Object.assign(this.prodsByDpto, prods);
-    }));
+
+    this.route.params.subscribe(p => {
+      console.log('onInit', p);
+      if(p['filter']){
+        this.stockService.getProductsByFilter(p['filter']).subscribe(prods => {
+          Object.assign(this.prods, prods);
+          Object.assign(this.prodsByDpto, prods);
+        })
+      } else if (p['dpto'] && p['tax']){
+        this.dptTax = p['tax'];
+        this.stockService.getProductsByDepartment(p['dpto']).subscribe(prods => {
+          Object.assign(this.prods, prods);
+          Object.assign(this.prodsByDpto, prods);
+        })
+      }
+    });
   }
 
   doAction(ev, prod: Product) {
@@ -53,7 +62,8 @@ export class ListProdComponent implements OnInit {
           console.log('filterDialog', next, this.prodsByDpto);
           let prods = this.prodsByDpto.filter(p => p.name.includes(next.text));
           prods.length <= 0 ?
-            this.stockService.cashService.openGenericInfo('Information', 'Not match any products with the specified filter')
+            this.stockService.cashService.openGenericInfo('Information', 'Not match any products with ' +
+              'the specified filter')
             :
             this.prods = prods;
             this.page = 1;

@@ -25,6 +25,10 @@ export class StockService {
     return this.dataStore.getProductsByDepartment(id);
   }
 
+  getProductsByFilter(filter: string): Observable<Product[] | Product> {
+    return this.dataStore.getProductsByUpc(filter, EOperationType.List);
+  }
+
   setOperation(typeOp: EOperationType, entity: string, desc: string){
     this.dataStore.registryOperation({operationType: typeOp, entityName: entity, description: desc})
   }
