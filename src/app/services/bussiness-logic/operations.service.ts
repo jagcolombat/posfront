@@ -574,7 +574,7 @@ export class OperationsService {
         this.invoiceService.invoice.paymentStatus === PaymentStatus.AUTH) {
         this.cashService.dialog.open(ProductGenericComponent,
           {
-            width: '480px', height: '650px', data: {name: 'Tip', label: 'Tip'},
+            width: '480px', height: '650px', data: {unitCost: 0, name: 'Tip', label: 'Tip'},
             disableClose: true
           }).afterClosed().subscribe(
           next=> {
@@ -592,7 +592,7 @@ export class OperationsService {
 
   private creditOp(){
       let dialogInfoEvents = this.openInfoEventDialog('Credit Card');
-      this.invoiceService.credit(this.invoiceService.invoice.total)
+      this.invoiceService.credit(this.invoiceService.invoice.total, this.invoiceService.invoice.tip)
         .subscribe(data => {
             console.log(data);
             this.invoiceService.createInvoice();
