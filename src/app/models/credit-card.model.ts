@@ -1,12 +1,14 @@
+import {PaymentStatus} from "../utils/payment-status.enum";
+
 export interface CreditCard {
-    name?: string;
-    cc?: string;
-    cvv?: string;
-    expDate?: string;
+    amount?: number;
+    tip?: number;
     receiptNumber: string;
+    transferType: PaymentStatus;
 }
 
 export class CreditCardModel implements CreditCard{
-  constructor(public name: string, public cc: string, public receiptNumber) {}
+  constructor(public amount: number, public tip: number=0, public receiptNumber: string,
+              public transferType: PaymentStatus=PaymentStatus.SAIL) {}
 }
 

@@ -1,7 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {OperationsService} from "../../../services/bussiness-logic/operations.service";
-import {InvioceOpEnum , PaymentOpEnum, FinancialOpEnum, TotalsOpEnum} from "../../../utils/operations";
+import {FinancialOpEnum, InvioceOpEnum, PaymentOpEnum, TotalsOpEnum} from "../../../utils/operations";
 import {OtherOpEnum} from "../../../utils/operations/other.enum";
+import {CompanyType} from "../../../utils/company-type.enum";
 
 @Component({
   selector: 'operations',
@@ -35,6 +36,9 @@ export class OperationsComponent implements OnInit {
   constructor(public operationService: OperationsService) {  }
 
   ngOnInit() {
+    // this.operationService.cashService.systemConfig.companyType = CompanyType.RESTAURANT;
+    if(this.operationService.cashService.systemConfig.companyType === CompanyType.RESTAURANT)
+      this.paymentOperations.splice(0,1);
   }
 
   financeKey(ev) {

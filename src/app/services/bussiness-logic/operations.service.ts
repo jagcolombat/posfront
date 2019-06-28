@@ -17,6 +17,10 @@ import {GenericInfoEventsComponent} from "../../components/presentationals/gener
 import {PaidOutComponent} from "../../components/presentationals/paid-out/paid-out.component";
 import {DialogPaidoutComponent} from "../../components/containers/dialog-paidout/dialog-paidout.component";
 import {DialogFilterComponent} from "../../components/containers/dialog-filter/dialog-filter.component";
+import {MatDialogRef} from "@angular/material";
+import {CompanyType} from "../../utils/company-type.enum";
+import {PaymentStatus} from "../../utils/payment-status.enum";
+import {ProductGenericComponent} from "../../components/presentationals/product-generic/product-generic.component";
 
 @Injectable({
   providedIn: 'root'
@@ -79,6 +83,7 @@ export class OperationsService {
       this.currentOperation === TotalsOpEnum.SUBTOTAL || this.currentOperation === PaymentOpEnum.CASH ||
       this.currentOperation === PaymentOpEnum.EBT_CARD ){
         this.cashService.resetEnableState();
+        this.invoiceService.isReviewed = false;
         if(this.currentOperation === FinancialOpEnum.REVIEW || this.currentOperation === FinancialOpEnum.REPRINT) {
           this.invoiceService.createInvoice();
         }
@@ -90,13 +95,15 @@ export class OperationsService {
       this.currentOperation === FinancialOpEnum.RECALL){
       this.invoiceService.createInvoice();
     } else if(this.invoiceService.invoiceProductSelected.length > 0 || this.invoiceService.digits){
-      this.cashService.openGenericInfo('Confirm', 'Do you want clear?', null,true)
-        .afterClosed().subscribe(next => {
-        if (next !== undefined && next.confirm) {
-          this.invoiceService.evDelProd.emit(true);
-          if (total) this.invoiceService.setTotal();
-        }
-      });
+      this.invoiceService.invoiceProductSelected.length > 0 ?
+        this.cashService.openGenericInfo('Confirm', 'Do you want clear?', null,true)
+          .afterClosed().subscribe(next => {
+          if (next !== undefined && next.confirm) {
+            this.invoiceService.evDelProd.emit(true);
+            if (total) this.invoiceService.setTotal();
+          }
+        }):
+        this.invoiceService.evDelProd.emit(true);
     }
   }
 
@@ -235,7 +242,7 @@ export class OperationsService {
   reviewCheck() {
     console.log('reviewCheck');
     this.currentOperation = FinancialOpEnum.REVIEW;
-
+    this.invoiceService.isReviewed = true;
     this.resetInactivity(true);
 
     if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS) {
@@ -245,8 +252,6 @@ export class OperationsService {
           this.cashService.reviewEnableState();
         });
       } else {
-        /*this.cashService.openGenericInfo('Error', 'Please input receipt number of check');
-        this.invoiceService.resetDigits();*/
         this.keyboard(FinancialOpEnum.REVIEW);
       }
     } else {
@@ -405,11 +410,12 @@ export class OperationsService {
     this.resetInactivity(false);
   }
 
-  openInfoEventDialog(title: string) {
-    this.cashService.dialog.open(GenericInfoEventsComponent,{
+  openInfoEventDialog(title: string): MatDialogRef<any, any> {
+    let infoEventDialog = this.cashService.dialog.open(GenericInfoEventsComponent,{
       width: '300px', height: '220px', data: {title: title ? title : 'Information'}, disableClose: true
-    })
-      .afterClosed().subscribe(() => this.cashService.resetEnableState());
+    });
+      infoEventDialog.afterClosed().subscribe(() => this.cashService.resetEnableState());
+      return infoEventDialog;
   }
 
   cash() {
@@ -478,11 +484,9 @@ export class OperationsService {
           this.invoiceService.resetDigits();
           this.print(i);
         })
-      } else if(this.currentOperation === FinancialOpEnum.REPRINT){
+      } else if(this.invoiceService.isReviewed){
         this.print(this.invoiceService.invoice);
       } else {
-        /*this.cashService.openGenericInfo('Error', 'Please input receipt number of check');
-        this.invoiceService.resetDigits();*/
         this.keyboard(FinancialOpEnum.REPRINT);
       }
 
@@ -522,7 +526,7 @@ export class OperationsService {
     this.currentOperation = 'EBT Card';
 
     if (this.invoiceService.invoice.total !== 0 || this.invoiceService.invoice.fsTotal !== 0) {
-      this.openInfoEventDialog('EBT Card');
+      let dialogInfoEvents = this.openInfoEventDialog('EBT Card');
       this.invoiceService.ebt(this.invoiceService.invoice.total)
         .subscribe(data => {
           console.log(data);
@@ -535,6 +539,7 @@ export class OperationsService {
           }
         },err => {
           console.log(err);
+          dialogInfoEvents.close();
           this.cashService.openGenericInfo('Error', 'Can\'t complete ebt operation');
           this.cashService.resetEnableState()
         });
@@ -546,13 +551,15 @@ export class OperationsService {
     this.currentOperation = 'debit';
 
     if (this.invoiceService.invoice.total !== 0) {
-      this.openInfoEventDialog('Debit Card');
+      let dialogInfoEvents = this.openInfoEventDialog('Debit Card');
       this.invoiceService.debit(this.invoiceService.invoice.total)
         .subscribe(data => {
           console.log(data);
           this.invoiceService.createInvoice();
         },err => {
-          console.log(err); this.cashService.openGenericInfo('Error', 'Can\'t complete debit operation');
+          console.log(err);
+          dialogInfoEvents.close();
+          this.cashService.openGenericInfo('Error', 'Can\'t complete debit operation');
           this.cashService.resetEnableState();
         });
     }
@@ -562,20 +569,40 @@ export class OperationsService {
   credit() {
     console.log('Credit Card');
     this.currentOperation = 'Credit Card';
-
     if (this.invoiceService.invoice.total !== 0) {
-      this.openInfoEventDialog('Credit Card');
+      if (this.cashService.systemConfig.companyType === CompanyType.RESTAURANT &&
+        this.invoiceService.invoice.paymentStatus === PaymentStatus.AUTH) {
+        this.cashService.dialog.open(ProductGenericComponent,
+          {
+            width: '480px', height: '650px', data: {name: 'Tip', label: 'Tip'},
+            disableClose: true
+          }).afterClosed().subscribe(
+          next=> {
+            console.log(next);
+            this.invoiceService.invoice.tip = next.unitCost;
+            this.creditOp();
+          },
+          err=> {console.error(err)})
+      } else {
+        this.creditOp();
+      }
+    }
+    this.resetInactivity(false);
+  }
+
+  private creditOp(){
+      let dialogInfoEvents = this.openInfoEventDialog('Credit Card');
       this.invoiceService.credit(this.invoiceService.invoice.total)
         .subscribe(data => {
             console.log(data);
             this.invoiceService.createInvoice();
           },
           err => {
-            console.log(err); this.cashService.openGenericInfo('Error', 'Can\'t complete credit operation');
+            console.log(err);
+            dialogInfoEvents.close();
+            this.cashService.openGenericInfo('Error', 'Can\'t complete credit operation');
             this.cashService.resetEnableState();
           });
-    }
-    this.resetInactivity(false);
   }
 
   private resetTotalFromFS() {
@@ -635,7 +662,8 @@ export class OperationsService {
   }
 
   keyboard(action?: FinancialOpEnum){
-    this.cashService.dialog.open(DialogFilterComponent, { width: '1024px', height: '600px', disableClose: true})
+    this.cashService.dialog.open(DialogFilterComponent,
+      { width: '1024px', height: '600px', data: {title: "Enter Receipt Number"} , disableClose: true})
       .afterClosed()
       .subscribe(next => {
         if (next) {

@@ -11,6 +11,7 @@ import {EOperationType} from "../../utils/operation.type.enum";
 import {CashPaymentModel} from "../../models/cash-payment.model";
 import {CashService} from "./cash.service";
 import {PaidOut} from "../../models/paid-out.model";
+import {PaymentStatus} from "../../utils/payment-status.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +26,7 @@ export class InvoiceService {
   // Invoice
   invoice: Invoice;
   invoiceProductSelected: any[] = [];
+  isReviewed: boolean;
 
   @Output() evAddProd = new EventEmitter<ProductOrder>();
   @Output() evDelProd = new EventEmitter<any>();
@@ -50,6 +52,7 @@ export class InvoiceService {
       console.info('createCheck successfull', next);
       this.receiptNumber = next.receiptNumber;
       this.invoice = next;
+      this.isReviewed = false;
       this.evDelAllProds.emit();
       this.setTotal();
       this.evCreateInvoice.next(true);
@@ -168,19 +171,19 @@ export class InvoiceService {
     return this.dataStorage.paidByCash(cashPayment);
   }
 
-  debit(payment: number): Observable<Invoice> {
-    const debitPayment = new CreditCardModel('Raydel', '12345678', this.invoice.receiptNumber);
+  debit(payment: number, tip?: number, transferType?: PaymentStatus): Observable<Invoice> {
+    const debitPayment = new CreditCardModel(payment, tip, this.invoice.receiptNumber,transferType);
     return this.dataStorage.paidByDeditCard(debitPayment);
   }
 
-  credit(payment: number): Observable<Invoice> {
-    const debitPayment = new CreditCardModel('Raydel', '12345678', this.invoice.receiptNumber);
-    return this.dataStorage.paidByCreditCard(debitPayment);
+  credit(payment: number, tip?: number, transferType?: PaymentStatus): Observable<Invoice> {
+    const creditPayment = new CreditCardModel(payment, tip, this.invoice.receiptNumber,transferType);
+    return this.dataStorage.paidByCreditCard(creditPayment);
   }
 
-  ebt(payment: number): Observable<Invoice> {
-    const debitPayment = new CreditCardModel('Raydel', '12345678', this.invoice.receiptNumber);
-    return this.dataStorage.paidByEBTCard(debitPayment);
+  ebt(payment: number, tip?: number, transferType?: PaymentStatus): Observable<Invoice> {
+    const ebtPayment = new CreditCardModel(payment, tip, this.invoice.receiptNumber,transferType);
+    return this.dataStorage.paidByEBTCard(ebtPayment);
   }
 
   print(invoice: Invoice) {

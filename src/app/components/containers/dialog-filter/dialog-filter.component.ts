@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import {MatDialogRef} from "@angular/material";
+import {Component, Inject, Input, OnInit} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
 import {FilterComponent} from "../../presentationals/filter/filter.component";
+import {ProductGeneric} from "../../../models/product-generic";
 
 @Component({
   selector: 'app-dialog-filter',
@@ -8,10 +9,13 @@ import {FilterComponent} from "../../presentationals/filter/filter.component";
   styleUrls: ['./dialog-filter.component.scss']
 })
 export class DialogFilterComponent implements OnInit {
-
-  constructor(public dialogRef: MatDialogRef<FilterComponent>) { }
+  @Input() title = 'Filter';
+  constructor(public dialogRef: MatDialogRef<FilterComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit() {
+    if (this.data.title) {
+      this.title = this.data.title;
+    }
   }
 
   closeDialog(text: string){

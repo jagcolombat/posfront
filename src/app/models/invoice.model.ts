@@ -1,5 +1,6 @@
 import {InvoiceStatus} from '../utils/invoice-status.enum';
 import {ProductOrder} from './product-order.model';
+import {PaymentStatus} from "../utils/payment-status.enum";
 
 export interface IInvoice {
   id: string;
@@ -15,6 +16,8 @@ export interface IInvoice {
   fsTotal?: number;
   date?: Date;
   productsCount?: number;
+  paymentStatus?: PaymentStatus;
+  tip?: number;
 }
 
 export class Invoice implements IInvoice {
@@ -30,7 +33,9 @@ export class Invoice implements IInvoice {
               public isRefund?: boolean,
               public fsTotal?: number,
               public date?: Date,
-              public productsCount?: number
+              public productsCount?: number,
+              public paymentStatus?: PaymentStatus,
+              public tip?: number
               ) {
   }
 }
