@@ -9,6 +9,6 @@ export interface CreditCard {
 
 export class CreditCardModel implements CreditCard{
   constructor(public amount: number, public tip: number=0, public receiptNumber: string,
-              public transferType: PaymentStatus=PaymentStatus.SAIL) {}
+              public transferType: PaymentStatus=PaymentStatus.SAlE) {}
 }
 
