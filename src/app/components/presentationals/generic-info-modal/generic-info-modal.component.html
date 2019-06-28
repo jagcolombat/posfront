@@ -6,7 +6,7 @@
   </mat-toolbar>
   <div mat-dialog-content>
     <p class="content">{{ data.content }}</p>
-    <p *ngIf="data.content2" class="price">{{ data.content2 | currency }}</p>
+    <p *ngIf="data.content2 !== undefined" class="price">{{ data.content2 | currency }}</p>
   </div>
   <div mat-dialog-actions *ngIf="data.confirm">
     <button mat-raised-button (click)="onConfirm()">Yes</button>

@@ -79,7 +79,7 @@ export class ProductOrderService {
   private openDialogScalableProd(product: Product): void {
     const dialogRef = this.dialog.open(ProductGenericComponent,
       {
-        width: '480px', height: '650px', data: {name: product.name, label: 'Weight', unitCost: 0}, disableClose: true
+        width: '480px', height: '650px', data: {name: product.name, label: 'Weight (Lbs)', unitCost: 0}, disableClose: true
       });
     dialogRef.afterClosed().subscribe( (data: ProductGeneric) => {
       if(data) {
