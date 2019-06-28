@@ -37,8 +37,12 @@ export class OperationsComponent implements OnInit {
 
   ngOnInit() {
     // this.operationService.cashService.systemConfig.companyType = CompanyType.RESTAURANT;
-    if(this.operationService.cashService.systemConfig.companyType === CompanyType.RESTAURANT)
-      this.paymentOperations.splice(0,1);
+    this.operationService.cashService.getSystemConfig().subscribe(config => {
+      if(this.operationService.cashService.systemConfig.companyType === CompanyType.RESTAURANT)
+        this.paymentOperations.splice(0,1);
+    }, err => {
+      this.operationService.cashService.openGenericInfo('Error', 'Can\'t get configuration');
+    });
   }
 
   financeKey(ev) {

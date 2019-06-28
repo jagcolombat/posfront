@@ -64,7 +64,7 @@ export class OperationsService {
           this.currentOperation === PaymentOpEnum.CASH || this.currentOperation === PaymentOpEnum.EBT_CARD) {
           this.clearOp(false);
         } else {
-          this.invoiceService.getSystemConfig().subscribe(config => {
+          this.cashService.getSystemConfig().subscribe(config => {
             config.allowClear ? this.clearOp() :
               this.authService.adminLogged() ? this.clearOp() : this.manager('clear');
           }, err => {

@@ -39,7 +39,7 @@ export class InvoiceService {
   evCreateInvoice = new BehaviorSubject<boolean>(true);
 
   constructor(private authService: AuthService, private dataStorage: DataStorageService, private cashService: CashService) {
-    this.setSystemConfig();
+    //this.setSystemConfig();
   }
 
   getCashier(): string {
@@ -227,22 +227,6 @@ export class InvoiceService {
   printLastInvoice() {
     this.dataStorage.printLastInvoice()
       .subscribe(data => data);
-  }
-
-  setSystemConfig(prop?: string){
-    // this.setUserToInvoice();
-    this.dataStorage.getConfiguration().subscribe(next => {
-      console.info('getConfig successfull', next);
-      this.cashService.systemConfig = next;
-      // return prop ? next[prop]: next;
-    }, err => {
-      console.error('getConfig failed');
-      this.cashService.openGenericInfo('Error', 'Can\'t get configuration');
-    });
-  }
-
-  getSystemConfig(){
-    return this.dataStorage.getConfiguration();
   }
 
   applyDiscountInvoice (discount: number): Observable<Invoice> {

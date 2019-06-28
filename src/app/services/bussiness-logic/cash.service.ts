@@ -2,6 +2,8 @@ import {EventEmitter, Injectable, Output} from '@angular/core';
 import {GenericInfoModalComponent} from "../../components/presentationals/generic-info-modal/generic-info-modal.component";
 import {MatDialog} from "@angular/material";
 import {Configuration} from "../../models/configuration.model";
+import {AuthService} from "../api/auth.service";
+import {DataStorageService} from "../api/data-storage.service";
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +17,9 @@ export class CashService {
   systemConfig: Configuration;
   @Output() evReviewEnableState = new EventEmitter<boolean>();
 
-  constructor(public dialog: MatDialog) {
+  constructor(public dialog: MatDialog, private dataStorage: DataStorageService) {
     this.resetEnableState();
+    this.setSystemConfig();
   }
 
   resetEnableState() {
@@ -59,6 +62,22 @@ export class CashService {
         confirm: confirm
       },
       disableClose: true
+    });
+  }
+
+  getSystemConfig(){
+    return this.dataStorage.getConfiguration();
+  }
+
+  setSystemConfig(prop?: string) {
+    // this.setUserToInvoice();
+    this.getSystemConfig().subscribe(next => {
+      console.info('getConfig successfull', next);
+      this.systemConfig = next;
+      // return prop ? next[prop]: next;
+    }, err => {
+      console.error('getConfig failed');
+      this.openGenericInfo('Error', 'Can\'t get configuration');
     });
   }
 
