@@ -13,7 +13,6 @@
 }
 [mat-dialog-content] div.buttons {
   flex-wrap: wrap;
-  height: 250px;
   overflow: auto;
 }
 

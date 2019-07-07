@@ -256,6 +256,7 @@ export class OperationsService {
       }
     } else {
       console.error('Can\'t complete review check operation');
+      this.cleanCurrentOp();
       this.invoiceService.resetDigits();
       this.cashService.openGenericInfo('Error', 'Can\'t complete review check operation because check is in progress');
     }
@@ -299,8 +300,11 @@ export class OperationsService {
   getCheckById(typeOp: EOperationType, action: (i: Invoice) => void) {
     this.invoiceService.getInvoicesById(typeOp)
       .subscribe(next => action(next),
-        (err: HttpErrorResponse) =>
-          this.cashService.openGenericInfo('Error', 'Can\'t complete get check operation. ' + err.statusText));
+        (err: HttpErrorResponse) => {
+          this.cashService.openGenericInfo('Error', 'Can\'t complete get check operation. ' +
+            err.statusText);
+          this.cleanCurrentOp();
+        });
   }
 
   openDialogInvoices(inv: Invoice[], action: (i: Invoice) => void) {
@@ -666,8 +670,8 @@ export class OperationsService {
       { width: '1024px', height: '600px', data: {title: "Enter Receipt Number"} , disableClose: true})
       .afterClosed()
       .subscribe(next => {
+        console.log('keyboard', next);
         if (next) {
-          console.log('keyboard', next);
           this.invoiceService.digits = next.text;
           if(action !== undefined){
             switch (action) {
@@ -682,7 +686,14 @@ export class OperationsService {
                 break;
             }
           }
+        } else if (!next && action === FinancialOpEnum.REVIEW) {
+          this.cleanCurrentOp();
+          this.invoiceService.isReviewed = false;
         }
       });
+  }
+
+  cleanCurrentOp(){
+    this.currentOperation = "";
   }
 }
