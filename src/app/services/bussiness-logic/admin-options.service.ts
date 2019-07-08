@@ -96,4 +96,13 @@ export class AdminOptionsService {
       this.cashService.openGenericInfo('Error', 'Can\'t complete Configuration operation', error1);
     });*/
   }
+
+  removeAHold() {
+    this.invoiceService.getInvoiceByStatus(EOperationType.RemoveHold, InvoiceStatus.IN_HOLD)
+      .subscribe(next => {
+          this.operationService.openDialogInvoices(next, i => {
+            this.invoiceService.voidOrder(i).subscribe(next => console.log(next), err => console.error(err));
+          })
+      },err => this.cashService.openGenericInfo('Error', 'Can\'t complete remove a hold operation'));
+  }
 }

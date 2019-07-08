@@ -120,6 +120,11 @@ export class InvoiceService {
     return this.dataStorage.changeInvoiceToHold(this.invoice);
   }
 
+  voidOrder(i: Invoice): Observable<any> {
+    // this.setUserToInvoice();
+    return this.dataStorage.changeInvoiceToVoid(i);
+  }
+
   /*recallCheck(): Observable<Invoice[]> {
     return this.dataStorage.getInvoicesByStatus(InvoiceStatus.PENDENT_FOR_PAYMENT, EOperationType.RecallCheck)
       .pipe(map(invoices => invoices));

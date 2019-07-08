@@ -39,6 +39,9 @@ export class AdminOptionsComponent implements OnInit {
       case 'Cancel Check':
         this.adminOpService.cancelCheck();
         break;
+      case 'Remove a hold':
+        this.adminOpService.removeAHold();
+        break;
       case 'Back User':
         this.adminOpService.backToUser();
         this.router.navigateByUrl('/cash/dptos');
