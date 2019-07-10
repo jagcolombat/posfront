@@ -118,4 +118,9 @@ export class InvoiceService {
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
+  cancelCheck (url: string, id: string): Observable<Invoice> {
+    return this._http.post<Invoice>(url + this.path + '/' + id + '/status/cancel', {})
+    .pipe(catchError(this.processHttpMsgService.handleError));
+}
+
 }
