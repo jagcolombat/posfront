@@ -251,7 +251,7 @@ export class InvoiceService {
   }
 
   cancelCheck() {
-    this.dataStorage.cancelCheck(this.digits.trim());
+    this.dataStorage.cancelCheck(this.digits.trim()).subscribe(next=> console.log(next), err=> console.error(err));
     this.resetDigits();
   }
 }
