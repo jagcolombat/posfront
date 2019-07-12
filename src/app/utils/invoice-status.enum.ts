@@ -5,5 +5,6 @@ export enum InvoiceStatus {
     PAID,
     CANCEL,
     CREATED,
-    PENDENT_FOR_PAYMENT
+    PENDENT_FOR_PAYMENT,
+    REMOVE_ON_HOLD
 }

@@ -35,6 +35,13 @@ export class InvoiceService {
     }
   }
 
+  changeInvoiceToRemoveHold(url: string, invoice: Invoice): Observable<Invoice> {
+    if (invoice.id) {
+      console.log('RemoveHold:', invoice);
+      return this._http.post<Invoice>(url + this.path + '/' + invoice.receiptNumber + '/status/removeHold', invoice);
+    }
+  }
+
   getInvoiceByStatus = (url: string, status: InvoiceStatus) => {
     let params = new HttpParams();
     params = params

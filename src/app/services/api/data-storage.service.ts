@@ -71,6 +71,11 @@ export class DataStorageService {
       return this.invoiceService.changeInvoiceToVoid(this.url, invoice);
   }
 
+  changeInvoiceToRemoveHold(invoice: Invoice): Observable<any> {
+    console.log(invoice);
+      return this.invoiceService.changeInvoiceToRemoveHold(this.url, invoice);
+  }
+
   /*getInvoiceInHold() {
     return this.invoiceService.getInvoiceByStatus(this.url, 'inHold');
   }
