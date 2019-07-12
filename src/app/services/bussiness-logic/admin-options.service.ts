@@ -1,17 +1,16 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {InvoiceService} from "./invoice.service";
 import {CashService} from "./cash.service";
 import {ApplyDiscountComponent} from "../../components/presentationals/apply-discount/apply-discount.component";
 import {EOperationType} from "../../utils/operation.type.enum";
 import {InvoiceStatus} from "../../utils/invoice-status.enum";
 import {OperationsService} from "./operations.service";
-import {FinancialOpEnum} from "../../utils/operations";
-import {PaidOutComponent} from "../../components/presentationals/paid-out/paid-out.component";
 import {DataStorageService} from "../api/data-storage.service";
 import {GenericSalesComponent} from "../../components/presentationals/generic-sales/generic-sales.component";
 import {environment} from "../../../environments/environment";
 import {AuthService} from "../api/auth.service";
 import {AdminConfigComponent} from "../../components/presentationals/admin-config/admin-config.component";
+import {AdminOpEnum} from "../../utils/operations/admin-op.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -43,12 +42,23 @@ export class AdminOptionsService {
   }
 
   cancelCheck() {
-    this.invoiceService.getInvoiceByStatus(EOperationType.CancelCheck, InvoiceStatus.CANCEL)
+    /*this.invoiceService.getInvoiceByStatus(EOperationType.CancelCheck, InvoiceStatus.CANCEL)
       .subscribe(next => this.operationService.openDialogInvoices(next, i => {
         this.invoiceService.setInvoice(i);
         this.cashService.reviewEnableState();
         this.operationService.currentOperation = FinancialOpEnum.REVIEW;
-      }),err => this.cashService.openGenericInfo('Error', 'Can\'t complete cancel check operation'));
+      }),err => this.cashService.openGenericInfo('Error', 'Can\'t complete cancel check operation'));*/
+    console.log('cancelCheck');
+    if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS) {
+      this.invoiceService.digits ? this.invoiceService.cancelCheck()
+        : this.operationService.keyboard(AdminOpEnum.CANCEL_CHECK);
+      // this.cashService.openGenericInfo('Error', 'Please input receipt number of check');
+
+    } else {
+      console.error('Can\'t complete cancel check operation');
+      this.invoiceService.resetDigits();
+      this.cashService.openGenericInfo('Error', 'Can\'t complete cancel check operation because check is in progress');
+    }
   }
 
   sysZ() {

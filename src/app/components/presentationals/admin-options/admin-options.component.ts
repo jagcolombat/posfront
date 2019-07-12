@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
 import {AdminOptionsService} from "../../../services/bussiness-logic/admin-options.service";
 import {leaveFocusOnButton} from "../../../utils/functions/functions";
+import {AdminOpEnum} from "../../../utils/operations/admin-op.enum";
 
 @Component({
   selector: 'app-admin-options',
@@ -9,8 +10,9 @@ import {leaveFocusOnButton} from "../../../utils/functions/functions";
   styleUrls: ['./admin-options.component.scss']
 })
 export class AdminOptionsComponent implements OnInit {
-  options = ['Empl Z','SYS Z','WTD Z','Change Printer','Close Browser','Apply Discount','Cancel Check','Remove a hold',
-    'Departments', 'Back User', 'Config','System Version'];
+  options = [AdminOpEnum.EMPLZ, AdminOpEnum.SYSZ, AdminOpEnum.WTDZ,AdminOpEnum.CHANGE_PRINTER,AdminOpEnum.CLOSE_BROWSER,
+    AdminOpEnum.APPLY_DISCOUNT, AdminOpEnum.CANCEL_CHECK, AdminOpEnum.REMOVE_HOLD, AdminOpEnum.DEPARMENTS,
+    AdminOpEnum.BACK_USER, AdminOpEnum.CONFIG, AdminOpEnum.SYSTEM_VERSION];
   page = 1;
   sizePage = 12;
 
@@ -24,33 +26,33 @@ export class AdminOptionsComponent implements OnInit {
     console.log('doAction', opt);
     leaveFocusOnButton(ev);
     switch (opt) {
-      case 'Departments':
+      case AdminOpEnum.DEPARMENTS:
         this.router.navigateByUrl('/cash/dptos');
         break;
-      case 'Apply Discount':
+      case AdminOpEnum.APPLY_DISCOUNT:
         this.adminOpService.applyDiscount();
         break;
-      case 'Empl Z':
+      case AdminOpEnum.EMPLZ:
         this.adminOpService.emplZ();
         break;
-      case 'SYS Z':
+      case AdminOpEnum.SYSZ:
         this.adminOpService.sysZ();
         break;
-      case 'Cancel Check':
+      case AdminOpEnum.CANCEL_CHECK:
         this.adminOpService.cancelCheck();
         break;
-      case 'Remove a hold':
+      case AdminOpEnum.REMOVE_HOLD:
         this.adminOpService.removeAHold();
         break;
-      case 'Back User':
+      case AdminOpEnum.BACK_USER:
         this.adminOpService.backToUser();
         this.router.navigateByUrl('/cash/dptos');
         break;
-      case 'Config':
+      case AdminOpEnum.CONFIG:
         this.adminOpService.configOption();
         // this.router.navigateByUrl('/cash/dptos');
         break;
-      case 'System Version':
+      case AdminOpEnum.SYSTEM_VERSION:
         this.adminOpService.systemVersion();
         break;
     }

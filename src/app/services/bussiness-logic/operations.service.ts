@@ -21,6 +21,7 @@ import {MatDialogRef} from "@angular/material";
 import {CompanyType} from "../../utils/company-type.enum";
 import {PaymentStatus} from "../../utils/payment-status.enum";
 import {ProductGenericComponent} from "../../components/presentationals/product-generic/product-generic.component";
+import {AdminOpEnum} from "../../utils/operations/admin-op.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -665,7 +666,7 @@ export class OperationsService {
       });
   }
 
-  keyboard(action?: FinancialOpEnum){
+  keyboard(action?: FinancialOpEnum | AdminOpEnum){
     this.cashService.dialog.open(DialogFilterComponent,
       { width: '1024px', height: '600px', data: {title: "Enter Receipt Number"} , disableClose: true})
       .afterClosed()
@@ -683,6 +684,9 @@ export class OperationsService {
                 break;
               case FinancialOpEnum.REPRINT:
                 this.reprint();
+                break;
+              case AdminOpEnum.CANCEL_CHECK:
+                this.invoiceService.cancelCheck();
                 break;
             }
           }

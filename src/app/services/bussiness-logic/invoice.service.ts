@@ -249,4 +249,9 @@ export class InvoiceService {
   addPaidOut(data: string, descrip?: string) {
     return this.dataStorage.addPaidOut(new PaidOut(+data, descrip))
   }
+
+  cancelCheck() {
+    this.dataStorage.cancelCheck(this.digits.trim());
+    this.resetDigits();
+  }
 }
