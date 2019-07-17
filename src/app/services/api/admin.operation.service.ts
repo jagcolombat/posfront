@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { ProcessHTTPMSgService } from './ProcessHTTPMSg.service';
 import { User, Payment } from 'src/app/models';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { PaidOut } from 'src/app/models/paid-out.model';
 import { catchError } from 'rxjs/operators';
 import { Invoice } from 'src/app/models/invoice.model';
+import { CloseBatch } from 'src/app/utils/close.batch.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -34,6 +35,14 @@ export class AdminOperationService {
 
   getPaymentByType(url: string): Observable<Payment[]> {
     return this._http.get<Payment[]>(url + this.path + '/stats/invoices/payments')
+      .pipe(catchError(this.processHttpMsgService.handleError));
+  }
+
+  closeBatch(url: string, closeBatch: CloseBatch): Observable<any> {
+    let params = new HttpParams();
+    params = params.append('closeBatchPrintOption', closeBatch + '');
+
+    return this._http.post<any>(url + this.path + '/op/batch/close', {}, {params})
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
