@@ -9,6 +9,7 @@ export enum AdminOpEnum {
   CANCEL_CHECK = 'Cancel Check',
   REMOVE_HOLD = 'Remove a hold',
   BACK_USER = 'Back User',
+  CLOSE_BATCH = 'Close Batch',
   CONFIG = 'Config',
   SYSTEM_VERSION = 'System Version'
 }

@@ -11,6 +11,7 @@ import {environment} from "../../../environments/environment";
 import {AuthService} from "../api/auth.service";
 import {AdminConfigComponent} from "../../components/presentationals/admin-config/admin-config.component";
 import {AdminOpEnum} from "../../utils/operations/admin-op.enum";
+import {CloseBatch} from "../../utils/close.batch.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -114,5 +115,13 @@ export class AdminOptionsService {
             this.invoiceService.removeHoldOrder(i).subscribe(next => console.log(next), err => console.error(err));
           })
       },err => this.cashService.openGenericInfo('Error', 'Can\'t complete remove a hold operation'));
+  }
+
+  closeBatch() {
+    this.cashService.dialog.open(AdminConfigComponent,
+      {
+        width: '480px', height: '600px', disableClose: true, data: {title: AdminOpEnum.CLOSE_BATCH}
+      }).afterClosed().subscribe(next=> this.dataStorage.closeBatch(next),
+        err=> console.error(err));
   }
 }

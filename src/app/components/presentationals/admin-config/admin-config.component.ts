@@ -1,6 +1,8 @@
 import {Component, EventEmitter, Inject, Input, OnInit, Output} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
 import {DataStorageService} from "../../../services/api/data-storage.service";
+import {AdminOpEnum} from "../../../utils/operations/admin-op.enum";
+import {CloseBatch} from "../../../utils/close.batch.enum";
 
 @Component({
   selector: 'admin-config',
@@ -10,13 +12,15 @@ import {DataStorageService} from "../../../services/api/data-storage.service";
 export class AdminConfigComponent implements OnInit {
   timeLogout: number;
   adminClearVoid: boolean;
+  closeBatch:boolean;
+  typeCloseBatch:number;
+
   constructor( public dialogRef: MatDialogRef<AdminConfigComponent>,
                @Inject(MAT_DIALOG_DATA) public data: any, private dataStorage: DataStorageService) {
-    console.log(data);
-    // if(this.data.content) this.populateSales(this.data.content);
   }
 
   ngOnInit() {
+    this.closeBatch = this.data.title=== AdminOpEnum.CLOSE_BATCH;
   }
 
   onNoClick(): void {
@@ -29,5 +33,10 @@ export class AdminConfigComponent implements OnInit {
 
   setAdmin4ClearVoid($event: any) {
     console.log('setAdmin4ClearVoid', $event, this.adminClearVoid)
+  }
+
+  setTypeCloseBatch($event: any) {
+    this.typeCloseBatch = ($event.value == 0) ? CloseBatch.SUMMARY : CloseBatch.DETAILS;
+    this.dialogRef.close(this.typeCloseBatch);
   }
 }
