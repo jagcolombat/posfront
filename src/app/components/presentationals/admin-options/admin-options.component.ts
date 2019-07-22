@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
 import {AdminOptionsService} from "../../../services/bussiness-logic/admin-options.service";
 import {leaveFocusOnButton} from "../../../utils/functions/functions";
@@ -15,8 +15,9 @@ export class AdminOptionsComponent implements OnInit {
     AdminOpEnum.BACK_USER, AdminOpEnum.CLOSE_BATCH, AdminOpEnum.CONFIG, AdminOpEnum.SYSTEM_VERSION];
   page = 1;
   sizePage = 16;
+  @Input() disable: boolean | boolean[] = this.adminOpService.cashService.disabledAdminOp;
 
-  constructor(private router: Router, private adminOpService: AdminOptionsService ) {
+  constructor(private router: Router, public adminOpService: AdminOptionsService ) {
   }
 
   ngOnInit() {
@@ -59,5 +60,9 @@ export class AdminOptionsComponent implements OnInit {
         this.adminOpService.closeBatch();
         break;
     }
+  }
+
+  setDisabled(index) {
+    return typeof this.disable === 'boolean' ? this.disable : this.disable[this.options.indexOf(index)]
   }
 }

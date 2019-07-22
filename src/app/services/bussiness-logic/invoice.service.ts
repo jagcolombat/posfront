@@ -251,7 +251,17 @@ export class InvoiceService {
   }
 
   cancelCheck() {
-    this.dataStorage.cancelCheck(this.digits.trim()).subscribe(next=> console.log(next), err=> console.error(err));
-    this.resetDigits();
+    this.dataStorage.cancelCheck(this.invoice.receiptNumber).subscribe(
+      next=> {
+        console.log(next);
+        this.resetDigits();
+        this.createInvoice();
+        this.cashService.resetEnableState();
+        },
+        err=> {
+          console.error(err);
+          this.cashService.openGenericInfo('Error', 'Can\'t complete cancel check operation');
+      });
+
   }
 }

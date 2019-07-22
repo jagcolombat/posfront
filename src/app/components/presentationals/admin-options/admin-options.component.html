@@ -1,7 +1,11 @@
 <div class="page">
   <button mat-button fxFlex="130px" *ngFor="let i of options | paginate: { itemsPerPage: sizePage, currentPage: page }"
-          (click)="doAction($event, i)" class="normal">
+          (click)="doAction($event, i)" class="normal" [disabled]="setDisabled(i)">
     {{ i | uppercase }}
   </button>
+  <!--<operation-group id="other" [operations]="options | paginate: { itemsPerPage: sizePage, currentPage: page }"
+                   [colors]="adminOpColor" style="padding-left: 5px;"
+                   class="border" (evPressKeys)="doAction($event)" [disable]="adminOpService.cashService.disabledAdminOp">
+  </operation-group>-->
 </div>
 <pos-paginator [countElements]="options.length" [sizePage]="sizePage" (evSetPage)="page = $event">

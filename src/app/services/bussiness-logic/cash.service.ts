@@ -14,6 +14,7 @@ export class CashService {
   disabledInvOp: boolean | boolean[];
   disabledTotalOp: boolean | boolean[];
   disabledPayment: boolean | boolean[];
+  disabledAdminOp: boolean | boolean[] = false;
   systemConfig: Configuration;
   @Output() evReviewEnableState = new EventEmitter<boolean>();
 
@@ -23,7 +24,7 @@ export class CashService {
   }
 
   resetEnableState() {
-    this.disabledInput = this.disabledFinOp = this.disabledInvOp = this.disabledTotalOp = false;
+    this.disabledInput = this.disabledFinOp = this.disabledInvOp = this.disabledTotalOp = this.disabledAdminOp = false;
     this.disabledPayment = true;
     this.evReviewEnableState.emit(false);
   }
@@ -51,6 +52,13 @@ export class CashService {
   ebtEnableState() {
     this.disabledTotalOp = [true, false];
     this.disabledPayment = true;
+  }
+
+  cancelCheckEnableState() {
+    this.disabledInput = this.disabledTotalOp = this.disabledPayment = this.disabledFinOp = true;
+    this.disabledInvOp =[false, true, true, true];
+    this.disabledAdminOp = [true, true, true, true, true, true, true, true, true, false, true, true, true];
+    //this.evReviewEnableState.emit(true);
   }
 
   openGenericInfo(title: string, content?: string, content2?: any, confirm?: boolean) {

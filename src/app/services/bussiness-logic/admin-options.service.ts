@@ -17,9 +17,14 @@ import {CloseBatch} from "../../utils/close.batch.enum";
   providedIn: 'root'
 })
 export class AdminOptionsService {
+  private cancelCheckLoaded: boolean;
 
-  constructor(private invoiceService: InvoiceService, private cashService: CashService, private auth: AuthService,
-              private operationService: OperationsService, private dataStorage: DataStorageService) { }
+  constructor(private invoiceService: InvoiceService, public cashService: CashService, private auth: AuthService,
+              private operationService: OperationsService, private dataStorage: DataStorageService) {
+    this.operationService.evCancelCheck.subscribe(next => {
+      next ? this.cancelCheck(): this.cancelCheckLoaded=false;
+    })
+  }
 
   applyDiscount(){
     // if(this.invoiceService.invoice.productOrders.length > 0){
@@ -43,15 +48,11 @@ export class AdminOptionsService {
   }
 
   cancelCheck() {
-    /*this.invoiceService.getInvoiceByStatus(EOperationType.CancelCheck, InvoiceStatus.CANCEL)
-      .subscribe(next => this.operationService.openDialogInvoices(next, i => {
-        this.invoiceService.setInvoice(i);
-        this.cashService.reviewEnableState();
-        this.operationService.currentOperation = FinancialOpEnum.REVIEW;
-      }),err => this.cashService.openGenericInfo('Error', 'Can\'t complete cancel check operation'));*/
     console.log('cancelCheck');
+    this.operationService.currentOperation = AdminOpEnum.CANCEL_CHECK;
     if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS) {
-      this.invoiceService.digits ? this.invoiceService.cancelCheck()
+      (this.invoiceService.digits || this.cancelCheckLoaded) ?
+        this.cancelCheckOp()
         : this.operationService.keyboard(AdminOpEnum.CANCEL_CHECK);
       // this.cashService.openGenericInfo('Error', 'Please input receipt number of check');
 
@@ -60,6 +61,23 @@ export class AdminOptionsService {
       this.invoiceService.resetDigits();
       this.cashService.openGenericInfo('Error', 'Can\'t complete cancel check operation because check is in progress');
     }
+  }
+
+  cancelCheckOp(){
+    this.cancelCheckLoaded ?
+      this.doCancelCheck():
+    this.invoiceService.getInvoicesById(EOperationType.CancelCheck)
+      .subscribe(next => {
+        this.invoiceService.setInvoice(next);
+        this.cancelCheckLoaded= true;
+        this.cashService.cancelCheckEnableState();
+        //this.operationService.currentOperation = FinancialOpEnum.REVIEW;
+      }),err => this.cashService.openGenericInfo('Error', 'Can\'t complete cancel check operation');
+  }
+
+  doCancelCheck(){
+    this.invoiceService.cancelCheck();
+    this.cancelCheckLoaded= false;
   }
 
   sysZ() {

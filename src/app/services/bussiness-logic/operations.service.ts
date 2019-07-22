@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {EventEmitter, Injectable, Output} from '@angular/core';
 import {InvoiceService} from "./invoice.service";
 import {Router} from "@angular/router";
 import {AuthService} from "../api/auth.service";
@@ -22,6 +22,7 @@ import {CompanyType} from "../../utils/company-type.enum";
 import {PaymentStatus} from "../../utils/payment-status.enum";
 import {ProductGenericComponent} from "../../components/presentationals/product-generic/product-generic.component";
 import {AdminOpEnum} from "../../utils/operations/admin-op.enum";
+import {AdminOptionsService} from "./admin-options.service";
 
 @Injectable({
   providedIn: 'root'
@@ -31,6 +32,7 @@ export class OperationsService {
   timer: any;
   currentOperation: string;
   invTotalsBeforeFSSubTotal = {total: 0, tax: 0, subtotal: 0};
+  @Output() evCancelCheck = new EventEmitter<any>();
 
   constructor(private invoiceService: InvoiceService, public cashService: CashService,
               private authService: AuthService, private router: Router) {
@@ -59,10 +61,14 @@ export class OperationsService {
     /*this.cashService.openGenericInfo('Confirm', 'Do you want clear?', null,true)
       .afterClosed().subscribe(next => {
       if (next !== undefined && next.confirm) {*/
-        if (this.invoiceService.invoiceProductSelected.length <= 0 || this.currentOperation === FinancialOpEnum.REVIEW ||
+        if (this.invoiceService.invoiceProductSelected.length <= 0 ||
+          this.currentOperation === FinancialOpEnum.REVIEW ||
           this.currentOperation === FinancialOpEnum.REPRINT ||
-          this.currentOperation === TotalsOpEnum.FS_SUBTOTAL || this.currentOperation === TotalsOpEnum.SUBTOTAL ||
-          this.currentOperation === PaymentOpEnum.CASH || this.currentOperation === PaymentOpEnum.EBT_CARD) {
+          this.currentOperation === TotalsOpEnum.FS_SUBTOTAL ||
+          this.currentOperation === TotalsOpEnum.SUBTOTAL ||
+          this.currentOperation === PaymentOpEnum.CASH ||
+          this.currentOperation === PaymentOpEnum.EBT_CARD ||
+          this.currentOperation === AdminOpEnum.CANCEL_CHECK) {
           this.clearOp(false);
         } else {
           this.cashService.getSystemConfig().subscribe(config => {
@@ -81,12 +87,17 @@ export class OperationsService {
     if(this.currentOperation === FinancialOpEnum.REVIEW ||
       this.currentOperation === FinancialOpEnum.REPRINT ||
       this.currentOperation === TotalsOpEnum.FS_SUBTOTAL ||
-      this.currentOperation === TotalsOpEnum.SUBTOTAL || this.currentOperation === PaymentOpEnum.CASH ||
-      this.currentOperation === PaymentOpEnum.EBT_CARD ){
+      this.currentOperation === TotalsOpEnum.SUBTOTAL ||
+      this.currentOperation === PaymentOpEnum.CASH ||
+      this.currentOperation === PaymentOpEnum.EBT_CARD ||
+      this.currentOperation === AdminOpEnum.CANCEL_CHECK){
         this.cashService.resetEnableState();
         this.invoiceService.isReviewed = false;
-        if(this.currentOperation === FinancialOpEnum.REVIEW || this.currentOperation === FinancialOpEnum.REPRINT) {
+        if(this.currentOperation === FinancialOpEnum.REVIEW ||
+          this.currentOperation === FinancialOpEnum.REPRINT ||
+          this.currentOperation === AdminOpEnum.CANCEL_CHECK) {
           this.invoiceService.createInvoice();
+          if(this.currentOperation === AdminOpEnum.CANCEL_CHECK){this.evCancelCheck.emit(false);}
         }
         if(this.currentOperation === TotalsOpEnum.FS_SUBTOTAL) {
           this.resetTotalFromFS();
@@ -686,7 +697,7 @@ export class OperationsService {
                 this.reprint();
                 break;
               case AdminOpEnum.CANCEL_CHECK:
-                this.invoiceService.cancelCheck();
+                this.evCancelCheck.emit(true);
                 break;
             }
           }
