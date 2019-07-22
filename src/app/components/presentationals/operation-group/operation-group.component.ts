@@ -11,6 +11,8 @@ export class OperationGroupComponent implements OnInit, OnChanges {
   @Input() colors: string | string[];
   @Input() disable: boolean | boolean[] = false;
   @Input() layout: string;
+  @Input() btnSize: string = "100px";
+  @Input() upperCase: boolean = false;
   @Output() evPressKeys = new EventEmitter<any>();
 
   constructor() { }
@@ -21,7 +23,9 @@ export class OperationGroupComponent implements OnInit, OnChanges {
     }*/
   }
 
-  ngOnInit() { }
+  ngOnInit() {
+    if(this.upperCase) this.operations=this.operations.map(o=> o.toUpperCase());
+  }
 
   pressKey(ev, val: string | number) {
     console.log(val);

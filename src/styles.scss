@@ -51,3 +51,11 @@ button[mat-button] /deep/ span {
   background: #edc0b8 !important;
   text-decoration: line-through !important;
 }
+
+mat-toolbar /deep/ button[mat-dialog-close] {
+  height: 80% !important;
+  cursor: none !important;
+  span.mat-button-wrapper{
+    font-size: 24px !important;
+  }
+}

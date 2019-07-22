@@ -140,7 +140,8 @@ export class OperationsService {
     }, err => {
       console.error('addProductByUpc', err);
       this.cashService.openGenericInfo('Error', 'Can\'t complete get product by plu');
-    }, () => this.invoiceService.resetDigits());
+    });
+    //this.invoiceService.resetDigits();
     this.resetInactivity(false);
   }
 
@@ -159,7 +160,9 @@ export class OperationsService {
             this.invoiceService.evAddProdByUPC.emit(prod);
           }
         });
-      }, err => { this.cashService.openGenericInfo('Error', 'Can\'t found this product '+ this.invoiceService.digits); });
+      }, err => {
+        this.cashService.openGenericInfo('Error', 'Can\'t found this product '+
+          this.invoiceService.digits); });
       this.invoiceService.resetDigits();
     }
     this.resetInactivity(true);

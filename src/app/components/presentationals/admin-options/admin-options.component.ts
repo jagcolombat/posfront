@@ -16,6 +16,7 @@ export class AdminOptionsComponent implements OnInit {
   page = 1;
   sizePage = 16;
   @Input() disable: boolean | boolean[] = this.adminOpService.cashService.disabledAdminOp;
+  adminOpColor = "red";
 
   constructor(private router: Router, public adminOpService: AdminOptionsService ) {
   }
@@ -23,40 +24,39 @@ export class AdminOptionsComponent implements OnInit {
   ngOnInit() {
   }
 
-  doAction(ev, opt: string) {
+  doAction(opt: string) {
     console.log('doAction', opt);
-    leaveFocusOnButton(ev);
     switch (opt) {
-      case AdminOpEnum.DEPARMENTS:
+      case AdminOpEnum.DEPARMENTS.toUpperCase():
         this.router.navigateByUrl('/cash/dptos');
         break;
-      case AdminOpEnum.APPLY_DISCOUNT:
+      case AdminOpEnum.APPLY_DISCOUNT.toUpperCase():
         this.adminOpService.applyDiscount();
         break;
-      case AdminOpEnum.EMPLZ:
+      case AdminOpEnum.EMPLZ.toUpperCase():
         this.adminOpService.emplZ();
         break;
-      case AdminOpEnum.SYSZ:
+      case AdminOpEnum.SYSZ.toUpperCase():
         this.adminOpService.sysZ();
         break;
-      case AdminOpEnum.CANCEL_CHECK:
+      case AdminOpEnum.CANCEL_CHECK.toUpperCase():
         this.adminOpService.cancelCheck();
         break;
-      case AdminOpEnum.REMOVE_HOLD:
+      case AdminOpEnum.REMOVE_HOLD.toUpperCase():
         this.adminOpService.removeAHold();
         break;
-      case AdminOpEnum.BACK_USER:
+      case AdminOpEnum.BACK_USER.toUpperCase():
         this.adminOpService.backToUser();
         this.router.navigateByUrl('/cash/dptos');
         break;
-      case AdminOpEnum.CONFIG:
+      case AdminOpEnum.CONFIG.toUpperCase():
         this.adminOpService.configOption();
         // this.router.navigateByUrl('/cash/dptos');
         break;
-      case AdminOpEnum.SYSTEM_VERSION:
+      case AdminOpEnum.SYSTEM_VERSION.toUpperCase():
         this.adminOpService.systemVersion();
         break;
-      case AdminOpEnum.CLOSE_BATCH:
+      case AdminOpEnum.CLOSE_BATCH.toUpperCase():
         this.adminOpService.closeBatch();
         break;
     }
