@@ -402,7 +402,10 @@ export class OperationsService {
     console.log('cancelar factura');
     this.invoiceService.cancelInvoice().subscribe(next => {
       this.invoiceService.createInvoice();
-    },err => console.error('cancelCheck failed'));
+    },err => {
+      console.error('cancelCheck failed');
+      this.cashService.openGenericInfo('Error', 'Can\'t complete void operation')
+    });
     this.resetInactivity(false);
   }
 
@@ -411,7 +414,10 @@ export class OperationsService {
     this.invoiceService.cancelInvoice().subscribe(next => {
       this.authService.token = t;
       this.invoiceService.createInvoice();
-    },err => console.error('cancelCheck failed'));
+    },err => {
+      console.error('cancelCheck failed');
+      this.cashService.openGenericInfo('Error', 'Can\'t complete void operation')
+    });
     this.resetInactivity(false);
   }
 
