@@ -141,7 +141,7 @@ export class OperationsService {
       console.error('addProductByUpc', err);
       this.cashService.openGenericInfo('Error', 'Can\'t complete get product by plu');
     });
-    //this.invoiceService.resetDigits();
+    this.invoiceService.resetDigits();
     this.resetInactivity(false);
   }
 

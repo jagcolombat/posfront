@@ -18,7 +18,10 @@ export class ListProdComponent implements OnInit {
   page: number = 1;
   sizePage = 20;
 
-  constructor( private route: ActivatedRoute, public stockService: StockService) { }
+  constructor( private route: ActivatedRoute, public stockService: StockService) {
+    this.sizePage = this.stockService.getStockCountItems();
+    console.log(this.sizePage);
+  }
 
   ngOnInit() {
 

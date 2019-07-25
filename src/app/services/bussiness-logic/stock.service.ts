@@ -6,11 +6,14 @@ import {Product} from "../../models";
 import {ProductOrderService} from "./product-order.service";
 import {EOperationType} from "../../utils/operation.type.enum";
 import {CashService} from "./cash.service";
+import {environment as env} from "../../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
 })
 export class StockService {
+
+  public env = env;
   actualPage: number;
 
   constructor(private dataStore: DataStorageService, public productOrderService: ProductOrderService,
@@ -31,6 +34,11 @@ export class StockService {
 
   setOperation(typeOp: EOperationType, entity: string, desc: string){
     this.dataStore.registryOperation({operationType: typeOp, entityName: entity, description: desc})
+  }
+
+  getStockCountItems() {
+    console.log(env.screenH);
+    return (Math.floor((env.screenH/2)/100)*4);
   }
 
 }

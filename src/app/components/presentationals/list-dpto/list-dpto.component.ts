@@ -1,4 +1,4 @@
-import {Component, OnInit, AfterViewInit, ViewChild, ElementRef} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Department} from '../../../models/department.model';
 import {StockService} from "../../../services/bussiness-logic/stock.service";
 import {Router} from "@angular/router";
@@ -11,13 +11,14 @@ import {DialogFilterComponent} from "../../containers/dialog-filter/dialog-filte
   templateUrl: './list-dpto.component.html',
   styleUrls: ['./list-dpto.component.scss']
 })
-export class ListDptoComponent implements OnInit, AfterViewInit {
-  @ViewChild('grid') grid: ElementRef;
+export class ListDptoComponent implements OnInit {
   dptos: Department[] = [];
   page = 1;
   sizePage = 20;
 
   constructor(private router: Router, public stockService: StockService) {
+    this.sizePage = this.stockService.getStockCountItems();
+    console.log(this.sizePage);
   }
 
   ngOnInit() {
@@ -25,11 +26,6 @@ export class ListDptoComponent implements OnInit, AfterViewInit {
       this.stockService.productOrderService.departments = this.dptos = dptos;
     });
     this.page = this.stockService.actualPage;
-  }
-
-  ngAfterViewInit(){
-    console.log('ngAfterViewInit', this.grid.nativeElement.offsetWidth, this.grid.nativeElement.offsetHeight);
-    // this.sizePage = 16;
   }
 
   doAction(ev, dpto: Department) {
