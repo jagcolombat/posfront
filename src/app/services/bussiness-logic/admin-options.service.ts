@@ -11,7 +11,6 @@ import {environment} from "../../../environments/environment";
 import {AuthService} from "../api/auth.service";
 import {AdminConfigComponent} from "../../components/presentationals/admin-config/admin-config.component";
 import {AdminOpEnum} from "../../utils/operations/admin-op.enum";
-import {CloseBatch} from "../../utils/close.batch.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -139,7 +138,10 @@ export class AdminOptionsService {
     this.cashService.dialog.open(AdminConfigComponent,
       {
         width: '480px', height: '600px', disableClose: true, data: {title: AdminOpEnum.CLOSE_BATCH}
-      }).afterClosed().subscribe(next=> this.dataStorage.closeBatch(next),
+      }).afterClosed().subscribe(
+        next=> this.dataStorage.closeBatch(next).subscribe(
+          next => console.log('closeBatch', next),
+          err => this.cashService.openGenericInfo('Error','Can\'t complete close batch operation')),
         err=> console.error(err));
   }
 }
