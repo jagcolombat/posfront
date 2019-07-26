@@ -11,18 +11,25 @@ import {environment} from "../../../environments/environment";
 import {AuthService} from "../api/auth.service";
 import {AdminConfigComponent} from "../../components/presentationals/admin-config/admin-config.component";
 import {AdminOpEnum} from "../../utils/operations/admin-op.enum";
+import {Invoice} from "../../models/invoice.model";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdminOptionsService {
   private cancelCheckLoaded: boolean;
+  private removeHoldLoaded: boolean;
 
   constructor(private invoiceService: InvoiceService, public cashService: CashService, private auth: AuthService,
               private operationService: OperationsService, private dataStorage: DataStorageService) {
+
     this.operationService.evCancelCheck.subscribe(next => {
       next ? this.cancelCheck(): this.cancelCheckLoaded=false;
-    })
+    });
+
+    this.operationService.evRemoveHold.subscribe(next => {
+      this.removeHoldLoaded=false;
+    });
   }
 
   applyDiscount(){
@@ -126,12 +133,36 @@ export class AdminOptionsService {
   }
 
   removeAHold() {
-    this.invoiceService.getInvoiceByStatus(EOperationType.RemoveHold, InvoiceStatus.IN_HOLD)
-      .subscribe(next => {
-          this.operationService.openDialogInvoices(next, i => {
-            this.invoiceService.removeHoldOrder(i).subscribe(next => console.log(next), err => console.error(err));
-          })
-      },err => this.cashService.openGenericInfo('Error', 'Can\'t complete remove a hold operation'));
+    this.operationService.currentOperation = AdminOpEnum.REMOVE_HOLD;
+    if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS) {
+      if(!this.removeHoldLoaded){
+        this.invoiceService.getInvoiceByStatus(EOperationType.RemoveHold, InvoiceStatus.IN_HOLD)
+          .subscribe(next => {
+            this.operationService.openDialogInvoices(next, i => this.removeHoldOp(i))
+          },err => this.cashService.openGenericInfo('Error', 'Can\'t complete remove a hold operation'));
+      } else {
+        this.removeHoldOp();
+      }
+    } else {
+      this.cashService.openGenericInfo('Error', 'Can\'t complete remove a hold operation because check is in progress');
+    }
+  }
+
+  removeHoldOp(i?:Invoice){
+    console.log('removeHold', i);
+    if(this.removeHoldLoaded){
+      this.doRemoveHold();
+    } else {
+      this.invoiceService.setInvoice(i);
+      this.removeHoldLoaded= true;
+      this.cashService.removeHoldEnableState();
+    }
+  }
+
+  doRemoveHold(){
+    this.removeHoldLoaded= false;
+    this.invoiceService.removeHoldOrder(this.invoiceService.invoice)
+      .subscribe(next => console.log(next), err => console.error(err));
   }
 
   closeBatch() {
@@ -139,9 +170,12 @@ export class AdminOptionsService {
       {
         width: '480px', height: '600px', disableClose: true, data: {title: AdminOpEnum.CLOSE_BATCH}
       }).afterClosed().subscribe(
-        next=> this.dataStorage.closeBatch(next).subscribe(
-          next => console.log('closeBatch', next),
-          err => this.cashService.openGenericInfo('Error','Can\'t complete close batch operation')),
-        err=> console.error(err));
+        next => {
+          if(next){
+            this.dataStorage.closeBatch(next).subscribe(
+            next => console.log('closeBatch', next),
+            err => this.cashService.openGenericInfo('Error','Can\'t complete close batch operation'))
+          };
+        },err=> console.error(err));
   }
 }

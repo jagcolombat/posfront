@@ -31,8 +31,9 @@ export class CashViewComponent implements OnInit {
         this.operationService.scanProduct();
       }
 
-    } else if((ev.keyCode > 48 && ev.keyCode < 57) || (ev.keyCode === 73  || ev.keyCode === 82) || !isNaN(parseInt(ev.key)) ){
-      this.invoiceService.evNumpadInput.emit(ev.key);
+    } else if((ev.keyCode > 48 && ev.keyCode < 57) || (ev.keyCode === 73  || ev.keyCode === 82 || ev.keyCode === 105 ||
+        ev.keyCode === 114) || !isNaN(parseInt(ev.key)) ){
+      this.invoiceService.evNumpadInput.emit(ev.key.toUpperCase());
     }
   }
 

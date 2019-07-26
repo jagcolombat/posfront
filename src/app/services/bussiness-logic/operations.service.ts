@@ -22,7 +22,6 @@ import {CompanyType} from "../../utils/company-type.enum";
 import {PaymentStatus} from "../../utils/payment-status.enum";
 import {ProductGenericComponent} from "../../components/presentationals/product-generic/product-generic.component";
 import {AdminOpEnum} from "../../utils/operations/admin-op.enum";
-import {AdminOptionsService} from "./admin-options.service";
 
 @Injectable({
   providedIn: 'root'
@@ -33,6 +32,7 @@ export class OperationsService {
   currentOperation: string;
   invTotalsBeforeFSSubTotal = {total: 0, tax: 0, subtotal: 0};
   @Output() evCancelCheck = new EventEmitter<any>();
+  @Output() evRemoveHold = new EventEmitter<any>();
 
   constructor(private invoiceService: InvoiceService, public cashService: CashService,
               private authService: AuthService, private router: Router) {
@@ -90,14 +90,21 @@ export class OperationsService {
       this.currentOperation === TotalsOpEnum.SUBTOTAL ||
       this.currentOperation === PaymentOpEnum.CASH ||
       this.currentOperation === PaymentOpEnum.EBT_CARD ||
-      this.currentOperation === AdminOpEnum.CANCEL_CHECK){
+      this.currentOperation === AdminOpEnum.CANCEL_CHECK ||
+      this.currentOperation === AdminOpEnum.REMOVE_HOLD){
         this.cashService.resetEnableState();
         this.invoiceService.isReviewed = false;
         if(this.currentOperation === FinancialOpEnum.REVIEW ||
           this.currentOperation === FinancialOpEnum.REPRINT ||
-          this.currentOperation === AdminOpEnum.CANCEL_CHECK) {
+          this.currentOperation === AdminOpEnum.CANCEL_CHECK ||
+          this.currentOperation === AdminOpEnum.REMOVE_HOLD) {
           this.invoiceService.createInvoice();
-          if(this.currentOperation === AdminOpEnum.CANCEL_CHECK){this.evCancelCheck.emit(false);}
+          if(this.currentOperation === AdminOpEnum.CANCEL_CHECK){
+            this.evCancelCheck.emit(false);
+          }
+          if(this.currentOperation === AdminOpEnum.REMOVE_HOLD){
+            this.evRemoveHold.emit(false);
+          }
         }
         if(this.currentOperation === TotalsOpEnum.FS_SUBTOTAL) {
           this.resetTotalFromFS();
@@ -121,13 +128,18 @@ export class OperationsService {
 
   void() {
     console.log('void');
-    this.cashService.openGenericInfo('Confirm', 'Do you want void?', null,true)
-      .afterClosed().subscribe(next => {
+    if(this.invoiceService.invoice.status === InvoiceStatus.IN_PROGRESS ||
+      this.invoiceService.invoice.status === InvoiceStatus.IN_HOLD){
+      this.cashService.openGenericInfo('Confirm', 'Do you want void?', null,true)
+        .afterClosed().subscribe(next => {
         if (next !== undefined && next.confirm) {
           this.currentOperation = 'void';
           this.authService.adminLogged() ? this.cancelCheck() : this.manager('void');
         }
-    });
+      });
+    } else {
+      this.cashService.openGenericInfo('Error', 'Void operation is only for invoice in hold or progress');
+    }
     this.resetInactivity(true);
   }
 
@@ -448,18 +460,26 @@ export class OperationsService {
     const totalToPaid = this.invoiceService.invoice.total;
     if (totalToPaid < 0  && this.invoiceService.invoice.isRefund) {
       console.log('paid refund, open cash!!!');
-      this.cashService.openGenericInfo('Open Cash', 'Paid Refund: ' + totalToPaid)
+      this.cashService.dialog.open(CashPaymentComponent,
+        {
+          width: '300px', height: '200px', data: totalToPaid, disableClose: true
+        })
+      //this.cashService.openGenericInfo('Open Cash', 'Paid Refund: ' + totalToPaid)
         .afterClosed()
         .subscribe(
-          () => this.invoiceService.cash(totalToPaid)
-            .subscribe(
-              data =>
-              {
-                console.log(data);
-                this.invoiceService.createInvoice();
-              },
-              err => this.cashService.openGenericInfo('Error', 'Error in refund paid'),
-              () => this.cashService.resetEnableState()));
+          result =>{
+            if (result !== '') {
+              this.invoiceService.cash(totalToPaid)
+                .subscribe(
+                  data =>
+                  {
+                    console.log(data);
+                    this.invoiceService.createInvoice();
+                  },
+                  err => this.cashService.openGenericInfo('Error', 'Error in refund paid'),
+                  () => this.cashService.resetEnableState())
+            }
+          });
     } else if (totalToPaid > 0) {
       const dialogRef = this.cashService.dialog.open(CashOpComponent,
         {
@@ -660,6 +680,10 @@ export class OperationsService {
         } else this.cashService.reviewEnableState();
       });
     }*/
+    if(this.invoiceService.invoice.status === InvoiceStatus.IN_PROGRESS){
+      this.cashService.openGenericInfo('Error', 'Scan invoice operation is not allow if a invoice is in progress');
+      this.invoiceService.resetDigits();
+    }
   }
 
   paidOut() {

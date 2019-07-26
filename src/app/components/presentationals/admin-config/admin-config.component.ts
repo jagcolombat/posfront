@@ -14,6 +14,7 @@ export class AdminConfigComponent implements OnInit {
   adminClearVoid: boolean;
   closeBatch:boolean;
   typeCloseBatch:number;
+  cb = CloseBatch;
 
   constructor( public dialogRef: MatDialogRef<AdminConfigComponent>,
                @Inject(MAT_DIALOG_DATA) public data: any, private dataStorage: DataStorageService) {
@@ -36,7 +37,14 @@ export class AdminConfigComponent implements OnInit {
   }
 
   setTypeCloseBatch($event: any) {
-    this.typeCloseBatch = ($event.value == 0) ? CloseBatch.SUMMARY : CloseBatch.DETAILS;
-    this.dialogRef.close(this.typeCloseBatch);
+    console.log('setTypeCloseBatch', $event, this.typeCloseBatch)
+  }
+
+  done(){
+    if(this.closeBatch)
+      this.dialogRef.close(this.typeCloseBatch);
+    else {
+      this.dialogRef.close();
+    }
   }
 }

@@ -61,6 +61,13 @@ export class CashService {
     //this.evReviewEnableState.emit(true);
   }
 
+  removeHoldEnableState() {
+    this.disabledInput = this.disabledTotalOp = this.disabledPayment = this.disabledFinOp = true;
+    this.disabledInvOp =[false, true, true, true];
+    this.disabledAdminOp = [true, true, true, true, true, true, true, false, true, true, true, true, true];
+    //this.evReviewEnableState.emit(true);
+  }
+
   openGenericInfo(title: string, content?: string, content2?: any, confirm?: boolean) {
     return this.dialog.open(GenericInfoModalComponent,{
       width: '400px', height: '300px', data: {
