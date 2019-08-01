@@ -160,9 +160,8 @@ export class AdminOptionsService {
   }
 
   doRemoveHold(){
+    this.invoiceService.removeHoldOrder(this.invoiceService.invoice);
     this.removeHoldLoaded= false;
-    this.invoiceService.removeHoldOrder(this.invoiceService.invoice)
-      .subscribe(next => console.log(next), err => console.error(err));
   }
 
   closeBatch() {

@@ -1,7 +1,6 @@
 import {Component, Inject, Input, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
 import {FilterComponent} from "../../presentationals/filter/filter.component";
-import {ProductGeneric} from "../../../models/product-generic";
 
 @Component({
   selector: 'app-dialog-filter',

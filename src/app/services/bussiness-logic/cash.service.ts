@@ -10,6 +10,7 @@ import {DataStorageService} from "../api/data-storage.service";
 })
 export class CashService {
   disabledInput: boolean;
+  disabledInputKey: boolean;
   disabledFinOp: boolean | boolean[];
   disabledInvOp: boolean | boolean[];
   disabledTotalOp: boolean | boolean[];

@@ -125,9 +125,19 @@ export class InvoiceService {
     return this.dataStorage.changeInvoiceToVoid(i);
   }
 
-  removeHoldOrder(i: Invoice): Observable<any> {
+  removeHoldOrder(i: Invoice): void {
     // this.setUserToInvoice();
-    return this.dataStorage.changeInvoiceToRemoveHold(i);
+    this.dataStorage.changeInvoiceToRemoveHold(i).subscribe(
+      next=> {
+        console.log(next);
+        this.resetDigits();
+        this.createInvoice();
+        this.cashService.resetEnableState();
+      },
+      err=> {
+        console.error(err);
+        this.cashService.openGenericInfo('Error', 'Can\'t complete remove on hold operation');
+      });
   }
 
   /*recallCheck(): Observable<Invoice[]> {

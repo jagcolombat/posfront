@@ -15,7 +15,7 @@ export class CashOpComponent implements OnInit {
   digits = '';
   cost = '';
   maxlength = 12;
-  valid: boolean;
+  valid: boolean = true;
   constructor(public dialogRef: MatDialogRef<CashOpComponent>,
               @Inject(MAT_DIALOG_DATA) public data: number) {
   }
@@ -34,7 +34,7 @@ export class CashOpComponent implements OnInit {
     } else if (ev.value === 'Back') {
       this.back();
     }
-    this.validTotalToPaid();
+    // this.validTotalToPaid();
   }
 
   inputNumber(value) {

@@ -509,7 +509,7 @@ export class OperationsService {
           this.invoiceService.cash(payment)
             .subscribe(data => {
                 console.log(data);
-                this.invoiceService.createInvoice();
+                if(+result >= 0) this.invoiceService.createInvoice();
               },
               err => {
                 console.log(err); this.cashService.openGenericInfo('Error', 'Can\'t complete cash operation')
@@ -687,11 +687,12 @@ export class OperationsService {
   }
 
   paidOut() {
-    this.cashService.dialog.open(PaidOutComponent,
-      {
-        width: '480px', height: '600px', disableClose: true
-      })
-      .afterClosed().subscribe((data: string) => {
+    if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS){
+      this.cashService.dialog.open(PaidOutComponent,
+        {
+          width: '480px', height: '600px', disableClose: true
+        })
+        .afterClosed().subscribe((data: string) => {
         console.log('paided out modal', data);
         if(data) {
           this.cashService.dialog.open(DialogPaidoutComponent,
@@ -699,23 +700,28 @@ export class OperationsService {
               width: '1024px', height: '600px', disableClose: true
             })
             .afterClosed().subscribe(next => {
-              this.invoiceService.addPaidOut(data, next.text).subscribe(next => {
-                console.log('paided out service', data, next);
-              }, error1 => {
-                console.error('paid out', error1);
-                this.cashService.openGenericInfo('Error', 'Can\'t complete paid out operation')
-              });
+            this.invoiceService.addPaidOut(data, next.text).subscribe(next => {
+              console.log('paided out service', data, next);
+            }, error1 => {
+              console.error('paid out', error1);
+              this.cashService.openGenericInfo('Error', 'Can\'t complete paid out operation')
+            });
           });
         };
       });
+    } else {
+      this.cashService.openGenericInfo('Error', 'Paid out operation is not allow if a invoice is in progress');
+    }
   }
 
   keyboard(action?: FinancialOpEnum | AdminOpEnum){
+    this.cashService.disabledInputKey = true;
     this.cashService.dialog.open(DialogFilterComponent,
       { width: '1024px', height: '600px', data: {title: "Enter Receipt Number"} , disableClose: true})
       .afterClosed()
       .subscribe(next => {
         console.log('keyboard', next);
+        this.cashService.disabledInputKey = false;
         if (next) {
           this.invoiceService.digits = next.text;
           if(action !== undefined){
@@ -734,7 +740,8 @@ export class OperationsService {
                 break;
             }
           }
-        } else if (!next && action === FinancialOpEnum.REVIEW) {
+        } else if (!next && action === FinancialOpEnum.REVIEW || action === FinancialOpEnum.REFUND ||
+          action === FinancialOpEnum.REPRINT) {
           this.cleanCurrentOp();
           this.invoiceService.isReviewed = false;
         }
