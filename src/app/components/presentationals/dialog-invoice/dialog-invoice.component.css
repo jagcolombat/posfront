@@ -11,9 +11,10 @@
   font-size: 20px;
   margin: 5px 0;
 }
-[mat-dialog-content] div.buttons {
+[mat-dialog-content] /deep/ div.buttons {
   flex-wrap: wrap;
   overflow: auto;
+  max-height: 270px;
 }
 
 button[mat-raised-button] {
