@@ -21,6 +21,7 @@ import { AdminOperationService } from './admin.operation.service';
 import { PaidOut } from 'src/app/models/paid-out.model';
 import { InvoiceStatus } from 'src/app/utils/invoice-status.enum';
 import { CloseBatch } from 'src/app/utils/close.batch.enum';
+import { Report } from 'src/app/models/report.model';
 
 @Injectable({
   providedIn: 'root'
@@ -190,8 +191,20 @@ export class DataStorageService {
     return this.adminOperationService.getPaymentByType(this.url);
   }
 
+  printInvoiceByUser(id: string): Observable<any> {
+    return this.adminOperationService.getInvoiceByUser(this.url, id);
+  }
+
+  printPaymentByType(): Observable<any> {
+    return this.adminOperationService.getPaymentByType(this.url);
+  }
+
   closeBatch(closeBatch: CloseBatch): Observable<any> {
     return this.adminOperationService.closeBatch(this.url, closeBatch);
+  }
+
+  getCloseBatchReport(closeBatch: CloseBatch): Observable<Report> {
+    return this.adminOperationService.getCloseBatchReport(this.url, closeBatch);
   }
 
 }

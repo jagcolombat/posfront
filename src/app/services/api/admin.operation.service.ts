@@ -7,12 +7,12 @@ import { PaidOut } from 'src/app/models/paid-out.model';
 import { catchError } from 'rxjs/operators';
 import { Invoice } from 'src/app/models/invoice.model';
 import { CloseBatch } from 'src/app/utils/close.batch.enum';
+import { Report } from 'src/app/models/report.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdminOperationService {
-
   path = '/AdminOperations';
 
   constructor(private _http: HttpClient, private processHttpMsgService: ProcessHTTPMSgService) { }
@@ -38,11 +38,29 @@ export class AdminOperationService {
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
+  printInvoiceByUser(url: string, id: string): Observable<any> {
+    return this._http.post<Invoice[]>(url + this.path + '/stats/user/' + id + '/invoices', {})
+      .pipe(catchError(this.processHttpMsgService.handleError));
+  }
+
+  printPaymentByType(url: string): Observable<any> {
+    return this._http.post<Payment[]>(url + this.path + '/stats/invoices/payments', {})
+      .pipe(catchError(this.processHttpMsgService.handleError));
+  }
+
   closeBatch(url: string, closeBatch: CloseBatch): Observable<any> {
     let params = new HttpParams();
     params = params.append('closeBatchPrintOption', closeBatch + '');
 
-    return this._http.post<any>(url + this.path + '/op/batch/close', {}, {params})
+    return this._http.post<any>(url + this.path + '/op/batch', {}, {params})
+      .pipe(catchError(this.processHttpMsgService.handleError));
+  }
+
+  getCloseBatchReport(url: string, closeBatch: CloseBatch): Observable<Report> {
+    let params = new HttpParams();
+    params = params.append('getCloseBatchReport', closeBatch + '');
+
+    return this._http.get<any>(url + this.path + '/op/batch', {params})
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
