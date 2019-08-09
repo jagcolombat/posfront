@@ -12,6 +12,8 @@
   [columnDefs]="columnDefs"
 >
 </ag-grid-angular>
+<button [ngClass]="(sales && sales.length > 0) ? 'show': 'hide'" mat-raised-button
+          class="background-primary text-floral-white" (click)="onPrint()">Print</button>
 <i class="no-sale" *ngIf="sales && sales.length === 0 && emplSel !== undefined">
   This employ haven't sold anything yet today
 </i>

@@ -15,5 +15,7 @@
                  [columnDefs]="columnDefs"
 >
 </ag-grid-angular>
+<button  [ngClass]="(sales) ? 'show': 'hide'" mat-raised-button class="background-primary text-floral-white"
+         (click)="onPrint()">Print</button>
 <ng-template *ngIf="!sales">This shop haven't sales yet today</ng-template>
 

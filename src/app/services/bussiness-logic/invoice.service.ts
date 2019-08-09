@@ -65,7 +65,8 @@ export class InvoiceService {
   addProductOrder(po: ProductOrder){
 
     // Update invoice on database
-    this.dataStorage.addProductOrderByInvoice(this.invoice.receiptNumber, po, EOperationType.Add, this.invoice.isRefund).subscribe(next => {
+    this.dataStorage.addProductOrderByInvoice(this.invoice.receiptNumber, po, EOperationType.Add, this.invoice.isRefund)
+      .subscribe(next => {
       console.log('addProductOrder-next', next);
       /*let countPO = next.productsOrders.length;
       let lastPO = next.productsOrders[countPO-1];
