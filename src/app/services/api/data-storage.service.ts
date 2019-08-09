@@ -192,11 +192,11 @@ export class DataStorageService {
   }
 
   printInvoiceByUser(id: string): Observable<any> {
-    return this.adminOperationService.getInvoiceByUser(this.url, id);
+    return this.adminOperationService.printInvoiceByUser(this.url, id);
   }
 
   printPaymentByType(): Observable<any> {
-    return this.adminOperationService.getPaymentByType(this.url);
+    return this.adminOperationService.printPaymentByType(this.url);
   }
 
   closeBatch(closeBatch: CloseBatch): Observable<any> {

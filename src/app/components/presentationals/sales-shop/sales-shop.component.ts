@@ -1,5 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import { GridOptions, GridApi } from 'ag-grid-community';
+import { DataStorageService } from 'src/app/services/api/data-storage.service';
 
 @Component({
   selector: 'sales-shop',
@@ -21,7 +22,7 @@ export class SalesShopComponent implements OnInit {
   private gridApi: GridApi;
   columnDefs: any;
 
-  constructor() {
+  constructor(private dataStorage: DataStorageService) {
     this.updateGridOptions();
   }
 
@@ -64,6 +65,15 @@ export class SalesShopComponent implements OnInit {
     this.sales.forEach((v, i) => this.sales[i].total = Number((v.total).toFixed(2)))
     this.gridOptions.api.setRowData(this.sales);
     this.gridOptions.api.sizeColumnsToFit();
+  }
+
+  onPrint() {
+    console.log('Print payments type');
+     this.dataStorage.printPaymentByType().subscribe(next => {
+      console.log(next);
+    }, error1 => {
+      console.error('getSales', error1);
+    });
   }
 
 }
