@@ -457,7 +457,9 @@ export class OperationsService {
 
   cash() {
     console.log('cash');
-    const totalToPaid = this.invoiceService.invoice.total;
+    const totalToPaid = this.invoiceService.invoice.balance !== undefined ?
+      this.invoiceService.invoice.balance:
+      this.invoiceService.invoice.total;
     if (totalToPaid < 0  && this.invoiceService.invoice.isRefund) {
       console.log('paid refund, open cash!!!');
       this.cashService.dialog.open(CashPaymentComponent,
@@ -469,7 +471,7 @@ export class OperationsService {
         .subscribe(
           result =>{
             if (result !== '') {
-              this.invoiceService.cash(totalToPaid)
+              this.invoiceService.cash(totalToPaid, totalToPaid)
                 .subscribe(
                   data =>
                   {
@@ -489,7 +491,11 @@ export class OperationsService {
         // this.paymentData = data;
         if (data > 0) {
           let valueToReturn = data - totalToPaid;
-          this.cashReturn(valueToReturn, data);
+          if(valueToReturn < 0)
+            this.invoiceService.invoice.balance = valueToReturn * -1;
+          else
+            this.invoiceService.invoice.balance = undefined;
+          this.cashReturn(valueToReturn, data, totalToPaid);
         } else {
           this.currentOperation = TotalsOpEnum.SUBTOTAL;
         }
@@ -499,17 +505,17 @@ export class OperationsService {
     this.resetInactivity(false);
   }
 
-  cashReturn(valueToReturn, payment) {
+  cashReturn(valueToReturn, payment, totalToPaid) {
     const dialogRef = this.cashService.dialog.open(CashPaymentComponent,
       {
         width: '300px', height: '200px', data: valueToReturn, disableClose: true
       })
       .afterClosed().subscribe((result: string) => {
         if (result !== '') {
-          this.invoiceService.cash(payment)
+          this.invoiceService.cash(payment, totalToPaid)
             .subscribe(data => {
                 console.log(data);
-                if(+result >= 0) this.invoiceService.createInvoice();
+                if(+result >= 0 || data.status === InvoiceStatus.PAID) this.invoiceService.createInvoice();
               },
               err => {
                 console.log(err); this.cashService.openGenericInfo('Error', 'Can\'t complete cash operation')

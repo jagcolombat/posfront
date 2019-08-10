@@ -18,6 +18,7 @@ export interface IInvoice {
   productsCount?: number;
   paymentStatus?: PaymentStatus;
   tip?: number;
+  balance?: number;
 }
 
 export class Invoice implements IInvoice {
@@ -35,7 +36,8 @@ export class Invoice implements IInvoice {
               public date?: Date,
               public productsCount?: number,
               public paymentStatus?: PaymentStatus,
-              public tip?: number
+              public tip?: number,
+              public balance?: number
               ) {
   }
 }

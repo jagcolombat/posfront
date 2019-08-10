@@ -187,8 +187,9 @@ export class InvoiceService {
     return this.dataStorage.changeInvoiceToVoid(this.invoice)
   }
 
-  cash(payment: number): Observable<Invoice> {
-    const cashPayment = new CashPaymentModel(this.invoice.receiptNumber, payment, this.invoice.total);
+  cash(payment: number, totalToPaid: number): Observable<Invoice> {
+    //const cashPayment = new CashPaymentModel(this.invoice.receiptNumber, payment, this.invoice.total);
+    const cashPayment = new CashPaymentModel(this.invoice.receiptNumber, payment, totalToPaid);
     return this.dataStorage.paidByCash(cashPayment);
   }
 
@@ -220,10 +221,10 @@ export class InvoiceService {
   }*/
 
   setTotal() {
-    /*let totalComputed = this.computeTotal();
-    this.invoice.subtotal = totalComputed.total;
+    let totalComputed = this.computeTotal();
+    this.invoice.subTotal = totalComputed.total;
     this.invoice.tax = totalComputed.taxes;
-    this.invoice.total = this.invoice.subtotal + this.invoice.tax;*/
+    this.invoice.total = this.invoice.subTotal + this.invoice.tax;
     this.evUpdateTotals.emit(true);
   }
 
