@@ -6,10 +6,20 @@
   </mat-toolbar>
   <div mat-dialog-content>
     <p>{{ subtitle }}</p>
-    <div class="buttons">
-      <button mat-button fxFlex="170px" *ngFor="let i of data" [mat-dialog-close]="i">
-        {{i.receiptNumber }}<p>{{i.total | currency }}</p>
-      </button>
+    <div class="page">
+      <div class="buttons">
+        <button mat-button fxFlex="170px" *ngFor="let i of data | paginate: { itemsPerPage: sizePage, currentPage: page }"
+                [mat-dialog-close]="i">
+          {{i.receiptNumber }}<p>{{i.total | currency }}</p>
+        </button>
+      </div>
+      <div class="paginator">
+        <pos-paginator [countElements]="data.length" [sizePage]="sizePage" (evSetPage)="setPage($event)"><!--
+        <button class="filter" mat-button (click)="filter()">
+          <span class="fa fa-search fa-lg"></span> FILTER
+        </button>-->
+        </pos-paginator>
+      </div>
     </div>
   </div>
 </div>

@@ -14,9 +14,28 @@
 [mat-dialog-content] /deep/ div.buttons {
   flex-wrap: wrap;
   overflow: auto;
-  max-height: 270px;
+  max-height: 275px;
 }
 
 button[mat-raised-button] {
   cursor: default !important;
+}
+
+div.page {
+  /*flex-wrap: wrap;
+  margin-left: 10px;
+  overflow: auto;
+  display: flex;
+  justify-content: space-between;*/
+}
+
+pos-paginator {
+  display: flex;
+  align-items: center;
+  margin-left: 8px;
+}
+
+.paginator {
+  display: flex;
+  justify-content: center;
 }

@@ -6,10 +6,13 @@ import { CalculatorComponent } from "../../components/presentationals/calculator
 import { GenericKeyboardComponent } from "../../components/presentationals/generic-keyboard/generic-keyboard.component";
 import { MaterialModule } from "../material/material.module";
 import { AgGridModule } from 'ag-grid-angular';
+import { NgxPaginationModule } from "ngx-pagination";
 import {NumpadComponent} from "../../components/presentationals/numpad/numpad.component";
 import {OperationGroupComponent} from "../../components/presentationals/operation-group/operation-group.component";
 import {AdminConfigComponent} from "../../components/presentationals/admin-config/admin-config.component";
 import {FilterComponent} from "../../components/presentationals/filter/filter.component";
+import {AdminOptionsComponent} from "../../components/presentationals/admin-options/admin-options.component";
+import {PaginatorComponent} from "../../components/presentationals/paginator/paginator.component";
 
 
 @NgModule({
@@ -20,6 +23,7 @@ import {FilterComponent} from "../../components/presentationals/filter/filter.co
     FlexLayoutModule,
     MaterialModule,
     AgGridModule.withComponents([null]),
+    NgxPaginationModule
   ],
   exports: [
     CommonModule,
@@ -28,13 +32,16 @@ import {FilterComponent} from "../../components/presentationals/filter/filter.co
     FlexLayoutModule,
     MaterialModule,
     AgGridModule,
+    NgxPaginationModule,
     GenericKeyboardComponent,
     CalculatorComponent,
     NumpadComponent,
     OperationGroupComponent,
-    FilterComponent
+    FilterComponent,
+    PaginatorComponent
   ],
   declarations: [CalculatorComponent, GenericKeyboardComponent, NumpadComponent, OperationGroupComponent,
-    FilterComponent ]
+    FilterComponent,
+    PaginatorComponent ]
 })
 export class SharedModule { }
