@@ -35,3 +35,16 @@ mat-form-field {
 mat-dialog-actions{
   justify-content: center;
 }
+
+ag-grid-angular {
+  width: 400px;
+  height: 350px;
+}
+
+.show {
+  display: initial;
+}
+
+.hide {
+  display: none;
+}

@@ -309,7 +309,7 @@ export class OperationsService {
           this.invoiceService.invoice.subTotal = this.invoiceService.invoice.subTotal - po.subTotal;
           this.invoiceService.invoice.tax -= po.tax;
           this.invoiceService.invoice.fsTotal = this.invoiceService.invoice.fsTotal ?
-            this.invoiceService.invoice.fsTotal + po.total : 0 + po.total;
+            this.invoiceService.invoice.fsTotal + po.subTotal : 0 + po.subTotal;
           this.invoiceService.invoice.total -= po.total;
           this.invoiceService.evUpdateTotals.emit();
         }
@@ -581,7 +581,7 @@ export class OperationsService {
       this.invoiceService.ebt(this.invoiceService.invoice.total)
         .subscribe(data => {
           console.log(data);
-          if(this.invoiceService.invoice.total === 0) {
+          if(this.invoiceService.invoice.status === InvoiceStatus.PAID) {
             this.invoiceService.createInvoice();
             this.cashService.resetEnableState();
           } else {

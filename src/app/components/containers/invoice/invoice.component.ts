@@ -17,6 +17,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
   fsSubtotal = 0;
   fsTax = 0;
   fsTotal = 0;
+  balance = 0;
   subscription: Subscription [] = [];
 
   constructor(public invoiceService: InvoiceService) {

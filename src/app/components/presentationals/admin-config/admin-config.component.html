@@ -27,6 +27,12 @@
         <mat-option value="{{cb.DETAILS}}">{{cb[cb.DETAILS]}}</mat-option>
       </mat-select>
     </mat-form-field>
+    <ag-grid-angular [ngClass]="(typeCloseBatch) ? 'show': 'hide'"
+                     class="ag-theme-material"
+                     [gridOptions]="gridOptions"
+                     [columnDefs]="columnDefs"
+    >
+    </ag-grid-angular>
   </div>
   <mat-dialog-actions>
     <button mat-raised-button mat-dialog-close>Cancel</button>

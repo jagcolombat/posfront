@@ -3,6 +3,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
 import {DataStorageService} from "../../../services/api/data-storage.service";
 import {AdminOpEnum} from "../../../utils/operations/admin-op.enum";
 import {CloseBatch} from "../../../utils/close.batch.enum";
+import { GridOptions, GridApi } from 'ag-grid-community';
 
 @Component({
   selector: 'admin-config',
@@ -15,13 +16,18 @@ export class AdminConfigComponent implements OnInit {
   closeBatch:boolean;
   typeCloseBatch:number;
   cb = CloseBatch;
+  public gridOptions: GridOptions;
+  private gridApi: GridApi;
+  columnDefs: any;
 
   constructor( public dialogRef: MatDialogRef<AdminConfigComponent>,
                @Inject(MAT_DIALOG_DATA) public data: any, private dataStorage: DataStorageService) {
+    this.updateGridOptions();
   }
 
   ngOnInit() {
     this.closeBatch = this.data.title=== AdminOpEnum.CLOSE_BATCH;
+    this.gridApi = this.gridOptions.api;
   }
 
   onNoClick(): void {
@@ -37,7 +43,13 @@ export class AdminConfigComponent implements OnInit {
   }
 
   setTypeCloseBatch($event: any) {
-    console.log('setTypeCloseBatch', $event, this.typeCloseBatch)
+    console.log('setTypeCloseBatch', $event, this.typeCloseBatch);
+    this.dataStorage.getCloseBatchReport(this.typeCloseBatch).subscribe(
+      next => {
+        console.log(next);
+
+      },
+      err => console.error(err));
   }
 
   done(){
@@ -46,5 +58,42 @@ export class AdminConfigComponent implements OnInit {
     else {
       this.dialogRef.close();
     }
+  }
+
+  private createColumnDefs() {
+    this.columnDefs = [
+      {
+        headerName: 'Receipt number',
+        field: 'receiptNumber',
+        width: 250
+      },
+      {
+        headerName: 'Total',
+        field: 'total',
+        type: 'numericColumn'
+      }
+    ];
+  }
+
+  updateGridOptions(){
+    this.gridOptions = <GridOptions>{
+      rowData: [],
+      onGridReady: () => {
+        this.gridOptions.api.sizeColumnsToFit();
+      }/*,
+      onRowClicked: (ev) => {
+        // this.invoiceService.invoiceProductSelected = this.gridOptions.api.getSelectedRows().length > 0;
+        if(ev.data.receiptNumber)
+          this.selectInvoice.emit(ev.data.receiptNumber);
+        else
+          console.error('Receipt number not specified')
+      }*/,
+      onBodyScroll: (ev) => {
+        this.gridOptions.api.sizeColumnsToFit();
+      },
+      rowHeight: 60,
+      rowStyle: {'font-size': '16px'}
+    };
+    this.createColumnDefs();
   }
 }

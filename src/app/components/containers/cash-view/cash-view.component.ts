@@ -21,7 +21,10 @@ export class CashViewComponent implements OnInit {
   handleKeyboardEvent(ev: KeyboardEvent) {
     console.log('inputKeyboard', ev, isNaN(parseInt(ev.key)));
     if(this.operationService.cashService.disabledInput || this.operationService.cashService.disabledInputKey){
-      this.operationService.cashService.openGenericInfo('Error', 'Not possible input keyboard');
+      /*let tmpMdl;
+      if(ev.key==='Enter' || ev.keyCode === 13) {
+        tmpMdl = this.operationService.cashService
+        .openGenericInfo('Error', 'Not possible input keyboard');}*/
     } else if((ev.key==='Enter' || ev.keyCode === 13) && this.invoiceService.digits){
       if(this.invoiceService.digits.startsWith('I') || this.invoiceService.digits.startsWith('R')){
         this.operationService.scanInvoice();

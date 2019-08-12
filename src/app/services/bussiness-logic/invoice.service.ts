@@ -189,7 +189,7 @@ export class InvoiceService {
 
   cash(payment: number, totalToPaid: number): Observable<Invoice> {
     //const cashPayment = new CashPaymentModel(this.invoice.receiptNumber, payment, this.invoice.total);
-    const cashPayment = new CashPaymentModel(this.invoice.receiptNumber, payment, totalToPaid);
+    const cashPayment = new CashPaymentModel(this.invoice.receiptNumber, totalToPaid, payment);
     return this.dataStorage.paidByCash(cashPayment);
   }
 
@@ -236,9 +236,9 @@ export class InvoiceService {
     this.invoice.productOrders.map(p => {
       subtotal = p.unitCost * p.quantity;
       total += subtotal;
-      if (p.tax > 0 ) {
+      if (p.tax !== 0 ) {
         // console.log(subtotal, p.tax);
-        tax = p.tax * subtotal / 100;
+        tax = p.tax /** subtotal / 100*/;
         taxes += tax;
       }
     });
