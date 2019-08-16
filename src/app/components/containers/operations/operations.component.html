@@ -20,4 +20,8 @@
   <operation-group id="other" fxFlex="22" [operations]="otherOperations" [colors]="otherColor" style="padding-left: 5px;"
                    class="border" (evPressKeys)="otherKey($event)" [disable]="operationService.cashService.disabledFinOp">
   </operation-group>
+
+  <operation-group id="money" [operations]="moneyOperations" [colors]="moneyColor" style="padding-left: 5px;" btnSize="130px"
+                   class="border" (evPressKeys)="otherKey($event)" [disable]="operationService.cashService.disabledFinOp">
+  </operation-group>
 </div>

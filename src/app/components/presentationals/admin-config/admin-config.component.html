@@ -27,15 +27,21 @@
         <mat-option value="{{cb.DETAILS}}">{{cb[cb.DETAILS]}}</mat-option>
       </mat-select>
     </mat-form-field>
-    <ag-grid-angular [ngClass]="(typeCloseBatch) ? 'show': 'hide'"
+    <ag-grid-angular [ngClass]="(cbReport && this.typeCloseBatch == 0) ? 'show': 'hide'"
                      class="ag-theme-material"
-                     [gridOptions]="gridOptions"
-                     [columnDefs]="columnDefs"
+                     [gridOptions]="gridOptionsSummary"
+                     [columnDefs]="colDefsSummary"
+    >
+    </ag-grid-angular>
+    <ag-grid-angular [ngClass]="(cbReport && typeCloseBatch == 1) ? 'show': 'hide'"
+                     class="ag-theme-material"
+                     [gridOptions]="gridOptionsDetails"
+                     [columnDefs]="colDefsDetails"
     >
     </ag-grid-angular>
   </div>
   <mat-dialog-actions>
-    <button mat-raised-button mat-dialog-close>Cancel</button>
-    <button mat-raised-button class="background-primary text-floral-white" (click)="done()">Done</button>
+    <button mat-raised-button mat-dialog-close [disabled]="loading">Cancel</button>
+    <button mat-raised-button [disabled]="loading" class="background-primary text-floral-white" (click)="done()">Done</button>
   </mat-dialog-actions>
 </div>

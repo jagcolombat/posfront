@@ -167,7 +167,7 @@ export class AdminOptionsService {
   closeBatch() {
     this.cashService.dialog.open(AdminConfigComponent,
       {
-        width: '480px', height: '600px', disableClose: true, data: {title: AdminOpEnum.CLOSE_BATCH}
+        width: '750px', height: '600px', disableClose: true, data: {title: AdminOpEnum.CLOSE_BATCH}
       }).afterClosed().subscribe(
         next => {
           if(next){

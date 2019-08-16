@@ -11,8 +11,8 @@ import {CompanyType} from "../../../utils/company-type.enum";
 })
 export class OperationsComponent implements OnInit {
 
-  @Input() financeOperations = [FinancialOpEnum.MANAGER, FinancialOpEnum.REPRINT, FinancialOpEnum.HOLD, FinancialOpEnum.REVIEW,
-    FinancialOpEnum.RECALL, FinancialOpEnum.REFUND, FinancialOpEnum.LOGOUT];
+  @Input() financeOperations = [FinancialOpEnum.MANAGER, FinancialOpEnum.REPRINT, FinancialOpEnum.HOLD,
+    FinancialOpEnum.REVIEW, FinancialOpEnum.RECALL, FinancialOpEnum.REFUND, FinancialOpEnum.LOGOUT];
   @Input() financeColor = 'green';
   @Input() financeDisabled: boolean | boolean []= this.operationService.cashService.disabledFinOp;
 
@@ -32,6 +32,9 @@ export class OperationsComponent implements OnInit {
 
   @Input() otherOperations = [OtherOpEnum.PRINT_LAST, OtherOpEnum.NO_SALE, OtherOpEnum.PAID_OUT, OtherOpEnum.HOUSE_CHARGE];
   @Input() otherColor = ['yellow', 'blue', 'blue', 'green'];
+
+  @Input() moneyOperations = ['1', '5', '10', '20', '50', '100'];
+  @Input() moneyColor = 'green';
 
   constructor(public operationService: OperationsService) {  }
 
@@ -132,6 +135,29 @@ export class OperationsComponent implements OnInit {
         this.operationService.paidOut();
         break;
       case 'House Charge':
+        this.operationService.cashService.openGenericInfo('House Charge', 'Sending event');
+        break;
+    }
+  }
+
+  moneyKey(ev) {
+    switch (ev) {
+      case '1':
+        this.operationService.printLast();
+        break;
+      case '5':
+        this.operationService.cashService.openGenericInfo('No Sale', 'Sending event');
+        break;
+      case '10':
+        this.operationService.paidOut();
+        break;
+      case '20':
+        this.operationService.cashService.openGenericInfo('House Charge', 'Sending event');
+        break;
+      case '50':
+        this.operationService.cashService.openGenericInfo('House Charge', 'Sending event');
+        break;
+      case '100':
         this.operationService.cashService.openGenericInfo('House Charge', 'Sending event');
         break;
     }

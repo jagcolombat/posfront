@@ -1,5 +1,3 @@
-import { Invoice } from './invoice.model';
-
 export interface ICashPayment {
     receiptNumber: string;
     total: number;

@@ -8,6 +8,7 @@ import { SharedModule } from "./modules/shared/shared.module";
 import { MaterialModule } from "./modules/material/material.module";
 import { HomeModule } from "./modules/home/home.module";
 import { baseURL } from './utils/url.path.enum';
+import { CloseBatchComponent } from './components/presentationals/close-batch/close-batch.component';
 
 @NgModule({
   imports: [
@@ -19,7 +20,8 @@ import { baseURL } from './utils/url.path.enum';
     HomeModule
   ],
   declarations: [
-    AppComponent
+    AppComponent,
+    CloseBatchComponent
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },

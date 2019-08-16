@@ -1,20 +1,15 @@
-import { ReportDetail } from './report-detail.model';
+import {IReportSummary, ReportDetail, ReportSummary} from './report-detail.model';
 
-export interface Report {
+export interface IReport {
   resultCode: string;
   resultTxt: string;
+  total: number;
+  message: string;
+  reportSummary: ReportSummary[];
+  reportDetailLookups: ReportDetail[];
+}
 
-  creditCount: number;
-  creditAmount: number;
-  debitCount: number;
-  debitAmount: number;
-  ebtCount: number;
-  ebtAmount: number;
-  cashCount: number;
-  cashAmount: number;
-
-  Total: number;
-  Message: string;
-
-  ReportDetailLookups: ReportDetail[];
+export class Report implements IReport {
+  constructor(public resultCode: string, public resultTxt: string, public total: number, public message: string,
+    public reportSummary: ReportSummary[], public reportDetailLookups: ReportDetail[]) {}
 }

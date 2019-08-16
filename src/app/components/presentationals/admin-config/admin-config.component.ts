@@ -4,6 +4,8 @@ import {DataStorageService} from "../../../services/api/data-storage.service";
 import {AdminOpEnum} from "../../../utils/operations/admin-op.enum";
 import {CloseBatch} from "../../../utils/close.batch.enum";
 import { GridOptions, GridApi } from 'ag-grid-community';
+import {Report} from "../../../models/report.model";
+import {transformCBReport} from "../../../utils/functions/functions";
 
 @Component({
   selector: 'admin-config',
@@ -16,18 +18,64 @@ export class AdminConfigComponent implements OnInit {
   closeBatch:boolean;
   typeCloseBatch:number;
   cb = CloseBatch;
-  public gridOptions: GridOptions;
-  private gridApi: GridApi;
-  columnDefs: any;
+  cbReport: Report;
+  public gridOptionsSummary: GridOptions;
+  public gridOptionsDetails: GridOptions;
+  loading = false;
+  colDefsSummary = [
+    {
+      headerName: 'Type',
+      field: 'paymentType',
+      width: 150
+    },
+    {
+      headerName: 'Count',
+      field: 'paymentCount',
+      type: 'numericColumn'
+    },
+    {
+      headerName: 'Amount',
+      field: 'paymentAmount',
+      type: 'numericColumn'
+    }
+  ];
+  colDefsDetails = [
+    {
+      headerName: 'Card Type',
+      field: 'cardType',
+      width: 200
+    },
+    {
+      headerName: 'Card Number',
+      field: 'cardNumber',
+      width: 220
+    },
+    {
+      headerName: 'Payment Type',
+      field: 'paymentType',
+      width: 220
+    },
+    {
+      headerName: 'Amount',
+      field: 'amount',
+      type: 'numericColumn'
+    },
+    {
+      headerName: 'Ref Number',
+      field: 'refNumber',
+      type: 'numericColumn'
+    }
+  ];
 
   constructor( public dialogRef: MatDialogRef<AdminConfigComponent>,
                @Inject(MAT_DIALOG_DATA) public data: any, private dataStorage: DataStorageService) {
-    this.updateGridOptions();
+    this.updateGridOptionsSummary();
+    this.updateGridOptionsDetails();
   }
 
   ngOnInit() {
     this.closeBatch = this.data.title=== AdminOpEnum.CLOSE_BATCH;
-    this.gridApi = this.gridOptions.api;
+    // if((this.closeBatch && this.cbReport) || !this.closeBatch) this.enableBtns = true;
   }
 
   onNoClick(): void {
@@ -44,12 +92,27 @@ export class AdminConfigComponent implements OnInit {
 
   setTypeCloseBatch($event: any) {
     console.log('setTypeCloseBatch', $event, this.typeCloseBatch);
-    this.dataStorage.getCloseBatchReport(this.typeCloseBatch).subscribe(
-      next => {
-        console.log(next);
+    this.loading = true;
+    if(!this.cbReport){
+      this.dataStorage.getCloseBatchReport(this.typeCloseBatch).subscribe(
+        next => {
+          console.log(next);
+          this.loading = false;
+          this.cbReport = transformCBReport(next);
+          this.setDataByType();
+        },
+        err => console.error(err));
+    } else {
+      this.setDataByType();
+    }
+  }
 
-      },
-      err => console.error(err));
+  setDataByType(){
+    if(this.typeCloseBatch == CloseBatch.SUMMARY){
+      this.setData(this.cbReport.reportSummary, this.gridOptionsSummary);
+    } else {
+      this.setData(this.cbReport.reportDetailLookups, this.gridOptionsDetails);
+    }
   }
 
   done(){
@@ -60,40 +123,36 @@ export class AdminConfigComponent implements OnInit {
     }
   }
 
-  private createColumnDefs() {
-    this.columnDefs = [
-      {
-        headerName: 'Receipt number',
-        field: 'receiptNumber',
-        width: 250
-      },
-      {
-        headerName: 'Total',
-        field: 'total',
-        type: 'numericColumn'
-      }
-    ];
-  }
-
-  updateGridOptions(){
-    this.gridOptions = <GridOptions>{
+  updateGridOptionsSummary(){
+    this.gridOptionsSummary = <GridOptions>{
       rowData: [],
       onGridReady: () => {
-        this.gridOptions.api.sizeColumnsToFit();
-      }/*,
-      onRowClicked: (ev) => {
-        // this.invoiceService.invoiceProductSelected = this.gridOptions.api.getSelectedRows().length > 0;
-        if(ev.data.receiptNumber)
-          this.selectInvoice.emit(ev.data.receiptNumber);
-        else
-          console.error('Receipt number not specified')
-      }*/,
+        this.gridOptionsSummary.api.sizeColumnsToFit();
+      },
       onBodyScroll: (ev) => {
-        this.gridOptions.api.sizeColumnsToFit();
+        this.gridOptionsSummary.api.sizeColumnsToFit();
       },
       rowHeight: 60,
       rowStyle: {'font-size': '16px'}
     };
-    this.createColumnDefs();
+  }
+
+  updateGridOptionsDetails(){
+    this.gridOptionsDetails = <GridOptions>{
+      rowData: [],
+      onGridReady: () => {
+        this.gridOptionsDetails.api.sizeColumnsToFit();
+      },
+      onBodyScroll: (ev) => {
+        this.gridOptionsDetails.api.sizeColumnsToFit();
+      },
+      rowHeight: 60,
+      rowStyle: {'font-size': '16px'}
+    };
+  }
+
+  private setData(data, grid) {
+    grid.api.setRowData(data);
+    grid.api.sizeColumnsToFit();
   }
 }
