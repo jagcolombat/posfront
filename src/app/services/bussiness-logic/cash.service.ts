@@ -15,6 +15,7 @@ export class CashService {
   disabledInvOp: boolean | boolean[];
   disabledTotalOp: boolean | boolean[];
   disabledPayment: boolean | boolean[];
+  disabledPaymentMoney: boolean | boolean[];
   disabledAdminOp: boolean | boolean[] = false;
   systemConfig: Configuration;
   @Output() evReviewEnableState = new EventEmitter<boolean>();
@@ -26,12 +27,12 @@ export class CashService {
 
   resetEnableState() {
     this.disabledInput = this.disabledFinOp = this.disabledInvOp = this.disabledTotalOp = this.disabledAdminOp = false;
-    this.disabledPayment = true;
+    this.disabledPayment = this.disabledPaymentMoney = true;
     this.evReviewEnableState.emit(false);
   }
 
   reviewEnableState() {
-    this.disabledInput = this.disabledTotalOp = this.disabledPayment = true;
+    this.disabledInput = this.disabledTotalOp = this.disabledPayment = this.disabledPaymentMoney = true;
     this.disabledFinOp = [true, false, true, true, true, true, true];
     this.disabledInvOp = [false, true, true, true];
     this.evReviewEnableState.emit(true);
@@ -47,23 +48,25 @@ export class CashService {
     console.log(fs);
     this.disabledInput = this.disabledFinOp = this.disabledTotalOp = true;
     this.disabledInvOp = [false, true, true, true];
-    fs ? this.disabledPayment = [false, true, true, true] : this.disabledPayment = [true, false, false, false];
+    fs ? this.disabledPayment = [false, true, true, true] :
+      this.disabledPayment = [true, false, false, false];
+      this.disabledPaymentMoney = false;
   }
 
   ebtEnableState() {
     this.disabledTotalOp = [true, false];
-    this.disabledPayment = true;
+    this.disabledPayment = this.disabledPaymentMoney = true;
   }
 
   cancelCheckEnableState() {
-    this.disabledInput = this.disabledTotalOp = this.disabledPayment = this.disabledFinOp = true;
+    this.disabledInput = this.disabledTotalOp = this.disabledPayment = this.disabledPaymentMoney = this.disabledFinOp = true;
     this.disabledInvOp =[false, true, true, true];
     this.disabledAdminOp = [true, true, true, true, true, true, false, true, true, true, true, true, true];
     //this.evReviewEnableState.emit(true);
   }
 
   removeHoldEnableState() {
-    this.disabledInput = this.disabledTotalOp = this.disabledPayment = this.disabledFinOp = true;
+    this.disabledInput = this.disabledTotalOp = this.disabledPayment = this.disabledPaymentMoney = this.disabledFinOp = true;
     this.disabledInvOp =[false, true, true, true];
     this.disabledAdminOp = [true, true, true, true, true, true, true, false, true, true, true, true, true];
     //this.evReviewEnableState.emit(true);

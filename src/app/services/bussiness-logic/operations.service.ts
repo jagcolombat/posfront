@@ -455,11 +455,13 @@ export class OperationsService {
       return infoEventDialog;
   }
 
+  getTotalToPaid(){
+    return this.invoiceService.invoice.balance !== undefined ? this.invoiceService.invoice.balance: this.invoiceService.invoice.total;
+  }
+
   cash() {
     console.log('cash');
-    const totalToPaid = this.invoiceService.invoice.balance !== undefined ?
-      this.invoiceService.invoice.balance:
-      this.invoiceService.invoice.total;
+    const totalToPaid = this.getTotalToPaid();
     if (totalToPaid < 0  && this.invoiceService.invoice.isRefund) {
       console.log('paid refund, open cash!!!');
       this.cashService.dialog.open(CashPaymentComponent,
@@ -489,20 +491,25 @@ export class OperationsService {
         }).afterClosed().subscribe(data => {
         console.log('The dialog was closed', data);
         // this.paymentData = data;
-        if (data > 0) {
-          let valueToReturn = data - totalToPaid;
-          if(valueToReturn < 0)
-            this.invoiceService.invoice.balance = valueToReturn * -1;
-          else
-            this.invoiceService.invoice.balance = undefined;
-          this.cashReturn(valueToReturn, data, totalToPaid);
-        } else {
-          this.currentOperation = TotalsOpEnum.SUBTOTAL;
-        }
+        this.cashPaid(data, totalToPaid)
       });
     }
     this.currentOperation = PaymentOpEnum.CASH;
     this.resetInactivity(false);
+  }
+
+  cashPaid(paid, totalToPaid?:number){
+    let total2Paid = (totalToPaid) ? totalToPaid : this.getTotalToPaid();
+    if (paid > 0) {
+      let valueToReturn = paid - total2Paid;
+      if(valueToReturn < 0)
+        this.invoiceService.invoice.balance = valueToReturn * -1;
+      else
+        this.invoiceService.invoice.balance = undefined;
+      this.cashReturn(valueToReturn, paid, total2Paid);
+    } else {
+      this.currentOperation = TotalsOpEnum.SUBTOTAL;
+    }
   }
 
   cashReturn(valueToReturn, payment, totalToPaid) {

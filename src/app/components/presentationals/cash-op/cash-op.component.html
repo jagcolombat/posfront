@@ -6,13 +6,13 @@
 
   <form novalidate #cashForm="ngForm">
     <mat-dialog-content>
-      <p>
+      <div>
         <mat-form-field>
           <input matInput placeholder="Price" type="text" [(ngModel)]="cost" name="price" #price="ngModel"
                  required [maxlength]="maxlength" [size]="maxlength" appCashValidator="data" disabled/>
           <mat-error *ngIf="price.errors?.required">Price is required</mat-error>
         </mat-form-field>
-      </p>
+      </div>
       <!--<app-input-price></app-input-price>-->
       <generic-keyboard (evKeys)="getKeys($event)" [valid]="!valid"></generic-keyboard>
     </mat-dialog-content>

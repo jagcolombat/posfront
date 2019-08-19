@@ -141,25 +141,6 @@ export class OperationsComponent implements OnInit {
   }
 
   moneyKey(ev) {
-    switch (ev) {
-      case '1':
-        this.operationService.printLast();
-        break;
-      case '5':
-        this.operationService.cashService.openGenericInfo('No Sale', 'Sending event');
-        break;
-      case '10':
-        this.operationService.paidOut();
-        break;
-      case '20':
-        this.operationService.cashService.openGenericInfo('House Charge', 'Sending event');
-        break;
-      case '50':
-        this.operationService.cashService.openGenericInfo('House Charge', 'Sending event');
-        break;
-      case '100':
-        this.operationService.cashService.openGenericInfo('House Charge', 'Sending event');
-        break;
-    }
+    this.operationService.cashPaid(+ev);
   }
 }

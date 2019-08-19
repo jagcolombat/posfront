@@ -9,7 +9,7 @@ button[mat-raised-button] {
   color: white;
 }
 */
-mat-dialog-content p {
+mat-dialog-content div {
   display: flex;
   justify-content: space-between;
 }
