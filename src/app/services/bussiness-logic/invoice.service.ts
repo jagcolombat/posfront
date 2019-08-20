@@ -221,10 +221,10 @@ export class InvoiceService {
   }*/
 
   setTotal() {
-    let totalComputed = this.computeTotal();
+    /*let totalComputed = this.computeTotal();
     this.invoice.subTotal = totalComputed.total;
     this.invoice.tax = totalComputed.taxes;
-    this.invoice.total = this.invoice.subTotal + this.invoice.tax;
+    this.invoice.total = this.invoice.subTotal + this.invoice.tax;*/
     this.evUpdateTotals.emit(true);
   }
 

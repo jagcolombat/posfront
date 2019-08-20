@@ -515,14 +515,14 @@ export class OperationsService {
   cashReturn(valueToReturn, payment, totalToPaid) {
     const dialogRef = this.cashService.dialog.open(CashPaymentComponent,
       {
-        width: '300px', height: '200px', data: valueToReturn, disableClose: true
+        width: '300px', height: '200px', data: valueToReturn > 0 ? valueToReturn : 0, disableClose: true
       })
       .afterClosed().subscribe((result: string) => {
         if (result !== '') {
           this.invoiceService.cash(payment, totalToPaid)
             .subscribe(data => {
                 console.log(data);
-                if(+result >= 0 || data.status === InvoiceStatus.PAID) this.invoiceService.createInvoice();
+                if(+valueToReturn >= 0 || data.status === InvoiceStatus.PAID) this.invoiceService.createInvoice();
               },
               err => {
                 console.log(err); this.cashService.openGenericInfo('Error', 'Can\'t complete cash operation')
