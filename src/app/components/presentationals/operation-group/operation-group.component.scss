@@ -26,19 +26,48 @@
   color: black;
 }
 
-.two > button[mat-button] {
+.two-layout > button[mat-button] {
   height: 175px;
 }
 
-.two {
+.two-layout {
   justify-item: space-between;
 }
 
-.five > button[mat-button]:last-of-type {
-  /*width: 200px !important;*/
+.five-layout > button[mat-button]:last-of-type {
   max-width: 205px !important;
 }
 
-.five > button[mat-button]:first-of-type {
+.five-layout > button[mat-button]:first-of-type {
   height: 175px;
+}
+
+.one {
+  background-image: url('../../../../assets/money/one.PNG');
+  background-size: cover;
+}
+
+.five {
+  background-image: url('../../../../assets/money/five.PNG');
+  background-size: cover;
+}
+
+.ten {
+   background-image: url('../../../../assets/money/ten.PNG');
+   background-size: cover;
+}
+
+.twenty {
+  background-image: url('../../../../assets/money/twenty.PNG');
+  background-size: cover;
+}
+
+.fifty {
+  background-image: url('../../../../assets/money/fifty.PNG');
+  background-size: cover;
+}
+
+.hundrey {
+  background-image: url('../../../../assets/money/hundrey.PNG');
+  background-size: cover;
 }

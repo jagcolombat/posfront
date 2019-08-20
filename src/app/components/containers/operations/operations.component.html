@@ -8,20 +8,20 @@
 
   <numpad lastKey="@/FOR" (evPressKeys)="numpadKey($event)" [disableOp]="operationService.cashService.disabledInput"></numpad>
 
-  <operation-group [operations]="totalsOperations" [colors]="totalColor" layout="two" (evPressKeys)="totalKey($event)"
+  <operation-group [operations]="totalsOperations" [colors]="totalColor" layout="two-layout" (evPressKeys)="totalKey($event)"
                    [disable]="operationService.cashService.disabledTotalOp"></operation-group>
 </div>
 
 <div fxFlex.lg="40" fxFlex.lt-lg="25" class="border">
-  <operation-group id="payment" fxFlex="22" [operations]="paymentOperations" [colors]="paymentColor" style="padding-left: 5px;"
+  <operation-group id="payment" fxFlex="22" [operations]="paymentOperations" [colors]="paymentColor"
                    (evPressKeys)="paymentKey($event)" [disable]="operationService.cashService.disabledPayment">
   </operation-group>
 
-  <operation-group id="other" fxFlex="22" [operations]="otherOperations" [colors]="otherColor" style="padding-left: 5px;"
-                   class="border" (evPressKeys)="otherKey($event)" [disable]="operationService.cashService.disabledFinOp">
+  <operation-group id="other" fxFlex="22" [operations]="otherOperations" [colors]="otherColor"
+                   (evPressKeys)="otherKey($event)" [disable]="operationService.cashService.disabledFinOp">
   </operation-group>
 
-  <operation-group id="money" [operations]="moneyOperations" [colors]="moneyColor" style="padding-left: 5px;" btnSize="130px"
-                   class="border" (evPressKeys)="moneyKey($event)" [disable]="operationService.cashService.disabledPaymentMoney">
+  <operation-group id="money" [operations]="moneyOperations" [colors]="moneyColor" btnSize="130px" showText="false"
+                   (evPressKeys)="moneyKey($event)" [disable]="operationService.cashService.disabledPaymentMoney">
   </operation-group>
 </div>

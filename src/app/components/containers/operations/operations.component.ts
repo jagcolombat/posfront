@@ -34,7 +34,7 @@ export class OperationsComponent implements OnInit {
   @Input() otherColor = ['yellow', 'blue', 'blue', 'green'];
 
   @Input() moneyOperations = ['1', '5', '10', '20', '50', '100'];
-  @Input() moneyColor = 'green';
+  @Input() moneyColor = ['one', 'five', 'ten', 'twenty', 'fifty', 'hundrey'];
 
   constructor(public operationService: OperationsService) {  }
 

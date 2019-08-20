@@ -10,7 +10,7 @@
   <!--<generic-keyboard (evKeys)="getKeys($event)" [valid]="loginForm.form.invalid"></generic-keyboard>-->
   <div style="display: flex">
     <numpad [numbers]="numbers" lastKey="Space" widthKey="80px" (evPressKeys)="getKeys($event)"></numpad>
-    <operation-group [operations]="operations" [colors]="opColor" layout="three" (evPressKeys)="getKeys($event)">
+    <operation-group [operations]="operations" [colors]="opColor" layout="three-layout" (evPressKeys)="getKeys($event)">
     </operation-group>
   </div>
 </form>

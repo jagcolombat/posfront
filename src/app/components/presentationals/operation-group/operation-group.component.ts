@@ -13,6 +13,7 @@ export class OperationGroupComponent implements OnInit, OnChanges {
   @Input() layout: string;
   @Input() btnSize: string = "100px";
   @Input() upperCase: boolean = false;
+  @Input() showText: boolean = true;
   @Output() evPressKeys = new EventEmitter<any>();
 
   constructor() { }
