@@ -34,7 +34,7 @@ export class SalesEmplComponent implements OnInit {
   }
 
   select(ev) {
-    this.selectEmployed.emit(ev.value);
+    if(ev.value !== undefined) this.selectEmployed.emit(ev.value);
   }
 
   private createColumnDefs() {

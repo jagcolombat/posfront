@@ -613,6 +613,7 @@ export class OperationsService {
       this.invoiceService.debit(this.invoiceService.invoice.total)
         .subscribe(data => {
           console.log(data);
+          dialogInfoEvents.close();
           this.invoiceService.createInvoice();
         },err => {
           console.log(err);
@@ -653,6 +654,7 @@ export class OperationsService {
       this.invoiceService.credit(this.invoiceService.invoice.total, this.invoiceService.invoice.tip)
         .subscribe(data => {
             console.log(data);
+            dialogInfoEvents.close();
             this.invoiceService.createInvoice();
           },
           err => {

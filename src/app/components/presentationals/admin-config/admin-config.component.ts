@@ -109,8 +109,12 @@ export class AdminConfigComponent implements OnInit {
 
   setDataByType(){
     if(this.typeCloseBatch == CloseBatch.SUMMARY){
+      this.cbReport.reportSummary.forEach((v, i) => this.cbReport.reportSummary[i].paymentAmount =
+        Number((v.paymentAmount).toFixed(2)));
       this.setData(this.cbReport.reportSummary, this.gridOptionsSummary);
     } else {
+      this.cbReport.reportDetailLookups.forEach((v, i) => this.cbReport.reportDetailLookups[i].amount =
+        Number((v.amount).toFixed(2)))
       this.setData(this.cbReport.reportDetailLookups, this.gridOptionsDetails);
     }
   }
