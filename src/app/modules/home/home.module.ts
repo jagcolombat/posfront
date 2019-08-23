@@ -27,6 +27,7 @@ import {AdminConfigComponent} from "../../components/presentationals/admin-confi
 import {DialogFilterComponent} from "../../components/containers/dialog-filter/dialog-filter.component";
 import {FilterComponent} from "../../components/presentationals/filter/filter.component";
 import {DialogPaidoutComponent} from "../../components/containers/dialog-paidout/dialog-paidout.component";
+import {DialogDeliveryComponent} from "../../components/presentationals/dialog-delivery/dialog-delivery.component";
 
 @NgModule({
   imports: [
@@ -53,6 +54,7 @@ import {DialogPaidoutComponent} from "../../components/containers/dialog-paidout
     CashOpComponent,
     CashPaymentComponent,
     DialogInvoiceComponent,
+    DialogDeliveryComponent,
     DebitCardComponent,
     GenericInfoEventsComponent,
     CustomHeaderComponent,
@@ -73,6 +75,7 @@ import {DialogPaidoutComponent} from "../../components/containers/dialog-paidout
     CashOpComponent,
     CashPaymentComponent,
     DialogInvoiceComponent,
+    DialogDeliveryComponent,
     DebitCardComponent,
     GenericInfoEventsComponent,
     CustomHeaderComponent,

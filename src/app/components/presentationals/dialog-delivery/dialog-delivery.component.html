@@ -1,0 +1,15 @@
+<div oncontextmenu="return false">
+  <mat-toolbar color="primary">
+    {{ title }}
+    <span class="flex-spacer"></span>
+    <button mat-raised-button mat-dialog-close color="primary">&times;</button>
+  </mat-toolbar>
+  <div mat-dialog-content>
+    <p>{{ subtitle }}</p>
+    <div class="buttons">
+      <button mat-button fxFlex="170px" *ngFor="let i of data" [mat-dialog-close]="i">
+        {{i | uppercase}}
+      </button>
+    </div>
+  </div>
+</div>

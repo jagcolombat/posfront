@@ -2,7 +2,7 @@
   <button mat-button fxFlex="130px" *ngFor="let i of prods | paginate: { itemsPerPage: sizePage, currentPage: page }"
         (click)="doAction($event,i)"
         [ngClass]="i.generic ? 'generic' : 'normal'" [disabled]="stockService.cashService.disabledInput">
-    {{i.name | uppercase }}
+    {{i.name.substring(0, 20) | uppercase }}
   </button>
 </div>
 <div class="paginator">

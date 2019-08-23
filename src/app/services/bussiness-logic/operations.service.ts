@@ -290,10 +290,11 @@ export class OperationsService {
   }
 
   subTotal(){
-    console.log('subTotal');
+    console.log('subTotal', this.currentOperation);
+    let refund = this.currentOperation === FinancialOpEnum.REFUND;
     if (this.invoiceService.invoice.productOrders.length > 0) {
       this.currentOperation = TotalsOpEnum.SUBTOTAL;
-      this.cashService.totalsEnableState();
+      this.cashService.totalsEnableState(false, refund);
     }
   }
 
@@ -351,7 +352,7 @@ export class OperationsService {
 
   refund() {
     console.log('refund');
-    this.currentOperation = 'refund';
+    this.currentOperation = FinancialOpEnum.REFUND;
     if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS) {
       this.invoiceService.digits ?
         this.authService.adminLogged() ? this.refundOp() : this.manager('refund')

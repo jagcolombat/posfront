@@ -44,13 +44,20 @@ export class CashService {
     this.disabledInvOp = [false, true, true, true];
   }
 
-  totalsEnableState(fs = false) {
+  totalsEnableState(fs = false, refund=false) {
     console.log(fs);
     this.disabledInput = this.disabledFinOp = this.disabledTotalOp = true;
     this.disabledInvOp = [false, true, true, true];
-    fs ? this.disabledPayment = [false, true, true, true] :
+    if(fs){
+      this.disabledPayment = [false, true, true, true]
+    } else if (refund) {
+      this.disabledPayment = [true, false, false, false];
+      this.disabledPaymentMoney = true;
+    } else {
       this.disabledPayment = [true, false, false, false];
       this.disabledPaymentMoney = false;
+    }
+
   }
 
   ebtEnableState() {
