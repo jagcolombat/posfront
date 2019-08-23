@@ -1,5 +1,5 @@
 export enum EDeliveryType {
-  PICKOFF = "Pick off",
+  PICKUP = "Pick up",
   DINEIN = "Dine In",
   DELIVERY = "Delivery"
 }
