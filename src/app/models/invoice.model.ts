@@ -1,6 +1,7 @@
 import {InvoiceStatus} from '../utils/invoice-status.enum';
 import {ProductOrder} from './product-order.model';
 import {PaymentStatus} from "../utils/payment-status.enum";
+import {ETXType} from "../utils/delivery.enum";
 
 export interface IInvoice {
   id: string;
@@ -19,6 +20,7 @@ export interface IInvoice {
   paymentStatus?: PaymentStatus;
   tip?: number;
   balance?: number;
+  type?:string;
 }
 
 export class Invoice implements IInvoice {
@@ -37,7 +39,8 @@ export class Invoice implements IInvoice {
               public productsCount?: number,
               public paymentStatus?: PaymentStatus,
               public tip?: number,
-              public balance?: number
+              public balance?: number,
+              public type = ETXType.DINEIN
               ) {
   }
 }

@@ -22,6 +22,8 @@ import {CompanyType} from "../../utils/company-type.enum";
 import {PaymentStatus} from "../../utils/payment-status.enum";
 import {ProductGenericComponent} from "../../components/presentationals/product-generic/product-generic.component";
 import {AdminOpEnum} from "../../utils/operations/admin-op.enum";
+import {ETXType} from "../../utils/delivery.enum";
+import {DialogDeliveryComponent} from "../../components/presentationals/dialog-delivery/dialog-delivery.component";
 
 @Injectable({
   providedIn: 'root'
@@ -766,5 +768,18 @@ export class OperationsService {
 
   cleanCurrentOp(){
     this.currentOperation = "";
+  }
+
+  txType() {
+    let txTypes= new Array<string>();
+    for (let eTxTypeKey in ETXType) {
+      txTypes.push(ETXType[eTxTypeKey]);
+    }
+    this.cashService.dialog.open(DialogDeliveryComponent,
+      { width: '600px', height: '340px', data: txTypes, disableClose: true })
+      .afterClosed().subscribe(next => {
+      console.log(next);
+      this.invoiceService.invoice.type = next;
+    });
   }
 }

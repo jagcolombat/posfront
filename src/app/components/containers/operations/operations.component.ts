@@ -12,7 +12,7 @@ import {CompanyType} from "../../../utils/company-type.enum";
 export class OperationsComponent implements OnInit {
 
   @Input() financeOperations = [FinancialOpEnum.MANAGER, FinancialOpEnum.REPRINT, FinancialOpEnum.HOLD,
-    FinancialOpEnum.REVIEW, FinancialOpEnum.RECALL, FinancialOpEnum.REFUND, FinancialOpEnum.LOGOUT];
+    FinancialOpEnum.REVIEW, FinancialOpEnum.RECALL, FinancialOpEnum.REFUND, FinancialOpEnum.LOGOUT, FinancialOpEnum.TXTYPE];
   @Input() financeColor = 'green';
   @Input() financeDisabled: boolean | boolean []= this.operationService.cashService.disabledFinOp;
 
@@ -70,6 +70,9 @@ export class OperationsComponent implements OnInit {
         break;
       case FinancialOpEnum.REFUND:
         this.operationService.refund();
+        break;
+      case FinancialOpEnum.TXTYPE:
+        this.operationService.txType();
         break;
     }
   }

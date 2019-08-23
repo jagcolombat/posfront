@@ -6,5 +6,5 @@ export enum FinancialOpEnum {
     RECALL = 'Recall Check',
     REFUND = 'Refund',
     LOGOUT = 'Logout',
-    GO_BACK = 'Go Back'
+    TXTYPE = 'TX Type'
 }

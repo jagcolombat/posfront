@@ -12,8 +12,6 @@ import {CashPaymentModel} from "../../models/cash-payment.model";
 import {CashService} from "./cash.service";
 import {PaidOut} from "../../models/paid-out.model";
 import {PaymentStatus} from "../../utils/payment-status.enum";
-import {DialogDeliveryComponent} from "../../components/presentationals/dialog-delivery/dialog-delivery.component";
-import {EDeliveryType} from "../../utils/delivery.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -50,14 +48,14 @@ export class InvoiceService {
 
   createInvoice(){
     // this.setUserToInvoice();
-    let deliveryTypes= new Array<string>();
+    /*let deliveryTypes= new Array<string>();
     for (let eDeliveryTypeKey in EDeliveryType) {
       deliveryTypes.push(EDeliveryType[eDeliveryTypeKey]);
     }
     this.cashService.dialog.open(DialogDeliveryComponent,
       { width: '600px', height: '340px', data: deliveryTypes, disableClose: true })
       .afterClosed().subscribe(next => {
-        console.log(next);
+        console.log(next);*/
         this.dataStorage.createInvoice().subscribe(next => {
           console.info('createCheck successfull', next);
           this.receiptNumber = next.receiptNumber;
@@ -70,7 +68,7 @@ export class InvoiceService {
           console.error('createCheck failed');
           this.evCreateInvoice.next(false);
         });
-    })
+    //})
   }
 
   addProductOrder(po: ProductOrder){
