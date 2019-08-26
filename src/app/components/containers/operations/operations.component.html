@@ -1,27 +1,30 @@
-<operation-group fxFlex.lg="18" fxFlex.lt-lg="22" [operations]="financeOperations" [colors]="financeColor"
+<operation-group fxFlex.lg="17" fxFlex.lt-lg="22" fxFlex.md="21" fxFlex.gt-lg="16" [operations]="financeOperations" [colors]="financeColor"
                  (evPressKeys)="financeKey($event)" [disable]="operationService.cashService.disabledFinOp">
 </operation-group>
 
-<div fxFlex.lg="40" fxFlex.lt-lg="53" class="border">
-  <operation-group fxFlex="20" [operations]="invoiceOperations" [colors]="invoiceColor" (evPressKeys)="invoiceKey($event)"
-                   [disable]="operationService.cashService.disabledInvOp"></operation-group>
+<div fxFlex.lg="42" fxFlex.lt-lg="47" fxFlex.md="45" fxFlex.gt-lg="48" class="border">
+  <operation-group fxFlex="20" fxFlex.lt-lg="25" fxFlex.md="23" [operations]="invoiceOperations" [colors]="invoiceColor"
+                   (evPressKeys)="invoiceKey($event)" [disable]="operationService.cashService.disabledInvOp"></operation-group>
 
-  <numpad lastKey="@/FOR" (evPressKeys)="numpadKey($event)" [disableOp]="operationService.cashService.disabledInput"></numpad>
+  <numpad fxFlex="60" fxFlex.lt-lg="50" fxFlex.md="54" lastKey="@/FOR" (evPressKeys)="numpadKey($event)"
+          [disableOp]="operationService.cashService.disabledInput"></numpad>
 
-  <operation-group [operations]="totalsOperations" [colors]="totalColor" layout="two-layout" (evPressKeys)="totalKey($event)"
-                   [disable]="operationService.cashService.disabledTotalOp"></operation-group>
+  <operation-group fxFlex="20" fxFlex.lt-lg="25" fxFlex.md="23" [operations]="totalsOperations" [colors]="totalColor" layout="two-layout"
+                   (evPressKeys)="totalKey($event)" [disable]="operationService.cashService.disabledTotalOp"></operation-group>
 </div>
 
-<div fxFlex.lg="40" fxFlex.lt-lg="25" class="border">
-  <operation-group id="payment" fxFlex="22" [operations]="paymentOperations" [colors]="paymentColor"
+<div fxFlex.lg="44" fxFlex.lt-lg="33" fxFlex.gt-lg="35" fxFlex.md="34" class="border">
+  <operation-group id="payment" fxFlex="20" fxFlex.lt-lg="33" [operations]="paymentOperations" [colors]="paymentColor"
                    (evPressKeys)="paymentKey($event)" [disable]="operationService.cashService.disabledPayment">
   </operation-group>
 
-  <operation-group id="other" fxFlex="22" [operations]="otherOperations" [colors]="otherColor"
-                   (evPressKeys)="otherKey($event)" [disable]="operationService.cashService.disabledFinOp">
+
+  <operation-group id="money" fxFlex="40" fxFlex.lt-lg="33" [operations]="moneyOperations" [colors]="moneyColor"
+                   btnSize="100px" showText="false" (evPressKeys)="moneyKey($event)"
+                   [disable]="operationService.cashService.disabledPaymentMoney">
   </operation-group>
 
-  <operation-group id="money" [operations]="moneyOperations" [colors]="moneyColor" btnSize="130px" showText="false"
-                   (evPressKeys)="moneyKey($event)" [disable]="operationService.cashService.disabledPaymentMoney">
+  <operation-group id="other" fxFlex="40" fxFlex.lt-lg="33" [operations]="otherOperations" [colors]="otherColor"
+                   (evPressKeys)="otherKey($event)" [disable]="operationService.cashService.disabledFinOp">
   </operation-group>
 </div>

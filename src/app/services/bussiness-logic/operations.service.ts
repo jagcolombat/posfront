@@ -779,7 +779,7 @@ export class OperationsService {
       { width: '600px', height: '340px', data: txTypes, disableClose: true })
       .afterClosed().subscribe(next => {
       console.log(next);
-      this.invoiceService.invoice.type = next;
+      (next)? this.invoiceService.invoice.type = next : this.invoiceService.invoice.type = ETXType.DINEIN;
     });
   }
 }
