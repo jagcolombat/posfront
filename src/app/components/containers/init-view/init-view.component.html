@@ -1,5 +1,5 @@
 <div #init fxLayout="row" class="container" fxLayoutAlign="space-between">
-  <div id="right" fxFlex.lg="64" fxFlex.lt-lg="54" fxLayout="column" fxLayoutAlign="space-between">
+  <div id="right" fxFlex.lt-lg="54" fxFlex.md="60" fxFlex.lg="64" fxFlex.xl="70" fxLayout="column" fxLayoutAlign="space-between">
     <div id="logo" fxLayoutAlign="center center" fxFlex="55" class="border" >
         <img src="{{env.myVarForImageURLS}}/assets/supermarket.jpg" fxFlex="100" alt="Logo"/>
     </div>
@@ -8,11 +8,11 @@
     </div>
   </div>
 
-  <div id="left" fxFlex.lg="35" fxFlex.lt-lg="45" fxLayout="column" fxLayoutAlign="space-between" class="border">
-    <div fxLayoutAlign="center center" fxFlex="38" class="border">
+  <div id="left" fxFlex.lt-lg="46" fxFlex.md="40" fxFlex.lg="35" fxFlex.xl="30" fxLayout="column" fxLayoutAlign="space-between" class="border">
+    <div fxLayoutAlign="center center" class="border">
       <slide-promotions [path]="env.myVarForImageURLS"></slide-promotions>
     </div>
-    <div fxLayoutAlign="center" fxLayout="column" fxFlex="65">
+    <div fxLayoutAlign="center" fxLayout="column" >
       <login fxLayout="column" fxFlex="100"></login>
     </div>
   </div>

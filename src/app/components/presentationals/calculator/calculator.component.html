@@ -3,7 +3,7 @@
     <button mat-button fxFlex="100px" [fxLayoutGap]="space" *ngFor="let i of rightOperations" class="right"
             (click)="sendKey(i, 'right')">{{i}}</button>
   </div>
-  <div fxFlex="330px" class="column">
+  <div fxFlex="320px" class="column">
     <button mat-button fxFlex="100px" [fxLayoutGap]="space" *ngFor="let j of numbers" class="numbers"
             (click)="sendKey(j, 'number')">{{j}}</button>
   </div>
