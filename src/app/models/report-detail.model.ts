@@ -8,9 +8,9 @@ export interface IReportDetail {
 }
 
 export interface IReportSummary {
-  paymentAmount: number;
-  paymentCount: number;
-  paymentType: string;
+  amount: number;
+  count: number;
+  type: string;
 }
 
 export class ReportDetail implements IReportDetail {
@@ -19,5 +19,5 @@ export class ReportDetail implements IReportDetail {
 }
 
 export class ReportSummary implements IReportSummary {
-  constructor(public paymentAmount: number, public paymentCount: number, public paymentType: string) {}
+  constructor(public amount: number, public count: number, public type: string) {}
 }

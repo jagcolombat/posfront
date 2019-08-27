@@ -25,17 +25,17 @@ export class AdminConfigComponent implements OnInit {
   colDefsSummary = [
     {
       headerName: 'Type',
-      field: 'paymentType',
+      field: 'type',
       width: 150
     },
     {
       headerName: 'Count',
-      field: 'paymentCount',
+      field: 'count',
       type: 'numericColumn'
     },
     {
       headerName: 'Amount',
-      field: 'paymentAmount',
+      field: 'amount',
       type: 'numericColumn'
     }
   ];
@@ -98,7 +98,7 @@ export class AdminConfigComponent implements OnInit {
         next => {
           console.log(next);
           this.loading = false;
-          this.cbReport = transformCBReport(next);
+          this.cbReport = next;
           this.setDataByType();
         },
         err => console.error(err));
@@ -109,9 +109,9 @@ export class AdminConfigComponent implements OnInit {
 
   setDataByType(){
     if(this.typeCloseBatch == CloseBatch.SUMMARY){
-      this.cbReport.reportSummary.forEach((v, i) => this.cbReport.reportSummary[i].paymentAmount =
-        Number((v.paymentAmount).toFixed(2)));
-      this.setData(this.cbReport.reportSummary, this.gridOptionsSummary);
+      this.cbReport.paymentDetailLookups.forEach((v, i) => this.cbReport.paymentDetailLookups[i].amount =
+        Number((v.amount).toFixed(2)));
+      this.setData(this.cbReport.paymentDetailLookups, this.gridOptionsSummary);
     } else {
       this.cbReport.reportDetailLookups.forEach((v, i) => this.cbReport.reportDetailLookups[i].amount =
         Number((v.amount).toFixed(2)))
