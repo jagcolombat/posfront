@@ -1,0 +1,6 @@
+<button mat-button fxFlex="170px" *ngFor="let i of data.invoice | paginate: { itemsPerPage: sizePage, currentPage: page }"
+        [mat-dialog-close]="i">
+  {{i[data.label] }}
+  <p *ngIf="data.detail && data.detail === 'total'">{{i[data.detail] | currency }}</p>
+  <p *ngIf="data.detail && data.detail !== 'total'">{{i[data.detail]}}</p>
+</button>

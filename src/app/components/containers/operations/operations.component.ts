@@ -141,6 +141,9 @@ export class OperationsComponent implements OnInit {
       case 'House Charge':
         this.operationService.cashService.openGenericInfo('House Charge', 'Sending event');
         break;
+      case 'Tables':
+        this.operationService.openDialogTables();
+        break;
     }
   }
 

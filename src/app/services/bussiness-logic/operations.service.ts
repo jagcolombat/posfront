@@ -24,6 +24,8 @@ import {ProductGenericComponent} from "../../components/presentationals/product-
 import {AdminOpEnum} from "../../utils/operations/admin-op.enum";
 import {ETXType} from "../../utils/delivery.enum";
 import {DialogDeliveryComponent} from "../../components/presentationals/dialog-delivery/dialog-delivery.component";
+import {OtherOpEnum} from "../../utils/operations/other.enum";
+import {Table} from "../../models/table.model";
 
 @Injectable({
   providedIn: 'root'
@@ -341,11 +343,30 @@ export class OperationsService {
     if (inv.length > 0) {
       const dialogRef = this.cashService.dialog.open(DialogInvoiceComponent,
         {
-          width: '620px', height: '540px', data: inv, disableClose: true
+          width: '620px', height: '540px', data: {invoice: inv, label:'receiptNumber', detail:'total'}, disableClose: true
         });
       dialogRef.afterClosed().subscribe(order => {
         console.log('The dialog was closed', order);
         if (order) { action(order); }
+      });
+    } else {
+      this.cashService.openGenericInfo('Information', 'Not exist hold orders');
+    }
+  }
+
+  openDialogTables(tabs?: Table[]) {
+    let tables = tabs? tabs : [{id:0, label: 'Table 1', employ: 'Tony'}, {id:1, label: 'Table 2', employ: 'Ray'},
+                  {id:2, label: 'Table 3', employ: 'Ray'}, {id:3, label: 'Table 4', employ: 'Tony'},
+                  {id:4, label: 'Table 5', employ: 'Ray'}, {id:5, label: 'Table 6', employ: 'Tony'}];
+    if (tables.length > 0) {
+      const dialogRef = this.cashService.dialog.open(DialogInvoiceComponent,
+        {
+          width: '620px', height: '540px', data: {invoice: tables, label:'employ', detail:'label', title: 'Tables',
+            subtitle: 'Select a table'}
+          , disableClose: true
+        });
+      dialogRef.afterClosed().subscribe(order => {
+        console.log('The dialog was closed', order);
       });
     } else {
       this.cashService.openGenericInfo('Information', 'Not exist hold orders');
@@ -781,5 +802,20 @@ export class OperationsService {
       console.log(next);
       (next)? this.invoiceService.invoice.type = next : this.invoiceService.invoice.type = ETXType.DINEIN;
     });
+  }
+
+  tables() {
+    console.log('tables');
+    this.currentOperation = OtherOpEnum.TABLES;
+    this.resetInactivity(true);
+    if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS) {
+      this.invoiceService.getInvoiceByStatus(EOperationType.Tables, InvoiceStatus.IN_HOLD)
+        .subscribe(next => this.openDialogInvoices(next, i => {
+            // this.invoiceService.setInvoice(i);
+        }), err => this.cashService.openGenericInfo('Error', 'Can\'t complete tables operation'));
+    } else {
+      console.error('Can\'t complete table operation');
+      this.cashService.openGenericInfo('Error', 'Can\'t complete table operation because check is in progress');
+    }
   }
 }

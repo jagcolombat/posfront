@@ -40,5 +40,6 @@ export enum EOperationType {
     Departments,
 
     AgeVerification,
-    List
+    List,
+    Tables
 }

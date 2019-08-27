@@ -1,0 +1,14 @@
+button {
+  background-color: #ed5f5f;
+  border-color: #913939;
+  color: white;
+
+  & /deep/ span {
+     font-size: 16px;
+     font-weight: normal;
+     p {
+       font-size: 20px;
+       margin: 5px 0;
+     }
+  }
+}

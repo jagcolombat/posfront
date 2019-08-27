@@ -28,6 +28,10 @@ import {DialogFilterComponent} from "../../components/containers/dialog-filter/d
 import {FilterComponent} from "../../components/presentationals/filter/filter.component";
 import {DialogPaidoutComponent} from "../../components/containers/dialog-paidout/dialog-paidout.component";
 import {DialogDeliveryComponent} from "../../components/presentationals/dialog-delivery/dialog-delivery.component";
+import {ListInvoicesComponent} from "../../components/presentationals/list-invoices/list-invoices.component";
+import {CloseBatchComponent} from "../../components/presentationals/close-batch/close-batch.component";
+import {AppComponent} from "../../app.component";
+import {ListTablesComponent} from "../../components/presentationals/list-tables/list-tables.component";
 
 @NgModule({
   imports: [
@@ -54,6 +58,8 @@ import {DialogDeliveryComponent} from "../../components/presentationals/dialog-d
     CashOpComponent,
     CashPaymentComponent,
     DialogInvoiceComponent,
+    ListInvoicesComponent,
+    ListTablesComponent,
     DialogDeliveryComponent,
     DebitCardComponent,
     GenericInfoEventsComponent,
@@ -65,7 +71,8 @@ import {DialogDeliveryComponent} from "../../components/presentationals/dialog-d
     SalesEmplComponent,
     AdminConfigComponent,
     DialogFilterComponent,
-    DialogPaidoutComponent
+    DialogPaidoutComponent,
+    CloseBatchComponent
   ],
   entryComponents: [
     AgeValidationComponent,
@@ -75,6 +82,8 @@ import {DialogDeliveryComponent} from "../../components/presentationals/dialog-d
     CashOpComponent,
     CashPaymentComponent,
     DialogInvoiceComponent,
+    ListInvoicesComponent,
+    ListTablesComponent,
     DialogDeliveryComponent,
     DebitCardComponent,
     GenericInfoEventsComponent,
@@ -85,7 +94,8 @@ import {DialogDeliveryComponent} from "../../components/presentationals/dialog-d
     AdminConfigComponent,
     FilterComponent,
     DialogFilterComponent,
-    DialogPaidoutComponent
+    DialogPaidoutComponent,
+    CloseBatchComponent
   ],
 })
 export class HomeModule { }

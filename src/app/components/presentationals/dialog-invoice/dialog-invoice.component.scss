@@ -1,0 +1,35 @@
+[mat-dialog-content] {
+  height: 100%;
+
+  & /deep/ :first-child {
+    flex-wrap: wrap;
+    overflow: auto;
+    max-height: 275px;
+  }
+}
+
+button[mat-raised-button] {
+  cursor: default !important;
+}
+
+div.page {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 88%;
+}
+
+pos-paginator {
+  display: flex;
+  align-items: center;
+  margin-left: 8px;
+}
+
+.paginator {
+  display: flex;
+  justify-content: center;
+}
+
+div[oncontextmenu]{
+  height: 88%;
+}
