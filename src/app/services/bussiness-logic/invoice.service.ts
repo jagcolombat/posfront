@@ -12,6 +12,7 @@ import {CashPaymentModel} from "../../models/cash-payment.model";
 import {CashService} from "./cash.service";
 import {PaidOut} from "../../models/paid-out.model";
 import {PaymentStatus} from "../../utils/payment-status.enum";
+import {Order} from "../../models/order.model";
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +26,7 @@ export class InvoiceService {
   qty: number = 1;
   // Invoice
   invoice: Invoice;
+  order: Order;
   invoiceProductSelected: any[] = [];
   isReviewed: boolean;
 

@@ -26,6 +26,7 @@ import {ETXType} from "../../utils/delivery.enum";
 import {DialogDeliveryComponent} from "../../components/presentationals/dialog-delivery/dialog-delivery.component";
 import {OtherOpEnum} from "../../utils/operations/other.enum";
 import {Table} from "../../models/table.model";
+import {Order, OrderType} from "../../models/order.model";
 
 @Injectable({
   providedIn: 'root'
@@ -367,6 +368,8 @@ export class OperationsService {
         });
       dialogRef.afterClosed().subscribe(order => {
         console.log('The dialog was closed', order);
+        this.invoiceService.order = new Order(this.invoiceService.invoice.id, new OrderType(ETXType.DINEIN,null,
+          <Table> order));
       });
     } else {
       this.cashService.openGenericInfo('Information', 'Not exist hold orders');
@@ -801,6 +804,9 @@ export class OperationsService {
       .afterClosed().subscribe(next => {
       console.log(next);
       (next)? this.invoiceService.invoice.type = next : this.invoiceService.invoice.type = ETXType.DINEIN;
+      if(this.invoiceService.invoice.type === ETXType.DINEIN){
+        this.openDialogTables();
+      }
     });
   }
 
