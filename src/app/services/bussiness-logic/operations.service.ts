@@ -368,9 +368,12 @@ export class OperationsService {
           console.log('The tables dialog was closed', table);
           if(table){
             this.invoiceService.setDineIn(<Table> table).subscribe(next => {
-              this.invoiceService.order = next;
-              this.cashService.openGenericInfo('Information', 'The "' +table['label'] + '" was assigned to this order');
-            }, err => {
+              if(next) {
+                this.invoiceService.order = next;
+                this.cashService.openGenericInfo('Information', 'The "' +table['label'] + '" was assigned to this order');
+              } else {
+                this.cashService.openGenericInfo('Error', 'Can\'t complete dine in operation')
+              }}, err => {
               this.cashService.openGenericInfo('Error', 'Can\'t complete dine in operation')
             })
           }
