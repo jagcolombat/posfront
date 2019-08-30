@@ -7,13 +7,13 @@
   width: 100%;
 }
 
-div.page {
+/*div.page {
   flex-wrap: wrap;
   margin-left: 10px;
   overflow: auto;
   align-items: center;
   justify-content: center;
-}
+}*/
 
 .normal {
   background-color: #ed5f5f;
@@ -23,6 +23,14 @@ div.page {
 .generic {
   background-color: #ff9b3e;
   border-color: #ffac41;
+}
+
+div.page {
+  flex-wrap: wrap;
+  margin-left: 10px;
+  overflow: auto;
+  align-items: center;
+  justify-content: center;
 }
 
 pos-paginator {

@@ -360,18 +360,20 @@ export class OperationsService {
       if (tables.length > 0) {
         const dialogRef = this.cashService.dialog.open(DialogInvoiceComponent,
           {
-            width: '620px', height: '540px', data: {invoice: tables, detail:'number', title: 'Tables',
+            width: '620px', height: '540px', data: {invoice: tables, detail:'label', title: 'Tables',
               subtitle: 'Select a table'}
             , disableClose: true
           });
         dialogRef.afterClosed().subscribe(table => {
           console.log('The tables dialog was closed', table);
-          this.invoiceService.setDineIn(<Table> table).subscribe(next => {
-            this.invoiceService.order = next;
-            this.cashService.openGenericInfo('Information', 'The "' +table['label'] + '" was assigned to this order');
-          }, err => {
-            this.cashService.openGenericInfo('Error', 'Can\'t complete dine in operation')
-          })
+          if(table){
+            this.invoiceService.setDineIn(<Table> table).subscribe(next => {
+              this.invoiceService.order = next;
+              this.cashService.openGenericInfo('Information', 'The "' +table['label'] + '" was assigned to this order');
+            }, err => {
+              this.cashService.openGenericInfo('Error', 'Can\'t complete dine in operation')
+            })
+          }
         });
       } else {
         this.cashService.openGenericInfo('Information', 'There are not tables');
