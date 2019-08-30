@@ -12,7 +12,9 @@ import {CashPaymentModel} from "../../models/cash-payment.model";
 import {CashService} from "./cash.service";
 import {PaidOut} from "../../models/paid-out.model";
 import {PaymentStatus} from "../../utils/payment-status.enum";
-import {Order} from "../../models/order.model";
+import {Client, Order, OrderType} from "../../models/order.model";
+import {ETXType} from "../../utils/delivery.enum";
+import {Table} from "../../models/table.model";
 
 @Injectable({
   providedIn: 'root'
@@ -286,5 +288,26 @@ export class InvoiceService {
           this.cashService.openGenericInfo('Error', 'Can\'t complete cancel check operation');
       });
 
+  }
+
+  setDineIn(table: Table): Observable<Order> {
+    let createOrder = (table) => new Order(this.invoice.id, new OrderType(ETXType.DINEIN, null, table));
+    return this.dataStorage.updateOrder(createOrder(table));
+  }
+
+  setPickUp(data: string, text: any): Observable<Order> {
+    let createOrder = (name, tel) => new Order(this.invoice.id, new OrderType(ETXType.PICKUP, new Client(name, tel)));
+    return this.dataStorage.updateOrder(createOrder(data, text));
+  }
+
+  setDelivery(name, address, phone, descrip?): Observable<Order> {
+    let createOrder = (name, address, phone, descrip) => {
+      return new Order(this.invoice.id, new OrderType(ETXType.DELIVERY, new Client(name, phone, address),null, descrip));
+    };
+    return this.dataStorage.updateOrder(createOrder(name, address, phone, descrip));
+  }
+
+  tables(): Observable<Table[]> {
+    return this.dataStorage.getTables();
   }
 }

@@ -1,11 +1,10 @@
 export interface ITable {
   id: string;
-  label: string;
-  employ: string;
+  number: number;
+  label?: string;
 }
 
 export class Table implements ITable {
   id: string;
-  constructor(public label: string, public employ: string) {
-  }
+  constructor(public number: number, public label?: string) { }
 }

@@ -22,6 +22,9 @@ import { PaidOut } from 'src/app/models/paid-out.model';
 import { InvoiceStatus } from 'src/app/utils/invoice-status.enum';
 import { CloseBatch } from 'src/app/utils/close.batch.enum';
 import { Report } from 'src/app/models/report.model';
+import {OrderService} from "./order.service";
+import {Order} from "../../models/order.model";
+import {Table} from "../../models/table.model";
 
 @Injectable({
   providedIn: 'root'
@@ -35,6 +38,7 @@ export class DataStorageService {
   constructor(private departmentService: DepartmentService,
               private productService: ProductService,
               private invoiceService: InvoiceService,
+              private orderService: OrderService,
               private paymentService: PaymentService,
               private journeyService: JourneyService,
               private configurationService: ConfigurationService,
@@ -205,6 +209,15 @@ export class DataStorageService {
 
   getCloseBatchReport(closeBatch: CloseBatch): Observable<Report> {
     return this.adminOperationService.getCloseBatchReport(this.url, closeBatch);
+  }
+
+  // Order
+  updateOrder(order: Order): Observable<Order>{
+    return this.orderService.update(this.url, order);
+  }
+
+  getTables(): Observable<Table[]>{
+    return this.orderService.getTables(this.url);
   }
 
 }

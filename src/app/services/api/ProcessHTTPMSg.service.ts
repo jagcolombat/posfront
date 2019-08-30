@@ -14,7 +14,7 @@ public handleError(error: HttpErrorResponse | any) {
   if (error.error instanceof ErrorEvent) {
   errMsg = error.error.message;
   } else {
-  errMsg = `${error.statusText || ''} ${error.error.message}`;
+  errMsg = `${error.statusText || ''} ${error.message}`;
   }
   return throwError(errMsg);
   }

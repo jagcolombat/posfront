@@ -12,7 +12,7 @@ export class DialogDeliveryComponent {
 
   constructor(
     public dialogRef: MatDialogRef<DialogDeliveryComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: string[]) {}
+    @Inject(MAT_DIALOG_DATA) public data: Array<any>) {}
 
   onNoClick(): void {
     this.dialogRef.close();

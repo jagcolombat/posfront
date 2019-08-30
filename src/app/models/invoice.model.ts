@@ -20,7 +20,7 @@ export interface IInvoice {
   paymentStatus?: PaymentStatus;
   tip?: number;
   balance?: number;
-  type?:string;
+  type?: ETXType;
 }
 
 export class Invoice implements IInvoice {

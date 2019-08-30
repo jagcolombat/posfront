@@ -1,5 +1,6 @@
 <div fxLayout="row" class="header">
   <info-pos title="Cashier" [value]="invoiceService.cashier" fxFlex="25" class="title-header"></info-pos>
+  <!--<info-pos *ngIf="invoiceService.order?.type.table" title="Table" fxFlex="10" class="title-header" [value]="invoiceService.order?.type.table.label"></info-pos>-->
   <info-pos title="Receipt Number" [value]="invoiceService.receiptNumber" fxFlex="25" class="title-header"></info-pos>
   <input-calculator [data]="invoiceService.digits" fxFlex="50" class="title-header"></input-calculator>
 </div>

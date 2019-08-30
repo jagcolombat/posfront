@@ -24,9 +24,9 @@ import {ProductGenericComponent} from "../../components/presentationals/product-
 import {AdminOpEnum} from "../../utils/operations/admin-op.enum";
 import {ETXType} from "../../utils/delivery.enum";
 import {DialogDeliveryComponent} from "../../components/presentationals/dialog-delivery/dialog-delivery.component";
-import {OtherOpEnum} from "../../utils/operations/other.enum";
 import {Table} from "../../models/table.model";
 import {Order, OrderType} from "../../models/order.model";
+import {Observable} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -356,24 +356,32 @@ export class OperationsService {
   }
 
   openDialogTables(tabs?: Table[]) {
-    let tables = tabs? tabs : [{id:0, label: 'Table 1', employ: 'Tony'}, {id:1, label: 'Table 2', employ: 'Ray'},
-                  {id:2, label: 'Table 3', employ: 'Ray'}, {id:3, label: 'Table 4', employ: 'Tony'},
-                  {id:4, label: 'Table 5', employ: 'Ray'}, {id:5, label: 'Table 6', employ: 'Tony'}];
-    if (tables.length > 0) {
-      const dialogRef = this.cashService.dialog.open(DialogInvoiceComponent,
-        {
-          width: '620px', height: '540px', data: {invoice: tables, label:'employ', detail:'label', title: 'Tables',
-            subtitle: 'Select a table'}
-          , disableClose: true
+    this.invoiceService.tables().subscribe(tables => {
+      if (tables.length > 0) {
+        const dialogRef = this.cashService.dialog.open(DialogInvoiceComponent,
+          {
+            width: '620px', height: '540px', data: {invoice: tables, detail:'number', title: 'Tables',
+              subtitle: 'Select a table'}
+            , disableClose: true
+          });
+        dialogRef.afterClosed().subscribe(table => {
+          console.log('The tables dialog was closed', table);
+          this.invoiceService.setDineIn(<Table> table).subscribe(next => {
+            this.invoiceService.order = next;
+            this.cashService.openGenericInfo('Information', 'The "' +table['label'] + '" was assigned to this order');
+          }, err => {
+            this.cashService.openGenericInfo('Error', 'Can\'t complete dine in operation')
+          })
         });
-      dialogRef.afterClosed().subscribe(order => {
-        console.log('The dialog was closed', order);
-        this.invoiceService.order = new Order(this.invoiceService.invoice.id, new OrderType(ETXType.DINEIN,null,
-          <Table> order));
-      });
-    } else {
-      this.cashService.openGenericInfo('Information', 'Not exist hold orders');
-    }
+      } else {
+        this.cashService.openGenericInfo('Information', 'There are not tables');
+      }
+    }, err => {
+      console.error('Error getting tables', err);
+      this.cashService.openGenericInfo('Error', 'Can\'t complete get tables operation');
+    });
+    //let tables = tabs? tabs : [{id:"0", number: 1, label: 'Table 1'}];
+
   }
 
   refund() {
@@ -795,22 +803,108 @@ export class OperationsService {
   }
 
   txType() {
-    let txTypes= new Array<string>();
-    for (let eTxTypeKey in ETXType) {
+    let txTypes= new Array<any>({value: 1, text: 'Dine In'}, {value: 2, text: 'Pick Up'},{value: 3, text: 'Delivery'});
+    /*for (let eTxTypeKey in ETXType) {
       txTypes.push(ETXType[eTxTypeKey]);
-    }
+    }*/
     this.cashService.dialog.open(DialogDeliveryComponent,
       { width: '600px', height: '340px', data: txTypes, disableClose: true })
       .afterClosed().subscribe(next => {
       console.log(next);
       (next)? this.invoiceService.invoice.type = next : this.invoiceService.invoice.type = ETXType.DINEIN;
-      if(this.invoiceService.invoice.type === ETXType.DINEIN){
-        this.openDialogTables();
+      switch (this.invoiceService.invoice.type) {
+        case ETXType.DINEIN:
+          this.openDialogTables();
+          break;
+        case ETXType.DELIVERY:
+          this.delivery();
+          break;
+        case ETXType.PICKUP:
+          this.pickUp();
+          break;
       }
+      /*if(this.invoiceService.invoice.type === ETXType.DINEIN){
+        this.openDialogTables();
+      }*/
     });
   }
 
-  tables() {
+  pickUp() {
+    let title = 'Pick up';
+    if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS){
+      this.getField(title, 'Client Name').subscribe((name) => {
+        console.log('pick up modal', name);
+        if(name.text) {
+          this.getField(title, 'Client Phone').subscribe(phone => {
+            if(phone.text){
+              this.invoiceService.setPickUp(name.text, phone.text).subscribe(order => {
+                console.log('pick up this order', order);
+                this.invoiceService.order = order;
+                this.cashService.openGenericInfo('Information', 'This order was set to "Pick up"')
+              }, error1 => {
+                console.error('pick upt', error1);
+                this.cashService.openGenericInfo('Error', 'Can\'t complete pick up operation')
+              });
+            } else {
+              this.cashService.openGenericInfo('Error', 'Can\'t complete pick up operation because no set Client Phone')
+            }
+          });
+        } else {
+          this.cashService.openGenericInfo('Error', 'Can\'t complete pick up operation because no set Client Name')
+        }
+      });
+    } else {
+      this.cashService.openGenericInfo('Error', 'Paid out operation is not allow if a invoice is in progress');
+    }
+  }
+
+  delivery(){
+    let title = 'Delivery';
+    // let order = new Order(this.invoiceService.invoice.id, new OrderType(ETXType.DELIVERY));
+    this.getField(title, 'Client Name').subscribe(name => {
+      if (name) {
+        //order.type.client.name = name.text;
+        this.getField(title, 'Client Address').subscribe(address => {
+          if(address){
+            //order.type.client.address = address.text;
+            this.getField(title, 'Client Phone').subscribe(phone => {
+              if(phone) {
+                //order.type.client.telephone = phone.text;
+                this.getField(title, 'Description').subscribe(descrip => {
+                  if(descrip) {
+                    descrip = descrip.text;
+                  }
+                  this.invoiceService.setDelivery(name.text, address.text, phone.text, descrip).subscribe(order => {
+                    console.log('delivery this order', order);
+                    this.invoiceService.order = order;
+                    this.cashService.openGenericInfo('Information', 'This order was set to "Delivery"');
+                  }, err => {
+                    console.error('delivery', err);
+                    this.cashService.openGenericInfo('Error', 'Can\'t complete delivery operation')
+                  });
+                })
+              } else {
+                this.cashService.openGenericInfo('Error', 'Can\'t complete delivery operation because no set Client Phone')
+              }
+            })
+          } else {
+            this.cashService.openGenericInfo('Error', 'Can\'t complete delivery operation because no set Client Address')
+          }
+        })
+      } else {
+        this.cashService.openGenericInfo('Error', 'Can\'t complete delivery operation because no set Client Name')
+      }
+    }, err => {
+      this.cashService.openGenericInfo('Error', 'Can\'t complete delivery operation')
+    });
+  }
+
+  getField(title, field): Observable<any>{
+    return this.cashService.dialog.open(DialogFilterComponent,
+      { width: '1024px', height: '600px', disableClose: true, data: {title: title+' - '+ field} }).afterClosed();
+  }
+
+  /*tables() {
     console.log('tables');
     this.currentOperation = OtherOpEnum.TABLES;
     this.resetInactivity(true);
@@ -823,5 +917,5 @@ export class OperationsService {
       console.error('Can\'t complete table operation');
       this.cashService.openGenericInfo('Error', 'Can\'t complete table operation because check is in progress');
     }
-  }
+  }*/
 }

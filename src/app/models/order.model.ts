@@ -1,7 +1,7 @@
 import {Table} from "./table.model";
 import {ETXType} from "../utils/delivery.enum";
 
-class Client {
+export interface IClient {
   name: string;
   telephone: string;
   address?: string;
@@ -18,6 +18,10 @@ export interface IOrder {
   id: string;
   invoiceId: string;
   type?: IOrderType;
+}
+
+export class Client implements IClient {
+  constructor(public name: string, public telephone: string, public address?: string) {}
 }
 
 export class OrderType implements IOrderType {
