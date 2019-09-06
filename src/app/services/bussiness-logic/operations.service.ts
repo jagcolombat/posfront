@@ -27,6 +27,7 @@ import {DialogDeliveryComponent} from "../../components/presentationals/dialog-d
 import {Table} from "../../models/table.model";
 import {Order, OrderType} from "../../models/order.model";
 import {Observable} from "rxjs";
+import {InputCcComponent} from "../../components/presentationals/input-cc/input-cc.component";
 
 @Injectable({
   providedIn: 'root'
@@ -359,11 +360,8 @@ export class OperationsService {
     this.invoiceService.tables().subscribe(tables => {
       if (tables.length > 0) {
         const dialogRef = this.cashService.dialog.open(DialogInvoiceComponent,
-          {
-            width: '620px', height: '540px', data: {invoice: tables, detail:'label', title: 'Tables',
-              subtitle: 'Select a table'}
-            , disableClose: true
-          });
+          { width: '620px', height: '540px', data: {invoice: tables, detail:'label', title: 'Tables', subtitle: 'Select a table'}
+            , disableClose: true });
         dialogRef.afterClosed().subscribe(table => {
           console.log('The tables dialog was closed', table);
           if(table){
@@ -679,11 +677,13 @@ export class OperationsService {
           next=> {
             console.log(next);
             this.invoiceService.invoice.tip = next.unitCost;
-            this.creditOp();
+            //this.creditOp();
+            this.setCreditCardType();
           },
           err=> {console.error(err)})
       } else {
-        this.creditOp();
+        //this.creditOp();
+        this.setCreditCardType();
       }
     }
     this.resetInactivity(false);
@@ -704,6 +704,42 @@ export class OperationsService {
             this.cashService.resetEnableState();
           });
   }
+
+  private creditManualOp(title){
+    this.getNumField(title, 'Number').subscribe((number) => {
+      console.log('cc manual modal', number);
+      if(number) {
+        this.getNumField(title, 'CVV').subscribe(cvv => {
+          if(cvv){
+            this.getNumField(title, 'Exp. Date').subscribe(date => {
+              if(date){
+                this.invoiceService.creditManual(this.invoiceService.invoice.total, this.invoiceService.invoice.tip,
+                  number, cvv, date)
+                  .subscribe(data => {
+                      console.log(data);
+                      this.invoiceService.createInvoice();
+                    },
+                    err => {
+                      console.log(err);
+                      this.cashService.openGenericInfo('Error', 'Can\'t complete credit card manual operation');
+                      this.cashService.resetEnableState();
+                    });
+
+              } else {
+                this.cashService.openGenericInfo('Error', 'Can\'t complete credit card manual operation because no set CC Date')
+              }
+            });
+          } else {
+            this.cashService.openGenericInfo('Error', 'Can\'t complete credit card manual operation because no set CCV')
+          }
+        });
+      } else {
+        this.cashService.openGenericInfo('Error', 'Can\'t complete credit card manual operation because no set CC Number')
+      }
+    });
+  }
+
+
 
   private resetTotalFromFS() {
     this.invoiceService.invoice.fsTotal = 0;
@@ -813,7 +849,7 @@ export class OperationsService {
       txTypes.push(ETXType[eTxTypeKey]);
     }*/
     this.cashService.dialog.open(DialogDeliveryComponent,
-      { width: '600px', height: '340px', data: txTypes, disableClose: true })
+      { width: '600px', height: '340px', data: { arr: txTypes}, disableClose: true })
       .afterClosed().subscribe(next => {
       console.log(next);
       (next)? this.invoiceService.invoice.type = next : this.invoiceService.invoice.type = ETXType.DINEIN;
@@ -834,6 +870,26 @@ export class OperationsService {
     });
   }
 
+  setCreditCardType() {
+    let ccTypes= new Array<any>({value: 1, text: 'Automatic'}, {value: 2, text: 'Manual'});
+    this.cashService.dialog.open(DialogDeliveryComponent,
+      { width: '600px', height: '340px', data: {name: 'Credit Card Types', label: 'Select a type', arr: ccTypes},
+        disableClose: true })
+      .afterClosed().subscribe(next => {
+      console.log(next);
+      switch (next) {
+        case 1:
+          this.creditOp();
+          break;
+        case 2:
+          this.creditManualOp('Credit Card');
+          break;
+        default:
+          this.cashService.resetEnableState();
+      }
+    });
+  }
+
   pickUp() {
     let title = 'Pick up';
     if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS){
@@ -842,13 +898,18 @@ export class OperationsService {
         if(name.text) {
           this.getField(title, 'Client Phone').subscribe(phone => {
             if(phone.text){
-              this.invoiceService.setPickUp(name.text, phone.text).subscribe(order => {
-                console.log('pick up this order', order);
-                this.invoiceService.order = order;
-                this.cashService.openGenericInfo('Information', 'This order was set to "Pick up"')
-              }, error1 => {
-                console.error('pick upt', error1);
-                this.cashService.openGenericInfo('Error', 'Can\'t complete pick up operation')
+              this.getField(title, 'Description').subscribe(descrip => {
+                if (descrip.text) {
+                  this.invoiceService.setPickUp(name.text, phone.text, descrip.text).subscribe(order => {
+                    console.log('pick up this order', order);
+                    this.invoiceService.order = order;
+                    this.cashService.openGenericInfo('Information', 'This order was set to "Pick up"')
+                  }, error1 => {
+                    console.error('pick upt', error1);
+                    this.cashService.openGenericInfo('Error', 'Can\'t complete pick up operation')
+                  });
+                } else {
+                }
               });
             } else {
               this.cashService.openGenericInfo('Error', 'Can\'t complete pick up operation because no set Client Phone')
@@ -909,18 +970,15 @@ export class OperationsService {
       { width: '1024px', height: '600px', disableClose: true, data: {title: title+' - '+ field} }).afterClosed();
   }
 
-  /*tables() {
-    console.log('tables');
-    this.currentOperation = OtherOpEnum.TABLES;
-    this.resetInactivity(true);
-    if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS) {
-      this.invoiceService.getInvoiceByStatus(EOperationType.Tables, InvoiceStatus.IN_HOLD)
-        .subscribe(next => this.openDialogInvoices(next, i => {
-            // this.invoiceService.setInvoice(i);
-        }), err => this.cashService.openGenericInfo('Error', 'Can\'t complete tables operation'));
-    } else {
-      console.error('Can\'t complete table operation');
-      this.cashService.openGenericInfo('Error', 'Can\'t complete table operation because check is in progress');
-    }
-  }*/
+  getNumField(name, label): Observable<any>{
+    return this.cashService.dialog.open(InputCcComponent,
+      { width: '480px', height: '650px', data: {number: '', name: name, label: label}, disableClose: true }).afterClosed();
+    /*.subscribe(
+      next=> {
+        console.log(next);
+        this.invoiceService.invoice.tip = next.unitCost;
+        this.creditOp();
+      },
+      err=> {console.error(err)});*/
+  }
 }

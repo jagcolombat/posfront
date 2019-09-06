@@ -32,6 +32,7 @@ import {ListInvoicesComponent} from "../../components/presentationals/list-invoi
 import {CloseBatchComponent} from "../../components/presentationals/close-batch/close-batch.component";
 import {AppComponent} from "../../app.component";
 import {ListTablesComponent} from "../../components/presentationals/list-tables/list-tables.component";
+import {InputCcComponent} from "../../components/presentationals/input-cc/input-cc.component";
 
 @NgModule({
   imports: [
@@ -72,7 +73,8 @@ import {ListTablesComponent} from "../../components/presentationals/list-tables/
     AdminConfigComponent,
     DialogFilterComponent,
     DialogPaidoutComponent,
-    CloseBatchComponent
+    CloseBatchComponent,
+    InputCcComponent
   ],
   entryComponents: [
     AgeValidationComponent,
@@ -95,7 +97,8 @@ import {ListTablesComponent} from "../../components/presentationals/list-tables/
     FilterComponent,
     DialogFilterComponent,
     DialogPaidoutComponent,
-    CloseBatchComponent
+    CloseBatchComponent,
+    InputCcComponent
   ],
 })
 export class HomeModule { }

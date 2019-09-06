@@ -216,6 +216,11 @@ export class InvoiceService {
     return this.dataStorage.paidByCreditCard(creditPayment);
   }
 
+  creditManual(payment: number, tip?: number, ccnumber?: string, cvv?: string, ccdate?: string): Observable<Invoice> {
+    const creditPayment = new CreditCardModel(payment, tip, this.invoice.receiptNumber,PaymentStatus.SAlE, ccnumber, cvv, ccdate);
+    return this.dataStorage.paidByCreditCard(creditPayment);
+  }
+
   ebt(payment: number, tip?: number, transferType?: PaymentStatus): Observable<Invoice> {
     const ebtPayment = new CreditCardModel(payment, tip, this.invoice.receiptNumber,transferType);
     return this.dataStorage.paidByEBTCard(ebtPayment);
@@ -295,8 +300,8 @@ export class InvoiceService {
     return this.dataStorage.updateOrder(createOrder(table));
   }
 
-  setPickUp(data: string, text: any): Observable<Order> {
-    let createOrder = (name, tel) => new Order(this.invoice.id, new OrderType(ETXType.PICKUP, new Client(name, tel)));
+  setPickUp(data: string, text: any, descrip?): Observable<Order> {
+    let createOrder = (name, tel) => new Order(this.invoice.id, new OrderType(ETXType.PICKUP, new Client(name, tel),null, descrip));
     return this.dataStorage.updateOrder(createOrder(data, text));
   }
 

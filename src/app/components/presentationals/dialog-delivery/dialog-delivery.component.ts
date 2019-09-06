@@ -11,8 +11,14 @@ export class DialogDeliveryComponent {
   subtitle = "Select a invoice type:";
 
   constructor(
-    public dialogRef: MatDialogRef<DialogDeliveryComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: Array<any>) {}
+    public dialogRef: MatDialogRef<DialogDeliveryComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
+    if (this.data.name) {
+      this.title = this.data.name;
+    }
+    if (this.data.label) {
+      this.subtitle = this.data.label;
+    }
+  }
 
   onNoClick(): void {
     this.dialogRef.close();
