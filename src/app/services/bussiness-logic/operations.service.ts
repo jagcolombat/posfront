@@ -708,13 +708,13 @@ export class OperationsService {
   private creditManualOp(title){
     this.getNumField(title, 'Number').subscribe((number) => {
       console.log('cc manual modal', number);
-      if(number) {
+      if(number.number) {
         this.getNumField(title, 'CVV').subscribe(cvv => {
-          if(cvv){
+          if(cvv.number){
             this.getNumField(title, 'Exp. Date').subscribe(date => {
-              if(date){
+              if(date.number){
                 this.invoiceService.creditManual(this.invoiceService.invoice.total, this.invoiceService.invoice.tip,
-                  number, cvv, date)
+                  number.number, cvv.number, date.number)
                   .subscribe(data => {
                       console.log(data);
                       this.invoiceService.createInvoice();
@@ -722,9 +722,8 @@ export class OperationsService {
                     err => {
                       console.log(err);
                       this.cashService.openGenericInfo('Error', 'Can\'t complete credit card manual operation');
-                      this.cashService.resetEnableState();
-                    });
-
+                    },
+                    () => this.cashService.resetEnableState());
               } else {
                 this.cashService.openGenericInfo('Error', 'Can\'t complete credit card manual operation because no set CC Date')
               }
