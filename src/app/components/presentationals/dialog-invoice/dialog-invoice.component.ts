@@ -13,7 +13,7 @@ export class DialogInvoiceComponent {
   title = "Invoices";
   subtitle = "Select a invoice:";
   page = 1;
-  sizePage = 9;
+  sizePage = 12;
   constructor(
     public dialogRef: MatDialogRef<DialogInvoiceComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {

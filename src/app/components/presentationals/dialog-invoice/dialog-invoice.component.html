@@ -11,7 +11,8 @@
                 [mat-dialog-close]="i">
           {{i.receiptNumber }}<p>{{i.total | currency }}</p>
         </button>-->
-      <list-invoices [data]="data" [sizePage]="sizePage" [page]="page" [label]="data.label" [detail]="data.detail"></list-invoices>
+      <list-invoices [data]="data" [sizePage]="sizePage" [page]="page" [label]="data.label" [detail]="data.detail"
+                     [subdetail]="data.subdetail"></list-invoices>
       <div class="paginator">
         <pos-paginator [countElements]="data.invoice.length" [sizePage]="sizePage" (evSetPage)="setPage($event)"><!--
         <button class="filter" mat-button (click)="filter()">

@@ -21,6 +21,7 @@ export interface IInvoice {
   tip?: number;
   balance?: number;
   type?: ETXType;
+  orderInfo?: string;
 }
 
 export class Invoice implements IInvoice {
@@ -40,7 +41,8 @@ export class Invoice implements IInvoice {
               public paymentStatus?: PaymentStatus,
               public tip?: number,
               public balance?: number,
-              public type = ETXType.DINEIN
+              public type = ETXType.DINEIN,
+              public orderInfo = 'Table1 Juan Perez 58814727'
               ) {
   }
 }

@@ -1,7 +1,5 @@
 button {
-  background-color: #ed5f5f;
-  border-color: #913939;
-  color: white;
+  height: 120px;
 
   & /deep/ span {
      font-size: 16px;
@@ -11,4 +9,22 @@ button {
        margin: 5px 0;
      }
   }
+}
+
+.red {
+  background-color: #ed5f5f;
+  border-color: #913939;
+  color: white;
+}
+
+.yelow {
+  background-color: #fff05f;
+  border-color: #b6a74a;
+  color: black;
+}
+
+.green {
+  background-color: #1fff9c;
+  border-color: #1a9f57;
+  color: black;
 }

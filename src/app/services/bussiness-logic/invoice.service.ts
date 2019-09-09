@@ -63,7 +63,7 @@ export class InvoiceService {
         this.dataStorage.createInvoice().subscribe(next => {
           console.info('createCheck successfull', next);
           this.receiptNumber = next.receiptNumber;
-          this.invoice = next;
+          this.invoice = <Invoice> next;
           this.isReviewed = false;
           this.evDelAllProds.emit();
           this.setTotal();

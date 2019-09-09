@@ -345,7 +345,7 @@ export class OperationsService {
     if (inv.length > 0) {
       const dialogRef = this.cashService.dialog.open(DialogInvoiceComponent,
         {
-          width: '620px', height: '540px', data: {invoice: inv, label:'receiptNumber', detail:'total'}, disableClose: true
+          width: '780px', height: '660px', data: {invoice: inv, label:'receiptNumber', detail:'total', subdetail: 'orderInfo'}, disableClose: true
         });
       dialogRef.afterClosed().subscribe(order => {
         console.log('The dialog was closed', order);
