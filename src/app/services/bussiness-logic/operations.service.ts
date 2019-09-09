@@ -857,7 +857,7 @@ export class OperationsService {
         (next)? this.invoiceService.invoice.type = next : this.invoiceService.invoice.type = ETXType.DINEIN;
         switch (this.invoiceService.invoice.type) {
           case ETXType.DINEIN:
-            this.openDialogTables();
+            this.dineIn();
             break;
           case ETXType.DELIVERY:
             this.delivery();
@@ -892,6 +892,14 @@ export class OperationsService {
     });
   }
 
+  dineIn(){
+    if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS){
+      this.openDialogTables();
+    } else {
+      this.cashService.openGenericInfo('Error', 'Dine in operation is not allow if a invoice is in progress');
+    }
+  }
+
   pickUp() {
     let title = 'Pick up';
     if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS){
@@ -901,10 +909,10 @@ export class OperationsService {
           this.getField(title, 'Client Phone').subscribe(phone => {
             if(phone.text){
               this.getField(title, 'Description').subscribe(descrip => {
-                if (descrip) {
-                  descrip = descrip.text;
+                if (!descrip.text) {
+                  console.log('pick up no set description');
                 }
-                this.invoiceService.setPickUp(name.text, phone.text, descrip).subscribe(order => {
+                this.invoiceService.setPickUp(name.text, phone.text, descrip.text).subscribe(order => {
                   console.log('pick up this order', order);
                   this.invoiceService.order = order;
                   this.cashService.openGenericInfo('Information', 'This order was set to "Pick up"')
@@ -922,49 +930,53 @@ export class OperationsService {
         }
       });
     } else {
-      this.cashService.openGenericInfo('Error', 'Paid out operation is not allow if a invoice is in progress');
+      this.cashService.openGenericInfo('Error', 'Pick up operation is not allow if a invoice is in progress');
     }
   }
 
   delivery(){
     let title = 'Delivery';
     // let order = new Order(this.invoiceService.invoice.id, new OrderType(ETXType.DELIVERY));
-    this.getField(title, 'Client Name').subscribe(name => {
-      if (name) {
-        //order.type.client.name = name.text;
-        this.getField(title, 'Client Address').subscribe(address => {
-          if(address){
-            //order.type.client.address = address.text;
-            this.getField(title, 'Client Phone').subscribe(phone => {
-              if(phone) {
-                //order.type.client.telephone = phone.text;
-                this.getField(title, 'Description').subscribe(descrip => {
-                  if(descrip) {
-                    descrip = descrip.text;
-                  }
-                  this.invoiceService.setDelivery(name.text, address.text, phone.text, descrip).subscribe(order => {
-                    console.log('delivery this order', order);
-                    this.invoiceService.order = order;
-                    this.cashService.openGenericInfo('Information', 'This order was set to "Delivery"');
-                  }, err => {
-                    console.error('delivery', err);
-                    this.cashService.openGenericInfo('Error', 'Can\'t complete delivery operation')
-                  });
-                })
-              } else {
-                this.cashService.openGenericInfo('Error', 'Can\'t complete delivery operation because no set Client Phone')
-              }
-            })
-          } else {
-            this.cashService.openGenericInfo('Error', 'Can\'t complete delivery operation because no set Client Address')
-          }
-        })
-      } else {
-        this.cashService.openGenericInfo('Error', 'Can\'t complete delivery operation because no set Client Name')
-      }
-    }, err => {
-      this.cashService.openGenericInfo('Error', 'Can\'t complete delivery operation')
-    });
+    if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS){
+      this.getField(title, 'Client Name').subscribe(name => {
+        if (name) {
+          //order.type.client.name = name.text;
+          this.getField(title, 'Client Address').subscribe(address => {
+            if(address){
+              //order.type.client.address = address.text;
+              this.getField(title, 'Client Phone').subscribe(phone => {
+                if(phone) {
+                  //order.type.client.telephone = phone.text;
+                  this.getField(title, 'Description').subscribe(descrip => {
+                    if (!descrip.text) {
+                      console.log('delivery no set description');
+                    }
+                    this.invoiceService.setDelivery(name.text, address.text, phone.text, descrip.text).subscribe(order => {
+                      console.log('delivery this order', order);
+                      this.invoiceService.order = order;
+                      this.cashService.openGenericInfo('Information', 'This order was set to "Delivery"');
+                    }, err => {
+                      console.error('delivery', err);
+                      this.cashService.openGenericInfo('Error', 'Can\'t complete delivery operation')
+                    });
+                  })
+                } else {
+                  this.cashService.openGenericInfo('Error', 'Can\'t complete delivery operation because no set Client Phone')
+                }
+              })
+            } else {
+              this.cashService.openGenericInfo('Error', 'Can\'t complete delivery operation because no set Client Address')
+            }
+          })
+        } else {
+          this.cashService.openGenericInfo('Error', 'Can\'t complete delivery operation because no set Client Name')
+        }
+      }, err => {
+        this.cashService.openGenericInfo('Error', 'Can\'t complete delivery operation')
+      });
+    } else {
+      this.cashService.openGenericInfo('Error', 'Delivery operation is not allow if a invoice is in progress');
+    }
   }
 
   getField(title, field): Observable<any>{
