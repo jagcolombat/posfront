@@ -4,6 +4,7 @@ import {MatDialog} from "@angular/material";
 import {Configuration} from "../../models/configuration.model";
 import {AuthService} from "../api/auth.service";
 import {DataStorageService} from "../api/data-storage.service";
+import {CompanyType} from "../../utils/company-type.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -51,13 +52,17 @@ export class CashService {
     if(fs){
       this.disabledPayment = [false, true, true, true]
     } else if (refund) {
-      this.disabledPayment = [true, false, false, false];
+      this.disabledPayment = this.disabledPaymentByCompany();
       this.disabledPaymentMoney = true;
     } else {
-      this.disabledPayment = [true, false, false, false];
+      this.disabledPayment = this.disabledPaymentByCompany();
       this.disabledPaymentMoney = false;
     }
 
+  }
+
+  disabledPaymentByCompany(){
+    return (this.systemConfig.companyType === CompanyType.MARKET) ? [true, false, false, false] : false;
   }
 
   ebtEnableState() {

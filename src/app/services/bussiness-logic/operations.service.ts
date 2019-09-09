@@ -343,6 +343,7 @@ export class OperationsService {
 
   openDialogInvoices(inv: Invoice[], action: (i: Invoice) => void) {
     if (inv.length > 0) {
+      //inv.map((i, ind) => i.orderInfo = 'Juan Perez Perez - '+ Math.random());
       const dialogRef = this.cashService.dialog.open(DialogInvoiceComponent,
         {
           width: '780px', height: '660px', data: {invoice: inv, label:'receiptNumber', detail:'total', subdetail: 'orderInfo'}, disableClose: true
@@ -416,7 +417,7 @@ export class OperationsService {
 
   refundOp() {
     this.invoiceService.refund().subscribe(i => {
-      console.log('refund', i);
+        console.log('refund', i);
         this.invoiceService.setInvoice(i);
       },
       err => {
@@ -645,8 +646,9 @@ export class OperationsService {
 
   debit() {
     this.currentOperation = 'debit';
-
-    if (this.invoiceService.invoice.total !== 0) {
+    if(this.invoiceService.invoice.isRefund) {
+      this.cash();
+    } else if (this.invoiceService.invoice.total !== 0) {
       let dialogInfoEvents = this.openInfoEventDialog('Debit Card');
       this.invoiceService.debit(this.invoiceService.invoice.total)
         .subscribe(data => {

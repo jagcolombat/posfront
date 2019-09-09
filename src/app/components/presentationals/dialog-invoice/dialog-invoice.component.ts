@@ -15,7 +15,7 @@ export class DialogInvoiceComponent {
   title = "Invoices";
   subtitle = "Select a invoice:";
   page = 1;
-  sizePage = 9;
+  sizePage = 12;
   constructor(
     private cashService: CashService,
     public dialogRef: MatDialogRef<DialogInvoiceComponent>,
