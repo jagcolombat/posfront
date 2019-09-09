@@ -3,6 +3,8 @@ import {Invoice} from "../../../models/invoice.model";
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import {EOperationType} from "../../../utils/operation.type.enum";
 import {Table} from "../../../models/table.model";
+import {DialogFilterComponent} from "../../containers/dialog-filter/dialog-filter.component";
+import {CashService} from "../../../services/bussiness-logic/cash.service";
 
 @Component({
   selector: 'dialog-invoice.component',
@@ -13,8 +15,9 @@ export class DialogInvoiceComponent {
   title = "Invoices";
   subtitle = "Select a invoice:";
   page = 1;
-  sizePage = 12;
+  sizePage = 9;
   constructor(
+    private cashService: CashService,
     public dialogRef: MatDialogRef<DialogInvoiceComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
     if(data.title) this.title = data.title;
@@ -33,6 +36,23 @@ export class DialogInvoiceComponent {
     }
     this.page = this.stockService.actualPage = ev;*/
     this.page = ev;
+  }
+
+  filter() {
+    this.cashService.dialog.open(DialogFilterComponent, { width: '1024px', height: '600px', disableClose: true})
+      .afterClosed()
+      .subscribe(next => {
+        if (next) {
+          console.log('filterDialog', next, this.data.invoice);
+          let invoices = this.data.invoice.filter(i => i.orderInfo.toUpperCase().includes(next.text));
+          invoices.length <= 0 ?
+            this.cashService.openGenericInfo('Information', 'Not match any products with ' +
+              'the specified filter')
+            :
+            this.data.invoice = invoices;
+          this.page = 1;
+        }
+      });
   }
 
 }

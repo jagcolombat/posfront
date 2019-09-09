@@ -14,10 +14,10 @@
       <list-invoices [data]="data" [sizePage]="sizePage" [page]="page" [label]="data.label" [detail]="data.detail"
                      [subdetail]="data.subdetail"></list-invoices>
       <div class="paginator">
-        <pos-paginator [countElements]="data.invoice.length" [sizePage]="sizePage" (evSetPage)="setPage($event)"><!--
-        <button class="filter" mat-button (click)="filter()">
+        <pos-paginator [countElements]="data.invoice.length" [sizePage]="sizePage" (evSetPage)="setPage($event)">
+        <button class="filter" mat-button *ngIf="data.invoice.length > sizePage && title !== 'Tables'" (click)="filter()">
           <span class="fa fa-search fa-lg"></span> FILTER
-        </button>-->
+        </button>
         </pos-paginator>
       </div>
     </div>
