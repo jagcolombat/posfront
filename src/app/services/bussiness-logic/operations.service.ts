@@ -679,8 +679,8 @@ export class OperationsService {
           next=> {
             console.log(next);
             this.invoiceService.invoice.tip = next.unitCost;
-            //this.creditOp();
-            this.setCreditCardType();
+            this.creditOp();
+            //this.setCreditCardType();
           },
           err=> {console.error(err)})
       } else {
@@ -845,26 +845,27 @@ export class OperationsService {
   }
 
   txType() {
-    let txTypes= new Array<any>({value: 1, text: 'Dine In'}, {value: 2, text: 'Pick Up'},{value: 3, text: 'Delivery'});
-    /*for (let eTxTypeKey in ETXType) {
-      txTypes.push(ETXType[eTxTypeKey]);
-    }*/
+    let txTypes= new Array<any>(
+      { value: 1, text: 'Dine In', color: 'red' },
+            { value: 2, text: 'Pick Up', color: 'yellow' },
+            { value: 3, text: 'Delivery', color: 'green' }
+      );
     this.cashService.dialog.open(DialogDeliveryComponent,
       { width: '600px', height: '340px', data: { arr: txTypes}, disableClose: true })
       .afterClosed().subscribe(next => {
-      console.log(next);
-      (next)? this.invoiceService.invoice.type = next : this.invoiceService.invoice.type = ETXType.DINEIN;
-      switch (this.invoiceService.invoice.type) {
-        case ETXType.DINEIN:
-          this.openDialogTables();
-          break;
-        case ETXType.DELIVERY:
-          this.delivery();
-          break;
-        case ETXType.PICKUP:
-          this.pickUp();
-          break;
-      }
+        console.log(next);
+        (next)? this.invoiceService.invoice.type = next : this.invoiceService.invoice.type = ETXType.DINEIN;
+        switch (this.invoiceService.invoice.type) {
+          case ETXType.DINEIN:
+            this.openDialogTables();
+            break;
+          case ETXType.DELIVERY:
+            this.delivery();
+            break;
+          case ETXType.PICKUP:
+            this.pickUp();
+            break;
+        }
       /*if(this.invoiceService.invoice.type === ETXType.DINEIN){
         this.openDialogTables();
       }*/
@@ -900,17 +901,17 @@ export class OperationsService {
           this.getField(title, 'Client Phone').subscribe(phone => {
             if(phone.text){
               this.getField(title, 'Description').subscribe(descrip => {
-                if (descrip.text) {
-                  this.invoiceService.setPickUp(name.text, phone.text, descrip.text).subscribe(order => {
-                    console.log('pick up this order', order);
-                    this.invoiceService.order = order;
-                    this.cashService.openGenericInfo('Information', 'This order was set to "Pick up"')
-                  }, error1 => {
-                    console.error('pick upt', error1);
-                    this.cashService.openGenericInfo('Error', 'Can\'t complete pick up operation')
-                  });
-                } else {
+                if (descrip) {
+                  descrip = descrip.text;
                 }
+                this.invoiceService.setPickUp(name.text, phone.text, descrip).subscribe(order => {
+                  console.log('pick up this order', order);
+                  this.invoiceService.order = order;
+                  this.cashService.openGenericInfo('Information', 'This order was set to "Pick up"')
+                }, error1 => {
+                  console.error('pick upt', error1);
+                  this.cashService.openGenericInfo('Error', 'Can\'t complete pick up operation')
+                });
               });
             } else {
               this.cashService.openGenericInfo('Error', 'Can\'t complete pick up operation because no set Client Phone')

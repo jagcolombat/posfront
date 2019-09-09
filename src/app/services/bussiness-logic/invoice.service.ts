@@ -3,7 +3,7 @@ import {AuthService} from "../api/auth.service";
 import {ProductOrder} from "../../models/product-order.model";
 import {DataStorageService} from "../api/data-storage.service";
 import {BehaviorSubject, Observable} from "rxjs";
-import {CreditCardModel, Product} from "../../models";
+import {CreditCardModel, Product, SwipeMethod} from "../../models";
 import {InvoiceStatus} from "../../utils/invoice-status.enum";
 import {Invoice} from "../../models/invoice.model";
 import {map} from "rxjs/operators";
@@ -217,7 +217,8 @@ export class InvoiceService {
   }
 
   creditManual(payment: number, tip?: number, ccnumber?: string, cvv?: string, ccdate?: string): Observable<Invoice> {
-    const creditPayment = new CreditCardModel(payment, tip, this.invoice.receiptNumber,PaymentStatus.SAlE, ccnumber, cvv, ccdate);
+    const creditPayment = new CreditCardModel(payment, tip, this.invoice.receiptNumber,PaymentStatus.SAlE, ccnumber, cvv,
+      ccdate, SwipeMethod.MANUAL);
     return this.dataStorage.paidByCreditCard(creditPayment);
   }
 

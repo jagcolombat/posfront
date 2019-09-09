@@ -44,12 +44,10 @@ export class DialogInvoiceComponent {
       .subscribe(next => {
         if (next) {
           console.log('filterDialog', next, this.data.invoice);
-          let invoices = this.data.invoice.filter(i => i.orderInfo.toUpperCase().includes(next.text));
+          let invoices = this.data.invoice.filter(i => i.orderInfo && i.orderInfo.toUpperCase().includes(next.text));
           invoices.length <= 0 ?
-            this.cashService.openGenericInfo('Information', 'Not match any products with ' +
-              'the specified filter')
-            :
-            this.data.invoice = invoices;
+            this.cashService.openGenericInfo('Information', 'Not match any invoices with the specified filter')
+            : this.data.invoice = invoices;
           this.page = 1;
         }
       });

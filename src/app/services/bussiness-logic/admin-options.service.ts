@@ -101,7 +101,7 @@ export class AdminOptionsService {
   emplZ() {
     this.dataStorage.getApplicationUsers().subscribe(next =>  {
       console.log('emplZ', next);
-      next.unshift({id: "-1", userName: "All employes"});
+      next.unshift({id: "-1", userName: "All employees"});
       this.cashService.dialog.open(GenericSalesComponent,
         {
           width: '480px', height: '620px', disableClose: true, data: {title: 'EMPL Z', empl: next }

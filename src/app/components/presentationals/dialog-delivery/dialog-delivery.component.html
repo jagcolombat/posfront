@@ -7,7 +7,7 @@
   <div mat-dialog-content>
     <p>{{ subtitle }}</p>
     <div class="buttons">
-      <button mat-button fxFlex="170px" *ngFor="let i of data.arr" [mat-dialog-close]="i.value">
+      <button mat-button fxFlex="170px" *ngFor="let i of data.arr" [mat-dialog-close]="i.value" [ngClass]="i.color">
         {{i.text | uppercase}}
       </button>
     </div>
