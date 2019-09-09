@@ -360,7 +360,7 @@ export class OperationsService {
     this.invoiceService.tables().subscribe(tables => {
       if (tables.length > 0) {
         const dialogRef = this.cashService.dialog.open(DialogInvoiceComponent,
-          { width: '620px', height: '540px', data: {invoice: tables, detail:'label', title: 'Tables', subtitle: 'Select a table'}
+          { width: '780px', height: '660px', data: {invoice: tables, detail:'label', title: 'Tables', subtitle: 'Select a table'}
             , disableClose: true });
         dialogRef.afterClosed().subscribe(table => {
           console.log('The tables dialog was closed', table);
