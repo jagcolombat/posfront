@@ -893,16 +893,16 @@ export class OperationsService {
   }
 
   dineIn(){
-    if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS){
+    //if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS){
       this.openDialogTables();
-    } else {
+    /*} else {
       this.cashService.openGenericInfo('Error', 'Dine in operation is not allow if a invoice is in progress');
-    }
+    }*/
   }
 
   pickUp() {
     let title = 'Pick up';
-    if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS){
+    //if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS){
       this.getField(title, 'Client Name').subscribe((name) => {
         console.log('pick up modal', name);
         if(name.text) {
@@ -929,15 +929,15 @@ export class OperationsService {
           this.cashService.openGenericInfo('Error', 'Can\'t complete pick up operation because no set Client Name')
         }
       });
-    } else {
+    /*} else {
       this.cashService.openGenericInfo('Error', 'Pick up operation is not allow if a invoice is in progress');
-    }
+    }*/
   }
 
   delivery(){
     let title = 'Delivery';
     // let order = new Order(this.invoiceService.invoice.id, new OrderType(ETXType.DELIVERY));
-    if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS){
+    //if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS){
       this.getField(title, 'Client Name').subscribe(name => {
         if (name) {
           //order.type.client.name = name.text;
@@ -974,9 +974,9 @@ export class OperationsService {
       }, err => {
         this.cashService.openGenericInfo('Error', 'Can\'t complete delivery operation')
       });
-    } else {
+    /*} else {
       this.cashService.openGenericInfo('Error', 'Delivery operation is not allow if a invoice is in progress');
-    }
+    }*/
   }
 
   getField(title, field): Observable<any>{
