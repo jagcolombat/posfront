@@ -15,7 +15,8 @@
                      [subdetail]="data.subdetail"></list-invoices>
       <div class="paginator">
         <pos-paginator [countElements]="data.invoice.length" [sizePage]="sizePage" (evSetPage)="setPage($event)">
-        <button class="filter" mat-button *ngIf="data.invoice.length > sizePage && title !== 'Tables'" (click)="filter()">
+        <!--<button class="filter" mat-button *ngIf="data.invoice.length > sizePage && title !== 'Tables'" (click)="filter()">-->
+        <button class="filter" mat-button *ngIf="title !== 'Tables'" (click)="filter()">
           <span class="fa fa-search fa-lg"></span> FILTER
         </button>
         </pos-paginator>
