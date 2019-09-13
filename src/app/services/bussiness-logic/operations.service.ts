@@ -25,9 +25,9 @@ import {AdminOpEnum} from "../../utils/operations/admin-op.enum";
 import {ETXType} from "../../utils/delivery.enum";
 import {DialogDeliveryComponent} from "../../components/presentationals/dialog-delivery/dialog-delivery.component";
 import {Table} from "../../models/table.model";
-import {Order, OrderType} from "../../models/order.model";
 import {Observable} from "rxjs";
 import {InputCcComponent} from "../../components/presentationals/input-cc/input-cc.component";
+import {operationsWithClear} from "../../utils/functions/functions";
 
 @Injectable({
   providedIn: 'root'
@@ -68,13 +68,7 @@ export class OperationsService {
       .afterClosed().subscribe(next => {
       if (next !== undefined && next.confirm) {*/
         if (this.invoiceService.invoiceProductSelected.length <= 0 ||
-          this.currentOperation === FinancialOpEnum.REVIEW ||
-          this.currentOperation === FinancialOpEnum.REPRINT ||
-          this.currentOperation === TotalsOpEnum.FS_SUBTOTAL ||
-          this.currentOperation === TotalsOpEnum.SUBTOTAL ||
-          this.currentOperation === PaymentOpEnum.CASH ||
-          this.currentOperation === PaymentOpEnum.EBT_CARD ||
-          this.currentOperation === AdminOpEnum.CANCEL_CHECK) {
+          operationsWithClear.filter(i => i === this.currentOperation).length > 0) {
           this.clearOp(false);
         } else {
           this.cashService.getSystemConfig().subscribe(config => {
@@ -90,14 +84,7 @@ export class OperationsService {
   }
 
   clearOp(total:boolean = true){
-    if(this.currentOperation === FinancialOpEnum.REVIEW ||
-      this.currentOperation === FinancialOpEnum.REPRINT ||
-      this.currentOperation === TotalsOpEnum.FS_SUBTOTAL ||
-      this.currentOperation === TotalsOpEnum.SUBTOTAL ||
-      this.currentOperation === PaymentOpEnum.CASH ||
-      this.currentOperation === PaymentOpEnum.EBT_CARD ||
-      this.currentOperation === AdminOpEnum.CANCEL_CHECK ||
-      this.currentOperation === AdminOpEnum.REMOVE_HOLD){
+    if(operationsWithClear.filter(i => i === this.currentOperation).length > 0){
         this.cashService.resetEnableState();
         this.invoiceService.isReviewed = false;
         if(this.currentOperation === FinancialOpEnum.REVIEW ||
@@ -249,7 +236,7 @@ export class OperationsService {
   recallCheck() {
     console.log('recallCheck');
     this.currentOperation = FinancialOpEnum.RECALL;
-
+    this.invoiceService.isReviewed = true;
     this.resetInactivity(true);
     if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS) {
       this.invoiceService.digits ?
@@ -994,5 +981,11 @@ export class OperationsService {
         this.creditOp();
       },
       err=> {console.error(err)});*/
+  }
+
+  getOrderInfo() {
+    console.log('getOrderInfo', this.invoiceService.invoice.orderInfo);/*
+    this.invoiceService.invoice.subscribe(next => console.log('Invoice', next));*/
+    return ETXType[this.invoiceService.order.type.type];
   }
 }

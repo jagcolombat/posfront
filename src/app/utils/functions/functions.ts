@@ -1,5 +1,7 @@
 import {Report} from "../../models/report.model";
-import {ReportDetail, ReportSummary} from "../../models/report-detail.model";
+import {ReportSummary} from "../../models/report-detail.model";
+import {FinancialOpEnum, PaymentOpEnum, TotalsOpEnum} from "../operations";
+import {AdminOpEnum} from "../operations/admin-op.enum";
 
 export function leaveFocusOnButton (ev: any) {
   (ev.target.tagName !== 'BUTTON') ? ev.target.parentElement.blur() : ev.target.blur();
@@ -20,3 +22,6 @@ export function transformReportSummary(report, type: string): ReportSummary {
     type.toUpperCase()
   );
 }
+
+export const operationsWithClear = [FinancialOpEnum.REVIEW, FinancialOpEnum.REPRINT, TotalsOpEnum.FS_SUBTOTAL,
+  TotalsOpEnum.SUBTOTAL, PaymentOpEnum.CASH , PaymentOpEnum.EBT_CARD, AdminOpEnum.CANCEL_CHECK, AdminOpEnum.REMOVE_HOLD]

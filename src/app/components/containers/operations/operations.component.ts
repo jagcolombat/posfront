@@ -31,8 +31,8 @@ export class OperationsComponent implements OnInit {
   @Input() paymentDisabled: boolean | boolean[] = this.operationService.cashService.disabledPayment;
 
   @Input() otherOperations = [OtherOpEnum.PRINT_LAST, OtherOpEnum.NO_SALE, OtherOpEnum.PAID_OUT, OtherOpEnum.HOUSE_CHARGE,
-    OtherOpEnum.TABLES];
-  @Input() otherColor = ['yellow', 'blue', 'blue', 'green','blue'];
+    OtherOpEnum.TABLES, OtherOpEnum.ORDER_INFO];
+  @Input() otherColor = ['yellow', 'blue', 'blue', 'green','blue','blue'];
 
   @Input() moneyOperations = ['1', '5', '10', '20', '50', '100'];
   @Input() moneyColor = ['one', 'five', 'ten', 'twenty', 'fifty', 'hundrey'];
@@ -143,6 +143,9 @@ export class OperationsComponent implements OnInit {
         break;
       case 'Tables':
         this.operationService.openDialogTables();
+        break;
+      case OtherOpEnum.ORDER_INFO:
+        this.operationService.cashService.openGenericInfo(OtherOpEnum.ORDER_INFO, this.operationService.getOrderInfo());
         break;
     }
   }

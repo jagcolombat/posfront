@@ -29,12 +29,6 @@ export class DialogInvoiceComponent {
   }
 
   setPage(ev){
-    /*if(ev > this.page){
-      this.stockService.setOperation(EOperationType.PageNext, ev, 'hold order');
-    } else {
-      this.stockService.setOperation(EOperationType.PagePrevious, ev, 'hold order');
-    }
-    this.page = this.stockService.actualPage = ev;*/
     this.page = ev;
   }
 

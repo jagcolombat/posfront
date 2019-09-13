@@ -41,5 +41,6 @@ export enum EOperationType {
 
     AgeVerification,
     List,
-    Tables
+    Tables,
+    OrderInfo
 }
