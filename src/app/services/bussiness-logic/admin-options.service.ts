@@ -91,7 +91,7 @@ export class AdminOptionsService {
       console.log('sysZ', next);
       this.cashService.dialog.open(GenericSalesComponent,
         {
-          width: '480px', height: '620px', disableClose: true, data: {title: 'SYS Z', content: next }
+          width: '480px', height: '620px', disableClose: true, data: {title: AdminOpEnum.SYSZ, content: next }
         })
     }, error1 => {
       this.cashService.openGenericInfo('Error', 'Can\'t complete sysZ operation')
@@ -104,7 +104,7 @@ export class AdminOptionsService {
       next.unshift({id: "-1", userName: "All employees"});
       this.cashService.dialog.open(GenericSalesComponent,
         {
-          width: '480px', height: '620px', disableClose: true, data: {title: 'EMPL Z', empl: next }
+          width: '480px', height: '620px', disableClose: true, data: {title: AdminOpEnum.EMPLZ, empl: next }
         })
     }, error1 => {
       this.cashService.openGenericInfo('Error', 'Can\'t complete emplZ operation')

@@ -1,8 +1,8 @@
 export enum AdminOpEnum {
   DEPARMENTS = 'Departments',
   APPLY_DISCOUNT = 'Apply Discount',
-  EMPLZ = 'Empl Z',
-  SYSZ = 'Sys Z',
+  EMPLZ = 'Daily Inv RPRT',
+  SYSZ = 'Daily PMNT Type',
   WTDZ = 'WTD Z',
   CHANGE_PRINTER = 'Change Printer',
   CLOSE_BROWSER = 'Close Browser',

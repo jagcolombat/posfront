@@ -26,8 +26,9 @@ export class OperationsComponent implements OnInit {
 
   @Input() numpadOption = '@/FOR';
 
-  @Input() paymentOperations = [PaymentOpEnum.EBT_CARD, PaymentOpEnum.DEBIT_CARD, PaymentOpEnum.CREDIT_CARD, PaymentOpEnum.CASH];
-  @Input() paymentColor = ['yellow', 'blue', 'blue', 'green'];
+  @Input() paymentOperations = [PaymentOpEnum.EBT_CARD, PaymentOpEnum.DEBIT_CARD, PaymentOpEnum.CREDIT_CARD,
+    PaymentOpEnum.CASH, PaymentOpEnum.OTHER];
+  @Input() paymentColor = ['yellow', 'yellow', 'yellow', 'green', 'blue'];
   @Input() paymentDisabled: boolean | boolean[] = this.operationService.cashService.disabledPayment;
 
   @Input() otherOperations = [OtherOpEnum.PRINT_LAST, OtherOpEnum.NO_SALE, OtherOpEnum.PAID_OUT, OtherOpEnum.HOUSE_CHARGE,
@@ -42,8 +43,13 @@ export class OperationsComponent implements OnInit {
   ngOnInit() {
     // this.operationService.cashService.systemConfig.companyType = CompanyType.RESTAURANT;
     this.operationService.cashService.getSystemConfig().subscribe(config => {
-      if(this.operationService.cashService.systemConfig.companyType === CompanyType.RESTAURANT)
+      if(this.operationService.cashService.systemConfig.companyType === CompanyType.RESTAURANT){
         this.paymentOperations.splice(0,1);
+        this.paymentColor.splice(0,1);
+      } else {
+        this.moneyOperations.push(this.paymentOperations.splice(-1,1)[0]);
+        this.moneyColor.push(this.paymentColor.splice(-1,1)[0]);
+      }
     }, err => {
       this.operationService.cashService.openGenericInfo('Error', 'Can\'t get configuration');
     });
@@ -113,7 +119,10 @@ export class OperationsComponent implements OnInit {
   paymentKey(ev) {
     switch (ev) {
       case PaymentOpEnum.CASH:
-        this.operationService.cash();
+        this.operationService.cash(PaymentOpEnum.CASH);
+        break;
+      case PaymentOpEnum.OTHER:
+        this.operationService.cash(PaymentOpEnum.OTHER);
         break;
       case PaymentOpEnum.EBT_CARD:
         this.operationService.ebt();

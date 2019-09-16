@@ -485,7 +485,7 @@ export class OperationsService {
     return this.invoiceService.invoice.balance !== undefined ? this.invoiceService.invoice.balance: this.invoiceService.invoice.total;
   }
 
-  cash() {
+  cash(opType?: PaymentOpEnum) {
     console.log('cash');
     const totalToPaid = this.getTotalToPaid();
     if (totalToPaid < 0  && this.invoiceService.invoice.isRefund) {
@@ -520,7 +520,7 @@ export class OperationsService {
         this.cashPaid(data, totalToPaid)
       });
     }
-    this.currentOperation = PaymentOpEnum.CASH;
+    this.currentOperation = opType;
     this.resetInactivity(false);
   }
 
@@ -545,6 +545,7 @@ export class OperationsService {
       })
       .afterClosed().subscribe((result: string) => {
         if (result !== '') {
+          console.log('cash', this.currentOperation);
           this.invoiceService.cash(payment, totalToPaid)
             .subscribe(data => {
                 console.log(data);
