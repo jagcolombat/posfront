@@ -15,7 +15,7 @@ import {PaymentStatus} from "../../utils/payment-status.enum";
 import {Client, Order, OrderType} from "../../models/order.model";
 import {ETXType} from "../../utils/delivery.enum";
 import {Table} from "../../models/table.model";
-import { PaymentOpEnum } from 'src/app/utils/operations';
+import {PaymentOpEnum} from 'src/app/utils/operations';
 
 @Injectable({
   providedIn: 'root'
@@ -201,7 +201,7 @@ export class InvoiceService {
     return this.dataStorage.changeInvoiceToVoid(this.invoice)
   }
 
-  cash(payment: number, totalToPaid: number, type: PaymentOpEnum): Observable<Invoice> {
+  cash(payment: number, totalToPaid: number, type: PaymentOpEnum = PaymentOpEnum.CASH): Observable<Invoice> {
     //const cashPayment = new CashPaymentModel(this.invoice.receiptNumber, payment, this.invoice.total);
     const cashPayment = new CashPaymentModel(this.invoice.receiptNumber, totalToPaid, payment, type);
     return this.dataStorage.paidByCash(cashPayment);

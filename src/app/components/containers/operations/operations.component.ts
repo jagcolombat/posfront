@@ -160,6 +160,6 @@ export class OperationsComponent implements OnInit {
   }
 
   moneyKey(ev) {
-    this.operationService.cashPaid(+ev);
+    this.operationService.cashMoney(+ev);
   }
 }

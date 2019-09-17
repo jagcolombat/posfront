@@ -524,6 +524,11 @@ export class OperationsService {
     this.resetInactivity(false);
   }
 
+  cashMoney(paid){
+    this.currentOperation = PaymentOpEnum.CASH;
+    this.cashPaid(paid);
+  }
+
   cashPaid(paid, totalToPaid?:number){
     let total2Paid = (totalToPaid) ? totalToPaid : this.getTotalToPaid();
     if (paid > 0) {
@@ -546,7 +551,7 @@ export class OperationsService {
       .afterClosed().subscribe((result: string) => {
         if (result !== '') {
           console.log('cash', this.currentOperation);
-          this.invoiceService.cash(payment, totalToPaid)
+          this.invoiceService.cash(payment, totalToPaid, <PaymentOpEnum>this.currentOperation)
             .subscribe(data => {
                 console.log(data);
                 if(+valueToReturn >= 0 || data.status === InvoiceStatus.PAID) this.invoiceService.createInvoice();
