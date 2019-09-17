@@ -33,7 +33,7 @@ import {operationsWithClear} from "../../utils/functions/functions";
   providedIn: 'root'
 })
 export class OperationsService {
-  inactivityTime: number = 600;
+  inactivityTime: number = 60;
   timer: any;
   currentOperation: string;
   invTotalsBeforeFSSubTotal = {total: 0, tax: 0, subtotal: 0};
@@ -52,7 +52,7 @@ export class OperationsService {
         this.logout();
       else
         this.resetInactivity(true)
-    },this.inactivityTime * 1000);
+    },this.inactivityTime * 60000);
   }
 
   resetInactivity(cont: boolean) {

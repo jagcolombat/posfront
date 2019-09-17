@@ -83,7 +83,7 @@ export class AdminConfigComponent implements OnInit {
   }
 
   setTime4Logout($event:any) {
-    console.log('setTime4Logout', $event, this.timeLogout)
+    console.log('setTime4Logout', $event, this.timeLogout);
   }
 
   setAdmin4ClearVoid($event: any) {
@@ -122,6 +122,8 @@ export class AdminConfigComponent implements OnInit {
   done(){
     if(this.closeBatch)
       this.dialogRef.close(this.typeCloseBatch);
+    else if(this.timeLogout)
+      this.dialogRef.close(this.timeLogout);
     else {
       this.dialogRef.close();
     }

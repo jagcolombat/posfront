@@ -126,7 +126,13 @@ export class AdminOptionsService {
       this.cashService.dialog.open(AdminConfigComponent,
         {
           width: '480px', height: '600px', disableClose: true, data: {title: 'Configuration'}
-        })/*
+        }).afterClosed().subscribe(next => {
+          if(next){
+            console.log('configOption', next);
+            this.operationService.inactivityTime = +next;
+            this.operationService.resetInactivity(true);
+          }
+      })/*
     }, error1 => {
       this.cashService.openGenericInfo('Error', 'Can\'t complete Configuration operation', error1);
     });*/
