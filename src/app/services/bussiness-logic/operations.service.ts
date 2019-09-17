@@ -499,7 +499,7 @@ export class OperationsService {
         .subscribe(
           result =>{
             if (result !== '') {
-              this.invoiceService.cash(totalToPaid, totalToPaid)
+              this.invoiceService.cash(totalToPaid, totalToPaid, opType)
                 .subscribe(
                   data =>
                   {
