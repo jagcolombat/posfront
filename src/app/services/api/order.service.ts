@@ -23,4 +23,9 @@ export class OrderService {
     return this._http.put<Order>(url + this.path + '/' + order.invoiceId , order)
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
+
+  getByInvoice(url: string, invoiceId: string) {
+    return this._http.get<Order>(url + this.path + '/invoice/' + invoiceId)
+      .pipe(catchError(this.processHttpMsgService.handleError));
+  }
 }

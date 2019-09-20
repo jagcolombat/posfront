@@ -112,4 +112,8 @@ export class CashService {
     });
   }
 
+  getOrder(inv: string){
+    return this.dataStorage.getOrder(inv);
+  }
+
 }

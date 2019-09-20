@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable, OnDestroy} from '@angular/core';
 import {AgeValidationComponent} from "../../components/presentationals/age-validation/age-validation.component";
 import {GenericInfoModalComponent} from "../../components/presentationals/generic-info-modal/generic-info-modal.component";
 import {MatDialog} from "@angular/material";
@@ -15,7 +15,7 @@ export const AGE = 18;
 @Injectable({
   providedIn: 'root'
 })
-export class ProductOrderService {
+export class ProductOrderService implements OnDestroy {
   // ageValidation: boolean;
   departments: Department[];
   quantityByProduct = 1;

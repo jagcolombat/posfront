@@ -6,6 +6,7 @@ import {CloseBatch} from "../../../utils/close.batch.enum";
 import { GridOptions, GridApi } from 'ag-grid-community';
 import {Report} from "../../../models/report.model";
 import {transformCBReport} from "../../../utils/functions/functions";
+import {CashService} from "../../../services/bussiness-logic/cash.service";
 
 @Component({
   selector: 'admin-config',
@@ -68,7 +69,8 @@ export class AdminConfigComponent implements OnInit {
   ];
 
   constructor( public dialogRef: MatDialogRef<AdminConfigComponent>,
-               @Inject(MAT_DIALOG_DATA) public data: any, private dataStorage: DataStorageService) {
+               @Inject(MAT_DIALOG_DATA) public data: any, private dataStorage: DataStorageService,
+               private cashService: CashService) {
     this.updateGridOptionsSummary();
     this.updateGridOptionsDetails();
   }
@@ -101,7 +103,10 @@ export class AdminConfigComponent implements OnInit {
           this.cbReport = next;
           this.setDataByType();
         },
-        err => console.error(err));
+        err => {
+          console.error(err);
+          this.cashService.openGenericInfo('Error','Can\'t complete close batch report operation');
+        });
     } else {
       this.setDataByType();
     }
@@ -117,6 +122,7 @@ export class AdminConfigComponent implements OnInit {
         Number((v.amount).toFixed(2)))
       this.setData(this.cbReport.reportDetailLookups, this.gridOptionsDetails);
     }
+    this.loading = false;
   }
 
   done(){

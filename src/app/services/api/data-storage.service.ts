@@ -212,6 +212,11 @@ export class DataStorageService {
   }
 
   // Order
+  getOrder(inv: string){
+    return this.orderService.getByInvoice(this.url, inv);
+  }
+
+
   updateOrder(order: Order): Observable<Order>{
     return this.orderService.update(this.url, order);
   }

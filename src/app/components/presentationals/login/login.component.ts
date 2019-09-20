@@ -1,22 +1,26 @@
-import {Component, EventEmitter, Inject, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { AuthService } from "../../../services/api/auth.service";
 import { Router } from "@angular/router";
+import {InitViewService} from "../../../services/bussiness-logic/init-view.service";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
   @Output() evRol = new EventEmitter<boolean>();
   @Input() rol: string;
   input = "";
   tryValidation:boolean;
   valid: boolean;
   errorMsg: string;
+  subscription: Subscription [] = [];
 
-  constructor(private router: Router, private authService: AuthService) {
+  constructor(private router: Router, private authService: AuthService, private initService: InitViewService) {
+    this.subscription.push(this.initService.evUserScanned.subscribe(next => this.userScan(next)));
   }
 
   ngOnInit() {
@@ -91,4 +95,14 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  ngOnDestroy() {
+    this.subscription.map(sub => sub.unsubscribe());
+  }
+
+  private userScan(user: string) {
+    let userTmp = user.substr(1, user.length-2);
+    console.log('userScan', user, userTmp);
+    this.input = userTmp;
+    this.login();
+  }
 }

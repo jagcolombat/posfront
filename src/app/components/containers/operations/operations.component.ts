@@ -154,7 +154,8 @@ export class OperationsComponent implements OnInit {
         this.operationService.openDialogTables();
         break;
       case OtherOpEnum.ORDER_INFO:
-        this.operationService.cashService.openGenericInfo(OtherOpEnum.ORDER_INFO, this.operationService.getOrderInfo());
+        /*this.operationService.cashService.openGenericInfo(OtherOpEnum.ORDER_INFO, this.operationService.getOrderInfo());*/
+        this.operationService.getOrderInfo();
         break;
     }
   }

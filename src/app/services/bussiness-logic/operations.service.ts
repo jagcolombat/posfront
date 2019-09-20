@@ -25,9 +25,11 @@ import {AdminOpEnum} from "../../utils/operations/admin-op.enum";
 import {ETXType} from "../../utils/delivery.enum";
 import {DialogDeliveryComponent} from "../../components/presentationals/dialog-delivery/dialog-delivery.component";
 import {Table} from "../../models/table.model";
-import {Observable} from "rxjs";
+import {Observable, of} from "rxjs";
 import {InputCcComponent} from "../../components/presentationals/input-cc/input-cc.component";
 import {operationsWithClear} from "../../utils/functions/functions";
+import {Order} from "../../models/order.model";
+import {OtherOpEnum} from "../../utils/operations/other.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -989,9 +991,27 @@ export class OperationsService {
       err=> {console.error(err)});*/
   }
 
-  getOrderInfo() {
+  getOrderInfo()/*: Observable<Order>*/ {
     console.log('getOrderInfo', this.invoiceService.invoice.orderInfo);/*
     this.invoiceService.invoice.subscribe(next => console.log('Invoice', next));*/
-    return ETXType[this.invoiceService.order.type.type];
+    if(this.invoiceService.order){
+      this.showOrderInfo(this.invoiceService.order);
+    } else {
+      return this.cashService.getOrder(this.invoiceService.invoice.receiptNumber).subscribe(
+        next => {
+          console.log(next);
+          this.invoiceService.order = next;
+          this.showOrderInfo(this.invoiceService.order);
+        },
+        err => {
+          console.error(err);
+          this.cashService.openGenericInfo('Error', 'Can\'t complete get order operation');
+        }
+      );
+    }
+  }
+
+  showOrderInfo(order: Order){
+    this.cashService.openGenericInfo(OtherOpEnum.ORDER_INFO, ETXType[order.type.type]);
   }
 }
