@@ -23,6 +23,9 @@ export class InputCcComponent implements OnInit {
     if (this.data.label) {
       this.label = this.data.label;
     }
+    if(this.data.type){
+      this.maxlength = this.data.type.max;
+    }
   }
 
   getKeys(ev) {
@@ -31,7 +34,7 @@ export class InputCcComponent implements OnInit {
     } else if (ev.value === 'Clear') {
       this.resetPrice();
     } else if (ev.value === 'Enter') {
-      this.addGenericProd();
+      this.sendData();
     } else if (ev.value === 'Back') {
       this.back();
     }
@@ -56,7 +59,7 @@ export class InputCcComponent implements OnInit {
     }
   }
 
-  addGenericProd() {
+  sendData() {
     // console.log("addGenericProd", this.data);
     this.dialogRef.close(this.data);
   }

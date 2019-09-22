@@ -9,7 +9,7 @@
       <p>
         <mat-form-field>
           <input matInput placeholder="{{label}}" type="text" [(ngModel)]="digits" name="price" #price="ngModel"
-                 required [maxlength]="maxlength" [size]="maxlength" disabled />
+                 required [maxlength]="maxlength" [size]="maxlength" disabled [mask]="'(000) 000-0000'"/>
           <mat-error *ngIf="price.errors?.required">{{label}} is required</mat-error>
         </mat-form-field>
       </p>

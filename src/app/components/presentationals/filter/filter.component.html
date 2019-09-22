@@ -1,8 +1,8 @@
 <form novalidate #loginForm="ngForm" fxFlex="100" fxLayout="column" fxLayoutAlign="space-between">
   <div class="form-field" fxFlex="60" fxLayoutAlign="start center">
     <mat-form-field fxFlex="60">
-      <input matInput placeholder="Input text" type="text" [(ngModel)]="input"
-             name="filter" #filter="ngModel" required [minlength]="2" [maxlength]="100" (input)="tryValidation = false"/>
+      <textarea matInput placeholder="Input text" type="text" [(ngModel)]="input" name="filter" #filter="ngModel" required
+                [minlength]="2" [maxlength]="max" matTextareaAutosize="true" (input)="tryValidation = false"></textarea>
       <mat-error *ngIf="filter.errors?.required">Text to search is required</mat-error>
     </mat-form-field>
     <mat-error *ngIf="!valid && tryValidation "><span class="fa fa-warning fa-lg"></span> {{errorMsg}}</mat-error>

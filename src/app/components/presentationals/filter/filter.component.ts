@@ -1,5 +1,5 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {MatDialogRef} from "@angular/material";
+import {Component, EventEmitter, Inject, Input, OnInit, Output} from '@angular/core';
+import {MAT_DIALOG_DATA} from "@angular/material";
 
 @Component({
   selector: 'app-filter',
@@ -17,11 +17,16 @@ export class FilterComponent implements OnInit {
     'V', 'B','N', 'M'];
   operations = ['Back', 'Clear', 'Enter'];
   opColor = ['yellow','yellow', 'red'];
+  @Input() max: number = 100;
   @Output() evFilter = new EventEmitter<string>();
 
-  constructor() { }
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit() {
+    console.log('filter component ', this.data);
+    if(this.data.type){
+      this.max = this.data.type.max;
+    }
   }
 
   getKeys(ev) {
@@ -54,8 +59,8 @@ export class FilterComponent implements OnInit {
   private filter() {
     let text = this.input.trim();
     console.log('filter', text);
-    (text.length > 1 && text.length <= 100) ? this.evFilter.emit(text):
-      this.invalid('Text must have between 2 and 100 characters');
+    (text.length > 1 && text.length <= this.max) ? this.evFilter.emit(text):
+      this.invalid('Text must have between 2 and '+ this.max +' characters');
   }
 
   invalid(msg?: string) {

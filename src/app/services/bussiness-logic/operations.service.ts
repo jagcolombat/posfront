@@ -25,11 +25,13 @@ import {AdminOpEnum} from "../../utils/operations/admin-op.enum";
 import {ETXType} from "../../utils/delivery.enum";
 import {DialogDeliveryComponent} from "../../components/presentationals/dialog-delivery/dialog-delivery.component";
 import {Table} from "../../models/table.model";
-import {Observable, of} from "rxjs";
+import {Observable} from "rxjs";
 import {InputCcComponent} from "../../components/presentationals/input-cc/input-cc.component";
-import {operationsWithClear} from "../../utils/functions/functions";
+import {dataValidation, operationsWithClear} from "../../utils/functions/functions";
 import {Order} from "../../models/order.model";
 import {OtherOpEnum} from "../../utils/operations/other.enum";
+import {EFieldType} from "../../utils/field-type.enum";
+import {OrderInfoComponent} from "../../components/presentationals/order-info/order-info.component";
 
 @Injectable({
   providedIn: 'root'
@@ -703,7 +705,7 @@ export class OperationsService {
   }
 
   private creditManualOp(title){
-    this.getNumField(title, 'Number').subscribe((number) => {
+    this.getNumField(title, 'Number', EFieldType.CARD_NUMBER).subscribe((number) => {
       console.log('cc manual modal', number);
       if(number.number) {
         this.getNumField(title, 'CVV').subscribe(cvv => {
@@ -898,16 +900,16 @@ export class OperationsService {
   pickUp() {
     let title = 'Pick up';
     //if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS){
-      this.getField(title, 'Client Name').subscribe((name) => {
+      this.getField(title, 'Client Name', EFieldType.NAME).subscribe((name) => {
         console.log('pick up modal', name);
         if(name.text) {
-          this.getField(title, 'Client Phone').subscribe(phone => {
-            if(phone.text){
-              this.getField(title, 'Description').subscribe(descrip => {
+          this.getNumField(title, 'Client Phone', EFieldType.PHONE).subscribe(phone => {
+            if(phone.number){
+              this.getField(title, 'Description', EFieldType.DESC).subscribe(descrip => {
                 if (!descrip.text) {
                   console.log('pick up no set description');
                 }
-                this.invoiceService.setPickUp(name.text, phone.text, descrip.text).subscribe(order => {
+                this.invoiceService.setPickUp(name.text, phone.number, descrip.text).subscribe(order => {
                   console.log('pick up this order', order);
                   this.invoiceService.order = order;
                   this.cashService.openGenericInfo('Information', 'This order was set to "Pick up"')
@@ -931,70 +933,60 @@ export class OperationsService {
 
   delivery(){
     let title = 'Delivery';
-    // let order = new Order(this.invoiceService.invoice.id, new OrderType(ETXType.DELIVERY));
-    //if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS){
-      this.getField(title, 'Client Name').subscribe(name => {
-        if (name) {
-          //order.type.client.name = name.text;
-          this.getField(title, 'Client Address').subscribe(address => {
-            if(address){
-              //order.type.client.address = address.text;
-              this.getField(title, 'Client Phone').subscribe(phone => {
-                if(phone) {
-                  //order.type.client.telephone = phone.text;
-                  this.getField(title, 'Description').subscribe(descrip => {
-                    if (!descrip.text) {
-                      console.log('delivery no set description');
-                    }
-                    this.invoiceService.setDelivery(name.text, address.text, phone.text, descrip.text).subscribe(order => {
-                      console.log('delivery this order', order);
-                      this.invoiceService.order = order;
-                      this.cashService.openGenericInfo('Information', 'This order was set to "Delivery"');
-                    }, err => {
-                      console.error('delivery', err);
-                      this.cashService.openGenericInfo('Error', 'Can\'t complete delivery operation')
-                    });
-                  })
-                } else {
-                  this.cashService.openGenericInfo('Error', 'Can\'t complete delivery operation because no set Client Phone')
-                }
-              })
-            } else {
-              this.cashService.openGenericInfo('Error', 'Can\'t complete delivery operation because no set Client Address')
-            }
-          })
-        } else {
-          this.cashService.openGenericInfo('Error', 'Can\'t complete delivery operation because no set Client Name')
-        }
-      }, err => {
-        this.cashService.openGenericInfo('Error', 'Can\'t complete delivery operation')
-      });
-    /*} else {
-      this.cashService.openGenericInfo('Error', 'Delivery operation is not allow if a invoice is in progress');
-    }*/
+    this.getField(title, 'Client Name', EFieldType.NAME).subscribe(name => {
+      if (name) {
+        //order.type.client.name = name.text;
+        this.getField(title, 'Client Address', EFieldType.ADDRESS).subscribe(address => {
+          if(address){
+            //order.type.client.address = address.text;
+            this.getNumField(title, 'Client Phone', EFieldType.PHONE).subscribe(phone => {
+              if(phone) {
+                //order.type.client.telephone = phone.text;
+                this.getField(title, 'Description', EFieldType.DESC).subscribe(descrip => {
+                  if (!descrip.text) {
+                    console.log('delivery no set description');
+                  }
+                  this.invoiceService.setDelivery(name.text, address.text, phone.number, descrip.text).subscribe(order => {
+                    console.log('delivery this order', order);
+                    this.invoiceService.order = order;
+                    this.cashService.openGenericInfo('Information', 'This order was set to "Delivery"');
+                  }, err => {
+                    console.error('delivery', err);
+                    this.cashService.openGenericInfo('Error', 'Can\'t complete delivery operation')
+                  });
+                })
+              } else {
+                this.cashService.openGenericInfo('Error', 'Can\'t complete delivery operation because no set Client Phone')
+              }
+            })
+          } else {
+            this.cashService.openGenericInfo('Error', 'Can\'t complete delivery operation because no set Client Address')
+          }
+        })
+      } else {
+        this.cashService.openGenericInfo('Error', 'Can\'t complete delivery operation because no set Client Name')
+      }
+    }, err => {
+      this.cashService.openGenericInfo('Error', 'Can\'t complete delivery operation')
+    });
   }
 
-  getField(title, field): Observable<any>{
+  getField(title, field, fieldType?: EFieldType): Observable<any>{
     return this.cashService.dialog.open(DialogFilterComponent,
-      { width: '1024px', height: '600px', disableClose: true, data: {title: title+' - '+ field} }).afterClosed();
+    { width: '1024px', height: '600px', disableClose: true, data: {title: title +' - '+ field,
+        type: dataValidation(fieldType)}}).afterClosed();
   }
 
-  getNumField(name, label): Observable<any>{
+  getNumField(name, label, fieldType?: EFieldType): Observable<any>{
     return this.cashService.dialog.open(InputCcComponent,
-      { width: '480px', height: '650px', data: {number: '', name: name, label: label}, disableClose: true }).afterClosed();
-    /*.subscribe(
-      next=> {
-        console.log(next);
-        this.invoiceService.invoice.tip = next.unitCost;
-        this.creditOp();
-      },
-      err=> {console.error(err)});*/
+      { width:'480px', height:'650px', data:{number:'', name: name, label:label,
+          type:dataValidation(fieldType)}, disableClose: true }).afterClosed();
   }
 
   getOrderInfo()/*: Observable<Order>*/ {
     console.log('getOrderInfo', this.invoiceService.invoice.orderInfo);/*
     this.invoiceService.invoice.subscribe(next => console.log('Invoice', next));*/
-    if(this.invoiceService.order){
+    if(this.invoiceService.order && this.invoiceService.order.invoiceId === this.invoiceService.invoice.id){
       this.showOrderInfo(this.invoiceService.order);
     } else {
       return this.cashService.getOrder(this.invoiceService.invoice.receiptNumber).subscribe(
@@ -1012,6 +1004,9 @@ export class OperationsService {
   }
 
   showOrderInfo(order: Order){
-    this.cashService.openGenericInfo(OtherOpEnum.ORDER_INFO, ETXType[order.type.type]);
+    //this.cashService.openGenericInfo(OtherOpEnum.ORDER_INFO, ETXType[order.type.type]);
+    this.cashService.dialog.open(OrderInfoComponent,
+      { width:'480px', height:'350px', data:{title: OtherOpEnum.ORDER_INFO, subtitle:ETXType[order.type.type],
+          type:order.type}, disableClose: true });
   }
 }

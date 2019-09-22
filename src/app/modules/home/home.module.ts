@@ -30,9 +30,10 @@ import {DialogPaidoutComponent} from "../../components/containers/dialog-paidout
 import {DialogDeliveryComponent} from "../../components/presentationals/dialog-delivery/dialog-delivery.component";
 import {ListInvoicesComponent} from "../../components/presentationals/list-invoices/list-invoices.component";
 import {CloseBatchComponent} from "../../components/presentationals/close-batch/close-batch.component";
-import {AppComponent} from "../../app.component";
 import {ListTablesComponent} from "../../components/presentationals/list-tables/list-tables.component";
 import {InputCcComponent} from "../../components/presentationals/input-cc/input-cc.component";
+import {OrderInfoComponent} from "../../components/presentationals/order-info/order-info.component";
+import {OrderInfoDetailsComponent} from "../../components/presentationals/order-info-details/order-info-details.component";
 
 @NgModule({
   imports: [
@@ -74,7 +75,9 @@ import {InputCcComponent} from "../../components/presentationals/input-cc/input-
     DialogFilterComponent,
     DialogPaidoutComponent,
     CloseBatchComponent,
-    InputCcComponent
+    InputCcComponent,
+    OrderInfoComponent,
+    OrderInfoDetailsComponent
   ],
   entryComponents: [
     AgeValidationComponent,
@@ -98,7 +101,9 @@ import {InputCcComponent} from "../../components/presentationals/input-cc/input-
     DialogFilterComponent,
     DialogPaidoutComponent,
     CloseBatchComponent,
-    InputCcComponent
+    InputCcComponent,
+    OrderInfoComponent,
+    OrderInfoDetailsComponent
   ],
 })
 export class HomeModule { }

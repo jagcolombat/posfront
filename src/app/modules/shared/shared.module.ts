@@ -13,7 +13,9 @@ import {AdminConfigComponent} from "../../components/presentationals/admin-confi
 import {FilterComponent} from "../../components/presentationals/filter/filter.component";
 import {AdminOptionsComponent} from "../../components/presentationals/admin-options/admin-options.component";
 import {PaginatorComponent} from "../../components/presentationals/paginator/paginator.component";
+import {IConfig, NgxMaskModule} from "ngx-mask";
 
+// export const options: Partial<IConfig>| (() => Partial<IConfig>);
 
 @NgModule({
   imports: [
@@ -23,7 +25,8 @@ import {PaginatorComponent} from "../../components/presentationals/paginator/pag
     FlexLayoutModule,
     MaterialModule,
     AgGridModule.withComponents([null]),
-    NgxPaginationModule
+    NgxPaginationModule,
+    NgxMaskModule.forRoot()
   ],
   exports: [
     CommonModule,
@@ -33,6 +36,7 @@ import {PaginatorComponent} from "../../components/presentationals/paginator/pag
     MaterialModule,
     AgGridModule,
     NgxPaginationModule,
+    NgxMaskModule,
     GenericKeyboardComponent,
     CalculatorComponent,
     NumpadComponent,
