@@ -225,4 +225,9 @@ export class DataStorageService {
     return this.orderService.getTables(this.url);
   }
 
+  // Report
+  dayClose() {
+    return this.adminOperationService.getDayClose(this.url);
+  }
+
 }

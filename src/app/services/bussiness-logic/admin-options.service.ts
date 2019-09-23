@@ -183,4 +183,15 @@ export class AdminOptionsService {
           };
         },err=> console.error(err));
   }
+
+  doDayClose() {
+    this.dataStorage.dayClose().subscribe(
+      next => {
+        console.log("Day Close");
+        this.cashService.openGenericInfo('Day Close', 'Complete day close operation');
+      },
+      err => this.cashService.openGenericInfo('Error', 'Can\'t complete day close operation')
+    );
+    this.removeHoldLoaded= false;
+  }
 }

@@ -62,7 +62,7 @@ export class SalesShopComponent implements OnInit {
   }
 
   private setData() {
-    this.sales.forEach((v, i) => this.sales[i].total = Number((v.total).toFixed(2)))
+    this.sales.forEach((v, i) => this.sales[i].total = (v.total).toFixed(2));
     this.gridOptions.api.setRowData(this.sales);
     this.gridOptions.api.sizeColumnsToFit();
   }
