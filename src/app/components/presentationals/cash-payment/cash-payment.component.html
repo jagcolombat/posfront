@@ -6,12 +6,9 @@
   
   <form novalidate #loginForm="ngForm">
     <mat-dialog-content>
-      <p>
-        <label>{{ data | currency }}</label>
-      </p>
+      <h2>{{ data | currency }}</h2>
     </mat-dialog-content>
     <mat-dialog-actions>
-      <span class="flex-spacer"></span>
       <button mat-raised-button mat-dialog-close>Cancel</button>
       <button mat-raised-button class="background-primary text-floral-white" (click)="onPrint()">Done</button>
     </mat-dialog-actions>

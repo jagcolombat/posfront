@@ -496,7 +496,7 @@ export class OperationsService {
       console.log('paid refund, open cash!!!');
       this.cashService.dialog.open(CashPaymentComponent,
         {
-          width: '300px', height: '200px', data: totalToPaid, disableClose: true
+          width: '300px', height: '240px', data: totalToPaid, disableClose: true
         })
       //this.cashService.openGenericInfo('Open Cash', 'Paid Refund: ' + totalToPaid)
         .afterClosed()
@@ -550,7 +550,7 @@ export class OperationsService {
   cashReturn(valueToReturn, payment, totalToPaid) {
     const dialogRef = this.cashService.dialog.open(CashPaymentComponent,
       {
-        width: '300px', height: '200px', data: valueToReturn > 0 ? valueToReturn : 0, disableClose: true
+        width: '300px', height: '240px', data: valueToReturn > 0 ? valueToReturn : 0, disableClose: true
       })
       .afterClosed().subscribe((result: string) => {
         if (result !== '') {
