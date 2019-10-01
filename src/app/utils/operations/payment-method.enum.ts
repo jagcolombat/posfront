@@ -3,5 +3,6 @@ export enum PaymentMethodEnum {
   CREDIT_CARD,
   DEBIT_CARD,
   EBT_CARD,
-  OTHER
+  OTHER,
+  PAID_OUT
 }
