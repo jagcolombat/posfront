@@ -12,9 +12,11 @@ constructor() { }
 public handleError(error: HttpErrorResponse | any) {
   let errMsg: string;
   if (error.error instanceof ErrorEvent) {
-  errMsg = error.error.message;
+    errMsg = error.error.message;
+  } else if(typeof error.error === "string") {
+    errMsg = error.error;
   } else {
-  errMsg = `${error.statusText || ''} ${error.message}`;
+    errMsg = `${error.statusText || ''} ${error.message}`;
   }
   return throwError(errMsg);
   }

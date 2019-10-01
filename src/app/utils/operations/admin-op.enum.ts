@@ -1,5 +1,5 @@
 export enum AdminOpEnum {
-  DEPARMENTS = 'Departments',
+  DEPARMENTS = 'DEPT',
   APPLY_DISCOUNT = 'Apply Discount',
   EMPLZ = 'Daily Inv RPRT',
   SYSZ = 'Daily PMNT Type',
