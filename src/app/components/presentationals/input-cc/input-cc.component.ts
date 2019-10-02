@@ -12,6 +12,7 @@ export class InputCcComponent implements OnInit {
   inputDigits: boolean;
   digits = '';
   maxlength = 16;
+  mask = '';
 
   constructor(public dialogRef: MatDialogRef<InputCcComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
@@ -25,6 +26,7 @@ export class InputCcComponent implements OnInit {
     }
     if(this.data.type){
       this.maxlength = this.data.type.max;
+      this.mask = (this.data.type.mask)? this.data.type.mask: '';
     }
   }
 
