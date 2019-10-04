@@ -37,7 +37,7 @@ export enum EOperationType {
     ApplyDiscount,
     CancelCheck,
     RemoveHold,
-    AuthPendent,
+    AuthPending,
     Departments,
 
     AgeVerification,

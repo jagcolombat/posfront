@@ -88,26 +88,26 @@ export class AdminOptionsService {
 
   sysZ() {
     this.dataStorage.getPaymentByType().subscribe(next =>  {
-      console.log('sysZ', next);
+      console.log(AdminOpEnum.SYSZ, next);
       this.cashService.dialog.open(GenericSalesComponent,
         {
           width: '480px', height: '640px', disableClose: true, data: {title: AdminOpEnum.SYSZ, content: next }
         })
     }, error1 => {
-      this.cashService.openGenericInfo('Error', 'Can\'t complete sysZ operation')
+      this.cashService.openGenericInfo('Error', 'Can\'t complete '+ AdminOpEnum.SYSZ +' operation')
     });
   }
 
   emplZ() {
     this.dataStorage.getApplicationUsers().subscribe(next =>  {
-      console.log('emplZ', next);
+      console.log(AdminOpEnum.EMPLZ, next);
       next.unshift({id: "-1", userName: "All employees"});
       this.cashService.dialog.open(GenericSalesComponent,
         {
           width: '480px', height: '640px', disableClose: true, data: {title: AdminOpEnum.EMPLZ, empl: next }
         })
     }, error1 => {
-      this.cashService.openGenericInfo('Error', 'Can\'t complete emplZ operation')
+      this.cashService.openGenericInfo('Error', 'Can\'t complete '+ AdminOpEnum.EMPLZ +' operation')
     });
   }
 
@@ -187,22 +187,24 @@ export class AdminOptionsService {
   doDayClose() {
     this.dataStorage.dayClose().subscribe(
       next => {
-        console.log("Day Close");
-        this.cashService.openGenericInfo('Day Close', 'Complete day close operation');
+        console.log(AdminOpEnum.WTDZ);
+        this.cashService.openGenericInfo('Day Close', 'Complete '+AdminOpEnum.WTDZ.toLowerCase()+' operation');
       },
-      err => this.cashService.openGenericInfo('Error', 'Can\'t complete day close operation')
+      err => this.cashService.openGenericInfo('Error', 'Can\'t complete '+
+        AdminOpEnum.WTDZ.toLowerCase()+' operation')
     );
     this.removeHoldLoaded= false;
   }
 
-  authPendent() {
-    this.operationService.currentOperation = AdminOpEnum.AUTH_PENDENT;
+  authPending() {
+    this.operationService.currentOperation = AdminOpEnum.AUTH_PENDING;
     if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS) {
       //if(!this.removeHoldLoaded){
-        this.invoiceService.getInvoiceByStatus(EOperationType.AuthPendent, InvoiceStatus.IN_HOLD)
+        this.invoiceService.getInvoiceByStatus(EOperationType.AuthPending, InvoiceStatus.IN_HOLD)
           .subscribe(next => {
-            this.operationService.openDialogInvoices(next, i => this.authPendentOp(i))
-          },err => this.cashService.openGenericInfo('Error', 'Can\'t complete remove a hold operation'));
+            this.operationService.openDialogInvoices(next, i => this.authPendingOp(i))
+          },err => this.cashService.openGenericInfo('Error', 'Can\'t complete ' +
+            AdminOpEnum.AUTH_PENDING.toLowerCase()+' operation'));
       /*} else {
         this.removeHoldOp();
       }*/
@@ -211,7 +213,7 @@ export class AdminOptionsService {
     }
   }
 
-  authPendentOp(i:Invoice){
+  authPendingOp(i:Invoice){
     console.log('authPendentOp', i);
     this.invoiceService.setInvoice(i);
   }

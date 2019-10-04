@@ -38,11 +38,11 @@ export function dataValidation(type: EFieldType): any{
     case EFieldType.DESC:
       return {max: 200};
     case EFieldType.CARD_NUMBER:
-      return {max: 16};
+      return {max: 16, mask: '0000 0000 0000 0000'};
     case EFieldType.EXPDATE:
       return {max: 4, mask: '00/00'};
     case EFieldType.CVV:
-      return {max: 3};
+      return {max: 4};
     case EFieldType.ZIPCODE:
       return {max: 5};
   }

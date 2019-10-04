@@ -10,7 +10,7 @@ import {AdminOpEnum} from "../../../utils/operations/admin-op.enum";
 })
 export class AdminOptionsComponent implements OnInit {
   options = [AdminOpEnum.EMPLZ, AdminOpEnum.SYSZ, AdminOpEnum.WTDZ,AdminOpEnum.CHANGE_PRINTER,AdminOpEnum.CLOSE_BROWSER,
-    AdminOpEnum.APPLY_DISCOUNT, AdminOpEnum.CANCEL_CHECK, AdminOpEnum.REMOVE_HOLD, AdminOpEnum.AUTH_PENDENT,
+    AdminOpEnum.APPLY_DISCOUNT, AdminOpEnum.CANCEL_CHECK, AdminOpEnum.REMOVE_HOLD, AdminOpEnum.AUTH_PENDING,
     AdminOpEnum.DEPARMENTS, AdminOpEnum.BACK_USER, AdminOpEnum.CLOSE_BATCH, AdminOpEnum.CONFIG, AdminOpEnum.SYSTEM_VERSION];
   page = 1;
   sizePage = 16;
@@ -44,8 +44,8 @@ export class AdminOptionsComponent implements OnInit {
       case AdminOpEnum.REMOVE_HOLD.toUpperCase():
         this.adminOpService.removeAHold();
         break;
-      case AdminOpEnum.AUTH_PENDENT.toUpperCase():
-        this.adminOpService.authPendent();
+      case AdminOpEnum.AUTH_PENDING.toUpperCase():
+        this.adminOpService.authPending();
         break;
       case AdminOpEnum.BACK_USER.toUpperCase():
         this.adminOpService.backToUser();
