@@ -5,5 +5,8 @@ export enum EFieldType {
   NAME,
   ADDRESS,
   DESC,
-  CARD_NUMBER
+  CARD_NUMBER,
+  CVV,
+  EXPDATE,
+  ZIPCODE
 }

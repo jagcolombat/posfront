@@ -194,4 +194,25 @@ export class AdminOptionsService {
     );
     this.removeHoldLoaded= false;
   }
+
+  authPendent() {
+    this.operationService.currentOperation = AdminOpEnum.AUTH_PENDENT;
+    if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS) {
+      //if(!this.removeHoldLoaded){
+        this.invoiceService.getInvoiceByStatus(EOperationType.AuthPendent, InvoiceStatus.IN_HOLD)
+          .subscribe(next => {
+            this.operationService.openDialogInvoices(next, i => this.authPendentOp(i))
+          },err => this.cashService.openGenericInfo('Error', 'Can\'t complete remove a hold operation'));
+      /*} else {
+        this.removeHoldOp();
+      }*/
+    } else {
+      this.cashService.openGenericInfo('Error', 'Can\'t complete remove a hold operation because check is in progress');
+    }
+  }
+
+  authPendentOp(i:Invoice){
+    console.log('authPendentOp', i);
+    this.invoiceService.setInvoice(i);
+  }
 }

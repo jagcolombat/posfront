@@ -217,9 +217,10 @@ export class InvoiceService {
     return this.dataStorage.paidByCreditCard(creditPayment);
   }
 
-  creditManual(payment: number, tip?: number, ccnumber?: string, cvv?: string, ccdate?: string): Observable<Invoice> {
+  creditManual(payment: number, tip?: number, ccnumber?: string, cvv?: string, ccdate?: string, zip?: string,
+               street: string='havana ave'): Observable<Invoice> {
     const creditPayment = new CreditCardModel(payment, tip, this.invoice.receiptNumber,PaymentStatus.SAlE, ccnumber, cvv,
-      ccdate, SwipeMethod.MANUAL);
+      ccdate, SwipeMethod.MANUAL, zip, street);
     return this.dataStorage.paidByCreditCard(creditPayment);
   }
 

@@ -708,21 +708,25 @@ export class OperationsService {
     this.getNumField(title, 'Number', EFieldType.CARD_NUMBER).subscribe((number) => {
       console.log('cc manual modal', number);
       if(number.number) {
-        this.getNumField(title, 'CVV').subscribe(cvv => {
+        this.getNumField(title, 'CVV', EFieldType.CVV).subscribe(cvv => {
           if(cvv.number){
-            this.getNumField(title, 'Exp. Date').subscribe(date => {
+            this.getNumField(title, 'Exp. Date', EFieldType.EXPDATE).subscribe(date => {
               if(date.number){
-                this.invoiceService.creditManual(this.invoiceService.invoice.total, this.invoiceService.invoice.tip,
-                  number.number, cvv.number, date.number)
-                  .subscribe(data => {
-                      console.log(data);
-                      this.invoiceService.createInvoice();
-                    },
-                    err => {
-                      console.log(err);
-                      this.cashService.openGenericInfo('Error', 'Can\'t complete credit card manual operation');
-                    },
-                    () => this.cashService.resetEnableState());
+                this.getNumField(title, 'Zip Code', EFieldType.ZIPCODE).subscribe(zipcode => {
+                  if (zipcode.number) {
+                    this.invoiceService.creditManual(this.invoiceService.invoice.total, this.invoiceService.invoice.tip,
+                      number.number, cvv.number, date.number, zipcode.number)
+                      .subscribe(data => {
+                          console.log(data);
+                          this.invoiceService.createInvoice();
+                        },
+                        err => {
+                          console.log(err);
+                          this.cashService.openGenericInfo('Error', 'Can\'t complete credit card manual operation');
+                        },
+                        () => this.cashService.resetEnableState());
+                  }
+                });
               } else {
                 this.cashService.openGenericInfo('Error', 'Can\'t complete credit card manual operation because no set CC Date')
               }
@@ -971,13 +975,13 @@ export class OperationsService {
     });
   }
 
-  getField(title, field, fieldType?: EFieldType): Observable<any>{
+  getField(title, field, fieldType?: EFieldType): Observable<any> {
     return this.cashService.dialog.open(DialogFilterComponent,
     { width: '1024px', height: '600px', disableClose: true, data: {title: title +' - '+ field,
         type: dataValidation(fieldType)}}).afterClosed();
   }
 
-  getNumField(name, label, fieldType?: EFieldType): Observable<any>{
+  getNumField(name, label, fieldType?: EFieldType): Observable<any> {
     return this.cashService.dialog.open(InputCcComponent,
       { width:'480px', height:'650px', data:{number:'', name: name, label:label,
           type:dataValidation(fieldType)}, disableClose: true }).afterClosed();

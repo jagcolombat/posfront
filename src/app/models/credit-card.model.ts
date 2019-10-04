@@ -18,6 +18,8 @@ export interface CreditCard {
   cvv?: string;     //Probar con: 437
   expDate?: string;  //Probar con 1219
   swipeMethod?: SwipeMethod; //enumerativo para manual: 2
+  zipCode?: string;  //Probar con 12345
+  street?: string;  //Probar con 12345
 }
 
 export enum SwipeMethod {
@@ -28,6 +30,6 @@ export enum SwipeMethod {
 export class CreditCardModel implements CreditCard{
   constructor(public amount: number, public tip: number=0, public receiptNumber: string,
               public transferType: PaymentStatus=PaymentStatus.SAlE, public account?: string, public cvv?: string,
-              public expDate?: string, public swipeMethod?: SwipeMethod) {}
+              public expDate?: string, public swipeMethod?: SwipeMethod, public zipCode?: string, public street?: string) {}
 }
 

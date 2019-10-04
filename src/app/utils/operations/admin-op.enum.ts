@@ -1,5 +1,5 @@
 export enum AdminOpEnum {
-  DEPARMENTS = 'DEPT',
+  DEPARMENTS = 'Dept',
   APPLY_DISCOUNT = 'Apply Discount',
   EMPLZ = 'Daily Inv RPRT',
   SYSZ = 'Daily PMNT Type',
@@ -8,6 +8,7 @@ export enum AdminOpEnum {
   CLOSE_BROWSER = 'Close Browser',
   CANCEL_CHECK = 'Cancel Check',
   REMOVE_HOLD = 'Remove a hold',
+  AUTH_PENDENT = 'Pendent Auth',
   BACK_USER = 'Back User',
   CLOSE_BATCH = 'Close Batch',
   CONFIG = 'Config',
