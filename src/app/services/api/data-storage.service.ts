@@ -25,6 +25,7 @@ import { Report } from 'src/app/models/report.model';
 import {OrderService} from "./order.service";
 import {Order} from "../../models/order.model";
 import {Table} from "../../models/table.model";
+import {ETransferType} from "../../utils/transfer-type.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -228,6 +229,10 @@ export class DataStorageService {
   // Report
   dayClose() {
     return this.adminOperationService.getDayClose(this.url);
+  }
+
+  getInvoiceByTransferType(authPending: EOperationType, auth: ETransferType) {
+    return this.invoiceService.getInvoiceByTransferType(this.url, auth);
   }
 
 }

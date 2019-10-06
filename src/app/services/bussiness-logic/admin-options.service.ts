@@ -12,6 +12,7 @@ import {AuthService} from "../api/auth.service";
 import {AdminConfigComponent} from "../../components/presentationals/admin-config/admin-config.component";
 import {AdminOpEnum} from "../../utils/operations/admin-op.enum";
 import {Invoice} from "../../models/invoice.model";
+import {ETransferType} from "../../utils/transfer-type.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -200,7 +201,7 @@ export class AdminOptionsService {
     this.operationService.currentOperation = AdminOpEnum.AUTH_PENDING;
     if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS) {
       //if(!this.removeHoldLoaded){
-        this.invoiceService.getInvoiceByStatus(EOperationType.AuthPending, InvoiceStatus.IN_HOLD)
+        this.dataStorage.getInvoiceByTransferType(EOperationType.AuthPending, ETransferType.Auth)
           .subscribe(next => {
             this.operationService.openDialogInvoices(next, i => this.authPendingOp(i))
           },err => this.cashService.openGenericInfo('Error', 'Can\'t complete ' +

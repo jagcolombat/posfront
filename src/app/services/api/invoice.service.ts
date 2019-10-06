@@ -7,6 +7,7 @@ import { EOperationType } from 'src/app/utils/operation.type.enum';
 import { ProductOrder } from 'src/app/models/product-order.model';
 import { catchError } from 'rxjs/operators';
 import { ProcessHTTPMSgService } from './ProcessHTTPMSg.service';
+import {ETransferType} from "../../utils/transfer-type.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -130,4 +131,7 @@ export class InvoiceService {
     .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
+  getInvoiceByTransferType(url: string, auth: ETransferType) {
+    return this._http.get<Invoice[]>(url + this.path + '/transfertype/'+auth);
+  }
 }
