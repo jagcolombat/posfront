@@ -24,7 +24,7 @@ export class FilterComponent implements OnInit {
 
   ngOnInit() {
     console.log('filter component ', this.data);
-    if(this.data.type){
+    if(this.data && this.data.type){
       this.max = this.data.type.max;
     }
   }

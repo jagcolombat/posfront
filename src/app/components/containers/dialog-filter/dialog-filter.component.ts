@@ -12,7 +12,7 @@ export class DialogFilterComponent implements OnInit {
   constructor(public dialogRef: MatDialogRef<FilterComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit() {
-    if (this.data.title) {
+    if (this.data && this.data.title) {
       this.title = this.data.title;
     }
   }
