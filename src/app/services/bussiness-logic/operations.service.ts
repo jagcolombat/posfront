@@ -732,7 +732,7 @@ export class OperationsService {
               }
             });
           } else {
-            this.cashService.openGenericInfo('Error', 'Can\'t complete credit card manual operation because no set CCV')
+            this.cashService.openGenericInfo('Error', 'Can\'t complete credit card manual operation because no set CVV')
           }
         });
       } else {
