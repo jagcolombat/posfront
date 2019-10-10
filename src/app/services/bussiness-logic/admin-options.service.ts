@@ -186,15 +186,22 @@ export class AdminOptionsService {
   }
 
   doDayClose() {
+    this.cashService.dayCloseEnableState();
+    let dialogEv = this.cashService.openGenericInfo('Information', 'Closing day...');
+
     this.dataStorage.dayClose().subscribe(
       next => {
         console.log(AdminOpEnum.WTDZ);
         this.cashService.openGenericInfo('Day Close', 'Complete '+AdminOpEnum.WTDZ.toLowerCase()+' operation');
       },
-      err => this.cashService.openGenericInfo('Error', 'Can\'t complete '+
-        AdminOpEnum.WTDZ.toLowerCase()+' operation')
+      err => {
+        this.cashService.openGenericInfo('Error', 'Can\'t complete '+
+        AdminOpEnum.WTDZ.toLowerCase()+' operation')},
+      () => {
+        dialogEv.close();
+        this.cashService.resetEnableState();
+      }
     );
-    this.removeHoldLoaded= false;
   }
 
   authPending() {
