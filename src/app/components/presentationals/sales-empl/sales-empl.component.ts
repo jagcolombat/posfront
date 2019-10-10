@@ -42,12 +42,19 @@ export class SalesEmplComponent implements OnInit {
       {
         headerName: 'Receipt number',
         field: 'receiptNumber',
-        width: 250
+        width: 200
       },
       {
         headerName: 'Total',
         field: 'total',
-        type: 'numericColumn'
+        type: 'numericColumn',
+        width: 120
+      },
+      {
+        headerName: 'Tips',
+        field: 'tips',
+        type: 'numericColumn',
+        width: 120
       }
     ];
   }
@@ -76,7 +83,10 @@ export class SalesEmplComponent implements OnInit {
 
   private setData() {
     console.log('setData', this.sales);
-    this.sales.forEach((v, i) => this.sales[i].total = (v.total).toFixed(2));
+    this.sales.forEach((v, i) => {
+      this.sales[i].total = (v.total).toFixed(2);
+      this.sales[i]['tips']= (v.tips ? v.tips : 0.00).toFixed(2);
+    });
     this.gridOptions.api.setRowData(this.sales);
     this.gridOptions.api.sizeColumnsToFit();
   }
