@@ -18,7 +18,7 @@ export class AdminOperationService {
   constructor(private _http: HttpClient, private processHttpMsgService: ProcessHTTPMSgService) { }
 
   getApplicationUsers(url: string): Observable<User[]> {
-    return this._http.get<User[]>(url + this.path + '/user')
+    return this._http.get<User[]>(url + this.path + '/users')
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 

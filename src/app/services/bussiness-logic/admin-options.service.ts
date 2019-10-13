@@ -13,6 +13,7 @@ import {AdminConfigComponent} from "../../components/presentationals/admin-confi
 import {AdminOpEnum} from "../../utils/operations/admin-op.enum";
 import {Invoice} from "../../models/invoice.model";
 import {ETransferType} from "../../utils/transfer-type.enum";
+import {DialogInvoiceComponent} from "../../components/presentationals/dialog-invoice/dialog-invoice.component";
 
 @Injectable({
   providedIn: 'root'
@@ -224,5 +225,31 @@ export class AdminOptionsService {
   authPendingOp(i:Invoice){
     console.log('authPendentOp', i);
     this.invoiceService.setInvoice(i);
+  }
+
+  setUserToOrder() {
+    this.dataStorage.getApplicationUsers().subscribe(next => {
+      console.log(AdminOpEnum.SET_USER, next);
+      let users = new Array<any>();
+      this.cashService.dialog.open(DialogInvoiceComponent,
+        { width: '780px', height: '660px', data: {invoice: users, detail:'userName', title: 'Users', subtitle: 'Select a user'}
+          , disableClose: true }).afterClosed().subscribe(next => {
+        console.log('dialog delivery', next);
+        if (next) {
+          this.invoiceService.setUser(this.invoiceService.invoice.applicationUserId).subscribe(
+            next => {
+              console.log('setUserToOrder', next);
+              this.invoiceService.invoice.applicationUserId = next['applicationUserId'];
+              this.cashService.openGenericInfo('Information', 'The user '+next['userName']
+                +' was assigned to this invoice');
+            },
+            err => {
+              console.error('setUserToOrder', err);
+              this.cashService.openGenericInfo('Error', 'Can\'t complete set user operation');
+            }
+          );
+        }
+      });
+    });
   }
 }

@@ -235,4 +235,7 @@ export class DataStorageService {
     return this.invoiceService.getInvoiceByTransferType(this.url, auth);
   }
 
+  setUserToInvoice(invoiceId, userId): Observable<Invoice> {
+    return this.invoiceService.setUser(this.url, invoiceId, userId);
+  }
 }

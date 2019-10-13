@@ -10,6 +10,7 @@ export enum AdminOpEnum {
   REMOVE_HOLD = 'Remove a hold',
   AUTH_PENDING = 'Pending Auth',
   BACK_USER = 'Back User',
+  SET_USER = 'Set User',
   CLOSE_BATCH = 'Close Batch',
   CONFIG = 'Config',
   SYSTEM_VERSION = 'System Version'

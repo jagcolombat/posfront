@@ -134,4 +134,9 @@ export class InvoiceService {
   getInvoiceByTransferType(url: string, auth: ETransferType) {
     return this._http.get<Invoice[]>(url + this.path + '/transfertype/'+auth);
   }
+
+  setUser(url: string, id: string, idUser: string): Observable<Invoice> {
+    return this._http.post<Invoice>(url + this.path + '/' + id + '/user/' + idUser, {})
+      .pipe(catchError(this.processHttpMsgService.handleError));
+  }
 }

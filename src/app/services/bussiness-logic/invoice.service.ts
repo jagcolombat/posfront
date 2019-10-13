@@ -303,6 +303,11 @@ export class InvoiceService {
     return this.dataStorage.updateOrder(createOrder(table));
   }
 
+  setRetail(): Observable<Order> {
+    let createOrder = () => new Order(this.invoice.id, new OrderType(ETXType.RETAIL, null, null));
+    return this.dataStorage.updateOrder(createOrder());
+  }
+
   setPickUp(data: string, text: any, descrip?): Observable<Order> {
     let createOrder = (name, tel) => new Order(this.invoice.id, new OrderType(ETXType.PICKUP, new Client(name, tel),null, descrip));
     return this.dataStorage.updateOrder(createOrder(data, text));
@@ -317,5 +322,9 @@ export class InvoiceService {
 
   tables(): Observable<Table[]> {
     return this.dataStorage.getTables();
+  }
+
+  setUser(userId):Observable<Invoice> {
+    return this.dataStorage.setUserToInvoice(this.invoice.receiptNumber, userId);
   }
 }

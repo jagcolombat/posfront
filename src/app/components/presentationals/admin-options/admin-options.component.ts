@@ -11,7 +11,8 @@ import {AdminOpEnum} from "../../../utils/operations/admin-op.enum";
 export class AdminOptionsComponent implements OnInit {
   options = [AdminOpEnum.EMPLZ, AdminOpEnum.SYSZ, AdminOpEnum.WTDZ,AdminOpEnum.CHANGE_PRINTER,AdminOpEnum.CLOSE_BROWSER,
     AdminOpEnum.APPLY_DISCOUNT, AdminOpEnum.CANCEL_CHECK, AdminOpEnum.REMOVE_HOLD, AdminOpEnum.AUTH_PENDING,
-    AdminOpEnum.DEPARMENTS, AdminOpEnum.BACK_USER, AdminOpEnum.CLOSE_BATCH, AdminOpEnum.CONFIG, AdminOpEnum.SYSTEM_VERSION];
+    AdminOpEnum.DEPARMENTS, AdminOpEnum.BACK_USER, AdminOpEnum.SET_USER, AdminOpEnum.CLOSE_BATCH, AdminOpEnum.CONFIG,
+    AdminOpEnum.SYSTEM_VERSION];
   page = 1;
   sizePage = 16;
   @Input() disable: boolean | boolean[] = this.adminOpService.cashService.disabledAdminOp;
@@ -50,6 +51,9 @@ export class AdminOptionsComponent implements OnInit {
       case AdminOpEnum.BACK_USER.toUpperCase():
         this.adminOpService.backToUser();
         this.router.navigateByUrl('/cash/dptos');
+        break;
+      case AdminOpEnum.SET_USER.toUpperCase():
+        this.adminOpService.setUserToOrder();
         break;
       case AdminOpEnum.CONFIG.toUpperCase():
         this.adminOpService.configOption();

@@ -849,27 +849,32 @@ export class OperationsService {
     let txTypes= new Array<any>(
       { value: 1, text: 'Dine In', color: 'red' },
             { value: 2, text: 'Pick Up', color: 'yellow' },
-            { value: 3, text: 'Delivery', color: 'green' }
+            { value: 3, text: 'Delivery', color: 'green' },
+            { value: 4, text: 'Retail', color: 'blue' }
       );
     this.cashService.dialog.open(DialogDeliveryComponent,
-      { width: '600px', height: '340px', data: { arr: txTypes}, disableClose: true })
+      { width: '400px', height: '340px', data: { arr: txTypes}, disableClose: true })
       .afterClosed().subscribe(next => {
-        console.log(next);
-        (next)? this.invoiceService.invoice.type = next : this.invoiceService.invoice.type = ETXType.DINEIN;
-        switch (this.invoiceService.invoice.type) {
-          case ETXType.DINEIN:
-            this.dineIn();
-            break;
-          case ETXType.DELIVERY:
-            this.delivery();
-            break;
-          case ETXType.PICKUP:
-            this.pickUp();
-            break;
+        console.log('dialog delivery', next);
+        if(next){
+          this.invoiceService.invoice.type = next;
+          switch (this.invoiceService.invoice.type) {
+            case ETXType.DINEIN:
+              this.dineIn();
+              break;
+            case ETXType.DELIVERY:
+              this.delivery();
+              break;
+            case ETXType.PICKUP:
+              this.pickUp();
+              break;
+            case ETXType.RETAIL:
+              this.retail();
+              break;
+          }
+        } else {
+          //this.invoiceService.invoice.type = ETXType.DINEIN;
         }
-      /*if(this.invoiceService.invoice.type === ETXType.DINEIN){
-        this.openDialogTables();
-      }*/
     });
   }
 
@@ -890,6 +895,18 @@ export class OperationsService {
         default:
           this.cashService.resetEnableState();
       }
+    });
+  }
+
+  retail() {
+    console.log('set order to retail');
+    this.invoiceService.setRetail().subscribe(next => {
+      if(next) {
+        this.invoiceService.order = next;
+        this.cashService.openGenericInfo('Information', 'This order was set to "Retail"');
+      }
+    },err => {
+      this.cashService.openGenericInfo('Error', 'Can\'t complete set retail operation');
     });
   }
 
