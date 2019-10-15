@@ -327,4 +327,8 @@ export class InvoiceService {
   setUser(userId):Observable<Invoice> {
     return this.dataStorage.setUserToInvoice(this.invoice.receiptNumber, userId);
   }
+
+  notSale(): Observable<any> {
+    return this.dataStorage.notSale();
+  }
 }

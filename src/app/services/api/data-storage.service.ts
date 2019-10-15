@@ -238,4 +238,10 @@ export class DataStorageService {
   setUserToInvoice(invoiceId, userId): Observable<Invoice> {
     return this.invoiceService.setUser(this.url, invoiceId, userId);
   }
+
+  //Other
+  notSale(): Observable<any> {
+    return this.adminOperationService.notSale(this.url);
+  }
+
 }

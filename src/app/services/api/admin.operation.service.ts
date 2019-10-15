@@ -69,5 +69,10 @@ export class AdminOperationService {
         .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
+  notSale(url: string): Observable<any> {
+    return this._http.get<any>(url + this.path + '/op/notsale', {})
+        .pipe(catchError(this.processHttpMsgService.handleError));
+  }
+
 }
 

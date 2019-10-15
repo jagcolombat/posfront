@@ -1030,4 +1030,10 @@ export class OperationsService {
       { width:'480px', height:'350px', data:{title: OtherOpEnum.ORDER_INFO, subtitle:ETXType[order.type.type],
           type:order.type}, disableClose: true });
   }
+
+  notSale() {
+    this.invoiceService.notSale().subscribe(d => {
+        console.log("Open cash drawer.")
+    });
+  }
 }

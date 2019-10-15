@@ -145,7 +145,7 @@ export class OperationsComponent implements OnInit {
         this.operationService.printLast();
         break;
       case 'No Sale':
-        this.operationService.cashService.openGenericInfo('No Sale', 'Sending event');
+        this.operationService.notSale();
         break;
       case 'Paid Out':
         this.operationService.paidOut();
