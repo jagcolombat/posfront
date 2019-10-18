@@ -857,7 +857,7 @@ export class OperationsService {
             { value: 4, text: 'Retail', color: 'blue' }
       );
     this.cashService.dialog.open(DialogDeliveryComponent,
-      { width: '400px', height: '340px', data: { arr: txTypes}, disableClose: true })
+      { width: '420px', height: '340px', data: { arr: txTypes}, disableClose: true })
       .afterClosed().subscribe(next => {
         console.log('dialog delivery', next);
         if(next){
