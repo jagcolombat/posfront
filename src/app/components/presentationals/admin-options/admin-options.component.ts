@@ -31,7 +31,7 @@ export class AdminOptionsComponent implements OnInit {
         this.router.navigateByUrl('/cash/dptos');
         break;
       case AdminOpEnum.APPLY_DISCOUNT.toUpperCase():
-        this.adminOpService.applyDiscount();
+        this.adminOpService.setApplyDiscountType();
         break;
       case AdminOpEnum.EMPLZ.toUpperCase():
         this.adminOpService.emplZ();

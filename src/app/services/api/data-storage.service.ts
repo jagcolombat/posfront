@@ -26,6 +26,7 @@ import {OrderService} from "./order.service";
 import {Order} from "../../models/order.model";
 import {Table} from "../../models/table.model";
 import {ETransferType} from "../../utils/transfer-type.enum";
+import {EApplyDiscount} from "../../utils/apply-discount.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -148,8 +149,8 @@ export class DataStorageService {
       return this.invoiceService.deleteProductOrders(this.url, productOrderId, invoiceId);
   }
 
-  applyDiscountInvoice (id: string, discount: number, productOrderIds: Array<string>): Observable<Invoice> {
-    return this.invoiceService.applyDiscountInvoice(this.url, id, discount, productOrderIds);
+  applyDiscountInvoice (id: string, discount: number, productOrderIds: Array<string>, discountType: EApplyDiscount): Observable<Invoice> {
+    return this.invoiceService.applyDiscountInvoice(this.url, id, discount, productOrderIds, discountType);
   }
 
   // Payment

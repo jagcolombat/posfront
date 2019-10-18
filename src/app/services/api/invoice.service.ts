@@ -8,6 +8,7 @@ import { ProductOrder } from 'src/app/models/product-order.model';
 import { catchError } from 'rxjs/operators';
 import { ProcessHTTPMSgService } from './ProcessHTTPMSg.service';
 import {ETransferType} from "../../utils/transfer-type.enum";
+import {EApplyDiscount} from "../../utils/apply-discount.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -111,8 +112,10 @@ export class InvoiceService {
     return this._http.post<Invoice>(url + this.path + '/' + invoice.receiptNumber + '/' + property + '/' + value, {});
   }
 
-  applyDiscountInvoice (url: string, id: string, discount: number, productOrderIds: Array<string>): Observable<Invoice> {
-    return this._http.post<Invoice>(url + this.path + '/' + id + '/discount/' + discount, productOrderIds, {})
+  applyDiscountInvoice (url: string, id: string, discount: number, productOrderIds: Array<string>, discountType: EApplyDiscount): Observable<Invoice> {
+    let params = new HttpParams();
+    params = params.append('discountType', discountType + '');
+    return this._http.post<Invoice>(url + this.path + '/' + id + '/discount/' + discount, productOrderIds, {params})
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 

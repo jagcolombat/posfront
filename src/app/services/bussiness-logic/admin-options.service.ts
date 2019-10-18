@@ -14,6 +14,9 @@ import {AdminOpEnum} from "../../utils/operations/admin-op.enum";
 import {Invoice} from "../../models/invoice.model";
 import {ETransferType} from "../../utils/transfer-type.enum";
 import {DialogInvoiceComponent} from "../../components/presentationals/dialog-invoice/dialog-invoice.component";
+import {DialogDeliveryComponent} from "../../components/presentationals/dialog-delivery/dialog-delivery.component";
+import {EApplyDiscount} from "../../utils/apply-discount.enum";
+import {ProductGenericComponent} from "../../components/presentationals/product-generic/product-generic.component";
 
 @Injectable({
   providedIn: 'root'
@@ -34,15 +37,42 @@ export class AdminOptionsService {
     });
   }
 
-  applyDiscount(){
+  setApplyDiscountType() {
+    let adTypes = new Array<any>({value: EApplyDiscount.PERCENT, text: EApplyDiscount[EApplyDiscount.PERCENT]},
+      {value: EApplyDiscount.COUNT, text: EApplyDiscount[EApplyDiscount.COUNT]});
+    this.cashService.dialog.open(DialogDeliveryComponent,
+      {
+        width: '600px', height: '340px', data: {name: 'Apply Discount Types', label: 'Select a type', arr: adTypes},
+        disableClose: true
+      })
+      .afterClosed().subscribe(next => {
+      console.log(next);
+      switch (next) {
+        case 1:
+          this.applyDiscount(EApplyDiscount.PERCENT);
+          break;
+        default:
+          this.applyDiscount(EApplyDiscount.COUNT);
+      }
+    });
+  }
+
+  applyDiscount(type: EApplyDiscount){
     // if(this.invoiceService.invoice.productOrders.length > 0){
-      const dialogRef = this.cashService.dialog.open(ApplyDiscountComponent,
+      const dialogRef = (type === EApplyDiscount.PERCENT)?
+        this.cashService.dialog.open(ApplyDiscountComponent,
         {
           width: '480px', height: '600px', disableClose: true
-        })
-        .afterClosed().subscribe((data: string) => {
+        }):
+        this.cashService.dialog.open(ProductGenericComponent,
+      {
+        width: '480px', height: '650px', data: {name: 'Apply Discount', label: 'Discount (count)', unitCost: 0},
+        disableClose: true
+      });
+        dialogRef.afterClosed().subscribe((data: any) => {
           console.log('apply discount', data);
-          this.invoiceService.applyDiscountInvoice(+data).subscribe(next => {
+          if(type === EApplyDiscount.COUNT ) data = (data['unitCost'])?(+data['unitCost']).toFixed(2): 0;
+          this.invoiceService.applyDiscountInvoice(+data, type).subscribe(next => {
             this.invoiceService.setInvoice(next);
             this.invoiceService.invoiceProductSelected.splice(0);
           }, err => {

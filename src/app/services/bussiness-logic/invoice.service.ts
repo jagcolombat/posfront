@@ -16,6 +16,7 @@ import {Client, Order, OrderType} from "../../models/order.model";
 import {ETXType} from "../../utils/delivery.enum";
 import {Table} from "../../models/table.model";
 import {PaymentOpEnum} from 'src/app/utils/operations';
+import {EApplyDiscount} from "../../utils/apply-discount.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -272,11 +273,12 @@ export class InvoiceService {
       .subscribe(data => data);
   }
 
-  applyDiscountInvoice (discount: number): Observable<Invoice> {
+  applyDiscountInvoice (discount: number, type?: EApplyDiscount): Observable<Invoice> {
     let idProdOrders = new Array<string>();
     idProdOrders = this.invoiceProductSelected.map(v => v.id);
     console.log('applyDiscountInvoice', this.invoiceProductSelected, idProdOrders);
-    return this.dataStorage.applyDiscountInvoice(this.invoice.receiptNumber, discount, idProdOrders);
+    console.log('applyDiscountType', discount, type);
+    return this.dataStorage.applyDiscountInvoice(this.invoice.receiptNumber, discount, idProdOrders, type);
   }
 
   addPaidOut(data: string, descrip?: string) {

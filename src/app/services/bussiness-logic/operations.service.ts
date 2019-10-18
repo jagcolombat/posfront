@@ -124,9 +124,10 @@ export class OperationsService {
   }
 
   void() {
-    console.log('void');
-    if(this.invoiceService.invoice.status === InvoiceStatus.IN_PROGRESS ||
-      this.invoiceService.invoice.status === InvoiceStatus.IN_HOLD){
+    console.log('void', this.invoiceService.invoice.productOrders);
+    if((this.invoiceService.invoice.status === InvoiceStatus.IN_PROGRESS &&
+      this.invoiceService.invoice.productOrders.length > 0 ) ||
+      this.invoiceService.invoice.status === InvoiceStatus.IN_HOLD ){
       this.cashService.openGenericInfo('Confirm', 'Do you want void?', null,true)
         .afterClosed().subscribe(next => {
         if (next !== undefined && next.confirm) {
@@ -135,7 +136,7 @@ export class OperationsService {
         }
       });
     } else {
-      this.cashService.openGenericInfo('Error', 'Void operation is only for invoice in hold or progress');
+      this.cashService.openGenericInfo('Error', 'Void operation is only for invoice with products, in hold or in progress');
     }
     this.resetInactivity(true);
   }

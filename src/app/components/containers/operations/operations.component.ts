@@ -50,6 +50,11 @@ export class OperationsComponent implements OnInit {
         this.totalsOperations.splice(0,1);
         this.totalColor.splice(0,1);
       } else {
+        this.financeOperations.splice(-1,1);
+
+        this.otherOperations.splice(4,2);
+        this.otherColor.splice(4,2);
+
         this.moneyOperations.push(this.paymentOperations.splice(-1,1)[0]);
         this.moneyColor.push(this.paymentColor.splice(-1,1)[0]);
       }
