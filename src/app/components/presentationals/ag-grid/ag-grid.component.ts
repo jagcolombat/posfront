@@ -31,7 +31,11 @@ export class AgGridComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.gridApi = this.gridOptions.api;
+    //this.gridApi = this.gridOptions.api;
+  }
+
+  onGridReady(params){
+    this.gridApi = params.api;
   }
 
   private createColumnDefs() {
@@ -40,7 +44,7 @@ export class AgGridComponent implements OnInit, OnDestroy {
         field: 'number_item',
         headerCheckboxSelection: this.selectableProd,
         checkboxSelection: this.selectableProd,
-        width: 170,
+        width: 160,
         headerComponentFramework: CustomHeaderComponent,
         headerComponentParams: { displayName: 'Number Item' }
       },
@@ -48,28 +52,28 @@ export class AgGridComponent implements OnInit, OnDestroy {
         headerComponentFramework: CustomHeaderComponent,
         headerComponentParams: { displayName: 'Name' },
         field: 'name',
-        width: 180
+        width: 160
       },
       {
         headerComponentFramework: CustomHeaderComponent,
         headerComponentParams: { displayName: 'Price' },
         field: 'unitCost',
         type: 'numericColumn',
-        width: 90
+        width: 100
       },
       {
         headerComponentFramework: CustomHeaderComponent,
         headerComponentParams: { displayName: 'Quantity' },
         field: 'quantity',
         type: 'numericColumn',
-        width: 90
+        width: 70
       },
       {
         headerComponentFramework: CustomHeaderComponent,
         headerComponentParams: { displayName: 'Discount' },
         field: 'discount',
         type: 'numericColumn',
-        width: 80
+        width: 100
       },
       {
         headerComponentFramework: CustomHeaderComponent,
@@ -92,12 +96,13 @@ export class AgGridComponent implements OnInit, OnDestroy {
 
   clearData() {
     this.gridOptions.api.setRowData([]);
-    this.showDiscount(false);
+    //this.showDiscount(false);
     this.invoiceService.setTotal();
     this.updateData.emit(true);
   }
 
   onAddRow(data: ProductOrder) {
+    let discount = Number.isInteger(data.discount)? data.discount: Number(data.discount).toFixed(2);
     const newData = {
       id: data.id,
       number_item: data.productUpc,
@@ -107,10 +112,10 @@ export class AgGridComponent implements OnInit, OnDestroy {
       total: Number(data.subTotal).toFixed(2),
       tax: Number(data.tax).toFixed(2),
       isRefund: data.isRefund,
-      discount: data.discount
+      discount: discount
     };
-    console.log('onAddRow', this.gridOptions.api.getDisplayedRowCount());
-    (newData.discount !== undefined) ? this.showDiscount(true) : this.showDiscount(false);
+    console.log('onAddRow', newData, this.gridOptions.api.getDisplayedRowCount());
+    //(newData.discount !== undefined) ? this.showDiscount(true) : this.showDiscount(false);
     const res = this.gridOptions.api.updateRowData({ add: [newData] });
     this.gridOptions.api.ensureIndexVisible(this.gridOptions.api.getDisplayedRowCount()-1);
     this.updateData.emit(true);
@@ -161,7 +166,7 @@ export class AgGridComponent implements OnInit, OnDestroy {
       rowClassRules: { 'refund-prod': 'data.isRefund === true' },
       onGridReady: () => {
         this.gridOptions.api.sizeColumnsToFit();
-        this.showDiscount(false);
+        //this.showDiscount(false);
       },
       onRowSelected: (ev) => {
           this.invoiceService.invoiceProductSelected = this.gridOptions.api.getSelectedRows();
@@ -191,6 +196,10 @@ export class AgGridComponent implements OnInit, OnDestroy {
   showDiscount(show: boolean) {
     this.gridOptions.columnApi.setColumnVisible('discount', show);
     this.gridOptions.api.sizeColumnsToFit();
+    /*this.gridOptions.api.refreshCells();
+    this.gridOptions.api.redrawRows();
+    this.gridApi.refreshView();
+    this.gridApi.doLayout();*/
   }
 
   ngOnDestroy() {

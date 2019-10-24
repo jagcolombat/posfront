@@ -39,7 +39,7 @@ export class AdminOptionsService {
 
   setApplyDiscountType() {
     let adTypes = new Array<any>({value: EApplyDiscount.PERCENT, text: EApplyDiscount[EApplyDiscount.PERCENT]},
-      {value: EApplyDiscount.COUNT, text: EApplyDiscount[EApplyDiscount.COUNT]});
+      {value: EApplyDiscount.AMOUNT, text: EApplyDiscount[EApplyDiscount.AMOUNT]});
     this.cashService.dialog.open(DialogDeliveryComponent,
       {
         width: '600px', height: '340px', data: {name: 'Apply Discount Types', label: 'Select a type', arr: adTypes},
@@ -52,7 +52,7 @@ export class AdminOptionsService {
           this.applyDiscount(EApplyDiscount.PERCENT);
           break;
         default:
-          this.applyDiscount(EApplyDiscount.COUNT);
+          this.applyDiscount(EApplyDiscount.AMOUNT);
       }
     });
   }
@@ -66,13 +66,13 @@ export class AdminOptionsService {
         }):
         this.cashService.dialog.open(ProductGenericComponent,
       {
-        width: '480px', height: '650px', data: {name: 'Apply Discount', label: 'Discount (count)', unitCost: 0},
+        width: '480px', height: '650px', data: {name: 'Apply Discount', label: 'Discount (amount)', unitCost: 0},
         disableClose: true
       });
         dialogRef.afterClosed().subscribe((data: any) => {
           console.log('apply discount', data);
-          if(type === EApplyDiscount.COUNT ) data = (data['unitCost'])?(+data['unitCost']).toFixed(2): 0;
-          this.invoiceService.applyDiscountInvoice(+data, type).subscribe(next => {
+          if(type === EApplyDiscount.AMOUNT ) data = (data['unitCost'])? Number(data['unitCost']).toFixed(2): 0;
+          this.invoiceService.applyDiscountInvoice(data, type).subscribe(next => {
             this.invoiceService.setInvoice(next);
             this.invoiceService.invoiceProductSelected.splice(0);
           }, err => {

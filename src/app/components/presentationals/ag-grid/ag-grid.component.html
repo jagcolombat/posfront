@@ -6,5 +6,5 @@
   [columnDefs]="columnDefs"
   [rowMultiSelectWithClick]="selectableProd"
   [suppressRowClickSelection]="!selectableProd"
->
+  (gridReady)= "onGridReady($event)">
 </ag-grid-angular>
