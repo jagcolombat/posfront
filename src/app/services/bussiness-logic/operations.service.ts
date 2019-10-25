@@ -55,7 +55,7 @@ export class OperationsService {
       if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS)
         this.logout();
       else
-        this.resetInactivity(true)
+        this.resetInactivity(true);
     },this.inactivityTime * 60000);
   }
 

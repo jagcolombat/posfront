@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Product } from '../../../models/product.model';
 import { StockService } from "../../../services/bussiness-logic/stock.service";
-import { ActivatedRoute } from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import { EOperationType } from "../../../utils/operation.type.enum";
 import { leaveFocusOnButton } from "../../../utils/functions/functions";
 import { DialogFilterComponent } from "../../containers/dialog-filter/dialog-filter.component";
@@ -18,7 +18,7 @@ export class ListProdComponent implements OnInit {
   page: number = 1;
   sizePage = 20;
 
-  constructor( private route: ActivatedRoute, public stockService: StockService) {
+  constructor( private router: Router, private route: ActivatedRoute, public stockService: StockService) {
     this.sizePage = this.stockService.getStockCountItems();
     console.log(this.sizePage);
   }
@@ -28,10 +28,8 @@ export class ListProdComponent implements OnInit {
     this.route.params.subscribe(p => {
       console.log('onInit', p);
       if(p['filter']){
-        this.stockService.getProductsByFilter(p['filter']).subscribe(prods => {
-          Object.assign(this.prods, prods);
-          Object.assign(this.prodsByDpto, prods);
-        })
+        Object.assign(this.prods, this.stockService.productsFiltered);
+        Object.assign(this.prodsByDpto, this.stockService.productsFiltered);
       } else if (p['dpto'] && p['tax']){
         this.dptTax = p['tax'];
         this.stockService.getProductsByDepartment(p['dpto']).subscribe(prods => {
@@ -61,15 +59,25 @@ export class ListProdComponent implements OnInit {
     this.stockService.cashService.dialog.open(DialogFilterComponent, { width: '1024px', height: '600px', disableClose: true})
       .afterClosed()
       .subscribe(next => {
-        if (next) {
+        if (next && next.text) {
           console.log('filterDialog', next, this.prodsByDpto);
-          let prods = this.prodsByDpto.filter(p => p.name.includes(next.text));
+          /*let prods = this.prodsByDpto.filter(p => p.name.includes(next.text));
           prods.length <= 0 ?
             this.stockService.cashService.openGenericInfo('Information', 'Not match any products with ' +
               'the specified filter')
             :
             this.prods = prods;
+            this.page = 1;*/
+          this.stockService.getProductsByFilter(next.text).subscribe(prods => {
+            this.prods.splice(0);
+            this.prodsByDpto.splice(0);
+            Object.assign(this.prods, prods);
+            Object.assign(this.prodsByDpto, prods);
             this.page = 1;
+          }, err => {
+            this.stockService.cashService.openGenericInfo('Error', 'Not match any products with ' +
+              'the specified filter');
+          });
         }
       });
   }

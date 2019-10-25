@@ -36,7 +36,7 @@ export function dataValidation(type: EFieldType): any{
     case EFieldType.PHONE:
       return {max: 12, mask: '(000) 000-0000'};
     case EFieldType.DESC:
-      return {max: 200};
+      return {min: -1, max: 200};
     case EFieldType.CARD_NUMBER:
       return {max: 16, mask: '0000 0000 0000 0000'};
     case EFieldType.EXPDATE:

@@ -58,9 +58,16 @@ export class ListDptoComponent implements OnInit {
     this.stockService.cashService.dialog.open(DialogFilterComponent, { width: '1024px', height: '600px', disableClose: true})
       .afterClosed()
       .subscribe(next => {
-        if (next) {
+        if (next && next.text) {
           console.log('filterDialog', next);
-          this.router.navigateByUrl('/cash/filteredproducts/' + next.text);
+          this.stockService.getProductsByFilter(next.text).subscribe(prods => {
+            this.stockService.productsFiltered.splice(0);
+            Object.assign(this.stockService.productsFiltered, prods);
+            this.router.navigateByUrl('/cash/filteredproducts/' + next.text);
+          }, err => {
+            this.stockService.cashService.openGenericInfo('Error', 'Not match any products with ' +
+              'the specified filter');
+          });
         }
       });
   }

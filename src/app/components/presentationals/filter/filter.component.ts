@@ -17,6 +17,7 @@ export class FilterComponent implements OnInit {
     'V', 'B','N', 'M'];
   operations = ['Back', 'Clear', 'Enter'];
   opColor = ['yellow','yellow', 'red'];
+  @Input() min: number = 1;
   @Input() max: number = 100;
   @Output() evFilter = new EventEmitter<string>();
 
@@ -25,7 +26,8 @@ export class FilterComponent implements OnInit {
   ngOnInit() {
     console.log('filter component ', this.data);
     if(this.data && this.data.type){
-      this.max = this.data.type.max;
+      this.min = this.data.type.min ? this.data.type.min : 1;
+      this.max = this.data.type.max ? this.data.type.max : 100;
     }
   }
 
@@ -59,7 +61,7 @@ export class FilterComponent implements OnInit {
   private filter() {
     let text = this.input.trim();
     console.log('filter', text);
-    (text.length > 1 && text.length <= this.max) ? this.evFilter.emit(text):
+    (text.length > this.min && text.length <= this.max) ? this.evFilter.emit(text):
       this.invalid('Text must have between 2 and '+ this.max +' characters');
   }
 

@@ -15,6 +15,7 @@ export class StockService {
 
   public env = env;
   actualPage: number;
+  productsFiltered = new Array<any>();
 
   constructor(private dataStore: DataStorageService, public productOrderService: ProductOrderService,
               public cashService: CashService) {
