@@ -51,10 +51,10 @@ export class ProductOrderService implements OnDestroy {
   }
 
   private onCreateProductOrder(product: Product): void {
-    if (product.scalable || product.generic) {
-      if (product.scalable) {
+    if (/*product.scalable || */product.generic) {
+      /*if (product.scalable) {
         this.openDialogScalableProd(product);
-      } else if (product.generic) {
+      } else */if (product.generic) {
         this.openDialogGenericProd(product);
       }
     } else {
