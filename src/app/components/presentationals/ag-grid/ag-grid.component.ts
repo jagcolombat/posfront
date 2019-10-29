@@ -44,7 +44,7 @@ export class AgGridComponent implements OnInit, OnDestroy {
         field: 'number_item',
         headerCheckboxSelection: this.selectableProd,
         checkboxSelection: this.selectableProd,
-        width: 160,
+        width: 155,
         headerComponentFramework: CustomHeaderComponent,
         headerComponentParams: { displayName: 'Number Item' }
       },
@@ -52,35 +52,35 @@ export class AgGridComponent implements OnInit, OnDestroy {
         headerComponentFramework: CustomHeaderComponent,
         headerComponentParams: { displayName: 'Name' },
         field: 'name',
-        width: 160
+        width: 155
       },
       {
         headerComponentFramework: CustomHeaderComponent,
         headerComponentParams: { displayName: 'Price' },
         field: 'unitCost',
         type: 'numericColumn',
-        width: 100
+        width: 95
       },
       {
         headerComponentFramework: CustomHeaderComponent,
         headerComponentParams: { displayName: 'Quantity' },
         field: 'quantity',
         type: 'numericColumn',
-        width: 70
+        width: 95
       },
       {
         headerComponentFramework: CustomHeaderComponent,
         headerComponentParams: { displayName: 'Discount' },
         field: 'discount',
         type: 'numericColumn',
-        width: 100
+        width: 95
       },
       {
         headerComponentFramework: CustomHeaderComponent,
         headerComponentParams: { displayName: 'Amount' },
         field: 'total',
         type: 'numericColumn',
-        width: 100
+        width: 95
       }
     ];
   }
@@ -102,17 +102,17 @@ export class AgGridComponent implements OnInit, OnDestroy {
   }
 
   onAddRow(data: ProductOrder) {
-    let discount = Number.isInteger(data.discount)? data.discount: Number(data.discount).toFixed(2);
+    let formatNumber = (number)=> Number.isInteger(number)? number : Number(number).toFixed(2);
     const newData = {
       id: data.id,
       number_item: data.productUpc,
       name: data.productName,
       unitCost: Number(data.unitCost).toFixed(2),
-      quantity: data.quantity,
+      quantity: formatNumber(data.quantity),
       total: Number(data.subTotal).toFixed(2),
       tax: Number(data.tax).toFixed(2),
       isRefund: data.isRefund,
-      discount: discount
+      discount: formatNumber(data.discount)
     };
     console.log('onAddRow', newData, this.gridOptions.api.getDisplayedRowCount());
     //(newData.discount !== undefined) ? this.showDiscount(true) : this.showDiscount(false);
