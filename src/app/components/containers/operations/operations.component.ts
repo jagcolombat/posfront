@@ -16,7 +16,7 @@ import {CustomerOpEnum} from "../../../utils/operations/customer.enum";
 })
 export class OperationsComponent implements OnInit {
 
-  @Input() financeOperations = [FinancialOpEnum.MANAGER, FinancialOpEnum.LOGOUT, FinancialOpEnum.TXTYPE];
+  @Input() financeOperations = [FinancialOpEnum.MANAGER, FinancialOpEnum.TXTYPE, FinancialOpEnum.LOGOUT];
   @Input() financeColor = 'green';
   @Input() financeDisabled: boolean | boolean []= this.operationService.cashService.disabledFinOp;
 
@@ -47,8 +47,8 @@ export class OperationsComponent implements OnInit {
   @Input() backOperations = [AdminOpEnum.PREV_SCREEN];
   @Input() backColor = 'yellow';
 
-  @Input() financeAdminOperations = [FinancialOpEnum.REPRINT, FinancialOpEnum.HOLD,
-    FinancialOpEnum.REVIEW, FinancialOpEnum.RECALL, FinancialOpEnum.REFUND];
+  @Input() financeAdminOperations = [FinancialOpEnum.REPRINT, FinancialOpEnum.HOLD, FinancialOpEnum.REVIEW,
+    FinancialOpEnum.RECALL, FinancialOpEnum.REFUND, FinancialOpEnum.LOGOUT];
   @Input() financeAdminColor = 'green';
 
   @Input() invoiceAdminOperations = [InvioceOpEnum.VOID, InvioceOpEnum.CLEAR];
@@ -227,7 +227,6 @@ export class OperationsComponent implements OnInit {
     switch (ev) {
       case AdminOpEnum.PREV_SCREEN:
         this.adminOpService.backToUser();
-        this.router.navigateByUrl('/cash/dptos');
         break;
     }
   }

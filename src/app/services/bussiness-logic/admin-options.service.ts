@@ -17,6 +17,7 @@ import {DialogInvoiceComponent} from "../../components/presentationals/dialog-in
 import {DialogDeliveryComponent} from "../../components/presentationals/dialog-delivery/dialog-delivery.component";
 import {EApplyDiscount} from "../../utils/apply-discount.enum";
 import {ProductGenericComponent} from "../../components/presentationals/product-generic/product-generic.component";
+import {Router} from "@angular/router";
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +27,7 @@ export class AdminOptionsService {
   private removeHoldLoaded: boolean;
 
   constructor(private invoiceService: InvoiceService, public cashService: CashService, private auth: AuthService,
-              private operationService: OperationsService, private dataStorage: DataStorageService) {
+              private operationService: OperationsService, private dataStorage: DataStorageService, private router: Router) {
 
     this.operationService.evCancelCheck.subscribe(next => {
       next ? this.cancelCheck(): this.cancelCheckLoaded=false;
@@ -148,8 +149,13 @@ export class AdminOptionsService {
   }
 
   backToUser() {
-    this.auth.restoreInitialLogin();
-    this.invoiceService.getCashier();
+    if(this.auth.initialLogin){
+      this.auth.restoreInitialLogin();
+      this.router.navigateByUrl('/cash/dptos');
+      this.invoiceService.getCashier();
+    } else {
+      this.cashService.openGenericInfo('Information', 'Any user was logged previously')
+    }
   }
 
   configOption() {

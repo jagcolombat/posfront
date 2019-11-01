@@ -49,7 +49,7 @@ export class InvoiceService {
   }
 
   getCashier(): string {
-    return this.cashier = this.authService.token.username ? this.authService.token.username : ''
+    return this.cashier = (this.authService.token && this.authService.token.username) ? this.authService.token.username : ''
   }
 
   createInvoice(){

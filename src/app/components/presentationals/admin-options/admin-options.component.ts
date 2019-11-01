@@ -50,7 +50,6 @@ export class AdminOptionsComponent implements OnInit {
         break;
       case AdminOpEnum.BACK_USER.toUpperCase():
         this.adminOpService.backToUser();
-        this.router.navigateByUrl('/cash/dptos');
         break;
       case AdminOpEnum.SET_USER.toUpperCase():
         this.adminOpService.setUserToOrder();
