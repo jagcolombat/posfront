@@ -1,6 +1,6 @@
 {
   "name": "posfront",
-  "version": "1.48.1",
+  "version": "2.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --proxy-config proxy.conf.json",
