@@ -13,5 +13,9 @@ export enum AdminOpEnum {
   SET_USER = 'Set User',
   CLOSE_BATCH = 'Close Batch',
   CONFIG = 'Config',
-  SYSTEM_VERSION = 'System Version'
+  SYSTEM_VERSION = 'System Version',
+  PREV_SCREEN = 'Prev Screen',
+  CHARGE_ACCT_SETUP = 'Change Acct Setup',
+  EMPLOYEE_SETUP = 'Employee Setup',
+  CHANGE_PRICES = 'Change Prices'
 }

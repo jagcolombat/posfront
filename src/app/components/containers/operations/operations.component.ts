@@ -3,6 +3,11 @@ import {OperationsService} from "../../../services/bussiness-logic/operations.se
 import {FinancialOpEnum, InvioceOpEnum, PaymentOpEnum, TotalsOpEnum} from "../../../utils/operations";
 import {OtherOpEnum} from "../../../utils/operations/other.enum";
 import {CompanyType} from "../../../utils/company-type.enum";
+import {AuthService} from "../../../services/api/auth.service";
+import {AdminOpEnum} from "../../../utils/operations/admin-op.enum";
+import {AdminOptionsService} from "../../../services/bussiness-logic/admin-options.service";
+import {NavigationEnd, Router} from "@angular/router";
+import {CustomerOpEnum} from "../../../utils/operations/customer.enum";
 
 @Component({
   selector: 'operations',
@@ -11,8 +16,7 @@ import {CompanyType} from "../../../utils/company-type.enum";
 })
 export class OperationsComponent implements OnInit {
 
-  @Input() financeOperations = [FinancialOpEnum.MANAGER, FinancialOpEnum.REPRINT, FinancialOpEnum.HOLD,
-    FinancialOpEnum.REVIEW, FinancialOpEnum.RECALL, FinancialOpEnum.REFUND, FinancialOpEnum.LOGOUT, FinancialOpEnum.TXTYPE];
+  @Input() financeOperations = [FinancialOpEnum.MANAGER, FinancialOpEnum.LOGOUT, FinancialOpEnum.TXTYPE];
   @Input() financeColor = 'green';
   @Input() financeDisabled: boolean | boolean []= this.operationService.cashService.disabledFinOp;
 
@@ -31,14 +35,47 @@ export class OperationsComponent implements OnInit {
   @Input() paymentColor = ['yellow', 'yellow', 'yellow', 'green', 'blue'];
   @Input() paymentDisabled: boolean | boolean[] = this.operationService.cashService.disabledPayment;
 
-  @Input() otherOperations = [OtherOpEnum.PRINT_LAST, OtherOpEnum.NO_SALE, OtherOpEnum.PAID_OUT, OtherOpEnum.HOUSE_CHARGE,
-    OtherOpEnum.TABLES, OtherOpEnum.ORDER_INFO];
+  @Input() otherOperations = [OtherOpEnum.PRINT_LAST, OtherOpEnum.NO_SALE, OtherOpEnum.WEIGHT_ITEM, OtherOpEnum.ORDER_INFO];
   @Input() otherColor = ['yellow', 'blue', 'blue', 'green','blue','blue'];
 
   @Input() moneyOperations = ['1', '5', '10', '20', '50', '100'];
   @Input() moneyColor = ['one', 'five', 'ten', 'twenty', 'fifty', 'hundrey'];
 
-  constructor(public operationService: OperationsService) {  }
+  @Input() reportOperations = [AdminOpEnum.EMPLZ, AdminOpEnum.SYSZ, AdminOpEnum.WTDZ];
+  @Input() reportColor = 'yellow';
+
+  @Input() backOperations = [AdminOpEnum.PREV_SCREEN];
+  @Input() backColor = 'yellow';
+
+  @Input() financeAdminOperations = [FinancialOpEnum.REPRINT, FinancialOpEnum.HOLD,
+    FinancialOpEnum.REVIEW, FinancialOpEnum.RECALL, FinancialOpEnum.REFUND];
+  @Input() financeAdminColor = 'green';
+
+  @Input() invoiceAdminOperations = [InvioceOpEnum.VOID, InvioceOpEnum.CLEAR];
+  @Input() invoiceAdminColor = 'red';
+
+  @Input() otherAdminOperations = [OtherOpEnum.PRINT_LAST, OtherOpEnum.NO_SALE, OtherOpEnum.PAID_OUT];
+  @Input() otherAdminColor = ['blue', 'blue', 'blue'];
+
+  @Input() customerOperations = [CustomerOpEnum.CUSTOMER, CustomerOpEnum.ACCT_BALANCE, CustomerOpEnum.ACCT_PAYMENT,
+    CustomerOpEnum.ACCT_CHARGE];
+  @Input() customerColor = 'orange';
+
+  isRouteAdmin = (route: string) => (route.startsWith('/cash/options') ? true : false);
+  routeAdmin: boolean;
+  showForAdmin = false;
+
+  constructor(public operationService: OperationsService, public authService: AuthService,
+              private adminOpService: AdminOptionsService, private router: Router) {
+    this.router.events.subscribe(ev => {
+      if(ev instanceof NavigationEnd) {
+        console.log('evRoute', this.router.url);
+        this.routeAdmin = this.isRouteAdmin(this.router.url);
+        this.showForAdmin = (this.routeAdmin && this.authService.adminLogged() ? true : false)
+        console.log('for admin', this.routeAdmin, this.authService.adminLogged(), this.showForAdmin);
+      }
+    });
+  }
 
   ngOnInit() {
     // this.operationService.cashService.systemConfig.companyType = CompanyType.RESTAURANT;
@@ -170,5 +207,46 @@ export class OperationsComponent implements OnInit {
 
   moneyKey(ev) {
     this.operationService.cashMoney(+ev);
+  }
+
+  reportKey(ev) {
+    switch (ev) {
+      case AdminOpEnum.EMPLZ:
+        this.adminOpService.emplZ();
+        break;
+      case AdminOpEnum.SYSZ:
+        this.adminOpService.sysZ();
+        break;
+      case AdminOpEnum.WTDZ:
+        this.adminOpService.doDayClose();
+        break;
+    }
+  }
+
+  backKey(ev) {
+    switch (ev) {
+      case AdminOpEnum.PREV_SCREEN:
+        this.adminOpService.backToUser();
+        this.router.navigateByUrl('/cash/dptos');
+        break;
+    }
+  }
+
+  customerKey(ev) {
+    console.log('customerKey', ev);
+    switch (ev) {
+      case CustomerOpEnum.CUSTOMER.toUpperCase():
+        //this.adminOpService.emplZ();
+        break;
+      case CustomerOpEnum.ACCT_BALANCE.toUpperCase():
+        //this.adminOpService.sysZ();
+        break;
+      case CustomerOpEnum.ACCT_PAYMENT.toUpperCase():
+        //this.adminOpService.doDayClose();
+        break;
+      case CustomerOpEnum.ACCT_CHARGE.toUpperCase():
+        //this.adminOpService.doDayClose();
+        break;
+    }
   }
 }

@@ -261,16 +261,17 @@ export class AdminOptionsService {
     this.dataStorage.getApplicationUsers().subscribe(next => {
       console.log(AdminOpEnum.SET_USER, next);
       let users = new Array<any>();
+      next.map(user => users.push(user));
       this.cashService.dialog.open(DialogInvoiceComponent,
         { width: '780px', height: '660px', data: {invoice: users, detail:'userName', title: 'Users', subtitle: 'Select a user'}
-          , disableClose: true }).afterClosed().subscribe(next => {
-        console.log('dialog delivery', next);
-        if (next) {
-          this.invoiceService.setUser(this.invoiceService.invoice.applicationUserId).subscribe(
-            next => {
-              console.log('setUserToOrder', next);
-              this.invoiceService.invoice.applicationUserId = next['applicationUserId'];
-              this.cashService.openGenericInfo('Information', 'The user '+next['userName']
+          , disableClose: true }).afterClosed().subscribe(userSelected => {
+        console.log('dialog delivery', userSelected);
+        if (userSelected) {
+          this.invoiceService.setUser(userSelected['id']).subscribe(
+            user => {
+              console.log('setUserToOrder', user);
+              this.invoiceService.invoice.applicationUserId = user['applicationUserId'];
+              this.cashService.openGenericInfo('Information', 'The user '+userSelected['userName']
                 +' was assigned to this invoice');
             },
             err => {

@@ -4,5 +4,6 @@ export enum OtherOpEnum {
   PAID_OUT = 'Paid Out',
   HOUSE_CHARGE = 'House Charge',
   TABLES = 'Tables',
-  ORDER_INFO = 'Order Info'
+  ORDER_INFO = 'Order Info',
+  WEIGHT_ITEM = 'Weight Item'
 }

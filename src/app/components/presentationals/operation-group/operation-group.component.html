@@ -1,4 +1,4 @@
-<div class="column" [ngClass]="layout">
+<div class="column" [ngClass]="layout" *ngIf="showElements">
   <button mat-button [ngClass]="setColor(i)" fxLayoutGap="10px" [fxFlex]="btnSize" *ngFor="let i of operations"
           (click)="pressKey($event, i)" [disabled]="setDisabled(i)">{{showText ? i: ""}}</button>
 </div>

@@ -26,6 +26,18 @@
   color: black;
 }
 
+.violet {
+  background-color: rgba(19, 34, 87, 0.71);
+  border-color: rgba(13, 20, 40, 0.71);
+  color: white;
+}
+
+.orange {
+  background-color: lightsalmon;
+  border-color: orange;
+  color: white;
+}
+
 .two-layout > button[mat-button] {
   height: 175px;
 }

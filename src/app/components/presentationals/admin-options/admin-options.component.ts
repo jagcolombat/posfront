@@ -9,14 +9,14 @@ import {AdminOpEnum} from "../../../utils/operations/admin-op.enum";
   styleUrls: ['./admin-options.component.scss']
 })
 export class AdminOptionsComponent implements OnInit {
-  options = [AdminOpEnum.EMPLZ, AdminOpEnum.SYSZ, AdminOpEnum.WTDZ,AdminOpEnum.CHANGE_PRINTER,AdminOpEnum.CLOSE_BROWSER,
+  options = [AdminOpEnum.CHANGE_PRINTER,AdminOpEnum.CLOSE_BROWSER,
     AdminOpEnum.APPLY_DISCOUNT, AdminOpEnum.CANCEL_CHECK, AdminOpEnum.REMOVE_HOLD, AdminOpEnum.AUTH_PENDING,
     AdminOpEnum.DEPARMENTS, AdminOpEnum.BACK_USER, AdminOpEnum.SET_USER, AdminOpEnum.CLOSE_BATCH, AdminOpEnum.CONFIG,
-    AdminOpEnum.SYSTEM_VERSION];
+    AdminOpEnum.SYSTEM_VERSION, AdminOpEnum.CHARGE_ACCT_SETUP, AdminOpEnum.EMPLOYEE_SETUP, AdminOpEnum.CHANGE_PRICES];
   page = 1;
   sizePage = 16;
   @Input() disable: boolean | boolean[] = this.adminOpService.cashService.disabledAdminOp;
-  adminOpColor = "red";
+  adminOpColor = ['red','red','red','red','red','red','red','red','red','red','red','red','violet','violet','violet'];
 
   constructor(private router: Router, public adminOpService: AdminOptionsService ) {
   }
