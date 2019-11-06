@@ -52,8 +52,9 @@ export class AdminOptionsService {
         case 1:
           this.applyDiscount(EApplyDiscount.PERCENT);
           break;
-        default:
+        case 2:
           this.applyDiscount(EApplyDiscount.AMOUNT);
+          break;
       }
     });
   }
