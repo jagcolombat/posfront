@@ -223,7 +223,7 @@ export class OperationsComponent implements OnInit {
         this.adminOpService.sysZ();
         break;
       case AdminOpEnum.WTDZ:
-        this.adminOpService.doDayClose();
+        this.adminOpService.dayCloseType();
         break;
     }
   }

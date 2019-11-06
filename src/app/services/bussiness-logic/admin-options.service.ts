@@ -241,6 +241,48 @@ export class AdminOptionsService {
     );
   }
 
+  private dayClosePrint() {
+    this.cashService.dayCloseEnableState();
+    this.dataStorage.dayClosePrint().subscribe(
+      next => {
+        console.log(AdminOpEnum.WTDZ);
+        this.cashService.openGenericInfo('Day Close Print', 'Complete '+AdminOpEnum.WTDZ.toLowerCase()+' operation');
+      },
+      err => {
+        this.cashService.openGenericInfo('Error', 'Can\'t complete '+
+          AdminOpEnum.WTDZ.toLowerCase()+' print operation')},
+      () => {
+        this.cashService.resetEnableState();
+      }
+    );
+  }
+
+  dayCloseType(){
+    let dayCloseTypes= new Array<any>({value: 1, text: 'Print'}, {value: 2, text: 'Close'});
+    this.cashService.dialog.open(DialogDeliveryComponent,
+      { width: '600px', height: '340px', data: {name: 'Day Close Types', label: 'Select a type', arr: dayCloseTypes},
+        disableClose: true })
+      .afterClosed().subscribe(next => {
+      console.log(next);
+      switch (next) {
+        case 1:
+          this.dayClosePrint();
+          break;
+        case 2:
+          this.cashService.openGenericInfo('Day Close', 'Do you want close day?', '', true)
+            .afterClosed().subscribe(next => {
+              console.log(next);
+              if(next){
+                this.doDayClose();
+              }
+            }, err => {
+              this.cashService.openGenericInfo('Error', 'Can\'t complete '+ AdminOpEnum.WTDZ +' operation');
+            });
+          break;
+      }
+    });
+  }
+
   authPending() {
     this.operationService.currentOperation = AdminOpEnum.AUTH_PENDING;
     if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS) {

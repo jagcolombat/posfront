@@ -64,9 +64,14 @@ export class AdminOperationService {
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
-  getDayClose(url: string): Observable<Report> {
+  getDayClosePrint(url: string): Observable<Report> {
     return this._http.get<any>(url + this.path + '/op/report', {})
         .pipe(catchError(this.processHttpMsgService.handleError));
+  }
+
+  getDayClose(url: string): Observable<Report> {
+    return this._http.post<any>(url + this.path + '/op/report', {})
+      .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
   notSale(url: string): Observable<any> {

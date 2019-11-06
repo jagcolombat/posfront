@@ -65,7 +65,7 @@ export class AdminOptionsComponent implements OnInit {
         this.adminOpService.closeBatch();
         break;
       case AdminOpEnum.WTDZ.toUpperCase():
-        this.adminOpService.doDayClose();
+        this.adminOpService.dayCloseType();
         break;
     }
   }

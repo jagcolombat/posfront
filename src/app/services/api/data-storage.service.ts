@@ -232,6 +232,10 @@ export class DataStorageService {
     return this.adminOperationService.getDayClose(this.url);
   }
 
+  dayClosePrint() {
+    return this.adminOperationService.getDayClosePrint(this.url);
+  }
+
   getInvoiceByTransferType(authPending: EOperationType, auth: ETransferType) {
     return this.invoiceService.getInvoiceByTransferType(this.url, auth);
   }
