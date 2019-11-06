@@ -30,9 +30,9 @@ export class OperationsComponent implements OnInit {
 
   @Input() numpadOption = '@/FOR';
 
-  @Input() paymentOperations = [PaymentOpEnum.EBT_CARD, PaymentOpEnum.DEBIT_CARD, PaymentOpEnum.CREDIT_CARD,
+  @Input() paymentOperations = [PaymentOpEnum.EBT_CARD, PaymentOpEnum.EBT_INQUIRY, PaymentOpEnum.DEBIT_CARD, PaymentOpEnum.CREDIT_CARD,
     PaymentOpEnum.CASH, PaymentOpEnum.OTHER];
-  @Input() paymentColor = ['yellow', 'yellow', 'yellow', 'green', 'blue'];
+  @Input() paymentColor = ['yellow', 'yellow', 'yellow', 'yellow', 'green', 'blue'];
   @Input() paymentDisabled: boolean | boolean[] = this.operationService.cashService.disabledPayment;
 
   @Input() otherOperations = [OtherOpEnum.PRINT_LAST, OtherOpEnum.NO_SALE, OtherOpEnum.WEIGHT_ITEM, OtherOpEnum.ORDER_INFO];
@@ -81,19 +81,21 @@ export class OperationsComponent implements OnInit {
     // this.operationService.cashService.systemConfig.companyType = CompanyType.RESTAURANT;
     this.operationService.cashService.getSystemConfig().subscribe(config => {
       if(this.operationService.cashService.systemConfig.companyType === CompanyType.RESTAURANT){
-        this.paymentOperations.splice(0,1);
-        this.paymentColor.splice(0,1);
-
+        // Remove EBT options and colors
+        this.paymentOperations.splice(0,2);
+        this.paymentColor.splice(0,2);
+        // Remove EBT total and color
         this.totalsOperations.splice(0,1);
         this.totalColor.splice(0,1);
       } else {
-        this.financeOperations.splice(-1,1);
-
+        // Remove TXType operation
+        this.financeOperations.splice(-1);
+        // Remove Table and Order Info operations and relative colors
         this.otherOperations.splice(4,2);
         this.otherColor.splice(4,2);
-
-        this.moneyOperations.push(this.paymentOperations.splice(-1,1)[0]);
-        this.moneyColor.push(this.paymentColor.splice(-1,1)[0]);
+        // Push in money operations cash and other payment options
+        this.paymentOperations.splice(-2).map(op => this.moneyOperations.push(op));
+        this.paymentColor.splice(-2).map(op => this.moneyColor.push(op));
       }
     }, err => {
       this.operationService.cashService.openGenericInfo('Error', 'Can\'t get configuration');
@@ -177,6 +179,9 @@ export class OperationsComponent implements OnInit {
         break;
       case PaymentOpEnum.CREDIT_CARD:
         this.operationService.credit();
+        break;
+      case PaymentOpEnum.EBT_INQUIRY:
+        this.operationService.ebtInquiry();
         break;
     }
   }

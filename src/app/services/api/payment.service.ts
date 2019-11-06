@@ -33,4 +33,7 @@ export class PaymentService {
     return this._http.post<any>(url + this.path + '/payment/ebt', cashPayment);
   }
 
+  ebtInquiry(url: string) {
+    return this._http.get<any>(url + this.path + '/payment/ebt');
+  }
 }

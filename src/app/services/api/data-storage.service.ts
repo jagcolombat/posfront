@@ -245,4 +245,7 @@ export class DataStorageService {
     return this.adminOperationService.notSale(this.url);
   }
 
+  inquiryEBTCard() {
+    return this.paymentService.ebtInquiry(this.url);
+  }
 }

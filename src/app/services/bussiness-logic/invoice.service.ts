@@ -230,6 +230,10 @@ export class InvoiceService {
     return this.dataStorage.paidByEBTCard(ebtPayment);
   }
 
+  ebtInquiry() {
+    return this.dataStorage.inquiryEBTCard();
+  }
+
   print(invoice: Invoice) {
     return this.dataStorage.printInvoices(invoice);
   }

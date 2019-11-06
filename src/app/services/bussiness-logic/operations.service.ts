@@ -634,10 +634,9 @@ export class OperationsService {
           }
         },err => {
           console.log(err);
-          dialogInfoEvents.close();
           this.cashService.openGenericInfo('Error', 'Can\'t complete ebt operation');
           this.cashService.resetEnableState()
-        });
+        }, () => dialogInfoEvents.close());
     }
     this.resetInactivity(false);
   }
@@ -1039,5 +1038,30 @@ export class OperationsService {
     this.invoiceService.notSale().subscribe(d => {
         console.log("Open cash drawer.")
     });
+  }
+
+  ebtInquiry() {
+    console.log('EBT Inquiry');
+    this.currentOperation = 'EBT Inquiry';
+
+    if (this.invoiceService.invoice.total !== 0 || this.invoiceService.invoice.fsTotal !== 0) {
+      this.invoiceService.ebtInquiry()
+        .subscribe(data => {
+          console.log(data);
+          if(data.remainingBalance) {
+            this.cashService.openGenericInfo('EBT Inquiry', 'Remaining balance:'+ data.remainingBalance,
+              'Extra balance:'+ data.extraBalance);
+            this.cashService.resetEnableState();
+          } else {
+            this.cashService.openGenericInfo('Error', 'Can\'t complete ebt inquiry operation');
+            this.cashService.ebtEnableState();
+          }
+        },err => {
+          console.log(err);
+          this.cashService.openGenericInfo('Error', 'Can\'t complete ebt inquiry operation');
+          this.cashService.resetEnableState()
+        });
+    }
+    this.resetInactivity(false);
   }
 }

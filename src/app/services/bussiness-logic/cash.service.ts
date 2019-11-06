@@ -53,7 +53,7 @@ export class CashService {
     this.disabledInput = this.disabledFinOp = this.disabledTotalOp = true;
     this.disabledInvOp = [false, true, true, true];
     if(fs){
-      this.disabledPayment = [false, true, true, true]
+      this.disabledPayment = [false, false, true, true, true, true]
     } else if (refund) {
       this.disabledPayment = this.disabledPaymentByCompany();
       this.disabledPaymentMoney = true;
@@ -65,7 +65,7 @@ export class CashService {
   }
 
   disabledPaymentByCompany(){
-    return (this.systemConfig.companyType === CompanyType.MARKET) ? [true, false, false, false] : false;
+    return (this.systemConfig.companyType === CompanyType.MARKET) ? [true, true, false, false, false, false] : false;
   }
 
   ebtEnableState() {
