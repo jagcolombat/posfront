@@ -9,6 +9,7 @@ import {InvoiceService} from "./invoice.service";
 import {ProductGenericComponent} from "../../components/presentationals/product-generic/product-generic.component";
 import {ProductGeneric} from "../../models/product-generic";
 import {Subscription} from "rxjs";
+import {CashService} from "./cash.service";
 
 export const AGE = 18;
 
@@ -21,7 +22,7 @@ export class ProductOrderService implements OnDestroy {
   quantityByProduct = 1;
   subscription: Subscription [] = [];
 
-  constructor(public dialog: MatDialog, private invoiceService: InvoiceService) {
+  constructor(public dialog: MatDialog, private invoiceService: InvoiceService, private cashService: CashService) {
     this.subscription.push(this.invoiceService.evAddProdByUPC.subscribe(prod => this.addProduct(prod)));
   }
 
@@ -51,10 +52,12 @@ export class ProductOrderService implements OnDestroy {
   }
 
   private onCreateProductOrder(product: Product): void {
-    if (/*product.scalable || */product.generic) {
-      /*if (product.scalable) {
-        this.openDialogScalableProd(product);
-      } else */if (product.generic) {
+    if (product.scalable || product.generic) {
+      if (product.scalable) {
+        this.cashService.systemConfig.externalScale ?
+          this.invoiceService.addProductOrder(this.createProductOrder(product)) :
+          this.openDialogScalableProd(product);
+      } else if (product.generic) {
         this.openDialogGenericProd(product);
       }
     } else {

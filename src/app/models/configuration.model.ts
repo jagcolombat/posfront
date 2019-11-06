@@ -5,4 +5,5 @@ export interface Configuration {
   allowClear?: boolean;
   allowAddMiscellany?: boolean;
   companyType?: CompanyType;
+  externalScale?: boolean;
 }

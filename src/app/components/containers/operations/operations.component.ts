@@ -207,6 +207,9 @@ export class OperationsComponent implements OnInit {
         /*this.operationService.cashService.openGenericInfo(OtherOpEnum.ORDER_INFO, this.operationService.getOrderInfo());*/
         this.operationService.getOrderInfo();
         break;
+      case OtherOpEnum.WEIGHT_ITEM:
+        this.operationService.weightItem();
+        break;
     }
   }
 

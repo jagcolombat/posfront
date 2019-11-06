@@ -1064,4 +1064,50 @@ export class OperationsService {
     }
     this.resetInactivity(false);
   }
+
+  weightItem() {
+    this.cashService.dialog.open(ProductGenericComponent,
+      {
+        width: '480px', height: '650px', data: {name: 'Weight Item', label: 'Price', unitCost: 0.00},
+        disableClose: true
+      }).afterClosed().subscribe(
+      next => {
+        console.log('weightItem', next);
+        if(next) {
+          this.setWeightedProduct(next['unitCost']);
+        }
+        /*if(next && !this.cashService.systemConfig.externalScale) {
+          this.cashService.dialog.open(ProductGenericComponent,
+            {
+              width: '480px',
+              height: '650px',
+              data: {name: 'Set Weight', label: 'Weight (Lbs)', unitCost: 0},
+              disableClose: true
+            }).afterClosed().subscribe(
+            next => {
+              this.setWeightedProduct();
+            });
+          } else {
+            this.setWeightedProduct();
+          }*/
+      });
+  }
+
+  setWeightedProduct(price: number){
+    if(this.invoiceService.digits){
+      // Send scanned product to invoice
+      this.invoiceService.getProductByUpc(EOperationType.WeightItem).subscribe(
+        next => {
+          console.log(next);
+          next['unitCost'] = price;
+          this.invoiceService.evAddProdByUPC.emit(next);
+        },
+        err => { this.cashService.openGenericInfo('Error', 'Can\'t get product by upc'); },
+        () => this.invoiceService.resetDigits()
+      );
+    } else {
+      // Send misc product to invoice
+      this.cashService.openGenericInfo('Information', 'Send misc product to invoice');
+    }
+  }
 }
