@@ -67,6 +67,9 @@ export class AdminOptionsComponent implements OnInit {
       case AdminOpEnum.WTDZ.toUpperCase():
         this.adminOpService.dayCloseType();
         break;
+      case AdminOpEnum.CHANGE_PRICES.toUpperCase():
+        this.adminOpService.changePrice();
+        break;
     }
   }
 

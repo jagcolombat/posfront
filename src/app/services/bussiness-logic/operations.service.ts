@@ -1001,9 +1001,9 @@ export class OperationsService {
         type: dataValidation(fieldType)}}).afterClosed();
   }
 
-  getNumField(name, label, fieldType?: EFieldType): Observable<any> {
+  getNumField(name, label, fieldType?: EFieldType, height = '650'): Observable<any> {
     return this.cashService.dialog.open(InputCcComponent,
-      { width:'480px', height:'650px', data:{number:'', name: name, label:label,
+      { width:'480px', height: height + 'px', data:{number:'', name: name, label:label,
           type:dataValidation(fieldType)}, disableClose: true }).afterClosed();
   }
 

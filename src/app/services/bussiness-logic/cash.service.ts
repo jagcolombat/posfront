@@ -95,7 +95,7 @@ export class CashService {
 
   openGenericInfo(title: string, content?: string, content2?: any, confirm?: boolean) {
     return this.dialog.open(GenericInfoModalComponent,{
-      width: '400px', height: '300px', data: {
+      width: '400px', height: '350px', data: {
         title: title ? title : 'Information',
         content: content,
         content2: content2,

@@ -332,4 +332,55 @@ export class AdminOptionsService {
       });
     });
   }
+
+  changePrice() {
+    console.log('priceCheck');
+    if(this.invoiceService.digits){
+      this.doChangePrice();
+      this.invoiceService.resetDigits();
+    } else {
+      this.operationService.getField('Enter UPC Number', 'Change Prices').subscribe(
+        next => {
+          console.log('change price by upc', next);
+          if(next.text){
+            this.invoiceService.numbers = next.text;
+            this.doChangePrice();
+          }
+        }
+      )
+    }
+  }
+
+  doChangePrice(){
+    this.invoiceService.getProductByUpc(EOperationType.PriceCheck).subscribe(prod => {
+      this.cashService.openGenericInfo('Price check', 'Do you want change the price of the '+prod.name,
+        prod.unitCost, true)
+        .afterClosed().subscribe(next => {
+        console.log(next);
+        if(next !== undefined && next.confirm ) {
+          this.cashService.dialog.open(ProductGenericComponent,
+            {
+              width: '480px', height: '650px', data: {name: 'Change Price', label: 'Price', unitCost: prod.unitCost.toFixed(2)},
+              disableClose: true
+            }).afterClosed().subscribe(
+            next => {
+              if(next){
+                this.invoiceService.updateProductsPrice(prod.upc, next.unitCost, prod.id).subscribe(next => {
+                  console.log(next);
+                  this.cashService.openGenericInfo('Information', 'The price of product '+
+                    next['upc'] + ' was updated to '+ next['price'].toFixed(2));
+                },
+                err => {
+                  this.cashService.openGenericInfo('Error', 'Can\'t change price of this product '+
+                    this.invoiceService.digits);
+                });
+              }
+            });
+        }
+      });
+    }, err => {
+      this.cashService.openGenericInfo('Error', 'Can\'t found this product ' + this.invoiceService.digits);
+    });
+  }
+
 }

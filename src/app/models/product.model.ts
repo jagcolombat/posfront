@@ -16,3 +16,13 @@ export interface Product {
     scalable?: boolean;
     tax: number;
 }
+
+export interface IProductUpdate {
+  id: string;
+  upc: string;
+  price: number;
+}
+
+export class ProductUpdate implements IProductUpdate {
+  constructor(public id: string, public upc: string, public price: number) { }
+}

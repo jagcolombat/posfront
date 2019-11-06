@@ -182,6 +182,10 @@ export class InvoiceService {
     return this.dataStorage.getProductByUpc(this.numbers, typeOp);
   }
 
+  updateProductsPrice(upc: string, price: string, id: string){
+    return this.dataStorage.updateProductByUpc(upc, price, id);
+  }
+
   setInvoice(inv: Invoice){
     this.invoice = inv;
     this.receiptNumber = this.invoice.receiptNumber;
