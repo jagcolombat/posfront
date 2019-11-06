@@ -89,7 +89,7 @@ export class OperationsComponent implements OnInit {
         this.totalColor.splice(0,1);
       } else {
         // Remove TXType operation
-        this.financeOperations.splice(-1);
+        this.financeOperations.splice(1, 1);
         // Remove Table and Order Info operations and relative colors
         this.otherOperations.splice(4,2);
         this.otherColor.splice(4,2);
