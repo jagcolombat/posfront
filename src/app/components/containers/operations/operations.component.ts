@@ -80,6 +80,10 @@ export class OperationsComponent implements OnInit {
   ngOnInit() {
     // this.operationService.cashService.systemConfig.companyType = CompanyType.RESTAURANT;
     this.operationService.cashService.getSystemConfig().subscribe(config => {
+      if(this.operationService.cashService.systemConfig.allowCardSplit){
+        this.otherOperations.unshift(OtherOpEnum.SPLIT_CARD);
+        this.otherColor.unshift('yellow');
+      }
       if(this.operationService.cashService.systemConfig.companyType === CompanyType.RESTAURANT){
         // Remove EBT options and colors
         this.paymentOperations.splice(0,2);
@@ -91,8 +95,8 @@ export class OperationsComponent implements OnInit {
         // Remove TXType operation
         this.financeOperations.splice(1, 1);
         // Remove Table and Order Info operations and relative colors
-        this.otherOperations.splice(4,2);
-        this.otherColor.splice(4,2);
+        this.otherOperations.splice(-2);
+        this.otherColor.splice(-2);
         // Push in money operations cash and other payment options
         this.paymentOperations.splice(-2).map(op => this.moneyOperations.push(op));
         this.paymentColor.splice(-2).map(op => this.moneyColor.push(op));
@@ -209,6 +213,9 @@ export class OperationsComponent implements OnInit {
         break;
       case OtherOpEnum.WEIGHT_ITEM:
         this.operationService.weightItem();
+        break;
+      case OtherOpEnum.SPLIT_CARD:
+        this.operationService.splitCard();
         break;
     }
   }

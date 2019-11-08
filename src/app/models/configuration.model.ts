@@ -6,4 +6,5 @@ export interface Configuration {
   allowAddMiscellany?: boolean;
   companyType?: CompanyType;
   externalScale?: boolean;
+  allowCardSplit: boolean;
 }

@@ -14,6 +14,7 @@ export class ProductGenericComponent implements OnInit {
   digits = '';
   cost = '';
   maxlength = 12;
+  max: number;
 
   constructor(public dialogRef: MatDialogRef<ProductGenericComponent>, @Inject(MAT_DIALOG_DATA) public data: ProductGeneric) { }
 
@@ -24,6 +25,9 @@ export class ProductGenericComponent implements OnInit {
     }
     if (this.data.label) {
       this.label = this.data.label;
+    }
+    if (this.data.max) {
+      this.max = this.data.max;
     }
   }
 

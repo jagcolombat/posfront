@@ -30,7 +30,6 @@ export class CashService {
   resetEnableState() {
     this.disabledInput = this.disabledFinOp = this.disabledInvOp = this.disabledTotalOp = this.disabledAdminOp = false;
     this.disabledPayment = this.disabledPaymentMoney = true;
-    this.disabledOtherOp = false;
     this.evReviewEnableState.emit(false);
   }
 
@@ -52,6 +51,7 @@ export class CashService {
     console.log(fs);
     this.disabledInput = this.disabledFinOp = this.disabledTotalOp = true;
     this.disabledInvOp = [false, true, true, true];
+    if(this.systemConfig && this.systemConfig.allowCardSplit) this.disabledOtherOp = false;
     if(fs){
       this.disabledPayment = [false, false, true, true, true, true]
     } else if (refund) {
@@ -114,6 +114,7 @@ export class CashService {
     this.getSystemConfig().subscribe(next => {
       console.info('getConfig successfull', next);
       this.systemConfig = next;
+      this.splitAllow();
       // return prop ? next[prop]: next;
     }, err => {
       console.error('getConfig failed');
@@ -125,4 +126,7 @@ export class CashService {
     return this.dataStorage.getOrder(inv);
   }
 
+  private splitAllow() {
+    this.disabledOtherOp = (this.systemConfig.allowCardSplit) ? [true, false, false, false, false, false, false] : false;
+  }
 }

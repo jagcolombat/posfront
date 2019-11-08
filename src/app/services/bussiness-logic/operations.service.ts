@@ -688,9 +688,9 @@ export class OperationsService {
     this.resetInactivity(false);
   }
 
-  private creditOp(){
+  private creditOp(splitAmount?: number){
       let dialogInfoEvents = this.openInfoEventDialog('Credit Card');
-      this.invoiceService.credit(this.invoiceService.invoice.total, this.invoiceService.invoice.tip)
+      this.invoiceService.credit(splitAmount ? splitAmount : this.invoiceService.invoice.total, this.invoiceService.invoice.tip)
         .subscribe(data => {
             console.log(data);
             dialogInfoEvents.close();
@@ -704,7 +704,7 @@ export class OperationsService {
           });
   }
 
-  private creditManualOp(title){
+  private creditManualOp(title, splitAmount?: number){
     this.getNumField(title, 'Number', EFieldType.CARD_NUMBER).subscribe((number) => {
       console.log('cc manual modal', number);
       if(number.number) {
@@ -714,8 +714,8 @@ export class OperationsService {
               if(date.number){
                 this.getNumField(title, 'Zip Code', EFieldType.ZIPCODE).subscribe(zipcode => {
                   if (zipcode.number) {
-                    this.invoiceService.creditManual(this.invoiceService.invoice.total, this.invoiceService.invoice.tip,
-                      number.number, cvv.number, date.number, zipcode.number)
+                    this.invoiceService.creditManual(splitAmount ? splitAmount :this.invoiceService.invoice.total,
+                      this.invoiceService.invoice.tip, number.number, cvv.number, date.number, zipcode.number)
                       .subscribe(data => {
                           console.log(data);
                           this.invoiceService.createInvoice();
@@ -881,7 +881,7 @@ export class OperationsService {
     });
   }
 
-  setCreditCardType() {
+  setCreditCardType(splitAmount?: number) {
     let ccTypes= new Array<any>({value: 1, text: 'Automatic'}, {value: 2, text: 'Manual'});
     this.cashService.dialog.open(DialogDeliveryComponent,
       { width: '600px', height: '340px', data: {name: 'Credit Card Types', label: 'Select a type', arr: ccTypes},
@@ -890,10 +890,10 @@ export class OperationsService {
       console.log(next);
       switch (next) {
         case 1:
-          this.creditOp();
+          this.creditOp(splitAmount);
           break;
         case 2:
-          this.creditManualOp('Credit Card');
+          this.creditManualOp('Credit Card', splitAmount);
           break;
         default:
           this.cashService.resetEnableState();
@@ -1108,6 +1108,28 @@ export class OperationsService {
     } else {
       // Send misc product to invoice
       this.cashService.openGenericInfo('Information', 'Send misc product to invoice');
+    }
+  }
+
+  splitCard() {
+    if(this.invoiceService.invoice.balance){
+      this.cashService.dialog.open(ProductGenericComponent,
+        {
+          width: '480px', height: '650px', data: {unitCost: 0, name: OtherOpEnum.SPLIT_CARD, label: 'Amount',
+            max: this.invoiceService.invoice.balance},
+          disableClose: true
+        }).afterClosed().subscribe(
+        next=> {
+          console.log(next);
+          if(next['unitCost'].toFixed(2) > this.invoiceService.invoice.balance){
+            this.cashService.openGenericInfo('Error', 'The spècified amount is superior to amount to pay')
+          } else {
+            this.setCreditCardType(next['unitCost'].toFixed(2));
+          }
+        },
+        err=> {console.error(err)});
+    } else {
+      this.cashService.openGenericInfo('Error', 'There is not amount to pay')
     }
   }
 }
