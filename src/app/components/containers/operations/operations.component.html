@@ -56,8 +56,7 @@
   </operation-group>
 
   <operation-group id="reports" fxFlex="20" fxFlex.lt-lg="25" [operations]="reportOperations" [colors]="reportColor"
-                   (evPressKeys)="reportKey($event)" [disable]="operationService.cashService.disabledOtherOp"
-                   *ngIf="showForAdmin">
+                   (evPressKeys)="reportKey($event)" *ngIf="showForAdmin">
   </operation-group>
 
   <operation-group fxFlex.lg="40" fxFlex.lt-lg="25" [operations]="financeAdminOperations" [colors]="financeAdminColor"

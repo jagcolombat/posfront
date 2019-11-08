@@ -51,22 +51,23 @@ export class SalesEmplComponent implements OnInit {
         field: 'total',
         type: 'numericColumn',
         width: 120
-      }
-    ];
-    if(this.cashService.systemConfig.companyType === CompanyType.RESTAURANT) {
-      this.columnDefs.push({
+      },
+      {
         headerName: 'Tips',
         field: 'tips',
         type: 'numericColumn',
         width: 120
-      });
-    }
+      }
+    ];
   }
 
   updateGridOptions(){
     this.gridOptions = <GridOptions>{
       rowData: [],
       onGridReady: () => {
+        if(this.cashService.systemConfig.companyType === CompanyType.MARKET) {
+          this.showTip(false);
+        }
         this.gridOptions.api.sizeColumnsToFit();
       },
       onRowClicked: (ev) => {
@@ -102,5 +103,10 @@ export class SalesEmplComponent implements OnInit {
     }, error1 => {
       console.error('getSales', error1);
     });
+  }
+
+  showTip(show: boolean) {
+    this.gridOptions.columnApi.setColumnVisible('tips', show);
+    this.gridOptions.api.sizeColumnsToFit();
   }
 }

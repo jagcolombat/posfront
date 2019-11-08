@@ -16,7 +16,7 @@ import {CustomerOpEnum} from "../../../utils/operations/customer.enum";
 })
 export class OperationsComponent implements OnInit {
 
-  @Input() financeOperations = [FinancialOpEnum.MANAGER, FinancialOpEnum.TXTYPE, FinancialOpEnum.LOGOUT];
+  @Input() financeOperations = [FinancialOpEnum.MANAGER, FinancialOpEnum.TXTYPE, OtherOpEnum.ORDER_INFO, FinancialOpEnum.LOGOUT];
   @Input() financeColor = 'green';
   @Input() financeDisabled: boolean | boolean []= this.operationService.cashService.disabledFinOp;
 
@@ -35,7 +35,7 @@ export class OperationsComponent implements OnInit {
   @Input() paymentColor = ['yellow', 'yellow', 'yellow', 'yellow', 'green', 'blue'];
   @Input() paymentDisabled: boolean | boolean[] = this.operationService.cashService.disabledPayment;
 
-  @Input() otherOperations = [OtherOpEnum.PRINT_LAST, OtherOpEnum.NO_SALE, OtherOpEnum.WEIGHT_ITEM, OtherOpEnum.ORDER_INFO];
+  @Input() otherOperations = [OtherOpEnum.PRINT_LAST, OtherOpEnum.NO_SALE, OtherOpEnum.WEIGHT_ITEM];
   @Input() otherColor = ['yellow', 'blue', 'blue', 'green','blue','blue'];
 
   @Input() moneyOperations = ['1', '5', '10', '20', '50', '100'];
@@ -132,6 +132,9 @@ export class OperationsComponent implements OnInit {
       case FinancialOpEnum.TXTYPE:
         this.operationService.txType();
         break;
+      case OtherOpEnum.ORDER_INFO:
+        this.operationService.getOrderInfo();
+        break;
     }
   }
 
@@ -221,7 +224,17 @@ export class OperationsComponent implements OnInit {
   }
 
   moneyKey(ev) {
-    this.operationService.cashMoney(+ev);
+    switch (ev) {
+      case PaymentOpEnum.CASH:
+        this.operationService.cash(PaymentOpEnum.CASH);
+        break;
+      case PaymentOpEnum.OTHER:
+        this.operationService.cash(PaymentOpEnum.OTHER);
+        break;
+      default:
+        this.operationService.cashMoney(+ev);
+        break;
+    }
   }
 
   reportKey(ev) {
