@@ -1,6 +1,8 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import { GridOptions, GridApi } from 'ag-grid-community';
 import { DataStorageService } from 'src/app/services/api/data-storage.service';
+import {CompanyType} from "../../../utils/company-type.enum";
+import {CashService} from "../../../services/bussiness-logic/cash.service";
 
 @Component({
   selector: 'sales-empl',
@@ -25,7 +27,7 @@ export class SalesEmplComponent implements OnInit {
   private gridApi: GridApi;
   columnDefs: any;
 
-  constructor(private dataStorage: DataStorageService) {
+  constructor(private dataStorage: DataStorageService, private cashService: CashService) {
     this.updateGridOptions();
   }
 
@@ -49,14 +51,16 @@ export class SalesEmplComponent implements OnInit {
         field: 'total',
         type: 'numericColumn',
         width: 120
-      },
-      {
+      }
+    ];
+    if(this.cashService.systemConfig.companyType === CompanyType.RESTAURANT) {
+      this.columnDefs.push({
         headerName: 'Tips',
         field: 'tips',
         type: 'numericColumn',
         width: 120
-      }
-    ];
+      });
+    }
   }
 
   updateGridOptions(){
