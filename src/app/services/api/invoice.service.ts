@@ -142,4 +142,12 @@ export class InvoiceService {
     return this._http.post<Invoice>(url + this.path + '/' + id + '/user/' + idUser, {})
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
+
+  weightItem(url: string, receiptNumber: string,price: number, weight?: number): Observable<Invoice> {
+    let params = new HttpParams();
+    params = params.append('price', price + '');
+    params = params.append('weight', weight + '');
+    return this._http.post<Invoice>(url + '/products/weightItem/invoice/'+ receiptNumber, '', {params})
+      .pipe(catchError(this.processHttpMsgService.handleError));
+  }
 }

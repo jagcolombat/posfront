@@ -340,4 +340,8 @@ export class InvoiceService {
   notSale(): Observable<any> {
     return this.dataStorage.notSale();
   }
+
+  weightItem(price: number, weight?: number): Observable<Invoice> {
+    return this.dataStorage.weightItem(this.invoice.receiptNumber, price, weight);
+  }
 }

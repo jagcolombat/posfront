@@ -3,6 +3,6 @@ export const environment = {
   myVarForImageURLS: '/posfront',
   baseURL:  'http://localhost:5000/api/1.0',
   WEBSOCKET: 'http://localhost:5000/events',
-  version: '2.2.1',
+  version: '2.2.2',
   screenH: 0
 };

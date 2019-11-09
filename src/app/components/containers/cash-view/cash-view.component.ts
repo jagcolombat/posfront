@@ -34,24 +34,35 @@ export class CashViewComponent implements OnInit, OnDestroy {
         tmpMdl = this.operationService.cashService
         .openGenericInfo('Error', 'Not possible input keyboard');}*/
     } else if((ev.key==='Enter' || ev.keyCode === 13) && this.invoiceService.digits){
-      if(this.invoiceService.digits.startsWith('I') || this.invoiceService.digits.startsWith('R')){
+      /*if(this.invoiceService.digits.startsWith('I') || this.invoiceService.digits.startsWith('R')){
         this.operationService.scanInvoice();
       } else {
         (this.operationService.currentOperation === InvioceOpEnum.PRICE)? this.operationService.priceCheck() :
         this.operationService.scanProduct();
-      }
-
+      }*/
+      this.selectInputData();
     } else if((ev.keyCode > 48 && ev.keyCode < 57) || (ev.keyCode === 73  || ev.keyCode === 82 || ev.keyCode === 105 ||
         ev.keyCode === 114) || !isNaN(parseInt(ev.key)) ){
       this.invoiceService.evNumpadInput.emit(ev.key.toUpperCase());
     }
   }
 
+  selectInputData(){
+    if(this.invoiceService.digits.startsWith('I') || this.invoiceService.digits.startsWith('R')){
+      this.operationService.scanInvoice();
+    } else {
+      (this.operationService.currentOperation === InvioceOpEnum.PRICE)? this.operationService.priceCheck() :
+        this.operationService.scanProduct();
+    }
+  }
+
   inputScanner(data: ScannerData){
     console.log('inputScanner', data);
     if(data.upc){
-      this.invoiceService.numbers = data.upc;
-      this.operationService.scanProduct();
+      this.invoiceService.numbers = this.invoiceService.digits = data.upc;
+      //this.invoiceService.digits = data.upc;
+      //this.operationService.scanProduct();
+      this.selectInputData();
     } else {
       console.error("Object scanned haven´t UPC property");
     }

@@ -16,7 +16,7 @@ import {CustomerOpEnum} from "../../../utils/operations/customer.enum";
 })
 export class OperationsComponent implements OnInit {
 
-  @Input() financeOperations = [FinancialOpEnum.MANAGER, FinancialOpEnum.TXTYPE, OtherOpEnum.ORDER_INFO, FinancialOpEnum.LOGOUT];
+  @Input() financeOperations = [FinancialOpEnum.MANAGER, FinancialOpEnum.LOGOUT];
   @Input() financeColor = 'green';
   @Input() financeDisabled: boolean | boolean []= this.operationService.cashService.disabledFinOp;
 
@@ -61,6 +61,9 @@ export class OperationsComponent implements OnInit {
     CustomerOpEnum.ACCT_CHARGE];
   @Input() customerColor = 'orange';
 
+  @Input() restaurantOperations = [FinancialOpEnum.TXTYPE, OtherOpEnum.ORDER_INFO, OtherOpEnum.TABLES];
+  @Input() restaurantColor = 'green';
+
   isRouteAdmin = (route: string) => (route.startsWith('/cash/options') ? true : false);
   routeAdmin: boolean;
   showForAdmin = false;
@@ -93,13 +96,16 @@ export class OperationsComponent implements OnInit {
         this.totalColor.splice(0,1);
       } else {
         // Remove TXType operation
-        this.financeOperations.splice(1, 1);
-        // Remove Table and Order Info operations and relative colors
-        this.otherOperations.splice(-2);
-        this.otherColor.splice(-2);
+        //this.financeOperations.splice(1, 1);
+        // Remove Table operation and relative color
+        //this.otherOperations.splice(-1);
+        //this.otherColor.splice(-1);
         // Push in money operations cash and other payment options
         this.paymentOperations.splice(-2).map(op => this.moneyOperations.push(op));
         this.paymentColor.splice(-2).map(op => this.moneyColor.push(op));
+        // Remove restaurant operations
+        this.restaurantOperations.splice(0);
+        this.restaurantColor = '';
       }
     }, err => {
       this.operationService.cashService.openGenericInfo('Error', 'Can\'t get configuration');
@@ -274,6 +280,20 @@ export class OperationsComponent implements OnInit {
       case CustomerOpEnum.ACCT_CHARGE.toUpperCase():
         //this.adminOpService.doDayClose();
         break;
+    }
+  }
+
+  restaurantKey(ev) {
+    console.log('customerKey', ev);
+    switch (ev) {
+      case 'Tables':
+        this.operationService.openDialogTables();
+        break;
+      case OtherOpEnum.ORDER_INFO:
+        this.operationService.getOrderInfo();
+        break;
+      case FinancialOpEnum.TXTYPE:
+        this.operationService.txType();
     }
   }
 }

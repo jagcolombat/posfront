@@ -32,6 +32,7 @@ import {Order} from "../../models/order.model";
 import {OtherOpEnum} from "../../utils/operations/other.enum";
 import {EFieldType} from "../../utils/field-type.enum";
 import {OrderInfoComponent} from "../../components/presentationals/order-info/order-info.component";
+import {ProductGeneric} from "../../models/product-generic";
 
 @Injectable({
   providedIn: 'root'
@@ -694,7 +695,7 @@ export class OperationsService {
         .subscribe(data => {
             console.log(data);
             dialogInfoEvents.close();
-            this.invoiceService.createInvoice();
+            (data && data.balance > 0) ? this.invoiceService.setInvoice(data) : this.invoiceService.createInvoice();
           },
           err => {
             console.log(err);
@@ -718,7 +719,7 @@ export class OperationsService {
                       this.invoiceService.invoice.tip, number.number, cvv.number, date.number, zipcode.number)
                       .subscribe(data => {
                           console.log(data);
-                          this.invoiceService.createInvoice();
+                          (data && data.balance > 0) ? this.invoiceService.setInvoice(data) : this.invoiceService.createInvoice();
                         },
                         err => {
                           console.log(err);
@@ -1108,6 +1109,28 @@ export class OperationsService {
     } else {
       // Send misc product to invoice
       this.cashService.openGenericInfo('Information', 'Send misc product to invoice');
+      if(!this.cashService.systemConfig.externalScale){
+        this.cashService.dialog.open(ProductGenericComponent,
+          {
+            width: '480px', height: '650px', data: {name: 'Weight', label: 'Weight (Lbs)', unitCost: 0}, disableClose: true
+          }).afterClosed().subscribe( (data: any) => {
+          if(data) {
+            this.invoiceService.weightItem(price, data.unitCost).subscribe(
+              i => {
+                this.invoiceService.setInvoice(i);
+              },
+              err => {
+                this.invoiceService.resetDigits();
+                this.cashService.openGenericInfo('Error', 'Can\'t complete weight operation');
+              }
+            );
+          } else {
+            console.log('Weight not specified');
+          }
+        });
+      } else {
+        this.invoiceService.weightItem(price);
+      }
     }
   }
 

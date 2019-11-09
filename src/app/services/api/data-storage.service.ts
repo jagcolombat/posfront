@@ -256,4 +256,8 @@ export class DataStorageService {
   inquiryEBTCard() {
     return this.paymentService.ebtInquiry(this.url);
   }
+
+  weightItem(receiptNumber: string, price: number, weight?: number): Observable<Invoice> {
+    return this.invoiceService.weightItem(this.url, receiptNumber, price, weight);
+  }
 }

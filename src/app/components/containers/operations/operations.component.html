@@ -50,8 +50,8 @@
                    *ngIf="!authService.adminLogged()">
   </operation-group>-->
 
-  <operation-group id="customer" fxFlex="40" fxFlex.lt-lg="33" [operations]="customerOperations" [colors]="customerColor"
-                   btnSize="120px" (evPressKeys)="customerKey($event)" [disable]="operationService.cashService.disabledOtherOp"
+  <operation-group id="customer" fxFlex="20" fxFlex.lt-lg="33" [operations]="customerOperations" [colors]="customerColor"
+                   btnSize="100px" (evPressKeys)="customerKey($event)"
                    *ngIf="!showForAdmin">
   </operation-group>
 
@@ -72,5 +72,9 @@
   <operation-group fxFlex.lg="20" fxFlex.lt-lg="25" [operations]="otherAdminOperations" [colors]="otherAdminColor"
                    (evPressKeys)="otherKey($event)" [disable]="operationService.cashService.disabledFinOp"
                    *ngIf="showForAdmin">
+  </operation-group>
+  <operation-group fxFlex.lg="20" fxFlex.lt-lg="25" [operations]="restaurantOperations" [colors]="restaurantColor"
+                   (evPressKeys)="restaurantKey($event)"
+                   *ngIf="!showForAdmin ">
   </operation-group>
 </div>
