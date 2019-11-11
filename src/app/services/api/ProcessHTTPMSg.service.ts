@@ -9,15 +9,17 @@ export class ProcessHTTPMSgService {
 
 constructor() { }
 
-public handleError(error: HttpErrorResponse | any) {
-  let errMsg: string;
-  if (error.error instanceof ErrorEvent) {
-    errMsg = error.error.message;
-  } else if(typeof error.error === "string") {
-    errMsg = error.error;
-  } else {
-    errMsg = `${error.statusText || ''} ${error.message}`;
-  }
-  return throwError(errMsg);
-  }
+  public handleError(response: HttpErrorResponse | any) {
+      let errMsg: string;
+      if (response.error instanceof ErrorEvent) {
+        errMsg = response.error.message;
+      } else if (response.error && response.error.message) {
+        errMsg = response.error.message;
+      } else if (typeof response.error === 'string') {
+        errMsg = response.error;
+      } else {
+        errMsg = `${response.statusText || ''} ${response.message}`;
+      }
+      return throwError(errMsg);
+    }
 }

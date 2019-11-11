@@ -3,6 +3,8 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import { ICashPayment } from 'src/app/models/cash-payment.model';
 import { CreditCard } from 'src/app/models';
+import { ProcessHTTPMSgService } from './ProcessHTTPMSg.service';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -11,29 +13,34 @@ export class PaymentService {
 
   path = '/invoices';
 
-  constructor(private _http: HttpClient) {}
+  constructor(private _http: HttpClient, private processHttpMsgService: ProcessHTTPMSgService) {}
 
   paidByCash(url: string, cashPayment: ICashPayment): Observable<any> {
     console.log(cashPayment);
-    return this._http.post<any>(url + this.path + '/payment/cash', cashPayment);
+    return this._http.post<any>(url + this.path + '/payment/cash', cashPayment)
+      .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
   paidByCreditCard(url: string, cashPayment: CreditCard): Observable<any> {
     console.log(cashPayment);
-    return this._http.post<any>(url + this.path + '/payment/credit', cashPayment);
+    return this._http.post<any>(url + this.path + '/payment/credit', cashPayment)
+      .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
   paidByDebitCard(url: string, cashPayment: CreditCard): Observable<any> {
     console.log(cashPayment);
-    return this._http.post<any>(url + this.path + '/payment/debit', cashPayment);
+    return this._http.post<any>(url + this.path + '/payment/debit', cashPayment)
+      .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
   paidByEBTCard(url: string, cashPayment: CreditCard): Observable<any> {
     console.log(cashPayment);
-    return this._http.post<any>(url + this.path + '/payment/ebt', cashPayment);
+    return this._http.post<any>(url + this.path + '/payment/ebt', cashPayment)
+      .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
   ebtInquiry(url: string) {
-    return this._http.get<any>(url + this.path + '/payment/ebt');
+    return this._http.get<any>(url + this.path + '/payment/ebt')
+      .pipe(catchError(this.processHttpMsgService.handleError));
   }
 }

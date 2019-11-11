@@ -7,8 +7,8 @@ import { EOperationType } from 'src/app/utils/operation.type.enum';
 import { ProductOrder } from 'src/app/models/product-order.model';
 import { catchError } from 'rxjs/operators';
 import { ProcessHTTPMSgService } from './ProcessHTTPMSg.service';
-import {ETransferType} from "../../utils/transfer-type.enum";
-import {EApplyDiscount} from "../../utils/apply-discount.enum";
+import {ETransferType} from '../../utils/transfer-type.enum';
+import {EApplyDiscount} from '../../utils/apply-discount.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -26,21 +26,24 @@ export class InvoiceService {
   changeInvoiceToHold(url: string, invoice: Invoice): Observable<Invoice> {
     if (invoice.id) {
       console.log('Hold:', invoice);
-      return this._http.post<Invoice>(url + this.path + '/' + invoice.receiptNumber + '/status/hold', invoice);
+      return this._http.post<Invoice>(url + this.path + '/' + invoice.receiptNumber + '/status/hold', invoice)
+        .pipe(catchError(this.processHttpMsgService.handleError));
     }
   }
 
   changeInvoiceToVoid(url: string, invoice: Invoice): Observable<Invoice> {
     if (invoice.id) {
       console.log('Void:', invoice);
-      return this._http.post<Invoice>(url + this.path + '/' + invoice.receiptNumber + '/status/void', invoice);
+      return this._http.post<Invoice>(url + this.path + '/' + invoice.receiptNumber + '/status/void', invoice)
+        .pipe(catchError(this.processHttpMsgService.handleError));
     }
   }
 
   changeInvoiceToRemoveHold(url: string, invoice: Invoice): Observable<Invoice> {
     if (invoice.id) {
       console.log('RemoveHold:', invoice);
-      return this._http.post<Invoice>(url + this.path + '/' + invoice.receiptNumber + '/status/removeHold', invoice);
+      return this._http.post<Invoice>(url + this.path + '/' + invoice.receiptNumber + '/status/removeHold', invoice)
+        .pipe(catchError(this.processHttpMsgService.handleError));
     }
   }
 
@@ -49,14 +52,16 @@ export class InvoiceService {
     params = params
       .append('pageNumber', '1')
       .append('pageSize', '20');
-    return this._http.get<Invoice[]>(url + this.path + '/status/'+status, { params });
+    return this._http.get<Invoice[]>(url + this.path + '/status/' + status, { params })
+      .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
   getById (url: string, id: string, operationType: EOperationType): Observable<Invoice> {
     let params = new HttpParams();
     params = params
       .append('operationType', operationType + '');
-    return this._http.get<Invoice>(url + this.path + '/receiptNumber/' + id, { params });
+    return this._http.get<Invoice>(url + this.path + '/receiptNumber/' + id, { params })
+      .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
   addProductOrder(url: string, product: ProductOrder, invoiceId: string, operation: EOperationType): Observable<any> {
@@ -84,17 +89,20 @@ export class InvoiceService {
     params = params.append('pageNumber', pageNumber + '');
     params = params.append('pageSize', pageSize + '' );
 
-    return this._http.get<Invoice>(url + this.path, { params });
+    return this._http.get<Invoice>(url + this.path, { params })
+      .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
   getAllWithoutPage = (url: string) => {
     // let params = new HttpParams();
     // params = params.append('pageNumber', page.page.toString()).append('pageSize', page.size.toString());
-    return this._http.get<Invoice[]>(url +  this.path);
+    return this._http.get<Invoice[]>(url +  this.path)
+      .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
   printInvoice(url: string, invoice: Invoice): Observable<Invoice[]> {
-    return this._http.post<Invoice[]>(url +  this.path +  '/' + invoice.receiptNumber + '/print', {});
+    return this._http.post<Invoice[]>(url +  this.path +  '/' + invoice.receiptNumber + '/print', {})
+      .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
   printLastInvoice(url: string): Observable<Invoice[]> {
@@ -103,13 +111,15 @@ export class InvoiceService {
   }
 
   getInvoiceByIdRefund (url: string, id: string): Observable<Invoice> {
-    return this._http.post<Invoice>(url + this.path + '/' + id + '/status/refund', {});
+    return this._http.post<Invoice>(url + this.path + '/' + id + '/status/refund', {})
+            .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
   updateInvoice (url: string, invoice: Invoice, property: string, value: any) {
     const documentPacth =  [{op: 'replace', path: '/' + property, value: value}];
-    //return this._http.patch<Invoice>(url + this.path + '/' + invoice.receiptNumber, documentPacth);
-    return this._http.post<Invoice>(url + this.path + '/' + invoice.receiptNumber + '/' + property + '/' + value, {});
+    // return this._http.patch<Invoice>(url + this.path + '/' + invoice.receiptNumber, documentPacth);
+    return this._http.post<Invoice>(url + this.path + '/' + invoice.receiptNumber + '/' + property + '/' + value, {})
+      .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
   applyDiscountInvoice (url: string, id: string, discount: number, productOrderIds: Array<string>, discountType: EApplyDiscount): Observable<Invoice> {
@@ -135,7 +145,8 @@ export class InvoiceService {
   }
 
   getInvoiceByTransferType(url: string, auth: ETransferType) {
-    return this._http.get<Invoice[]>(url + this.path + '/transfertype/'+auth);
+    return this._http.get<Invoice[]>(url + this.path + '/transfertype/' + auth)
+    .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
   setUser(url: string, id: string, idUser: string): Observable<Invoice> {
@@ -143,11 +154,11 @@ export class InvoiceService {
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
-  weightItem(url: string, receiptNumber: string,price: number, weight?: number): Observable<Invoice> {
+  weightItem(url: string, receiptNumber: string, price: number, weight?: number): Observable<Invoice> {
     let params = new HttpParams();
     params = params.append('price', price + '');
     params = params.append('weight', weight + '');
-    return this._http.post<Invoice>(url + '/products/weightItem/invoice/'+ receiptNumber, '', {params})
+    return this._http.post<Invoice>(url + '/products/weightItem/invoice/' + receiptNumber, '', {params})
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 }
