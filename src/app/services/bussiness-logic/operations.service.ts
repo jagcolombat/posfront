@@ -691,7 +691,7 @@ export class OperationsService {
 
   private creditOp(splitAmount?: number){
       let dialogInfoEvents = this.openInfoEventDialog('Credit Card');
-      this.invoiceService.credit(splitAmount ? splitAmount : this.invoiceService.invoice.total, this.invoiceService.invoice.tip)
+      this.invoiceService.credit(splitAmount ? splitAmount : this.invoiceService.invoice.balance, this.invoiceService.invoice.tip)
         .subscribe(data => {
             console.log(data);
             dialogInfoEvents.close();
