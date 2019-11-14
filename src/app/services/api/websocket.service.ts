@@ -1,6 +1,6 @@
-import {EventEmitter, Injectable, OnInit, Output} from '@angular/core';
+import { EventEmitter, Injectable, Output } from '@angular/core';
 import { HubConnection, HubConnectionBuilder, LogLevel } from '@aspnet/signalr';
-import {ScannerData} from "../../models/scanner.model";
+import { ScannerData } from "../../models/scanner.model";
 import { WEBSOCKET } from 'src/app/utils/url.path.enum';
 
 @Injectable({
@@ -10,6 +10,7 @@ export class WebsocketService {
   connection: HubConnection;
   // Events
   @Output() evScanner = new EventEmitter<any>();
+  @Output() evInvoiceUpdated = new EventEmitter<any>();
 
   constructor() {
     this.connection = new HubConnectionBuilder()
@@ -27,9 +28,13 @@ export class WebsocketService {
     });
 
     this.connection.on('scanner-event', (data: ScannerData) => {
-      // ScannerData tiene varios atributos, tienes que usar el upc
       console.log(data.message);
       this.evScanner.emit(data);
+    });
+
+    this.connection.on('invoice-updated-event', (data: any) => {
+      console.log('invoice-updated-event', data);
+      this.evInvoiceUpdated.emit(data);
     });
   }
 

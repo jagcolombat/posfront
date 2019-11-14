@@ -22,9 +22,9 @@ export class CashService {
   systemConfig: Configuration;
   @Output() evReviewEnableState = new EventEmitter<boolean>();
 
-  constructor(public dialog: MatDialog, private dataStorage: DataStorageService) {
+  constructor(public dialog: MatDialog, private dataStorage: DataStorageService, private authServ: AuthService) {
     this.resetEnableState();
-    this.setSystemConfig();
+    if(this.authServ.token) this.setSystemConfig();
   }
 
   resetEnableState() {
