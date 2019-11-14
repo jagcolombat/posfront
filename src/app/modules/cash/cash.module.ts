@@ -3,13 +3,9 @@ import { SharedModule } from "../shared/shared.module";
 import { RouterModule, Routes } from "@angular/router";
 import { MaterialModule } from "../../modules/material/material.module";
 
-import { AgGridComponent } from '../../components/presentationals/ag-grid/ag-grid.component';
 import { CashViewComponent } from "../../components/containers/cash-view/cash-view.component";
 import { OperationsComponent } from "../../components/containers/operations/operations.component";
 import { StockComponent } from "../../components/containers/stock/stock.component";
-import { InvoiceComponent } from "../../components/containers/invoice/invoice.component";
-import { InfoPosComponent } from '../../components/presentationals/info-pos/info-pos.component';
-import { InputCalculatorComponent } from "../../components/presentationals/input-calculator/input-calculator.component";
 import { ListDptoComponent } from "../../components/presentationals/list-dpto/list-dpto.component";
 import {ListProdComponent} from "../../components/presentationals/list-prod/list-prod.component";
 import {AdminOptionsComponent} from "../../components/presentationals/admin-options/admin-options.component";
@@ -34,12 +30,8 @@ const routes: Routes = [
   ],
   declarations: [
     CashViewComponent,
-    InvoiceComponent,
     StockComponent,
     OperationsComponent,
-    AgGridComponent,
-    InfoPosComponent,
-    InputCalculatorComponent,
     ListDptoComponent,
     ListProdComponent,
     AdminOptionsComponent

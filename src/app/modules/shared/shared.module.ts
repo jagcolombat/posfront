@@ -14,6 +14,14 @@ import {FilterComponent} from "../../components/presentationals/filter/filter.co
 import {AdminOptionsComponent} from "../../components/presentationals/admin-options/admin-options.component";
 import {PaginatorComponent} from "../../components/presentationals/paginator/paginator.component";
 import {IConfig, NgxMaskModule} from "ngx-mask";
+import {InvoiceComponent} from "../../components/containers/invoice/invoice.component";
+import {AgGridComponent} from "../../components/presentationals/ag-grid/ag-grid.component";
+import {InfoPosComponent} from "../../components/presentationals/info-pos/info-pos.component";
+import {InputCalculatorComponent} from "../../components/presentationals/input-calculator/input-calculator.component";
+import {LoginComponent} from "../../components/presentationals/login/login.component";
+import {AnnounceComponent} from "../../components/presentationals/announce/announce.component";
+import {PromotionsComponent} from "../../components/presentationals/promotions/promotions.component";
+import {SlideshowModule} from "ng-simple-slideshow";
 
 // export const options: Partial<IConfig>| (() => Partial<IConfig>);
 
@@ -26,7 +34,8 @@ import {IConfig, NgxMaskModule} from "ngx-mask";
     MaterialModule,
     AgGridModule.withComponents([null]),
     NgxPaginationModule,
-    NgxMaskModule.forRoot()
+    NgxMaskModule.forRoot(),
+    SlideshowModule
   ],
   exports: [
     CommonModule,
@@ -37,15 +46,31 @@ import {IConfig, NgxMaskModule} from "ngx-mask";
     AgGridModule,
     NgxPaginationModule,
     NgxMaskModule,
+    SlideshowModule,
     GenericKeyboardComponent,
     CalculatorComponent,
     NumpadComponent,
     OperationGroupComponent,
     FilterComponent,
-    PaginatorComponent
+    PaginatorComponent,
+    InvoiceComponent,
+    AgGridComponent,
+    InfoPosComponent,
+    InputCalculatorComponent,
+    AnnounceComponent,
+    PromotionsComponent
   ],
-  declarations: [CalculatorComponent, GenericKeyboardComponent, NumpadComponent, OperationGroupComponent,
+  declarations: [CalculatorComponent,
+    GenericKeyboardComponent,
+    NumpadComponent,
+    OperationGroupComponent,
     FilterComponent,
-    PaginatorComponent ]
+    PaginatorComponent,
+    InvoiceComponent,
+    AgGridComponent,
+    InfoPosComponent,
+    InputCalculatorComponent,
+    AnnounceComponent,
+    PromotionsComponent]
 })
 export class SharedModule { }

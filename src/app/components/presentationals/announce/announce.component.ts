@@ -9,7 +9,7 @@ import {IImage} from "ng-simple-slideshow";
 export class AnnounceComponent implements OnInit {
   @Input() path: string;
   imagesUrl: (string | IImage)[];
-  height: string = '330px';
+  @Input() height: string = '330px';
   autoPlay: boolean = true;
   autoPlayInterval: number = 5000;
   stopAutoPlayOnSlide: boolean = true;

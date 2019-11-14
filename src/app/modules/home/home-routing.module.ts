@@ -4,8 +4,9 @@ import { InitViewComponent } from "../../components/containers/init-view/init-vi
 import { AuthGuard } from "../../services/guards/auth.guard";
 
 export const routes: Routes = [
-  { path: 'init',     component: InitViewComponent },
-  { path: 'cash',  loadChildren: '../cash/cash.module#CashModule', canActivate: [AuthGuard] },
+  { path: 'init', component: InitViewComponent },
+  { path: 'cash', loadChildren: '../cash/cash.module#CashModule', canActivate: [AuthGuard] },
+  { path: 'client', loadChildren: '../client/client.module#ClientModule' },
   { path: '', redirectTo: '/init', pathMatch: 'full' }
 ];
 

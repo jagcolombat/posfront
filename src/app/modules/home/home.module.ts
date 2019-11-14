@@ -34,25 +34,22 @@ import {ListTablesComponent} from "../../components/presentationals/list-tables/
 import {InputCcComponent} from "../../components/presentationals/input-cc/input-cc.component";
 import {OrderInfoComponent} from "../../components/presentationals/order-info/order-info.component";
 import {OrderInfoDetailsComponent} from "../../components/presentationals/order-info-details/order-info-details.component";
+import {ClientModule} from "../client/client.module";
+import {ClientViewComponent} from "../../components/containers/client-view/client-view.component";
 
 @NgModule({
   imports: [
     CommonModule,
     HomeRoutingModule,
-    SlideshowModule,
     SharedModule
   ],
   exports: [
     HomeRoutingModule,
-    LoginComponent,
-    AnnounceComponent,
-    PromotionsComponent
+    LoginComponent
   ],
   declarations: [
     InitViewComponent,
     LoginComponent,
-    AnnounceComponent,
-    PromotionsComponent,
     AgeValidationComponent,
     GenericInfoModalComponent,
     ProductGenericComponent,

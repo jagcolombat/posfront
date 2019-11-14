@@ -44,12 +44,13 @@ export class InvoiceService {
   @Output() evUpdateProds = new EventEmitter<ProductOrder[]>();
   evCreateInvoice = new BehaviorSubject<boolean>(true);
 
-  constructor(private authService: AuthService, private dataStorage: DataStorageService, private cashService: CashService) {
+  constructor(public authService: AuthService, private dataStorage: DataStorageService, private cashService: CashService) {
     //this.setSystemConfig();
   }
 
   getCashier(): string {
-    return this.cashier = (this.authService.token && this.authService.token.username) ? this.authService.token.username : ''
+    //return this.cashier = (this.authService.token && this.authService.token.username) ? this.authService.token.username : '';
+    return this.cashier = (sessionStorage.getItem('userName')) ? sessionStorage.getItem('userName') : ''
   }
 
   createInvoice(){
