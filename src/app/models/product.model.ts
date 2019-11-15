@@ -15,6 +15,7 @@ export interface Product {
     isRefund?: boolean;
     scalable?: boolean;
     tax: number;
+    wic?: boolean;
 }
 
 export interface IProductUpdate {

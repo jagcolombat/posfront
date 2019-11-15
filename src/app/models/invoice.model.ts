@@ -42,7 +42,7 @@ export class Invoice implements IInvoice {
               public tip?: number,
               public balance?: number,
               public type = ETXType.DINEIN,
-              public orderInfo = 'Table1 Juan Perez 58814727'
+              public orderInfo?: string
               ) {
   }
 }

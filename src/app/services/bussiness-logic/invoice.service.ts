@@ -33,6 +33,7 @@ export class InvoiceService {
   order: Order;
   invoiceProductSelected: any[] = [];
   isReviewed: boolean;
+  priceWic: string;
 
   @Output() evAddProd = new EventEmitter<ProductOrder>();
   @Output() evDelProd = new EventEmitter<any>();

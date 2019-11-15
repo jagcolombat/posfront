@@ -606,6 +606,11 @@ export class OperationsService {
   }
 
   scanProduct(){
+    if(this.invoiceService.numbers.length === 12 && this.invoiceService.numbers.startsWith('2')){
+      let upc = this.invoiceService.numbers.substring(0, 6);
+      this.invoiceService.priceWic = this.invoiceService.numbers.substring(7, 11);
+      this.invoiceService.numbers = upc;
+    }
     this.invoiceService.addProductByUpc(EOperationType.Scanner).subscribe(prod => {
       console.log('scanProduct', prod);
       this.invoiceService.evAddProdByUPC.emit(prod);

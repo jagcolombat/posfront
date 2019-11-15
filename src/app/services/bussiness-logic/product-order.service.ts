@@ -52,17 +52,34 @@ export class ProductOrderService implements OnDestroy {
   }
 
   private onCreateProductOrder(product: Product): void {
-    if (product.scalable || product.generic) {
-      if (product.scalable) {
-        this.cashService.systemConfig.externalScale ?
-          this.invoiceService.addProductOrder(this.createProductOrder(product)) :
-          this.openDialogScalableProd(product);
+    if (product.scalable || product.generic|| product.wic ) {
+      if(product.wic){
+        this.productWeightFormat(product);
+      } else if (product.scalable) {
+        this.productScalable(product);
       } else if (product.generic) {
         this.openDialogGenericProd(product);
       }
     } else {
       this.invoiceService.addProductOrder(this.createProductOrder(product));
     }
+  }
+
+  productWeightFormat(product: Product){
+    if(this.invoiceService.priceWic){
+      this.quantityByProduct = Number(((+this.invoiceService.priceWic/100) / product.unitCost).toFixed(2));
+      this.invoiceService.priceWic = '';
+      this.invoiceService.addProductOrder(this.createProductOrder(product))
+    } else {
+      this.productScalable(product);
+    }
+
+  }
+
+  productScalable(product: Product){
+    this.cashService.systemConfig.externalScale ?
+      this.invoiceService.addProductOrder(this.createProductOrder(product)) :
+      this.openDialogScalableProd(product);
   }
 
   private openDialogGenericProd(product: Product): void {
