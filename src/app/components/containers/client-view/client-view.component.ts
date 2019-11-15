@@ -26,6 +26,7 @@ export class ClientViewComponent implements OnInit, OnDestroy {
   }
 
   private invoiceUpdated(data: any) {
-
+    console.log('invoiceUpdated', data);
+    this.invoiceService.setInvoice(data.entity);
   }
 }
