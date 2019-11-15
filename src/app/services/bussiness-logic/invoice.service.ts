@@ -50,33 +50,23 @@ export class InvoiceService {
   }
 
   getCashier(): string {
-    //return this.cashier = (this.authService.token && this.authService.token.username) ? this.authService.token.username : '';
-    return this.cashier = (sessionStorage.getItem('userName')) ? sessionStorage.getItem('userName') : ''
+    return this.cashier = (this.authService.token && this.authService.token.username) ? this.authService.token.username : '';
+    //return this.cashier = (localStorage.getItem('userName')) ? localStorage.getItem('userName') : ''
   }
 
   createInvoice(){
-    // this.setUserToInvoice();
-    /*let deliveryTypes= new Array<string>();
-    for (let eDeliveryTypeKey in EDeliveryType) {
-      deliveryTypes.push(EDeliveryType[eDeliveryTypeKey]);
-    }
-    this.cashService.dialog.open(DialogDeliveryComponent,
-      { width: '600px', height: '340px', data: deliveryTypes, disableClose: true })
-      .afterClosed().subscribe(next => {
-        console.log(next);*/
-        this.dataStorage.createInvoice().subscribe(next => {
-          console.info('createCheck successfull', next);
-          this.receiptNumber = next.receiptNumber;
-          this.invoice = <Invoice> next;
-          this.isReviewed = false;
-          this.evDelAllProds.emit();
-          this.setTotal();
-          this.evCreateInvoice.next(true);
-        }, err => {
-          console.error('createCheck failed');
-          this.evCreateInvoice.next(false);
-        });
-    //})
+      this.dataStorage.createInvoice().subscribe(next => {
+        console.info('createCheck successfull', next);
+        this.receiptNumber = next.receiptNumber;
+        this.invoice = <Invoice> next;
+        this.isReviewed = false;
+        this.evDelAllProds.emit();
+        this.setTotal();
+        this.evCreateInvoice.next(true);
+      }, err => {
+        console.error('createCheck failed');
+        this.evCreateInvoice.next(false);
+      });
   }
 
   addProductOrder(po: ProductOrder){

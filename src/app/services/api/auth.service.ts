@@ -52,14 +52,14 @@ export class AuthService {
         const expiredAt = new Date();
         token.exp = expiredAt.getTime();
         this.token = token;
-        this.manageUser(token.username, true);
+        //this.saveUser(token, true);
         return token;
       })
     );
   }
 
   logout()/*: Observable<any>*/ {
-    this.manageUser(this.token.username, false);
+    //this.saveUser(this.token, false);
     this.token = {};
     this.dialog.closeAll();
     this.router.navigateByUrl('/init');
@@ -74,7 +74,13 @@ export class AuthService {
     this.token = this.initialLogin;
   }
 
-  private manageUser(username: string, set?: boolean) {
-    set ? sessionStorage.setItem('userName', username): sessionStorage.removeItem('userName');
-  }
+  /*private saveUser(token: Token, set?: boolean) {
+    if(set){
+      localStorage.setItem('userName', token.username);
+      localStorage.setItem('token', token.fullToken);
+    } else {
+      localStorage.removeItem('userName');
+      localStorage.removeItem('token');
+    }
+  }*/
 }
