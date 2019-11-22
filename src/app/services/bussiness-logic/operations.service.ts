@@ -48,6 +48,7 @@ export class OperationsService {
   constructor(private invoiceService: InvoiceService, public cashService: CashService,
               private authService: AuthService, private router: Router) {
     this.invoiceService.evAddProd.subscribe(() => this.onAddProduct());
+    this.invoiceService.evCreateInvoice.subscribe(next => this.router.navigateByUrl('/cash/dptos'));
     this.counterInactivity();
   }
 
@@ -1047,7 +1048,7 @@ export class OperationsService {
     });
   }
 
-  ebtInquiry() {
+  /*ebtInquiry() {
     console.log('EBT Inquiry');
     this.currentOperation = 'EBT Inquiry';
 
@@ -1070,7 +1071,7 @@ export class OperationsService {
         });
     }
     this.resetInactivity(false);
-  }
+  }*/
 
   weightItem() {
     this.cashService.dialog.open(ProductGenericComponent,

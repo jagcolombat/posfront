@@ -17,5 +17,6 @@ export enum AdminOpEnum {
   PREV_SCREEN = 'Prev Screen',
   CHARGE_ACCT_SETUP = 'Change Acct Setup',
   EMPLOYEE_SETUP = 'Employee Setup',
-  CHANGE_PRICES = 'Change Prices'
+  CHANGE_PRICES = 'Change Prices',
+  EBT_INQUIRY = 'EBT Inquiry'
 }

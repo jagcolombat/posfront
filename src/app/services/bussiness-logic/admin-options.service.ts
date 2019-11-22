@@ -18,6 +18,9 @@ import {DialogDeliveryComponent} from "../../components/presentationals/dialog-d
 import {EApplyDiscount} from "../../utils/apply-discount.enum";
 import {ProductGenericComponent} from "../../components/presentationals/product-generic/product-generic.component";
 import {Router} from "@angular/router";
+import {EFieldType} from "../../utils/field-type.enum";
+import {Observable} from "rxjs";
+import {EmployeedModel, IPositionModel} from "../../models/employeed.model";
 
 @Injectable({
   providedIn: 'root'
@@ -339,6 +342,7 @@ export class AdminOptionsService {
       this.doChangePrice();
       this.invoiceService.resetDigits();
     } else {
+      this.cashService.disabledInputKey = true;
       this.operationService.getField('Enter UPC Number', 'Change Prices').subscribe(
         next => {
           console.log('change price by upc', next);
@@ -346,14 +350,14 @@ export class AdminOptionsService {
             this.invoiceService.numbers = next.text;
             this.doChangePrice();
           }
-        }
+        }, error1 => {}, () => this.cashService.disabledInputKey = false
       )
     }
   }
 
   doChangePrice(){
     this.invoiceService.getProductByUpc(EOperationType.PriceCheck).subscribe(prod => {
-      this.cashService.openGenericInfo('Price check', 'Do you want change the price of the '+prod.name,
+      this.cashService.openGenericInfo('Change Price', 'Do you want change the price of the '+prod.name,
         prod.unitCost, true)
         .afterClosed().subscribe(next => {
         console.log(next);
@@ -383,4 +387,89 @@ export class AdminOptionsService {
     });
   }
 
+  employSetup() {
+    let employee = new EmployeedModel();
+    this.operationService.getField(AdminOpEnum.EMPLOYEE_SETUP, 'Name', EFieldType.NAME).subscribe(
+      name => {
+        if(name){
+          employee.username = name.text;
+          this.getUsersPosition().subscribe(
+            positions => {
+              console.log(AdminOpEnum.EMPLOYEE_SETUP, positions);
+              this.showUsersPosition(<IPositionModel[]> positions).subscribe(positionSelected => {
+                console.log('dialog delivery', positionSelected);
+                if (positionSelected) {
+                  employee.userPositionId = positionSelected.id;
+                  this.operationService.getNumField(AdminOpEnum.EMPLOYEE_SETUP, 'Password', EFieldType.PASSWORD)
+                    .subscribe(
+                      code => {
+                        if (code) {
+                          employee.password = code.number;
+                          employee.companyId = 1;
+                          console.log(AdminOpEnum.EMPLOYEE_SETUP, employee);
+                          this.dataStorage.employSetup(employee).subscribe(
+                            next => { console.log(AdminOpEnum.EMPLOYEE_SETUP, next); },
+                            err => { this.cashService.openGenericInfo("Error","Can't setup the employee"); }
+                          );
+                        }
+                        else {
+                          this.cashService.openGenericInfo("Error",
+                            "Can't setup the employee because no was specified the code");
+                        }
+                      });
+                } else {
+                  this.cashService.openGenericInfo("Error", "Can't setup the employee because no was" +
+                    " selected the position");
+                }
+              });
+            },
+            error1 => {
+              this.cashService.openGenericInfo("Error", "Can't get users positions");
+            }
+          );
+        } else {
+          this.cashService.openGenericInfo("Error", "Can't setup the employee because no was" +
+            " selected the name");
+        }
+      });
+  }
+
+  getUsersPosition(): Observable<any> {
+    return this.dataStorage.getUsersPosition();
+  }
+
+  showUsersPosition(positions: Array<IPositionModel>){
+    return this.cashService.dialog.open(DialogInvoiceComponent,
+      {
+        width: '780px',
+        height: '660px',
+        data: {invoice: positions, detail: 'name', title: 'Work position', subtitle: 'Select a position'}
+        ,
+        disableClose: true
+      }).afterClosed();
+  }
+
+  ebtInquiry() {
+    console.log('EBT Inquiry');
+    //this.currentOperation = 'EBT Inquiry';
+    if (this.invoiceService.invoice.total !== 0 || this.invoiceService.invoice.fsTotal !== 0) {
+      this.invoiceService.ebtInquiry()
+        .subscribe(data => {
+          console.log(data);
+          if(data.remainingBalance) {
+            this.cashService.openGenericInfo('EBT Inquiry', 'Remaining balance:'+ data.remainingBalance,
+              'Extra balance:'+ data.extraBalance);
+            this.cashService.resetEnableState();
+          } else {
+            this.cashService.openGenericInfo('Error', 'Can\'t complete ebt inquiry operation');
+            this.cashService.ebtEnableState();
+          }
+        },err => {
+          console.log(err);
+          this.cashService.openGenericInfo('Error', 'Can\'t complete ebt inquiry operation');
+          this.cashService.resetEnableState()
+        });
+    }
+    //this.resetInactivity(false);
+  }
 }

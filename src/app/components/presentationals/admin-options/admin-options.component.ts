@@ -2,6 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
 import {AdminOptionsService} from "../../../services/bussiness-logic/admin-options.service";
 import {AdminOpEnum} from "../../../utils/operations/admin-op.enum";
+import {PaymentOpEnum} from "../../../utils/operations";
 
 @Component({
   selector: 'app-admin-options',
@@ -12,11 +13,12 @@ export class AdminOptionsComponent implements OnInit {
   options = [AdminOpEnum.CHANGE_PRINTER,AdminOpEnum.CLOSE_BROWSER,
     AdminOpEnum.APPLY_DISCOUNT, AdminOpEnum.CANCEL_CHECK, AdminOpEnum.REMOVE_HOLD, AdminOpEnum.AUTH_PENDING,
     AdminOpEnum.DEPARMENTS, AdminOpEnum.BACK_USER, AdminOpEnum.SET_USER, AdminOpEnum.CLOSE_BATCH, AdminOpEnum.CONFIG,
-    AdminOpEnum.SYSTEM_VERSION, AdminOpEnum.CHARGE_ACCT_SETUP, AdminOpEnum.EMPLOYEE_SETUP, AdminOpEnum.CHANGE_PRICES];
+    AdminOpEnum.SYSTEM_VERSION, AdminOpEnum.EBT_INQUIRY, AdminOpEnum.CHARGE_ACCT_SETUP, AdminOpEnum.EMPLOYEE_SETUP,
+    AdminOpEnum.CHANGE_PRICES];
   page = 1;
   sizePage = 16;
   @Input() disable: boolean | boolean[] = this.adminOpService.cashService.disabledAdminOp;
-  adminOpColor = ['red','red','red','red','red','red','red','red','red','red','red','red','violet','violet','violet'];
+  adminOpColor = ['red','red','red','red','red','red','red','red','red','red','red','red','red','violet','violet','violet'];
 
   constructor(private router: Router, public adminOpService: AdminOptionsService ) {
   }
@@ -67,8 +69,14 @@ export class AdminOptionsComponent implements OnInit {
       case AdminOpEnum.WTDZ.toUpperCase():
         this.adminOpService.dayCloseType();
         break;
+      case AdminOpEnum.EMPLOYEE_SETUP.toUpperCase():
+        this.adminOpService.employSetup();
+        break;
       case AdminOpEnum.CHANGE_PRICES.toUpperCase():
         this.adminOpService.changePrice();
+        break;
+      case AdminOpEnum.EBT_INQUIRY.toUpperCase():
+        this.adminOpService.ebtInquiry();
         break;
     }
   }

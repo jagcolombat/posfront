@@ -27,6 +27,7 @@ import {Order} from "../../models/order.model";
 import {Table} from "../../models/table.model";
 import {ETransferType} from "../../utils/transfer-type.enum";
 import {EApplyDiscount} from "../../utils/apply-discount.enum";
+import {EmployeedModel, IPositionModel} from "../../models/employeed.model";
 
 @Injectable({
   providedIn: 'root'
@@ -189,6 +190,10 @@ export class DataStorageService {
     return this.adminOperationService.getApplicationUsers(this.url);
   }
 
+  getUsersPosition(): Observable<IPositionModel[]> {
+    return this.adminOperationService.getUsersPosition(this.url);
+  }
+
   addPaidOut(paidOut: PaidOut): Observable<any> {
     return this.adminOperationService.addPaidOut(this.url, paidOut);
   }
@@ -259,5 +264,9 @@ export class DataStorageService {
 
   weightItem(receiptNumber: string, price: number, weight?: number): Observable<Invoice> {
     return this.invoiceService.weightItem(this.url, receiptNumber, price, weight);
+  }
+
+  employSetup(employee: EmployeedModel) {
+    return this.adminOperationService.employSetup(this.url, employee);
   }
 }

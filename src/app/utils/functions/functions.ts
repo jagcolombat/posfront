@@ -45,5 +45,7 @@ export function dataValidation(type: EFieldType): any{
       return {max: 4};
     case EFieldType.ZIPCODE:
       return {max: 5};
+    case EFieldType.PASSWORD:
+      return {max: 4, type: 'password'};
   }
 }

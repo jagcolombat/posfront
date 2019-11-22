@@ -8,6 +8,7 @@ import { catchError } from 'rxjs/operators';
 import { Invoice } from 'src/app/models/invoice.model';
 import { CloseBatch } from 'src/app/utils/close.batch.enum';
 import { Report } from 'src/app/models/report.model';
+import {EmployeedModel, IPositionModel} from "../../models/employeed.model";
 
 @Injectable({
   providedIn: 'root'
@@ -79,5 +80,14 @@ export class AdminOperationService {
         .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
+  getUsersPosition(url: string): Observable<IPositionModel[]> {
+    return this._http.get<IPositionModel[]>(url + '/ApplicationUserPositions')
+      .pipe(catchError(this.processHttpMsgService.handleError));
+  }
+
+  employSetup(url: string, employee: EmployeedModel) {
+    return this._http.post<any>(url + '/account/pos', employee)
+      .pipe(catchError(this.processHttpMsgService.handleError));
+  }
 }
 

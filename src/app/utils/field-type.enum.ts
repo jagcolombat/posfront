@@ -8,5 +8,6 @@ export enum EFieldType {
   CARD_NUMBER,
   CVV,
   EXPDATE,
-  ZIPCODE
+  ZIPCODE,
+  PASSWORD
 }

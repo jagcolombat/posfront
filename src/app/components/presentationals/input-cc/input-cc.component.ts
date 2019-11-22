@@ -9,6 +9,7 @@ import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 export class InputCcComponent implements OnInit {
   @Input() title = 'Input Credit Card Info';
   @Input() label = 'CC Number';
+  @Input() type = 'text';
   inputDigits: boolean;
   digits = '';
   maxlength = 16;
@@ -26,6 +27,7 @@ export class InputCcComponent implements OnInit {
     }
     if(this.data.type){
       this.maxlength = this.data.type.max;
+      this.type = this.data.type.type;
       this.mask = (this.data.type.mask)? this.data.type.mask: '';
     }
   }
