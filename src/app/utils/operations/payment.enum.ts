@@ -3,6 +3,5 @@ export enum PaymentOpEnum {
     CREDIT_CARD = 'Credit Card',
     DEBIT_CARD = 'Debit Card',
     CASH = 'Cash',
-    OTHER = 'Other'/*,
-    EBT_INQUIRY = 'EBT Inquiry'*/
+    OTHER = 'Other'
 }

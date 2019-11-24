@@ -5,6 +5,9 @@ import {InvioceOpEnum} from "../../../utils/operations";
 import {WebsocketService} from "../../../services/api/websocket.service";
 import {Subscription} from "rxjs";
 import {ScannerData} from "../../../models/scanner.model";
+import {AdminOperationService} from "../../../services/api/admin.operation.service";
+import {AdminOpEnum} from "../../../utils/operations/admin-op.enum";
+import {AdminOptionsService} from "../../../services/bussiness-logic/admin-options.service";
 
 @Component({
   selector: 'app-cash-view',
@@ -19,7 +22,7 @@ export class CashViewComponent implements OnInit, OnDestroy {
   sub: Subscription[] = new Array<Subscription>();
 
   constructor(private invoiceService: InvoiceService, private operationService: OperationsService,
-              private ws: WebsocketService) { }
+              private adminOpService: AdminOptionsService, private ws: WebsocketService) { }
 
   ngOnInit() {
     //this.ws.start();
@@ -51,8 +54,13 @@ export class CashViewComponent implements OnInit, OnDestroy {
     if(this.invoiceService.digits.startsWith('I') || this.invoiceService.digits.startsWith('R')){
       this.operationService.scanInvoice();
     } else {
-      (this.operationService.currentOperation === InvioceOpEnum.PRICE)? this.operationService.priceCheck() :
+      if(this.operationService.currentOperation === InvioceOpEnum.PRICE) {
+        this.operationService.priceCheck();
+      } else if (this.adminOpService.currentOperation === AdminOpEnum.CHANGE_PRICES) {
+        this.adminOpService.changePrice();
+      } else {
         this.operationService.scanProduct();
+      }
     }
   }
 

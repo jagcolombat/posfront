@@ -21,6 +21,7 @@ import {Router} from "@angular/router";
 import {EFieldType} from "../../utils/field-type.enum";
 import {Observable} from "rxjs";
 import {EmployeedModel, IPositionModel} from "../../models/employeed.model";
+import {InvioceOpEnum} from "../../utils/operations";
 
 @Injectable({
   providedIn: 'root'
@@ -28,6 +29,7 @@ import {EmployeedModel, IPositionModel} from "../../models/employeed.model";
 export class AdminOptionsService {
   private cancelCheckLoaded: boolean;
   private removeHoldLoaded: boolean;
+  currentOperation: AdminOpEnum | string;
 
   constructor(private invoiceService: InvoiceService, public cashService: CashService, private auth: AuthService,
               private operationService: OperationsService, private dataStorage: DataStorageService, private router: Router) {
@@ -338,10 +340,12 @@ export class AdminOptionsService {
 
   changePrice() {
     console.log('priceCheck');
+    (this.currentOperation !== AdminOpEnum.CHANGE_PRICES) ? this.currentOperation = AdminOpEnum.CHANGE_PRICES:
+      this.currentOperation = "";
     if(this.invoiceService.digits){
       this.doChangePrice();
       this.invoiceService.resetDigits();
-    } else {
+    } else if (this.currentOperation !== AdminOpEnum.CHANGE_PRICES) {
       this.cashService.disabledInputKey = true;
       this.operationService.getField('Enter UPC Number', 'Change Prices').subscribe(
         next => {

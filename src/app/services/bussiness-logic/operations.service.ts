@@ -160,7 +160,6 @@ export class OperationsService {
   priceCheck() {
     console.log('priceCheck');
     (this.currentOperation !== InvioceOpEnum.PRICE)? this.currentOperation = InvioceOpEnum.PRICE: this.currentOperation = "";
-    //this.currentOperation = InvioceOpEnum.PRICE;
     if(this.invoiceService.digits){
       this.invoiceService.getProductByUpc(EOperationType.PriceCheck).subscribe(prod => {
         this.cashService.openGenericInfo('Price check', 'Do you want add '+prod.name+' to the invoice',
