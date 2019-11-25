@@ -344,7 +344,7 @@ export class AdminOptionsService {
       this.currentOperation = "";
     if(this.invoiceService.digits){
       this.doChangePrice();
-      this.invoiceService.resetDigits();
+      //this.invoiceService.resetDigits();
     } else if (this.currentOperation !== AdminOpEnum.CHANGE_PRICES) {
       this.cashService.disabledInputKey = true;
       this.operationService.getField('Enter UPC Number', 'Change Prices').subscribe(
@@ -379,8 +379,7 @@ export class AdminOptionsService {
                     next['upc'] + ' was updated to '+ next['price'].toFixed(2));
                 },
                 err => {
-                  this.cashService.openGenericInfo('Error', 'Can\'t change price of this product '+
-                    this.invoiceService.digits);
+                  this.cashService.openGenericInfo('Error', 'Can\'t change price of this product '+prod.upc);
                 });
               }
             });
@@ -388,7 +387,7 @@ export class AdminOptionsService {
       });
     }, err => {
       this.cashService.openGenericInfo('Error', 'Can\'t found this product ' + this.invoiceService.digits);
-    });
+    }, () =>  this.invoiceService.resetDigits());
   }
 
   employSetup() {
