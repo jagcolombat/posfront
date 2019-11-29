@@ -345,7 +345,7 @@ export class AdminOptionsService {
     if(this.invoiceService.digits){
       this.doChangePrice();
       //this.invoiceService.resetDigits();
-    } else if (this.currentOperation !== AdminOpEnum.CHANGE_PRICES) {
+    } /*else if (this.currentOperation !== AdminOpEnum.CHANGE_PRICES) {
       this.cashService.disabledInputKey = true;
       this.operationService.getField('Enter UPC Number', 'Change Prices').subscribe(
         next => {
@@ -356,7 +356,7 @@ export class AdminOptionsService {
           }
         }, error1 => {}, () => this.cashService.disabledInputKey = false
       )
-    }
+    }*/
   }
 
   doChangePrice(){
@@ -387,7 +387,10 @@ export class AdminOptionsService {
       });
     }, err => {
       this.cashService.openGenericInfo('Error', 'Can\'t found this product ' + this.invoiceService.digits);
-    }, () =>  this.invoiceService.resetDigits());
+    }, () =>  {
+      this.invoiceService.resetDigits();
+      this.currentOperation = "";
+    });
   }
 
   employSetup() {
