@@ -58,7 +58,7 @@ export class ProductOrderService implements OnDestroy {
       } else if (product.scalable) {
         this.productScalable(product);
       } else if (product.generic) {
-        this.openDialogGenericProd(product);
+        (product.prefixIsPrice)? this.prefixIsPrice(product): this.openDialogGenericProd(product);
       }
     } else {
       this.invoiceService.addProductOrder(this.createProductOrder(product));
@@ -141,6 +141,17 @@ export class ProductOrderService implements OnDestroy {
         }
       }
     });
+  }
+
+  private prefixIsPrice(product: Product) {
+    if(this.invoiceService.digits && this.invoiceService.digits.length < 6){
+      let prefixPrice = (+this.invoiceService.digits / 100).toFixed(2);
+      product.unitCost = +prefixPrice;
+      this.invoiceService.addProductOrder(this.createProductOrder(product));
+    } else {
+      console.info('No specified price for product with prefixIsPrice');
+      this.openDialogGenericProd(product);
+    }
   }
 
   ngOnDestroy() {

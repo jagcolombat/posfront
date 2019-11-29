@@ -16,6 +16,7 @@ export interface Product {
     scalable?: boolean;
     tax: number;
     wic?: boolean;
+    prefixIsPrice: boolean;
 }
 
 export interface IProductUpdate {
