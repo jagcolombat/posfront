@@ -25,7 +25,8 @@ export function transformReportSummary(report, type: string): ReportSummary {
 }
 
 export const operationsWithClear = [FinancialOpEnum.REVIEW, FinancialOpEnum.REPRINT, TotalsOpEnum.FS_SUBTOTAL,
-  TotalsOpEnum.SUBTOTAL, PaymentOpEnum.CASH , PaymentOpEnum.EBT_CARD, AdminOpEnum.CANCEL_CHECK, AdminOpEnum.REMOVE_HOLD]
+  TotalsOpEnum.SUBTOTAL, PaymentOpEnum.CASH , PaymentOpEnum.EBT_CARD, AdminOpEnum.CANCEL_CHECK, AdminOpEnum.REMOVE_HOLD,
+  AdminOpEnum.CHANGE_PRICES];
 
 export function dataValidation(type: EFieldType): any{
   switch (type) {

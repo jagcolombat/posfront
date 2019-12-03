@@ -33,6 +33,7 @@ import {OtherOpEnum} from "../../utils/operations/other.enum";
 import {EFieldType} from "../../utils/field-type.enum";
 import {OrderInfoComponent} from "../../components/presentationals/order-info/order-info.component";
 import {ProductGeneric} from "../../models/product-generic";
+import {AdminOptionsService} from "./admin-options.service";
 
 @Injectable({
   providedIn: 'root'
@@ -44,6 +45,7 @@ export class OperationsService {
   invTotalsBeforeFSSubTotal = {total: 0, tax: 0, subtotal: 0};
   @Output() evCancelCheck = new EventEmitter<any>();
   @Output() evRemoveHold = new EventEmitter<any>();
+  @Output() evCleanAdminOperation = new EventEmitter<any>();
 
   constructor(private invoiceService: InvoiceService, public cashService: CashService,
               private authService: AuthService, private router: Router) {
@@ -123,6 +125,7 @@ export class OperationsService {
         }):
         this.invoiceService.evDelProd.emit(true);
     }
+    this.evCleanAdminOperation.emit();
   }
 
   void() {

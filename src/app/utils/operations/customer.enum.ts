@@ -1,6 +1,6 @@
 export enum CustomerOpEnum {
-  CUSTOMER = 'Customer',
-  ACCT_BALANCE = 'Acct Balance',
-  ACCT_PAYMENT = 'Acct Payment',
-  ACCT_CHARGE = 'Acct Charge',
+  CUSTOMER = 'CUST',
+  ACCT_BALANCE = 'ACCT Balance',
+  ACCT_PAYMENT = 'ACCT Payment',
+  ACCT_CHARGE = 'ACCT Charge',
 }
