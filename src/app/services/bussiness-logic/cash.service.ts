@@ -59,7 +59,7 @@ export class CashService {
     //if(this.systemConfig && this.systemConfig.allowCardSplit) this.disabledOtherOp = false;
     this.splitAllow(true);
     if(fs){
-      this.disabledPayment = [false, false, true, true, true, true]
+      this.disabledPayment = [false, true, true, true, true, true]
     } else if (refund) {
       this.disabledPayment = this.disabledPaymentByCompany();
       this.disabledPaymentMoney = this.disabledPaymentMoneyByCompany();
@@ -71,7 +71,7 @@ export class CashService {
   }
 
   disabledPaymentByCompany(){
-    return (this.systemConfig.companyType === CompanyType.MARKET) ? [true, true, false, false, false, false] : false;
+    return (this.systemConfig.companyType === CompanyType.MARKET) ? [true, false, false, false, false, false] : false;
   }
 
   disabledPaymentMoneyByCompany(){

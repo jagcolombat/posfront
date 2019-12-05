@@ -21,6 +21,7 @@ import {Router} from "@angular/router";
 import {EFieldType} from "../../utils/field-type.enum";
 import {Observable} from "rxjs";
 import {EmployeedModel, IPositionModel} from "../../models/employeed.model";
+import {EbtInquiryInfoComponent} from "../../components/presentationals/ebt-inquiry-info/ebt-inquiry-info.component";
 
 @Injectable({
   providedIn: 'root'
@@ -465,9 +466,10 @@ export class AdminOptionsService {
       this.invoiceService.ebtInquiry()
         .subscribe(data => {
           console.log(data);
-          if(data.remainingBalance) {
-            this.cashService.openGenericInfo('EBT Inquiry', 'Remaining balance:'+ data.remainingBalance,
-              'Extra balance:'+ data.extraBalance);
+          if(data) {
+            this.cashService.dialog.open(EbtInquiryInfoComponent, {
+              width: '360px', height: '320px', disableClose: true, data: {title: AdminOpEnum.EBT_INQUIRY, content: data }
+            });
             this.cashService.resetEnableState();
           } else {
             this.cashService.openGenericInfo('Error', 'Can\'t complete ebt inquiry operation');

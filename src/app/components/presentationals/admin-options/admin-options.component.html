@@ -1,6 +1,6 @@
 <div class="page">
   <!--<button mat-button fxFlex="130px" *ngFor="let i of options | paginate: { itemsPerPage: sizePage, currentPage: page }"
-          (click)="doAction($event, i)" class="normal" [disabled]="setDisabled(i)">
+          (click)="doAction($event, i)" class="normal" [disabled]="adminOpService.cashService.disabledAdminOp">
     {{ i | uppercase }}
   </button>-->
   <operation-group id="admin" [operations]="options"

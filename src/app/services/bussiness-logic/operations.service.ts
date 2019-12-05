@@ -309,11 +309,11 @@ export class OperationsService {
       this.saveStateTotals();
       this.invoiceService.invoice.productOrders.filter(po => {
         if(po.foodStamp){
-          this.invoiceService.invoice.subTotal = this.invoiceService.invoice.subTotal - po.subTotal;
-          this.invoiceService.invoice.tax -= po.tax;
+          //this.invoiceService.invoice.subTotal = this.invoiceService.invoice.subTotal - po.subTotal;
+          //this.invoiceService.invoice.tax -= po.tax;
           this.invoiceService.invoice.fsTotal = this.invoiceService.invoice.fsTotal ?
             this.invoiceService.invoice.fsTotal + po.subTotal : 0 + po.subTotal;
-          this.invoiceService.invoice.total -= po.total;
+          //this.invoiceService.invoice.total -= po.total;
           this.invoiceService.evUpdateTotals.emit();
         }
         console.log('fsTotal', this.invoiceService.invoice.fsTotal);
@@ -626,16 +626,16 @@ export class OperationsService {
     this.resetInactivity(false);
   }
 
-  ebt() {
+  ebt(type?: number) {
     console.log('EBT Card');
     this.currentOperation = 'EBT Card';
 
     if (this.invoiceService.invoice.total !== 0 || this.invoiceService.invoice.fsTotal !== 0) {
       let dialogInfoEvents = this.openInfoEventDialog('EBT Card');
-      this.invoiceService.ebt(this.invoiceService.invoice.total)
+      this.invoiceService.ebt(this.invoiceService.invoice.total, type)
         .subscribe(data => {
           console.log(data);
-          if(this.invoiceService.invoice.status === InvoiceStatus.PAID) {
+          if(data.status === InvoiceStatus.PAID) {
             this.invoiceService.createInvoice();
             this.cashService.resetEnableState();
           } else {
@@ -644,8 +644,10 @@ export class OperationsService {
           }
         },err => {
           console.log(err);
+          this.resetTotalFromFS();
+          dialogInfoEvents.close();
           this.cashService.openGenericInfo('Error', 'Can\'t complete ebt operation');
-          this.cashService.resetEnableState()
+          this.cashService.resetEnableState();
         }, () => dialogInfoEvents.close());
     }
     this.resetInactivity(false);
@@ -754,13 +756,8 @@ export class OperationsService {
     });
   }
 
-
-
   private resetTotalFromFS() {
     this.invoiceService.invoice.fsTotal = 0;
-    this.invoiceService.invoice.total = this.invTotalsBeforeFSSubTotal.total;
-    this.invoiceService.invoice.subTotal = this.invTotalsBeforeFSSubTotal.subtotal;
-    this.invoiceService.invoice.tax = this.invTotalsBeforeFSSubTotal.tax;
     this.invoiceService.evUpdateTotals.emit();
   }
 
@@ -908,6 +905,18 @@ export class OperationsService {
         default:
           this.cashService.resetEnableState();
       }
+    });
+  }
+
+  setEBTCardType() {
+    let ccTypes= new Array<any>({value: 0, text: 'EBT'}, {value: 1, text: 'EBT Cash'});
+    this.cashService.dialog.open(DialogDeliveryComponent,
+      { width: '600px', height: '340px', data: {name: 'EBT Card Types', label: 'Select a type', arr: ccTypes},
+        disableClose: true })
+      .afterClosed().subscribe(next => {
+      console.log(next);
+      this.ebt(next);
+      this.cashService.resetEnableState();
     });
   }
 

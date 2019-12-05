@@ -36,6 +36,7 @@ import {OrderInfoComponent} from "../../components/presentationals/order-info/or
 import {OrderInfoDetailsComponent} from "../../components/presentationals/order-info-details/order-info-details.component";
 import {ClientModule} from "../client/client.module";
 import {ClientViewComponent} from "../../components/containers/client-view/client-view.component";
+import {EbtInquiryInfoComponent} from "../../components/presentationals/ebt-inquiry-info/ebt-inquiry-info.component";
 
 @NgModule({
   imports: [
@@ -53,6 +54,7 @@ import {ClientViewComponent} from "../../components/containers/client-view/clien
     AgeValidationComponent,
     GenericInfoModalComponent,
     ProductGenericComponent,
+    EbtInquiryInfoComponent,
     DialogLoginComponent,
     CashOpComponent,
     CashPaymentComponent,
@@ -80,6 +82,7 @@ import {ClientViewComponent} from "../../components/containers/client-view/clien
     AgeValidationComponent,
     GenericInfoModalComponent,
     ProductGenericComponent,
+    EbtInquiryInfoComponent,
     DialogLoginComponent,
     CashOpComponent,
     CashPaymentComponent,

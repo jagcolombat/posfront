@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import { ICashPayment } from 'src/app/models/cash-payment.model';
 import { CreditCard } from 'src/app/models';
@@ -33,9 +33,11 @@ export class PaymentService {
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
-  paidByEBTCard(url: string, cashPayment: CreditCard): Observable<any> {
+  paidByEBTCard(url: string, cashPayment: CreditCard, type: number): Observable<any> {
     console.log(cashPayment);
-    return this._http.post<any>(url + this.path + '/payment/ebt', cashPayment)
+    let params = new HttpParams();
+    params = params.append('type', type + '');
+    return this._http.post<any>(url + this.path + '/payment/ebt', cashPayment, {params})
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 

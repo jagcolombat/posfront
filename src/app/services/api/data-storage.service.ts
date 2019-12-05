@@ -171,8 +171,8 @@ export class DataStorageService {
     return this.paymentService.paidByDebitCard(this.url, cashPayment);
   }
 
-  paidByEBTCard(cashPayment: CreditCard): Observable<any> {
-    return this.paymentService.paidByEBTCard(this.url, cashPayment);
+  paidByEBTCard(cashPayment: CreditCard, type: number): Observable<any> {
+    return this.paymentService.paidByEBTCard(this.url, cashPayment, type);
   }
 
   // Journey

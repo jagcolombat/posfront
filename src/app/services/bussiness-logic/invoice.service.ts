@@ -220,9 +220,9 @@ export class InvoiceService {
     return this.dataStorage.paidByCreditCard(creditPayment);
   }
 
-  ebt(payment: number, tip?: number, transferType?: PaymentStatus): Observable<Invoice> {
+  ebt(payment: number, type?: number, tip?: number, transferType?: PaymentStatus): Observable<Invoice> {
     const ebtPayment = new CreditCardModel(payment, tip, this.invoice.receiptNumber,transferType);
-    return this.dataStorage.paidByEBTCard(ebtPayment);
+    return this.dataStorage.paidByEBTCard(ebtPayment, type);
   }
 
   ebtInquiry() {
