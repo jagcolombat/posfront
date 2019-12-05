@@ -145,15 +145,15 @@ export class ProductOrderService implements OnDestroy {
 
   private prefixIsPrice(product: Product) {
     if(this.invoiceService.digits){
-      if(this.invoiceService.digits.length > 5 && !this.invoiceService.digits.includes('@')){
+      if(this.invoiceService.digits.includes('@')){
+        let qtyPrice = this.invoiceService.digits.split('@').map(value => value.trim());
+        this.quantityByProduct = +qtyPrice[0];
+        this.invoiceService.digits = qtyPrice[1];
+      }
+      if(this.invoiceService.digits.length > 5 ){
         this.cashService.openGenericInfo('Information', 'The price specified is too long');
         this.invoiceService.resetDigits();
       } else {
-        if(this.invoiceService.digits.includes('@')){
-          let qtyPrice = this.invoiceService.digits.split('@').map(value => value.trim());
-          this.quantityByProduct = +qtyPrice[0];
-          this.invoiceService.digits = qtyPrice[1];
-        }
         let prefixPrice = (+this.invoiceService.digits / 100).toFixed(2);
         product.unitCost = +prefixPrice;
         this.invoiceService.addProductOrder(this.createProductOrder(product));

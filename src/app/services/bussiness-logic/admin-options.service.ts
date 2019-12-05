@@ -477,7 +477,8 @@ export class AdminOptionsService {
           }
         },err => {
           console.log(err);
-          this.cashService.openGenericInfo('Error', 'Can\'t complete ebt inquiry operation');
+          //this.cashService.openGenericInfo('Error', 'Can\'t complete ebt inquiry operation');
+          this.cashService.openGenericInfo('Error', err);
           this.cashService.resetEnableState()
         });
     }
