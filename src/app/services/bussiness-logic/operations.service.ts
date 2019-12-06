@@ -10,7 +10,7 @@ import {CashPaymentComponent} from "../../components/presentationals/cash-paymen
 import {InvoiceStatus} from "../../utils/invoice-status.enum";
 import {EOperationType} from "../../utils/operation.type.enum";
 import {CashService} from "./cash.service";
-import {Token} from "../../models";
+import {Product, Token} from "../../models";
 import {FinancialOpEnum, InvioceOpEnum, PaymentOpEnum, TotalsOpEnum} from "../../utils/operations";
 import {HttpErrorResponse} from '@angular/common/http';
 import {GenericInfoEventsComponent} from "../../components/presentationals/generic-info-events/generic-info-events.component";
@@ -25,7 +25,7 @@ import {AdminOpEnum} from "../../utils/operations/admin-op.enum";
 import {ETXType} from "../../utils/delivery.enum";
 import {DialogDeliveryComponent} from "../../components/presentationals/dialog-delivery/dialog-delivery.component";
 import {Table} from "../../models/table.model";
-import {Observable} from "rxjs";
+import {Observable, of} from "rxjs";
 import {InputCcComponent} from "../../components/presentationals/input-cc/input-cc.component";
 import {dataValidation, operationsWithClear} from "../../utils/functions/functions";
 import {Order} from "../../models/order.model";
@@ -150,8 +150,11 @@ export class OperationsService {
     console.log('plu');
     this.currentOperation = InvioceOpEnum.PLU;
     // Consume servicio de PLU con this.digits eso devuelve ProductOrder
-    this.invoiceService.addProductByUpc(EOperationType.Plu).subscribe(prod => {
-      this.invoiceService.evAddProdByUPC.emit(prod);
+    this.invoiceService.addProductByUpc(EOperationType.Plu).subscribe(prods => {
+      this.selectProd(prods).subscribe(prod => {
+        console.log('Plu', prod);
+        prod ? this.invoiceService.evAddProdByUPC.emit(prod): this.invoiceService.resetDigits();
+      });
     }, err => {
       console.error('addProductByUpc', err);
       this.cashService.openGenericInfo('Error', 'Can\'t complete get product by plu');
@@ -160,18 +163,40 @@ export class OperationsService {
     this.resetInactivity(false);
   }
 
+  selectProd(prods: Product[]): Observable<Product>{
+    let $prod : Observable<Product>;
+    if(prods.length > 1){
+      $prod = this.cashService.dialog.open(DialogInvoiceComponent,
+        { width: '780px', height: '660px',
+          data: {invoice: prods, label: 'name', detail:'id', title: 'Products', subtitle: 'Select a product'},
+          disableClose: true }).afterClosed()/*.subscribe(next => {
+            if(next) console.log('Selected product', next);
+      })*/;
+    } else {
+      //this.invoiceService.evAddProdByUPC.emit(prods[0]);
+      $prod = of(prods[0]);
+    }
+    return $prod;
+  }
+
   priceCheck() {
     console.log('priceCheck');
     (this.currentOperation !== InvioceOpEnum.PRICE)? this.currentOperation = InvioceOpEnum.PRICE: this.currentOperation = "";
     if(this.invoiceService.digits){
-      this.invoiceService.getProductByUpc(EOperationType.PriceCheck).subscribe(prod => {
-        this.cashService.openGenericInfo('Price check', 'Do you want add '+prod.name+' to the invoice',
-          prod.unitCost, true)
-          .afterClosed().subscribe(next => {
-          console.log(next);
-          if(next !== undefined && next.confirm ) {
-            // Logout
-            this.invoiceService.evAddProdByUPC.emit(prod);
+      this.invoiceService.getProductByUpc(EOperationType.PriceCheck).subscribe(prods => {
+        this.selectProd(prods).subscribe( prod => {
+          if(prod){
+            this.cashService.openGenericInfo('Price check', 'Do you want add '+prod.name+' to the invoice',
+              prod.unitCost, true)
+              .afterClosed().subscribe(next => {
+              console.log(next);
+              if(next !== undefined && next.confirm ) {
+                // Logout
+                this.invoiceService.evAddProdByUPC.emit(prod);
+              }
+            });
+          } else {
+            this.invoiceService.resetDigits();
           }
         });
       }, err => {
@@ -615,9 +640,11 @@ export class OperationsService {
       let upc = this.invoiceService.numbers.substring(0, 6);
       this.invoiceService.numbers = upc + '000000';
     }
-    this.invoiceService.addProductByUpc(EOperationType.Scanner).subscribe(prod => {
-      console.log('scanProduct', prod);
-      this.invoiceService.evAddProdByUPC.emit(prod);
+    this.invoiceService.addProductByUpc(EOperationType.Scanner).subscribe(prods => {
+      this.selectProd(prods).subscribe( prod => {
+        console.log('scanProduct', prod);
+        prod ? this.invoiceService.evAddProdByUPC.emit(prod): this.invoiceService.resetDigits();
+      });
     }, err => {
       console.error('addProductByUpc', err);
       this.invoiceService.resetDigits();
@@ -646,7 +673,8 @@ export class OperationsService {
           console.log(err);
           this.resetTotalFromFS();
           dialogInfoEvents.close();
-          this.cashService.openGenericInfo('Error', 'Can\'t complete ebt operation');
+          //this.cashService.openGenericInfo('Error', 'Can\'t complete ebt operation');
+          this.cashService.openGenericInfo('Error', err);
           this.cashService.resetEnableState();
         }, () => dialogInfoEvents.close());
     }

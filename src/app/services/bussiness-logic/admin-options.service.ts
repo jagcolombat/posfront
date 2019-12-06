@@ -364,29 +364,35 @@ export class AdminOptionsService {
   }
 
   doChangePrice(){
-    this.invoiceService.getProductByUpc(EOperationType.PriceCheck).subscribe(prod => {
-      this.cashService.openGenericInfo('Change Price', 'Do you want change the price of the '+prod.name,
-        prod.unitCost, true)
-        .afterClosed().subscribe(next => {
-        console.log(next);
-        if(next !== undefined && next.confirm ) {
-          this.cashService.dialog.open(ProductGenericComponent,
-            {
-              width: '480px', height: '650px', data: {name: 'Change Price', label: 'Price', unitCost: prod.unitCost.toFixed(2)},
-              disableClose: true
-            }).afterClosed().subscribe(
-            next => {
-              if(next){
-                this.invoiceService.updateProductsPrice(prod.upc, next.unitCost, prod.id).subscribe(next => {
-                  console.log(next);
-                  this.cashService.openGenericInfo('Information', 'The price of product '+
-                    next['upc'] + ' was updated to '+ next['price'].toFixed(2));
-                },
-                err => {
-                  this.cashService.openGenericInfo('Error', 'Can\'t change price of this product '+prod.upc);
+    this.invoiceService.getProductByUpc(EOperationType.PriceCheck).subscribe(prods => {
+      this.operationService.selectProd(prods).subscribe( prod => {
+        if(prod) {
+          this.cashService.openGenericInfo('Change Price', 'Do you want change the price of the '+prod.name,
+            prod.unitCost, true)
+            .afterClosed().subscribe(next => {
+            console.log(next);
+            if(next !== undefined && next.confirm ) {
+              this.cashService.dialog.open(ProductGenericComponent,
+                {
+                  width: '480px', height: '650px', data: {name: 'Change Price', label: 'Price', unitCost: prod.unitCost.toFixed(2)},
+                  disableClose: true
+                }).afterClosed().subscribe(
+                next => {
+                  if(next){
+                    this.invoiceService.updateProductsPrice(prod.upc, next.unitCost, prod.id).subscribe(next => {
+                        console.log(next);
+                        this.cashService.openGenericInfo('Information', 'The price of product '+
+                          next['upc'] + ' was updated to '+ next['price'].toFixed(2));
+                      },
+                      err => {
+                        this.cashService.openGenericInfo('Error', 'Can\'t change price of this product '+prod.upc);
+                      });
+                  }
                 });
-              }
-            });
+            }
+          });
+        } else {
+          this.invoiceService.resetDigits();
         }
       });
     }, err => {

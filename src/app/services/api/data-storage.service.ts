@@ -57,8 +57,9 @@ export class DataStorageService {
   }
 
   // Products
-  getProductByUpc(upc: string, typeOp: EOperationType): Observable<Product> {
-    return this.productService.getProductByUpc(this.url, upc, typeOp).pipe(map(p => p[0]));
+  getProductByUpc(upc: string, typeOp: EOperationType): Observable<Product[]> {
+    //return this.productService.getProductByUpc(this.url, upc, typeOp).pipe(map(p => p[0]));
+    return this.productService.getProductByUpc(this.url, upc, typeOp).pipe();
   }
 
   getProductsByUpc(upc: string, typeOp: EOperationType): Observable<Product[]> {

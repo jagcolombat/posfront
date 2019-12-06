@@ -117,7 +117,7 @@ export class InvoiceService {
       });
   }
 
-  addProductByUpc(typeOp: EOperationType): Observable<Product> {
+  addProductByUpc(typeOp: EOperationType): Observable<Product[]> {
     // Consume servicio de PLU con this.digits eso devuelve ProductOrder
     return this.getProductByUpc(typeOp);
   }
@@ -169,7 +169,7 @@ export class InvoiceService {
     return this.dataStorage.getInvoiceById(this.digits, typeOp);
   }
 
-  getProductByUpc(typeOp: EOperationType): Observable<Product>{
+  getProductByUpc(typeOp: EOperationType): Observable<Product[]>{
     return this.dataStorage.getProductByUpc(this.numbers, typeOp);
   }
 
