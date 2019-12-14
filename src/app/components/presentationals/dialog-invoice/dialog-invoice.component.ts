@@ -16,12 +16,15 @@ export class DialogInvoiceComponent {
   subtitle = "Select a invoice:";
   page = 1;
   sizePage = 12;
+  showFilter: true;
+
   constructor(
     private cashService: CashService,
     public dialogRef: MatDialogRef<DialogInvoiceComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
     if(data.title) this.title = data.title;
     if(data.subtitle) this.subtitle = data.subtitle;
+    if(data.filter) this.showFilter = data.filter;
   }
 
   onNoClick(): void {

@@ -168,12 +168,9 @@ export class OperationsService {
     if(prods.length > 1){
       $prod = this.cashService.dialog.open(DialogInvoiceComponent,
         { width: '780px', height: '660px',
-          data: {invoice: prods, label: 'name', detail:'id', title: 'Products', subtitle: 'Select a product'},
-          disableClose: true }).afterClosed()/*.subscribe(next => {
-            if(next) console.log('Selected product', next);
-      })*/;
+          data: {invoice: prods, label: 'name', detail:'unitCost', title: 'Products', subtitle: 'Select a product', filter: false},
+          disableClose: true }).afterClosed();
     } else {
-      //this.invoiceService.evAddProdByUPC.emit(prods[0]);
       $prod = of(prods[0]);
     }
     return $prod;
