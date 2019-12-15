@@ -82,18 +82,33 @@ export class AdminOptionsService {
       });
         dialogRef.afterClosed().subscribe((data: any) => {
           console.log('apply discount', data);
-          if(type === EApplyDiscount.AMOUNT ) data = (data['unitCost'])? Number(data['unitCost']).toFixed(2): 0;
-          this.invoiceService.applyDiscountInvoice(data, type).subscribe(next => {
-            this.invoiceService.setInvoice(next);
-            this.invoiceService.invoiceProductSelected.splice(0);
-          }, err => {
-            this.cashService.openGenericInfo('Error', 'Can\'t apply discount')
-          })
+          if(type === EApplyDiscount.AMOUNT ){
+            data = (data['unitCost']) ? Number(data['unitCost']).toFixed(2) : 0;
+            if((this.invoiceService.invoiceProductSelected.length < this.invoiceService.invoice.productOrders.length)
+              && (this.invoiceService.invoiceProductSelected.length > 1)){
+              this.cashService.openGenericInfo('Information', 'Discount by amount only can apply for a ' +
+                'product or full invoice');
+            } else {
+              this.applyDiscountOp(data, type);
+            }
+          } else {
+            this.applyDiscountOp(data, type);
+          }
         });
     /*} else {
       this.cashService.openGenericInfo('Error', 'Can\'t apply discount without products')
     }*/
 
+  }
+
+  applyDiscountOp(data, type: EApplyDiscount){
+    this.invoiceService.applyDiscountInvoice(data, type).subscribe(next => {
+      this.invoiceService.setInvoice(next);
+      this.invoiceService.invoiceProductSelected.splice(0);
+    }, err => {
+      //this.cashService.openGenericInfo('Error', 'Can\'t apply discount');
+      this.cashService.openGenericInfo('Error', err);
+    })
   }
 
   cancelCheck() {
