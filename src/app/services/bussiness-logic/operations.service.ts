@@ -132,7 +132,8 @@ export class OperationsService {
     console.log('void', this.invoiceService.invoice.productOrders);
     if((this.invoiceService.invoice.status === InvoiceStatus.IN_PROGRESS &&
       this.invoiceService.invoice.productOrders.length > 0 ) ||
-      this.invoiceService.invoice.status === InvoiceStatus.IN_HOLD ){
+      this.invoiceService.invoice.status === InvoiceStatus.IN_HOLD ||
+      this.invoiceService.invoice.isRefund ){
       this.cashService.openGenericInfo('Confirm', 'Do you want void?', null,true)
         .afterClosed().subscribe(next => {
         if (next !== undefined && next.confirm) {
@@ -441,7 +442,8 @@ export class OperationsService {
       err => {
         console.error(err);
         this.invoiceService.resetDigits();
-        this.cashService.openGenericInfo('Error', 'Can\'t complete refund operation');
+        //this.cashService.openGenericInfo('Error', 'Can\'t complete refund operation');
+        this.cashService.openGenericInfo('Error', err);
       }
     )
   }

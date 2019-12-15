@@ -61,17 +61,17 @@
   </operation-group>
 
   <operation-group fxFlex.lg="40" fxFlex.lt-lg="25" [operations]="financeAdminOperations" [colors]="financeAdminColor"
-                   (evPressKeys)="financeKey($event)" [disable]="operationService.cashService.disabledFinOp"
+                   (evPressKeys)="financeKey($event)" [disable]="operationService.cashService.disabledFinanceAdminOp"
                    *ngIf="showForAdmin">
   </operation-group>
 
   <operation-group fxFlex.lg="20" fxFlex.lt-lg="25" [operations]="invoiceAdminOperations" [colors]="invoiceAdminColor"
-                   (evPressKeys)="invoiceKey($event)" [disable]="operationService.cashService.disabledFinanceAdminOp"
+                   (evPressKeys)="invoiceKey($event)" [disable]="operationService.cashService.disabledInvoiceAdminOp"
                    *ngIf="showForAdmin">
   </operation-group>
 
   <operation-group fxFlex.lg="20" fxFlex.lt-lg="25" [operations]="otherAdminOperations" [colors]="otherAdminColor"
-                   (evPressKeys)="otherKey($event)" [disable]="operationService.cashService.disabledFinOp"
+                   (evPressKeys)="otherKey($event)" [disable]="operationService.cashService.disabledOtherAdminOp"
                    *ngIf="showForAdmin">
   </operation-group>
   <operation-group fxFlex.lg="20" fxFlex.lt-lg="25" [operations]="restaurantOperations" [colors]="restaurantColor"

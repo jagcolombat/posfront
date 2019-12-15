@@ -21,6 +21,8 @@ export class CashService {
   disabledAdminOp: boolean | boolean[] = false;
   disabledFinanceAdminOp: boolean | boolean[] = false;
   disabledReportsAdminOp: boolean | boolean[] = false;
+  disabledInvoiceAdminOp: boolean | boolean[] = false;
+  disabledOtherAdminOp: boolean | boolean[] = false;
   systemConfig: Configuration;
   @Output() evReviewEnableState = new EventEmitter<boolean>();
 
@@ -35,6 +37,9 @@ export class CashService {
     this.splitAllow(false);
     this.disabledFinanceAdminOp = false;
     this.disabledReportsAdminOp = false;
+    this.disabledInvoiceAdminOp = false;
+    this.disabledOtherAdminOp = false;
+    this.disabledAdminOp = false;
     this.evReviewEnableState.emit(false);
   }
 
@@ -43,6 +48,11 @@ export class CashService {
     this.disabledFinOp = [true, false, true, true, true, true, true, true];
     this.disabledInvOp = [false, true, true, true];
     this.disabledOtherOp = [true, true, true, true, true, false];
+    this.disabledReportsAdminOp = true;
+    this.disabledFinanceAdminOp = true;
+    this.disabledInvoiceAdminOp = [true, false];
+    this.disabledOtherAdminOp = true;
+    this.disabledAdminOp = true;
     this.evReviewEnableState.emit(true);
   }
 
@@ -86,7 +96,7 @@ export class CashService {
   cancelCheckEnableState() {
     this.disabledInput = this.disabledTotalOp = this.disabledPayment = this.disabledPaymentMoney = this.disabledFinOp = true;
     //this.disabledInvOp =[false, true, true, true];
-    this.disabledFinanceAdminOp = [true, false];
+    this.disabledInvoiceAdminOp = [true, false];
     this.disabledReportsAdminOp = true;
     this.disabledAdminOp = [true, true, true, false, true, true, true, true, true, true, true, true, true, true, true, true];
     //this.evReviewEnableState.emit(true);
@@ -95,7 +105,7 @@ export class CashService {
   removeHoldEnableState() {
     this.disabledInput = this.disabledTotalOp = this.disabledPayment = this.disabledPaymentMoney = this.disabledFinOp = true;
     //this.disabledInvOp =[false, true, true, true];
-    this.disabledFinanceAdminOp = [true, false];
+    this.disabledInvoiceAdminOp = [true, false];
     this.disabledReportsAdminOp = true;
     this.disabledAdminOp = [true, true, true, true, false, true, true, true, true, true, true, true, true, true, true, true];
     //this.evReviewEnableState.emit(true);
