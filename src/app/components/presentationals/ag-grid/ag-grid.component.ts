@@ -112,7 +112,8 @@ export class AgGridComponent implements OnInit, OnDestroy {
       total: Number(data.subTotal).toFixed(2),
       tax: Number(data.tax).toFixed(2),
       isRefund: data.isRefund,
-      discount: formatNumber(data.discount)
+      discount: formatNumber(data.discount),
+      productId: data.productId
     };
     console.log('onAddRow', newData, this.gridOptions.api.getDisplayedRowCount());
     //(newData.discount !== undefined) ? this.showDiscount(true) : this.showDiscount(false);
@@ -135,11 +136,11 @@ export class AgGridComponent implements OnInit, OnDestroy {
     if(selectedData.length > 0 && this.selectableProd){
       console.log('remove selected');
       this.invoiceService.delPOFromInvoice(selectedData);
-      const res = this.gridOptions.api.updateRowData({ remove: selectedData });
+      //const res = this.gridOptions.api.updateRowData({ remove: selectedData });
       // printResult(res);
-      this.invoiceService.setTotal();
+      //this.invoiceService.setTotal();
       this.updateData.emit(true);
-      this.deleteOnInvoice();
+      // this.deleteOnInvoice();
     }
   }
 

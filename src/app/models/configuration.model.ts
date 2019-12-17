@@ -7,4 +7,5 @@ export interface Configuration {
   companyType?: CompanyType;
   externalScale?: boolean;
   allowCardSplit: boolean;
+  fullRefund: boolean;
 }

@@ -102,11 +102,11 @@ export class InvoiceService {
   }
 
   delPOFromInvoice(po: ProductOrder[]){
-    const productOrdersIds = po.map(prodOrder => {
+    /*const productOrdersIds = po.map(prodOrder => {
       return prodOrder.id;
-    });
+    });*/
 
-    this.dataStorage.deleteProductOrdersByInvoice(this.invoice.receiptNumber, productOrdersIds, this.invoice.isRefund)
+    this.dataStorage.deleteProductOrdersByInvoice(this.invoice.receiptNumber, po, this.invoice.isRefund)
       .subscribe(data => {
         console.log(data);
         this.setInvoice(data);

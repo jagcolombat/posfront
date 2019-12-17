@@ -77,8 +77,8 @@ export class InvoiceService {
     .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
-  deleteProductOrders(url: string, productOrderIds: Array<string>, invoiceId: string): Observable<any> {
-    return this._http.request('delete', url + this.path + '/' + invoiceId + '/product', {body: productOrderIds})
+  deleteProductOrders(url: string, productOrders: ProductOrder[], invoiceId: string): Observable<any> {
+    return this._http.request('delete', url + this.path + '/' + invoiceId + '/product', {body: productOrders})
     .pipe(catchError(this.processHttpMsgService.handleError));
   }
 

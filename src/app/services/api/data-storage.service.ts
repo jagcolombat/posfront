@@ -151,8 +151,8 @@ export class DataStorageService {
       return this.invoiceService.deleteProductOrder(this.url, productOrderId, invoiceId);
   }
 
-  deleteProductOrdersByInvoice(invoiceId: string, productOrderId: Array<string>, isRefund = false): Observable<Invoice> {
-      return this.invoiceService.deleteProductOrders(this.url, productOrderId, invoiceId);
+  deleteProductOrdersByInvoice(invoiceId: string, productOrders: ProductOrder[], isRefund = false): Observable<Invoice> {
+      return this.invoiceService.deleteProductOrders(this.url, productOrders, invoiceId);
   }
 
   applyDiscountInvoice (id: string, discount: number, productOrderIds: Array<string>, discountType: EApplyDiscount): Observable<Invoice> {

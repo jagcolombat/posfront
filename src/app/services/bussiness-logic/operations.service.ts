@@ -521,7 +521,7 @@ export class OperationsService {
   cash(opType?: PaymentOpEnum) {
     console.log('cash');
     const totalToPaid = this.getTotalToPaid();
-    if (totalToPaid < 0  && this.invoiceService.invoice.isRefund) {
+    if ((totalToPaid !== 0 || (totalToPaid === 0 && this.cashService.systemConfig.fullRefund) ) && this.invoiceService.invoice.isRefund) {
       console.log('paid refund, open cash!!!');
       this.cashService.dialog.open(CashPaymentComponent,
         {
