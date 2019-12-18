@@ -153,14 +153,14 @@ export class OperationsService {
     // Consume servicio de PLU con this.digits eso devuelve ProductOrder
     this.invoiceService.addProductByUpc(EOperationType.Plu).subscribe(prods => {
       this.selectProd(prods).subscribe(prod => {
-        console.log('Plu', prod);
+        console.log('Plu', prod, this.invoiceService.qty);
         prod ? this.invoiceService.evAddProdByUPC.emit(prod): this.invoiceService.resetDigits();
       });
     }, err => {
       console.error('addProductByUpc', err);
+      this.invoiceService.resetDigits();
       this.cashService.openGenericInfo('Error', 'Can\'t complete get product by plu');
     });
-    this.invoiceService.resetDigits();
     this.resetInactivity(false);
   }
 
