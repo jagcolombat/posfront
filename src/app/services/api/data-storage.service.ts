@@ -62,8 +62,8 @@ export class DataStorageService {
     return this.productService.getProductByUpc(this.url, upc, typeOp).pipe();
   }
 
-  getProductsByUpc(upc: string, typeOp: EOperationType): Observable<Product[]> {
-    return this.productService.getProductByUpc(this.url, upc, typeOp).pipe();
+  getProductsByUpc(upc: string, typeOp: EOperationType, pageNumber?: number, pageSize?: number): Observable<Product[]> {
+    return this.productService.getProductByUpc(this.url, upc, typeOp, pageNumber, pageSize).pipe();
   }
 
   updateProductByUpc(upc: string, price: string, id: string): Observable<Product[]> {

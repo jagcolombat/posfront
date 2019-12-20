@@ -13,10 +13,12 @@ export class ProductService {
 
   constructor(private _http: HttpClient, private processHttpMsgService: ProcessHTTPMSgService) {}
 
-  getProductByUpc(url: string, upc: string, typeOp: EOperationType): Observable<Product[]> {
+  getProductByUpc(url: string, upc: string, typeOp: EOperationType, pageNumber: number = 1, pageSize: number = 60): Observable<Product[]> {
     let params = new HttpParams();
     params = params.append('value', upc );
     params = params.append('operationType', typeOp + '' );
+    params = params.append('pageNumber', pageNumber + '');
+    params = params.append('pageSize', pageSize + '' );
     return this._http.get<any>(url + '/products/attribute', { params })
       .pipe(catchError(this.processHttpMsgService.handleError));
   }

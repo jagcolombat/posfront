@@ -29,8 +29,8 @@ export class StockService {
     return this.dataStore.getProductsByDepartment(id, pageNumber, pageSize);
   }
 
-  getProductsByFilter(filter: string): Observable<Product[] | Product> {
-    return this.dataStore.getProductsByUpc(filter, EOperationType.List);
+  getProductsByFilter(filter: string, pageNumber?: number, pageSize?: number): Observable<Product[]> {
+    return this.dataStore.getProductsByUpc(filter, EOperationType.List, pageNumber, pageSize);
   }
 
   setOperation(typeOp: EOperationType, entity: string, desc: string){

@@ -19,7 +19,7 @@ export class DepartmentService {
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
-  getProductByDepartment(url: string, department: string, pageNumber: number = 5, pageSize: number = 20): Observable<Product[]> {
+  getProductByDepartment(url: string, department: string, pageNumber: number = 1, pageSize: number = 60): Observable<Product[]> {
     let params = new HttpParams();
     params = params.append('pageNumber', pageNumber + '');
     params = params.append('pageSize', pageSize + '' );
