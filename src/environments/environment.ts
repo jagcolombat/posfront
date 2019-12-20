@@ -8,7 +8,7 @@ export const environment = {
   baseURL:  '/api/1.0',
   WEBSOCKET: '/events',
   CLIENTVIEW: '/entity',
-  version: '2.7.3',
+  version: '2.8.0',
   screenH: 0
 };
 

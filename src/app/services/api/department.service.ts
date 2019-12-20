@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Department} from '../../models/department.model';
 import {Product} from '../../models/product.model';
@@ -19,8 +19,11 @@ export class DepartmentService {
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
-  getProductByDepartment(url: string, department: string): Observable<Product[]> {
-    return this._http.get<Product[]>(url + '/departments/' + department + '/products')
+  getProductByDepartment(url: string, department: string, pageNumber: number = 5, pageSize: number = 20): Observable<Product[]> {
+    let params = new HttpParams();
+    params = params.append('pageNumber', pageNumber + '');
+    params = params.append('pageSize', pageSize + '' );
+    return this._http.get<Product[]>(url + '/departments/' + department + '/products', { params })
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 }

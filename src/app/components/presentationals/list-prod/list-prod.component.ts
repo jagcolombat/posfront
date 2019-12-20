@@ -17,6 +17,9 @@ export class ListProdComponent implements OnInit {
   dptTax: number;
   page: number = 1;
   sizePage = 20;
+  loading = false;
+  dpto: any;
+  lastPage = 5;
 
   constructor( private router: Router, private route: ActivatedRoute, public stockService: StockService) {
     this.sizePage = this.stockService.getStockCountItems();
@@ -31,11 +34,18 @@ export class ListProdComponent implements OnInit {
         Object.assign(this.prods, this.stockService.productsFiltered);
         Object.assign(this.prodsByDpto, this.stockService.productsFiltered);
       } else if (p['dpto'] && p['tax']){
+        this.loading = true;
         this.dptTax = p['tax'];
-        this.stockService.getProductsByDepartment(p['dpto']).subscribe(prods => {
-          Object.assign(this.prods, prods);
-          Object.assign(this.prodsByDpto, prods);
-        })
+        this.dpto = p['dpto'];
+        //setTimeout(() => {
+          this.stockService.getProductsByDepartment(p['dpto'], 1, this.sizePage * this.lastPage)
+            .subscribe(prods => {
+            this.loading = false;
+            Object.assign(this.prods, prods);
+            Object.assign(this.prodsByDpto, prods);
+          });
+        //}, 5000);
+
       }
     });
   }
@@ -49,6 +59,17 @@ export class ListProdComponent implements OnInit {
   setPage(ev){
     if(ev > this.page){
       this.stockService.setOperation(EOperationType.PageNext, ev, 'products');
+      this.lastPage += 1;
+      this.stockService.getProductsByDepartment(this.dpto, this.lastPage, this.sizePage).subscribe(prods => {
+        this.loading = false;
+        prods.map(prod => {
+          this.prods.push(prod);
+          this.prodsByDpto.push(prod);
+        });
+        console.log('Next page', prods);
+      }, error1 => {
+        console.error('Next page', error1);
+      });
     } else {
       this.stockService.setOperation(EOperationType.PagePrevious, ev, 'products');
     }
