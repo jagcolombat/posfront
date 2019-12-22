@@ -34,6 +34,7 @@ import {EFieldType} from "../../utils/field-type.enum";
 import {OrderInfoComponent} from "../../components/presentationals/order-info/order-info.component";
 import {ProductGeneric} from "../../models/product-generic";
 import {AdminOptionsService} from "./admin-options.service";
+import {EBTTypes} from "../../utils/card-payment-types.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -652,13 +653,13 @@ export class OperationsService {
     this.resetInactivity(false);
   }
 
-  ebt(type?: number) {
+  ebt(type?: number, splitAmount?: number) {
     console.log('EBT Card');
     this.currentOperation = 'EBT Card';
 
     if (this.invoiceService.invoice.total !== 0 || this.invoiceService.invoice.fsTotal !== 0) {
       let dialogInfoEvents = this.openInfoEventDialog('EBT Card');
-      this.invoiceService.ebt(this.invoiceService.invoice.total, type)
+      this.invoiceService.ebt(splitAmount ? splitAmount : this.invoiceService.invoice.fsTotal, type)
         .subscribe(data => {
           console.log(data);
           if(data.status === InvoiceStatus.PAID) {
@@ -753,7 +754,7 @@ export class OperationsService {
               if(date.number){
                 this.getNumField(title, 'Zip Code', EFieldType.ZIPCODE).subscribe(zipcode => {
                   if (zipcode.number) {
-                    this.invoiceService.creditManual(splitAmount ? splitAmount :this.invoiceService.invoice.total,
+                    this.invoiceService.creditManual(splitAmount ? splitAmount :this.invoiceService.invoice.balance,
                       this.invoiceService.invoice.tip, number.number, cvv.number, date.number, zipcode.number)
                       .subscribe(data => {
                           console.log(data);
@@ -916,7 +917,8 @@ export class OperationsService {
   }
 
   setCreditCardType(splitAmount?: number) {
-    let ccTypes= new Array<any>({value: 1, text: 'Automatic'}, {value: 2, text: 'Manual'});
+    let ccTypes= new Array<any>({value: 1, text: 'Automatic'}, {value: 2, text: 'Manual'}, {value: 3, text: 'EBT'},
+      {value: 4, text: 'EBT Cash'});
     this.cashService.dialog.open(DialogDeliveryComponent,
       { width: '600px', height: '340px', data: {name: 'Credit Card Types', label: 'Select a type', arr: ccTypes},
         disableClose: true })
@@ -929,6 +931,12 @@ export class OperationsService {
         case 2:
           this.creditManualOp('Credit Card', splitAmount);
           break;
+        case 3:
+          this.ebt(EBTTypes.EBT, splitAmount);
+          break;
+        case 4:
+          this.ebt(EBTTypes.EBT_CASH, splitAmount);
+          break;
         default:
           this.cashService.resetEnableState();
       }
@@ -936,7 +944,7 @@ export class OperationsService {
   }
 
   setEBTCardType() {
-    let ccTypes= new Array<any>({value: 0, text: 'EBT'}, {value: 1, text: 'EBT Cash'});
+    let ccTypes= new Array<any>({value: EBTTypes.EBT, text: 'EBT'}, {value: EBTTypes.EBT_CASH, text: 'EBT Cash'});
     this.cashService.dialog.open(DialogDeliveryComponent,
       { width: '600px', height: '340px', data: {name: 'EBT Card Types', label: 'Select a type', arr: ccTypes},
         disableClose: true })

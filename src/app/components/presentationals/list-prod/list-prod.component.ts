@@ -43,14 +43,12 @@ export class ListProdComponent implements OnInit {
         this.loading = true;
         this.dptTax = p['tax'];
         this.dpto = p['dpto'];
-        //setTimeout(() => {
-          this.stockService.getProductsByDepartment(p['dpto'], 1, this.sizePage * this.lastPage)
-            .subscribe(prods => {
-            this.loading = false;
-            Object.assign(this.prods, prods);
-            Object.assign(this.prodsByDpto, prods);
-          });
-        //}, 5000);
+        this.stockService.getProductsByDepartment(p['dpto'], 1, this.sizePage * this.lastPage)
+          .subscribe(prods => {
+          this.loading = false;
+          Object.assign(this.prods, prods);
+          Object.assign(this.prodsByDpto, prods);
+        });
       }
     });
   }
