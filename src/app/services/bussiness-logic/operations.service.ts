@@ -940,6 +940,7 @@ export class OperationsService {
           break;
         default:
           this.cashService.resetEnableState();
+          this.resetTotalFromFS();
       }
     });
   }
@@ -951,8 +952,9 @@ export class OperationsService {
         disableClose: true })
       .afterClosed().subscribe(next => {
       console.log(next);
-      this.ebt(next);
+      if(next) this.ebt(next);
       this.cashService.resetEnableState();
+      this.resetTotalFromFS();
     });
   }
 
