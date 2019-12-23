@@ -87,7 +87,8 @@ export class OperationsComponent implements OnInit {
         this.otherOperations.unshift(OtherOpEnum.SPLIT_CARD);
         this.otherColor.unshift('yellow');
       }
-      if(this.operationService.cashService.systemConfig.companyType === CompanyType.RESTAURANT){
+      if(this.operationService.cashService.systemConfig.companyType === CompanyType.RESTAURANT ||
+        !this.operationService.cashService.systemConfig.allowEBT){
         // Remove EBT options and colors
         this.paymentOperations.splice(0,1);
         this.paymentColor.splice(0,1);
@@ -104,6 +105,8 @@ export class OperationsComponent implements OnInit {
         this.paymentOperations.splice(-1).map(op => this.moneyOperations.push(op));
         this.paymentColor.splice(-1).map(op => this.moneyColor.push(op));
         //this.operationService.cashService.disabledPayment=[true, false, true, true, true, true];
+      }
+      if(this.operationService.cashService.systemConfig.companyType !== CompanyType.RESTAURANT){
         // Remove restaurant operations
         this.restaurantOperations.splice(0);
         this.restaurantColor = '';

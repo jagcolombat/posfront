@@ -6,6 +6,7 @@ export interface Configuration {
   allowAddMiscellany?: boolean;
   companyType?: CompanyType;
   externalScale?: boolean;
-  allowCardSplit: boolean;
-  fullRefund: boolean;
+  allowCardSplit?: boolean;
+  fullRefund?: boolean;
+  allowEBT?: boolean;
 }

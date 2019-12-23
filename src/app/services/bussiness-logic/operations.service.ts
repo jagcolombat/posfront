@@ -917,8 +917,9 @@ export class OperationsService {
   }
 
   setCreditCardType(splitAmount?: number) {
-    let ccTypes= new Array<any>({value: 1, text: 'Automatic'}, {value: 2, text: 'Manual'}, {value: 3, text: 'EBT'},
-      {value: 4, text: 'EBT Cash'});
+    let ccTypes= new Array<any>({value: 1, text: 'Automatic'}, {value: 2, text: 'Manual'});
+    if(this.cashService.systemConfig.allowEBT)
+      [{value: 3, text: 'EBT'}, {value: 4, text: 'EBT Cash'}].map(op => ccTypes.push(op));
     this.cashService.dialog.open(DialogDeliveryComponent,
       { width: '600px', height: '340px', data: {name: 'Credit Card Types', label: 'Select a type', arr: ccTypes},
         disableClose: true })

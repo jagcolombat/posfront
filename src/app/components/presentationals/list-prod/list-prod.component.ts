@@ -45,10 +45,14 @@ export class ListProdComponent implements OnInit {
         this.dpto = p['dpto'];
         this.stockService.getProductsByDepartment(p['dpto'], 1, this.sizePage * this.lastPage)
           .subscribe(prods => {
-          this.loading = false;
-          Object.assign(this.prods, prods);
-          Object.assign(this.prodsByDpto, prods);
-        });
+            this.loading = false;
+            Object.assign(this.prods, prods);
+            Object.assign(this.prodsByDpto, prods);
+          }, error1 => {
+            this.loading = false;
+            this.stockService.cashService.openGenericInfo('Error', error1/*'Can\'t get products for this deparment'*/);
+            this.router.navigateByUrl('/cash/dptos');
+          });
       }
     });
   }

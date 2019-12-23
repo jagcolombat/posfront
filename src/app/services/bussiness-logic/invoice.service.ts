@@ -80,13 +80,17 @@ export class InvoiceService {
       this.addPO2Invoice(lastPO);
       this.resetDigits();*/
       // next.productOrders[next.productOrders.length-1].foodStamp = po.foodStamp;
-      this.setInvoice(next);
+      (next.productOrders.length > 0) ? this.setInvoice(next): this.showErr('The invoice has not products');
     }, err => {
-      console.error('addProductOrder', err);
-      // this.delPOFromInvoice(po);
-      this.resetDigits();
-      this.cashService.openGenericInfo('Error', err);
+      this.showErr(err);
     });
+  }
+
+  private showErr(err: any){
+    console.error('addProductOrder', err);
+    // this.delPOFromInvoice(po);
+    this.resetDigits();
+    this.cashService.openGenericInfo('Error', err);
   }
 
   updateClientAge(clientAge: number) {
