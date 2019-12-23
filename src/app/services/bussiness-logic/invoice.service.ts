@@ -74,13 +74,7 @@ export class InvoiceService {
     this.dataStorage.addProductOrderByInvoice(this.invoice.receiptNumber, po, EOperationType.Add, this.invoice.isRefund)
       .subscribe(next => {
       console.log('addProductOrder-next', next);
-      /*let countPO = next.productsOrders.length;
-      let lastPO = next.productsOrders[countPO-1];
-      lastPO.product = po.product;
-      this.addPO2Invoice(lastPO);
-      this.resetDigits();*/
-      // next.productOrders[next.productOrders.length-1].foodStamp = po.foodStamp;
-      (next.productOrders.length > 0) ? this.setInvoice(next): this.showErr('The invoice has not products');
+      (next.productOrders.length > 0) ? this.setInvoice(next): this.showErr('The invoice hasn\'t products');
     }, err => {
       this.showErr(err);
     });
