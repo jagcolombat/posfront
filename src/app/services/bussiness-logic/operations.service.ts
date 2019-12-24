@@ -784,6 +784,20 @@ export class OperationsService {
     });
   }
 
+  manualPayment(title, splitAmount?: number){
+    this.getNumField(title, 'Card Number', EFieldType.CARD_NUMBER).subscribe((number) => {
+      console.log('cc manual modal', number);
+      if (number.number) {
+        this.getNumField(title, 'Validation Number', EFieldType.CVV).subscribe(cvv => {
+          if (cvv.number) {
+            //this.getNumField(title, 'Exp. Date', EFieldType.EXPDATE).subscribe(date => {])
+          }
+        });
+      }
+    });
+
+  }
+
   private resetTotalFromFS() {
     this.invoiceService.invoice.fsTotal = 0;
     this.invoiceService.evUpdateTotals.emit();
@@ -952,7 +966,7 @@ export class OperationsService {
         disableClose: true })
       .afterClosed().subscribe(next => {
       console.log(next);
-      if(next) this.ebt(next);
+      if(next !== "") this.ebt(next);
       this.cashService.resetEnableState();
       this.resetTotalFromFS();
     });

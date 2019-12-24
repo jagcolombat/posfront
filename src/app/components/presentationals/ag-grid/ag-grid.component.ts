@@ -135,8 +135,17 @@ export class AgGridComponent implements OnInit, OnDestroy {
     console.log('selectedData', selectedData);
     if(selectedData.length > 0 && this.selectableProd){
       console.log('remove selected');
-      this.invoiceService.delPOFromInvoice(selectedData);
-      const res = this.gridOptions.api.updateRowData({ remove: selectedData });
+      this.invoiceService.delPOFromInvoice(selectedData)
+        .subscribe(data => {
+            console.log(data);
+            this.invoiceService.setInvoice(data);
+            const res = this.gridOptions.api.updateRowData({ remove: selectedData });
+          },
+          err => {
+            console.log(err);
+            this.cashService.openGenericInfo('Error', err.error);
+          });
+
       // printResult(res);
       //this.invoiceService.setTotal();
       this.updateData.emit(true);

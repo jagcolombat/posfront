@@ -99,20 +99,12 @@ export class InvoiceService {
     this.evAddProd.emit(po);
   }
 
-  delPOFromInvoice(po: ProductOrder[]){
+  delPOFromInvoice(po: ProductOrder[]): Observable<any> {
     /*const productOrdersIds = po.map(prodOrder => {
       return prodOrder.id;
     });*/
 
-    this.dataStorage.deleteProductOrdersByInvoice(this.invoice.receiptNumber, po, this.invoice.isRefund)
-      .subscribe(data => {
-        console.log(data);
-        this.setInvoice(data);
-      },
-      err => {
-        console.log(err);
-        this.cashService.openGenericInfo('Error', err.error);
-      });
+    return this.dataStorage.deleteProductOrdersByInvoice(this.invoice.receiptNumber, po, this.invoice.isRefund);
   }
 
   addProductByUpc(typeOp: EOperationType): Observable<Product[]> {
