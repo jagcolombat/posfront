@@ -67,9 +67,14 @@ export class ProductOrderService implements OnDestroy {
 
   productWeightFormat(product: Product){
     if(this.invoiceService.priceWic){
-      this.quantityByProduct = Number(((+this.invoiceService.priceWic/100) / product.unitCost).toFixed(2));
+      if(product.unitCost) {
+        this.quantityByProduct = Number(((+this.invoiceService.priceWic/100) / product.unitCost).toFixed(2));
+        this.invoiceService.addProductOrder(this.createProductOrder(product));
+      } else {
+        this.cashService.openGenericInfo('Error', 'Can\'t add weight format product because unit cost is 0');
+        this.invoiceService.resetDigits();
+      }
       this.invoiceService.priceWic = '';
-      this.invoiceService.addProductOrder(this.createProductOrder(product))
     } else {
       this.productScalable(product);
     }
