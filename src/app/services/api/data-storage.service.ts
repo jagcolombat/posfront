@@ -14,7 +14,7 @@ import { EOperationType } from 'src/app/utils/operation.type.enum';
 import { ICashPayment } from 'src/app/models/cash-payment.model';
 import { Journey } from 'src/app/models/journey.model';
 import { JourneyService } from './journey.service';
-import { CreditCard, User, Payment } from 'src/app/models';
+import {CreditCard, User, Payment, CardManualPayment} from 'src/app/models';
 import { ConfigurationService } from './configuration.service';
 import { Configuration } from 'src/app/models/configuration.model';
 import { AdminOperationService } from './admin.operation.service';
@@ -174,6 +174,10 @@ export class DataStorageService {
 
   paidByEBTCard(cashPayment: CreditCard, type: number): Observable<any> {
     return this.paymentService.paidByEBTCard(this.url, cashPayment, type);
+  }
+
+  paidByExternalCard(externalPayment: CardManualPayment): Observable<any> {
+    return this.paymentService.paymentExternalCardReader(this.url, externalPayment);
   }
 
   // Journey

@@ -34,7 +34,7 @@ import {EFieldType} from "../../utils/field-type.enum";
 import {OrderInfoComponent} from "../../components/presentationals/order-info/order-info.component";
 import {ProductGeneric} from "../../models/product-generic";
 import {AdminOptionsService} from "./admin-options.service";
-import {EBTTypes} from "../../utils/card-payment-types.enum";
+import {CardTypes, EBTTypes} from "../../utils/card-payment-types.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -784,18 +784,60 @@ export class OperationsService {
     });
   }
 
-  manualPayment(title, splitAmount?: number){
-    this.getNumField(title, 'Card Number', EFieldType.CARD_NUMBER).subscribe((number) => {
-      console.log('cc manual modal', number);
-      if (number.number) {
-        this.getNumField(title, 'Validation Number', EFieldType.CVV).subscribe(cvv => {
-          if (cvv.number) {
-            //this.getNumField(title, 'Exp. Date', EFieldType.EXPDATE).subscribe(date => {])
+  externalCardPayment(title='External Card'){
+    console.log('External Card');
+    this.getPriceField(title, 'Amount').subscribe((amount) => {
+      console.log('Amount', amount.unitCost);
+      if (amount.unitCost) {
+        this.getNumField(title, 'Account', EFieldType.CVV).subscribe(cardNumber => {
+          if (cardNumber.number) {
+            this.getNumField(title, 'Auth Code', EFieldType.NUMBER).subscribe(authCode => {
+              if (authCode.number) {
+                this.getCreditCardType().subscribe(next => {
+                  console.log(next);
+                  if (next) {
+                    this.invoiceService.externalCard(amount.unitCost, cardNumber.number, authCode.number, next).subscribe(
+                      next => {
+                        console.log('External Card', next);
+                        this.invoiceService.createInvoice();
+                      },
+                      error1 => {
+                        console.error('External Card', error1);
+                        //this.cashService.openGenericInfo('Error', 'Can\'t complete external card payment operation');
+                        this.cashService.openGenericInfo('Error', error1);
+                      },
+                      () => this.cashService.resetEnableState()
+                    );
+                  } else {
+                    this.cashService.openGenericInfo('Error', 'Can\'t complete external card payment '
+                      + 'operation because the card type not was selected');
+                  }
+                })
+              } else {
+                this.cashService.openGenericInfo('Error', 'Can\'t complete external card payment operation '
+                  + 'because authorization number not was specified');
+              }
+            });
+          } else {
+            this.cashService.openGenericInfo('Error', 'Can\'t complete external card payment operation '
+              + 'because account number not was specified');
           }
         });
+      } else {
+        this.cashService.openGenericInfo('Error', 'Can\'t complete external card payment operation '
+          + 'because amount not was specified');
       }
     });
 
+  }
+
+  getCreditCardType(): Observable<any> {
+    let ccTypes= new Array<any>({value: CardTypes[CardTypes.VISA], text: CardTypes[CardTypes.VISA]},
+      {value: CardTypes[CardTypes.MASTERCARD], text: CardTypes[CardTypes.MASTERCARD]});
+    return this.cashService.dialog.open(DialogDeliveryComponent,
+      { width: '600px', height: '340px', data: {name: 'Credit Card Types', label: 'Select a type', arr: ccTypes},
+        disableClose: true })
+      .afterClosed();
   }
 
   private resetTotalFromFS() {
@@ -1076,6 +1118,14 @@ export class OperationsService {
     return this.cashService.dialog.open(InputCcComponent,
       { width:'480px', height: height + 'px', data:{number:'', name: name, label:label,
           type:dataValidation(fieldType)}, disableClose: true }).afterClosed();
+  }
+
+  getPriceField(name, label) {
+    return this.cashService.dialog.open(ProductGenericComponent,
+      {
+        width: '480px', height: '650px', data: {name: name, label: label, unitCost: 0.00},
+        disableClose: true
+      }).afterClosed();
   }
 
   getOrderInfo()/*: Observable<Order>*/ {

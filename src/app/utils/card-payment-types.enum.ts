@@ -7,3 +7,8 @@ export enum CreditTypes {
   AUTOMATIC = 1,
   MANUAL
 }
+
+export enum CardTypes {
+  VISA = 1,
+  MASTERCARD
+}

@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import { ICashPayment } from 'src/app/models/cash-payment.model';
-import { CreditCard } from 'src/app/models';
+import {CardManualPayment, CreditCard} from 'src/app/models';
 import { ProcessHTTPMSgService } from './ProcessHTTPMSg.service';
 import { catchError } from 'rxjs/operators';
+import {Invoice} from "../../models/invoice.model";
 
 @Injectable({
   providedIn: 'root'
@@ -43,6 +44,16 @@ export class PaymentService {
 
   ebtInquiry(url: string) {
     return this._http.get<any>(url + this.path + '/payment/ebt')
+      .pipe(catchError(this.processHttpMsgService.handleError));
+  }
+
+  paymentExternalCardReader(url: string, cardManualPayment: CardManualPayment ): Observable<Invoice> {
+    console.log('paymentExternalCardReader', cardManualPayment);
+    let params = new HttpParams();
+    params = params.append('paymentMethod', 2 + '');
+    params = params.append('transferType', cardManualPayment.transferType + '');
+    params = params.append('receiptNumber', cardManualPayment.receiptNumber);
+    return this._http.post<Invoice>(url + this.path + '/payment/external', cardManualPayment, {params})
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 }

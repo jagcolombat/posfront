@@ -3,7 +3,7 @@ import {AuthService} from "../api/auth.service";
 import {ProductOrder} from "../../models/product-order.model";
 import {DataStorageService} from "../api/data-storage.service";
 import {BehaviorSubject, Observable} from "rxjs";
-import {CreditCardModel, Product, SwipeMethod} from "../../models";
+import {CardManualPayment, CreditCardModel, Product, SwipeMethod} from "../../models";
 import {InvoiceStatus} from "../../utils/invoice-status.enum";
 import {Invoice} from "../../models/invoice.model";
 import {map} from "rxjs/operators";
@@ -17,6 +17,7 @@ import {ETXType} from "../../utils/delivery.enum";
 import {Table} from "../../models/table.model";
 import {PaymentOpEnum} from 'src/app/utils/operations';
 import {EApplyDiscount} from "../../utils/apply-discount.enum";
+import {CardTypes} from "../../utils/card-payment-types.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -217,6 +218,12 @@ export class InvoiceService {
 
   ebtInquiry() {
     return this.dataStorage.inquiryEBTCard();
+  }
+
+  externalCard(payment: number, accountNumber?: string, authCode?: string, cardType?: string | CardTypes): Observable<Invoice> {
+    const cardPayment = new CardManualPayment(payment, PaymentStatus.SAlE, this.invoice.receiptNumber, accountNumber,
+      authCode, cardType);
+    return this.dataStorage.paidByExternalCard(cardPayment);
   }
 
   print(invoice: Invoice) {
