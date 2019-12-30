@@ -43,7 +43,7 @@ export class DialogInvoiceComponent {
           console.log('filterDialog', next, this.data.invoice);
           let invoices = this.data.invoice.filter(i => i.orderInfo && i.orderInfo.toUpperCase().includes(next.text));
           invoices.length <= 0 ?
-            this.cashService.openGenericInfo('Information', 'Not match any invoices with the specified filter')
+            this.cashService.openGenericInfo('Information', 'Not match any elements with the specified filter')
             : this.data.invoice = invoices;
           this.page = 1;
         }

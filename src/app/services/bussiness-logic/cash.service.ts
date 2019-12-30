@@ -81,7 +81,8 @@ export class CashService {
   }
 
   disabledPaymentByCompany(){
-    return (this.systemConfig.companyType === CompanyType.MARKET) ? [true, false, false, false, false, false] : false;
+    return (this.systemConfig.companyType === CompanyType.MARKET && this.systemConfig.allowEBT) ?
+      [true, false, false, false, false, false] : false;
   }
 
   disabledPaymentMoneyByCompany(){

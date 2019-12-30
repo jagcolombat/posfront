@@ -180,6 +180,10 @@ export class DataStorageService {
     return this.paymentService.paymentExternalCardReader(this.url, externalPayment);
   }
 
+  getPaymentMedia(): Observable<any> {
+    return this.paymentService.getPaymentMedia(this.url);
+  }
+
   // Journey
   registryOperation(journey: Journey): Observable<Invoice> {
     return this.journeyService.registryOperation(this.url, journey);

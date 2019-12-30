@@ -226,6 +226,10 @@ export class InvoiceService {
     return this.dataStorage.paidByExternalCard(cardPayment);
   }
 
+  getExternalCadTypes(): Observable<any>{
+    return this.dataStorage.getPaymentMedia();
+  }
+
   print(invoice: Invoice) {
     return this.dataStorage.printInvoices(invoice);
   }

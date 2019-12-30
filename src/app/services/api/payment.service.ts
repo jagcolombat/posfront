@@ -6,6 +6,7 @@ import {CardManualPayment, CreditCard} from 'src/app/models';
 import { ProcessHTTPMSgService } from './ProcessHTTPMSg.service';
 import { catchError } from 'rxjs/operators';
 import {Invoice} from "../../models/invoice.model";
+import {ETransferType} from "../../utils/transfer-type.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -54,6 +55,11 @@ export class PaymentService {
     params = params.append('transferType', cardManualPayment.transferType + '');
     params = params.append('receiptNumber', cardManualPayment.receiptNumber);
     return this._http.post<Invoice>(url + this.path + '/payment/external', cardManualPayment, {params})
+      .pipe(catchError(this.processHttpMsgService.handleError));
+  }
+
+  getPaymentMedia(url: string): Observable<any> {
+    return this._http.get<any[]>(url + this.path + '/payment/media')
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 }

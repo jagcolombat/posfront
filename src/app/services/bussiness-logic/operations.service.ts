@@ -361,19 +361,24 @@ export class OperationsService {
         });
   }
 
-  openDialogInvoices(inv: Invoice[], action: (i: Invoice) => void) {
+  openDialogInvoices(inv: Invoice[], action: (i: any) => void, noSelectionMsg?: string, title?:string, subTitle?: string) {
     if (inv.length > 0) {
       //inv.map((i, ind) => i.orderInfo = 'Juan Perez Perez - '+ Math.random());
       const dialogRef = this.cashService.dialog.open(DialogInvoiceComponent,
         {
-          width: '780px', height: '660px', data: {invoice: inv, label:'receiptNumber', detail:'total', subdetail: 'orderInfo'}, disableClose: true
+          width: '780px', height: '660px',
+          data: {invoice: inv, label:'receiptNumber', detail:'total', subdetail: 'orderInfo', title: title, subtitle: subTitle},
+          disableClose: true
         });
       dialogRef.afterClosed().subscribe(order => {
         console.log('The dialog was closed', order);
         if (order) { action(order); }
+        else {
+          if(noSelectionMsg) this.cashService.openGenericInfo('Error', noSelectionMsg);
+        }
       });
     } else {
-      this.cashService.openGenericInfo('Information', 'Not exist hold orders');
+      this.cashService.openGenericInfo('Information', 'There aren\'t elements to select');
     }
   }
 
@@ -793,51 +798,62 @@ export class OperationsService {
           if (cardNumber.number) {
             this.getNumField(title, 'Auth Code', EFieldType.NUMBER).subscribe(authCode => {
               if (authCode.number) {
-                this.getCreditCardType().subscribe(next => {
-                  console.log(next);
-                  if (next) {
-                    this.invoiceService.externalCard(amount.unitCost, cardNumber.number, authCode.number, next).subscribe(
-                      next => {
-                        console.log('External Card', next);
-                        this.invoiceService.createInvoice();
-                      },
-                      error1 => {
-                        console.error('External Card', error1);
-                        //this.cashService.openGenericInfo('Error', 'Can\'t complete external card payment operation');
-                        this.cashService.openGenericInfo('Error', error1);
-                      },
-                      () => this.cashService.resetEnableState()
-                    );
-                  } else {
-                    this.cashService.openGenericInfo('Error', 'Can\'t complete external card payment '
-                      + 'operation because the card type not was selected');
-                  }
-                })
+                this.getCreditCardType(amount.unitCost, cardNumber.number, authCode.number)
               } else {
                 this.cashService.openGenericInfo('Error', 'Can\'t complete external card payment operation '
                   + 'because authorization number not was specified');
+                this.cashService.resetEnableState();
               }
             });
           } else {
             this.cashService.openGenericInfo('Error', 'Can\'t complete external card payment operation '
               + 'because account number not was specified');
+            this.cashService.resetEnableState();
           }
         });
       } else {
         this.cashService.openGenericInfo('Error', 'Can\'t complete external card payment operation '
           + 'because amount not was specified');
+        this.cashService.resetEnableState();
       }
     });
 
   }
 
-  getCreditCardType(): Observable<any> {
-    let ccTypes= new Array<any>({value: CardTypes[CardTypes.VISA], text: CardTypes[CardTypes.VISA]},
-      {value: CardTypes[CardTypes.MASTERCARD], text: CardTypes[CardTypes.MASTERCARD]});
-    return this.cashService.dialog.open(DialogDeliveryComponent,
-      { width: '600px', height: '340px', data: {name: 'Credit Card Types', label: 'Select a type', arr: ccTypes},
-        disableClose: true })
-      .afterClosed();
+  getCreditCardType(amount, cardNumber, authCode) {
+    this.invoiceService.getExternalCadTypes().subscribe(
+      next => {
+        let ccTypes= [];
+        console.log('getExternalCardTypes', next);
+        if(next.length > 0) {
+          next.map(val => ccTypes.push({value: val, receiptNumber: val}));
+          this.openDialogInvoices(ccTypes, next => {
+            this.invoiceService.externalCard(amount, cardNumber, authCode, next.value).subscribe(
+              next => {
+                console.log('External Card', next);
+                (next && next.balance > 0) ? this.invoiceService.setInvoice(next) : this.invoiceService.createInvoice();
+              },
+              error1 => {
+                console.error('External Card', error1);
+                this.cashService.openGenericInfo('Error', error1);
+                this.cashService.resetEnableState();
+              },
+              () => this.cashService.resetEnableState()
+            );
+          }, 'Can\'t complete external card payment operation because the card type not was selected',
+            'Card Payment Types', 'Select a card type:');
+        } else {
+          this.cashService.openGenericInfo('Error', 'Can\'t complete external card payment '
+            + 'operation because there aren\'t card types to select');
+          this.cashService.resetEnableState();
+        }
+      },
+      error1 => {
+        console.error(error1);
+        this.cashService.openGenericInfo('Error', 'Can\'t complete external card payment '
+          + 'operation because there aren\'t card types to select');
+        this.cashService.resetEnableState();
+      })
   }
 
   private resetTotalFromFS() {
