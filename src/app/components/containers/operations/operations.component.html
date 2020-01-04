@@ -51,7 +51,7 @@
   </operation-group>-->
 
   <operation-group id="customer" fxFlex="20" fxFlex.lt-lg="33" [operations]="customerOperations" [colors]="customerColor"
-                   btnSize="100px" (evPressKeys)="customerKey($event)"
+                   btnSize="100px" (evPressKeys)="customerKey($event)" [disable]="operationService.cashService.disabledCustomerOp"
                    *ngIf="!showForAdmin">
   </operation-group>
 

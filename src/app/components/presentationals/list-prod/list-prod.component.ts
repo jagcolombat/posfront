@@ -121,4 +121,14 @@ export class ListProdComponent implements OnInit {
       console.error('Next page filtered', error1);
     });
   }
+
+  getColorByProp(prod: Product): string {
+    let color = 'normal';
+    if(prod.generic){
+      color = 'generic';
+    } else if(prod.scalable){
+      color = 'scalable';
+    }
+    return color;
+  }
 }

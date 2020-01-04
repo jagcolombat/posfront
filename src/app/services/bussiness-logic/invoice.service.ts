@@ -18,6 +18,7 @@ import {Table} from "../../models/table.model";
 import {PaymentOpEnum} from 'src/app/utils/operations';
 import {EApplyDiscount} from "../../utils/apply-discount.enum";
 import {CardTypes} from "../../utils/card-payment-types.enum";
+import {PaymentMethodEnum} from "../../utils/operations/payment-method.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -223,7 +224,7 @@ export class InvoiceService {
   externalCard(payment: number, accountNumber?: string, authCode?: string, cardType?: string | CardTypes, client?: any): Observable<Invoice> {
     const cardPayment = new CardManualPayment(payment, PaymentStatus.SAlE, this.invoice.receiptNumber, accountNumber,
       authCode, cardType);
-    return (client)? this.dataStorage.acctPayment(client, cardPayment) : this.dataStorage.paidByExternalCard(cardPayment);
+    return (client)? this.dataStorage.acctPayment(client, cardPayment,PaymentMethodEnum.CREDIT_CARD) : this.dataStorage.paidByExternalCard(cardPayment);
   }
 
   getExternalCadTypes(): Observable<any>{
@@ -344,6 +345,6 @@ export class InvoiceService {
 
   acctPaymentCash(client, amount){
     let cashPayment = new CardManualPayment(amount, null, null, null, null, null);
-    return this.dataStorage.acctPayment(client, <CardManualPayment>cashPayment);
+    return this.dataStorage.acctPayment(client, <CardManualPayment>cashPayment, PaymentMethodEnum.CASH);
   }
 }

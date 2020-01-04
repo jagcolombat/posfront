@@ -30,6 +30,7 @@ import {EApplyDiscount} from "../../utils/apply-discount.enum";
 import {EmployeedModel, IPositionModel} from "../../models/employeed.model";
 import {ClientService} from "./client.service";
 import {ClientModel} from "../../models/client.model";
+import {PaymentMethodEnum} from "../../utils/operations/payment-method.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -299,7 +300,7 @@ export class DataStorageService {
     return this.clientService.acctCharge(this.url, c, amount, receiptNumber);
   }
 
-  acctPayment(client: string, cardPayment: CardManualPayment) {
-    return this.clientService.acctPayment(this.url, client, cardPayment);
+  acctPayment(client: string, cardPayment: CardManualPayment, paymentMethod: PaymentMethodEnum) {
+    return this.clientService.acctPayment(this.url, client, cardPayment, paymentMethod);
   }
 }

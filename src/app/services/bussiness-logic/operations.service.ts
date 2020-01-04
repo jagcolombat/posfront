@@ -1365,14 +1365,14 @@ export class OperationsService {
 
   private acctChargeOp(client, amount){
     if(amount){
-      this.invoiceService.acctCharge(client, amount.unitCost).subscribe(
+      this.invoiceService.acctCharge(client, amount).subscribe(
         next => {
           console.log('setAmount', next);
           (next && next.balance > 0) ? this.invoiceService.setInvoice(next) : this.invoiceService.createInvoice();
         }, error1 => {
           console.error('setAmount', error1);
           this.cashService.openGenericInfo(InformationType.ERROR, error1);
-        }
+        }, () => this.cashService.resetEnableState()
       )
     } else {
       this.cashService.openGenericInfo(InformationType.INFO, 'Can\'t charge account because the amount not was specified');

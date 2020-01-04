@@ -6,6 +6,7 @@ import { catchError } from 'rxjs/operators';
 import {ClientModel} from "../../models/client.model";
 import {CardManualPayment} from "../../models";
 import {Invoice} from "../../models/invoice.model";
+import {PaymentMethodEnum} from "../../utils/operations/payment-method.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -39,10 +40,10 @@ export class ClientService {
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
-  acctPayment(url: string, client: string, cardPayment: CardManualPayment) {
+  acctPayment(url: string, client: string, cardPayment: CardManualPayment, paymentMethod: PaymentMethodEnum) {
     console.log('acctPayment', cardPayment);
     let params = new HttpParams();
-    params = params.append('paymentMethod', 2 + '');
+    params = params.append('paymentMethod', paymentMethod + '');
     return this._http.post<Invoice>(url + this.path + '/' + client + '/chargeAccount/payment', cardPayment, {params})
       .pipe(catchError(this.processHttpMsgService.handleError));
   }

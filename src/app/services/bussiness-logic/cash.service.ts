@@ -23,6 +23,7 @@ export class CashService {
   disabledReportsAdminOp: boolean | boolean[] = false;
   disabledInvoiceAdminOp: boolean | boolean[] = false;
   disabledOtherAdminOp: boolean | boolean[] = false;
+  disabledCustomerOp: boolean | boolean[] = false;
   systemConfig: Configuration;
   @Output() evReviewEnableState = new EventEmitter<boolean>();
 
@@ -40,6 +41,7 @@ export class CashService {
     this.disabledInvoiceAdminOp = false;
     this.disabledOtherAdminOp = false;
     this.disabledAdminOp = false;
+    this.disabledCustomerOp = [false, false, false, true];
     this.evReviewEnableState.emit(false);
   }
 
@@ -73,9 +75,11 @@ export class CashService {
     } else if (refund) {
       this.disabledPayment = this.disabledPaymentByCompany();
       this.disabledPaymentMoney = this.disabledPaymentMoneyByCompany();
+      this.disabledCustomerOp = false;
     } else {
       this.disabledPayment = this.disabledPaymentByCompany();
       this.disabledPaymentMoney = false;
+      this.disabledCustomerOp = false;
     }
 
   }
