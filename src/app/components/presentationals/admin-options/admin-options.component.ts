@@ -78,6 +78,9 @@ export class AdminOptionsComponent implements OnInit {
       case AdminOpEnum.EBT_INQUIRY.toUpperCase():
         this.adminOpService.ebtInquiry();
         break;
+      case AdminOpEnum.CHARGE_ACCT_SETUP.toUpperCase():
+        this.adminOpService.chargeAccountSetup();
+        break;
     }
   }
 

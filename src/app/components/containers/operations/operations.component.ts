@@ -275,14 +275,14 @@ export class OperationsComponent implements OnInit {
       case CustomerOpEnum.CUSTOMER.toUpperCase():
         //this.adminOpService.emplZ();
         break;
-      case CustomerOpEnum.ACCT_BALANCE.toUpperCase():
-        //this.adminOpService.sysZ();
+      case CustomerOpEnum.ACCT_BALANCE:
+        this.operationService.acctBalance();
         break;
       case CustomerOpEnum.ACCT_PAYMENT.toUpperCase():
         //this.adminOpService.doDayClose();
         break;
-      case CustomerOpEnum.ACCT_CHARGE.toUpperCase():
-        //this.adminOpService.doDayClose();
+      case CustomerOpEnum.ACCT_CHARGE:
+        this.operationService.acctCharge();
         break;
     }
   }

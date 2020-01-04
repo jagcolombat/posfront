@@ -22,6 +22,7 @@ import {EFieldType} from "../../utils/field-type.enum";
 import {Observable} from "rxjs";
 import {EmployeedModel, IPositionModel} from "../../models/employeed.model";
 import {EbtInquiryInfoComponent} from "../../components/presentationals/ebt-inquiry-info/ebt-inquiry-info.component";
+import {ClientModel} from "../../models/client.model";
 
 @Injectable({
   providedIn: 'root'
@@ -504,5 +505,50 @@ export class AdminOptionsService {
         });
     }
     //this.resetInactivity(false);
+  }
+
+  chargeAccountSetup() {
+    let client;
+    this.operationService.getField(AdminOpEnum.CHARGE_ACCT_SETUP, 'Name', EFieldType.NAME).subscribe(
+      name => {
+        if(name){
+          //employee.username = name.text;
+          this.operationService.getNumField(AdminOpEnum.CHARGE_ACCT_SETUP, 'Credit Limit', EFieldType.NUMBER)
+            .subscribe(
+              credit => {
+                if (credit) {
+                  client = new ClientModel(name.text, credit.number);
+                  this.operationService.getField(AdminOpEnum.CHARGE_ACCT_SETUP, 'Address', EFieldType.ADDRESS).subscribe(
+                    address => {
+                      if(address) client.address = address.text;
+                      this.operationService.getNumField(AdminOpEnum.CHARGE_ACCT_SETUP, 'Phone', EFieldType.PHONE).subscribe(
+                        phone => {
+                          if(phone) client.phone = phone.number;
+                          this.operationService.getField(AdminOpEnum.CHARGE_ACCT_SETUP, 'Company', EFieldType.NAME).subscribe(
+                            company => {
+                              if(company) client.company = company.text;
+                              this.dataStorage.clientSetup(client).subscribe(
+                                next => {
+                                  console.log(AdminOpEnum.CHARGE_ACCT_SETUP, next);
+                                  this.cashService.openGenericInfo('Information', 'Charge account setup operation succesfull');
+                                },
+                                err => {
+                                  this.cashService.openGenericInfo("Error", "Can't setup the charge account");
+                                }
+                              );
+                            });
+                        });
+                    });
+                }
+                else {
+                  this.cashService.openGenericInfo("Error",
+                    "Can't setup the charge account because no was specified the credit limit");
+                }
+              });
+        } else {
+          this.cashService.openGenericInfo("Error", "Can't setup the charge account because no was" +
+            " specified the name");
+        }
+      });
   }
 }

@@ -32,9 +32,10 @@ import {Order} from "../../models/order.model";
 import {OtherOpEnum} from "../../utils/operations/other.enum";
 import {EFieldType} from "../../utils/field-type.enum";
 import {OrderInfoComponent} from "../../components/presentationals/order-info/order-info.component";
-import {ProductGeneric} from "../../models/product-generic";
-import {AdminOptionsService} from "./admin-options.service";
-import {CardTypes, EBTTypes} from "../../utils/card-payment-types.enum";
+import {EBTTypes} from "../../utils/card-payment-types.enum";
+import {CustomerOpEnum} from "../../utils/operations/customer.enum";
+import {ClientService} from "./client.service";
+import {InformationType} from "../../utils/information-type.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -49,7 +50,7 @@ export class OperationsService {
   @Output() evCleanAdminOperation = new EventEmitter<any>();
 
   constructor(private invoiceService: InvoiceService, public cashService: CashService,
-              private authService: AuthService, private router: Router) {
+              private authService: AuthService, private clientService: ClientService, private router: Router) {
     this.invoiceService.evAddProd.subscribe(() => this.onAddProduct());
     this.invoiceService.evCreateInvoice.subscribe(next => this.router.navigateByUrl('/cash/dptos'));
     this.counterInactivity();
@@ -362,29 +363,12 @@ export class OperationsService {
   }
 
   openDialogInvoices(inv: Invoice[], action: (i: any) => void, noSelectionMsg?: string, title?:string, subTitle?: string) {
-    if (inv.length > 0) {
-      //inv.map((i, ind) => i.orderInfo = 'Juan Perez Perez - '+ Math.random());
-      const dialogRef = this.cashService.dialog.open(DialogInvoiceComponent,
-        {
-          width: '780px', height: '660px',
-          data: {invoice: inv, label:'receiptNumber', detail:'total', subdetail: 'orderInfo', title: title, subtitle: subTitle},
-          disableClose: true
-        });
-      dialogRef.afterClosed().subscribe(order => {
-        console.log('The dialog was closed', order);
-        if (order) { action(order); }
-        else {
-          if(noSelectionMsg) this.cashService.openGenericInfo('Error', noSelectionMsg);
-        }
-      });
-    } else {
-      this.cashService.openGenericInfo('Information', 'There aren\'t elements to select');
-    }
+    this.openDialogWithPag(inv, action, title, subTitle, 'receiptNumber', 'total', 'orderInfo');
   }
 
   openDialogTables(tabs?: Table[]) {
     this.invoiceService.tables().subscribe(tables => {
-      if (tables.length > 0) {
+      /*if (tables.length > 0) {
         const dialogRef = this.cashService.dialog.open(DialogInvoiceComponent,
           { width: '780px', height: '660px', data: {invoice: tables, detail:'label', title: 'Tables', subtitle: 'Select a table'}
             , disableClose: true });
@@ -404,13 +388,50 @@ export class OperationsService {
         });
       } else {
         this.cashService.openGenericInfo('Information', 'There are not tables');
-      }
+      }*/
+      this.openDialogWithPag(tables, t => this.setDineIn(t), 'Tables', 'Select a table',null,
+        'label');
     }, err => {
       console.error('Error getting tables', err);
       this.cashService.openGenericInfo('Error', 'Can\'t complete get tables operation');
     });
     //let tables = tabs? tabs : [{id:"0", number: 1, label: 'Table 1'}];
 
+  }
+
+  setDineIn(table: any){
+    if(table){
+      this.invoiceService.setDineIn(<Table> table).subscribe(next => {
+        if(next) {
+          this.invoiceService.order = next;
+          this.cashService.openGenericInfo('Information', 'The "' +table['label'] + '" was assigned to this order');
+        } else {
+          this.cashService.openGenericInfo('Error', 'Can\'t complete dine in operation')
+        }}, err => {
+        this.cashService.openGenericInfo('Error', 'Can\'t complete dine in operation')
+      })
+    }
+  }
+
+  openDialogWithPag(dataArr: Array<any>, action: (i: any) => void, title:string, subTitle: string, label: string,
+                       detail?: string, subdetail?: string, noSelectionMsg?: string){
+    if (dataArr.length > 0) {
+      const dialogRef = this.cashService.dialog.open(DialogInvoiceComponent,
+        {
+          width: '780px', height: '660px',
+          data: {invoice: dataArr, title: title, subtitle: subTitle, label:label, detail: detail, subdetail: subdetail},
+          disableClose: true
+        });
+      dialogRef.afterClosed().subscribe(order => {
+        console.log('The dialog with pagination was closed', order);
+        if (order) { action(order); }
+        else {
+          if(noSelectionMsg) this.cashService.openGenericInfo('Error', noSelectionMsg);
+        }
+      });
+    } else {
+      this.cashService.openGenericInfo('Information', 'There aren\'t elements to select');
+    }
   }
 
   refund() {
@@ -789,7 +810,7 @@ export class OperationsService {
     });
   }
 
-  externalCardPayment(title='External Card'){
+  externalCardPayment(title='External Card', client?: any){
     console.log('External Card');
     this.getPriceField(title, 'Amount').subscribe((amount) => {
       console.log('Amount', amount.unitCost);
@@ -820,7 +841,7 @@ export class OperationsService {
 
   }
 
-  getCreditCardType(amount, cardNumber, authCode) {
+  getCreditCardType(amount, cardNumber, authCode, client?: any) {
     this.invoiceService.getExternalCadTypes().subscribe(
       next => {
         let ccTypes= [];
@@ -828,7 +849,7 @@ export class OperationsService {
         if(next.length > 0) {
           next.map(val => ccTypes.push({value: val, receiptNumber: val}));
           this.openDialogInvoices(ccTypes, next => {
-            this.invoiceService.externalCard(amount, cardNumber, authCode, next.value).subscribe(
+            this.invoiceService.externalCard(amount, cardNumber, authCode, next.value, client).subscribe(
               next => {
                 console.log('External Card', next);
                 (next && next.balance > 0) ? this.invoiceService.setInvoice(next) : this.invoiceService.createInvoice();
@@ -1290,5 +1311,61 @@ export class OperationsService {
     } else {
       this.cashService.openGenericInfo('Error', 'There is not amount to pay')
     }
+  }
+
+  acctBalance() {
+    console.log(CustomerOpEnum.ACCT_BALANCE);
+    this.currentOperation = CustomerOpEnum.ACCT_BALANCE;
+    this.clientService.getClients().subscribe(
+      clients=> {
+        this.openDialogWithPag(clients, (c)=> this.showBalance(c), 'Clients', 'Select a client:', 'name');
+      },
+      error1 => {
+        this.cashService.openGenericInfo(InformationType.INFO, 'Can\'t get the clients');
+      }, () => this.currentOperation = '');
+
+  }
+
+  private showBalance(c: any) {
+    this.cashService.openGenericInfo('Balance', 'The balance of client '+ c.name +' is: $'
+      + c.balance.toFixed(2));
+  }
+
+  acctCharge() {
+    console.log(CustomerOpEnum.ACCT_CHARGE);
+    this.currentOperation = CustomerOpEnum.ACCT_CHARGE;
+    this.clientService.getClients().subscribe(
+      clients=> {
+        this.openDialogWithPag(clients, (c)=> this.selectPaymentType(c), 'Clients', 'Select a client:', 'name');
+      },
+      error1 => {
+        this.cashService.openGenericInfo(InformationType.INFO, 'Can\'t get the clients');
+      }, () => this.currentOperation = '');
+
+  }
+
+  private selectPaymentType(c: any) {
+    /*this.getPriceField(CustomerOpEnum.ACCT_CHARGE, 'Amount').subscribe(
+      amount=> {
+        console.log('selectPayment', amount);
+        if(amount){
+          this.
+        } else {
+          this.cashService.openGenericInfo(InformationType.INFO, 'Can\'t charge account because the amount not was specified');
+        }
+      }
+    )*/
+    this.openDialogWithPag([{label: 'CARD'}, {label: 'CASH'}], i => {
+      console.log(i);
+        switch (i.label) {
+          case 'CASH':
+            this.cash(PaymentOpEnum.CASH);
+            break;
+          case 'CARD':
+            this.externalCardPayment();
+            break;
+        }
+      }, CustomerOpEnum.ACCT_CHARGE,
+      'Select a payment type', 'label')
   }
 }

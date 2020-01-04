@@ -28,6 +28,8 @@ import {Table} from "../../models/table.model";
 import {ETransferType} from "../../utils/transfer-type.enum";
 import {EApplyDiscount} from "../../utils/apply-discount.enum";
 import {EmployeedModel, IPositionModel} from "../../models/employeed.model";
+import {ClientService} from "./client.service";
+import {ClientModel} from "../../models/client.model";
 
 @Injectable({
   providedIn: 'root'
@@ -45,7 +47,8 @@ export class DataStorageService {
               private paymentService: PaymentService,
               private journeyService: JourneyService,
               private configurationService: ConfigurationService,
-              private adminOperationService: AdminOperationService) { }
+              private adminOperationService: AdminOperationService,
+              private clientService: ClientService) { }
 
   // Departments
   getDepartments(): Observable<Department[]> {
@@ -277,5 +280,18 @@ export class DataStorageService {
 
   employSetup(employee: EmployeedModel) {
     return this.adminOperationService.employSetup(this.url, employee);
+  }
+
+  // Clients
+  clientSetup(client: ClientModel) {
+    return this.clientService.setClient(this.url, client);
+  }
+
+  getClientById(id: string){
+    return this.clientService.getClientById(this.url, id);
+  }
+
+  getClients() {
+    return this.clientService.getClients(this.url);
   }
 }
