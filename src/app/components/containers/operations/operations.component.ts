@@ -272,14 +272,14 @@ export class OperationsComponent implements OnInit {
   customerKey(ev) {
     console.log('customerKey', ev);
     switch (ev) {
-      case CustomerOpEnum.CUSTOMER.toUpperCase():
+      case CustomerOpEnum.CUSTOMER:
         //this.adminOpService.emplZ();
         break;
       case CustomerOpEnum.ACCT_BALANCE:
         this.operationService.acctBalance();
         break;
-      case CustomerOpEnum.ACCT_PAYMENT.toUpperCase():
-        //this.adminOpService.doDayClose();
+      case CustomerOpEnum.ACCT_PAYMENT:
+        this.operationService.acctPayment();
         break;
       case CustomerOpEnum.ACCT_CHARGE:
         this.operationService.acctCharge();

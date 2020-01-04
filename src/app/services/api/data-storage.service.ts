@@ -294,4 +294,12 @@ export class DataStorageService {
   getClients() {
     return this.clientService.getClients(this.url);
   }
+
+  acctCharge(c: string, amount: number, receiptNumber: string) {
+    return this.clientService.acctCharge(this.url, c, amount, receiptNumber);
+  }
+
+  acctPayment(client: string, cardPayment: CardManualPayment) {
+    return this.clientService.acctPayment(this.url, client, cardPayment);
+  }
 }

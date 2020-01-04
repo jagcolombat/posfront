@@ -819,7 +819,7 @@ export class OperationsService {
           if (cardNumber.number) {
             this.getNumField(title, 'Auth Code', EFieldType.NUMBER).subscribe(authCode => {
               if (authCode.number) {
-                this.getCreditCardType(amount.unitCost, cardNumber.number, authCode.number)
+                this.getCreditCardType(amount.unitCost, cardNumber.number, authCode.number, client)
               } else {
                 this.cashService.openGenericInfo('Error', 'Can\'t complete external card payment operation '
                   + 'because authorization number not was specified');
@@ -852,7 +852,13 @@ export class OperationsService {
             this.invoiceService.externalCard(amount, cardNumber, authCode, next.value, client).subscribe(
               next => {
                 console.log('External Card', next);
-                (next && next.balance > 0) ? this.invoiceService.setInvoice(next) : this.invoiceService.createInvoice();
+                if(!client){
+                  (next && next.balance > 0) ? this.invoiceService.setInvoice(next) : this.invoiceService.createInvoice();
+                } else {
+                  console.log('External Card for Account Payment');
+                  this.cashService.openGenericInfo(InformationType.INFO, ' The account client ('+ client
+                    + ') was charged with ' + amount);
+                }
               },
               error1 => {
                 console.error('External Card', error1);
@@ -1318,7 +1324,9 @@ export class OperationsService {
     this.currentOperation = CustomerOpEnum.ACCT_BALANCE;
     this.clientService.getClients().subscribe(
       clients=> {
-        this.openDialogWithPag(clients, (c)=> this.showBalance(c), 'Clients', 'Select a client:', 'name');
+        console.log(CustomerOpEnum.ACCT_BALANCE, clients);
+        this.openDialogWithPag(clients, (c)=> this.showBalance(c), 'Clients', 'Select a client:',
+          'name'/*, 'creditLimit','telephone'*/ );
       },
       error1 => {
         this.cashService.openGenericInfo(InformationType.INFO, 'Can\'t get the clients');
@@ -1336,7 +1344,8 @@ export class OperationsService {
     this.currentOperation = CustomerOpEnum.ACCT_CHARGE;
     this.clientService.getClients().subscribe(
       clients=> {
-        this.openDialogWithPag(clients, (c)=> this.selectPaymentType(c), 'Clients', 'Select a client:', 'name');
+        this.openDialogWithPag(clients, (c)=> this.setAmount(c.id, a => this.acctChargeOp(c.id, a)),
+          'Clients', 'Select a client:', 'name');
       },
       error1 => {
         this.cashService.openGenericInfo(InformationType.INFO, 'Can\'t get the clients');
@@ -1344,28 +1353,71 @@ export class OperationsService {
 
   }
 
-  private selectPaymentType(c: any) {
-    /*this.getPriceField(CustomerOpEnum.ACCT_CHARGE, 'Amount').subscribe(
+  private setAmount(c: any,  action: (i: any) => void){
+    console.log('setAmount', c);
+    this.getPriceField(CustomerOpEnum.ACCT_CHARGE, 'Amount').subscribe(
       amount=> {
-        console.log('selectPayment', amount);
-        if(amount){
-          this.
-        } else {
-          this.cashService.openGenericInfo(InformationType.INFO, 'Can\'t charge account because the amount not was specified');
-        }
+        console.log('setAmount', amount);
+        action(amount.unitCost);
       }
-    )*/
+    )
+  }
+
+  private acctChargeOp(client, amount){
+    if(amount){
+      this.invoiceService.acctCharge(client, amount.unitCost).subscribe(
+        next => {
+          console.log('setAmount', next);
+          (next && next.balance > 0) ? this.invoiceService.setInvoice(next) : this.invoiceService.createInvoice();
+        }, error1 => {
+          console.error('setAmount', error1);
+          this.cashService.openGenericInfo(InformationType.ERROR, error1);
+        }
+      )
+    } else {
+      this.cashService.openGenericInfo(InformationType.INFO, 'Can\'t charge account because the amount not was specified');
+    }
+  }
+
+  acctPayment() {
+    console.log(CustomerOpEnum.ACCT_PAYMENT);
+    this.currentOperation = CustomerOpEnum.ACCT_PAYMENT;
+    this.clientService.getClients().subscribe(
+      clients=> {
+        this.openDialogWithPag(clients, (c)=> this.selectPaymentType(c.id), 'Clients', 'Select a client:', 'name');
+      },
+      error1 => {
+        this.cashService.openGenericInfo(InformationType.INFO, 'Can\'t get the clients');
+      }, () => this.currentOperation = '');
+
+  }
+
+  private selectPaymentType(c: string) {
     this.openDialogWithPag([{label: 'CARD'}, {label: 'CASH'}], i => {
       console.log(i);
         switch (i.label) {
           case 'CASH':
-            this.cash(PaymentOpEnum.CASH);
+            this.setAmount(c, (a) => this.acctPaymentCashOp(c, a));
             break;
           case 'CARD':
-            this.externalCardPayment();
+            this.externalCardPayment(CustomerOpEnum.ACCT_PAYMENT, c);
             break;
         }
       }, CustomerOpEnum.ACCT_CHARGE,
       'Select a payment type', 'label')
+  }
+
+  acctPaymentCashOp(client: string, amount: number) {
+    this.invoiceService.acctPaymentCash(client, amount).subscribe(
+      next => {
+        console.log('acctPaymentOp', next);
+        this.cashService.openGenericInfo(InformationType.INFO, ' The account client ('+ client
+          + ') was charged with ' + amount);
+      },
+      error1 => {
+        console.error(error1);
+        this.cashService.openGenericInfo(InformationType.ERROR, error1);
+      }
+    )
   }
 }

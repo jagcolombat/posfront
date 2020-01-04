@@ -188,10 +188,10 @@ export class InvoiceService {
     return this.dataStorage.changeInvoiceToVoid(this.invoice)
   }
 
-  cash(payment: number, totalToPaid: number, type: PaymentOpEnum = PaymentOpEnum.CASH, client?: any): Observable<Invoice> {
+  cash(payment: number, totalToPaid: number, type: PaymentOpEnum = PaymentOpEnum.CASH): Observable<Invoice> {
     //const cashPayment = new CashPaymentModel(this.invoice.receiptNumber, payment, this.invoice.total);
     const cashPayment = new CashPaymentModel(this.invoice.receiptNumber, totalToPaid, payment, type);
-    return (client)? this.dataStorage.paidByCash(cashPayment) : this.dataStorage.paidByCash(cashPayment);
+    return this.dataStorage.paidByCash(cashPayment);
   }
 
   debit(payment: number, tip?: number, transferType?: PaymentStatus): Observable<Invoice> {
@@ -223,7 +223,7 @@ export class InvoiceService {
   externalCard(payment: number, accountNumber?: string, authCode?: string, cardType?: string | CardTypes, client?: any): Observable<Invoice> {
     const cardPayment = new CardManualPayment(payment, PaymentStatus.SAlE, this.invoice.receiptNumber, accountNumber,
       authCode, cardType);
-    return (client)? this.dataStorage.paidByExternalCard(cardPayment) : this.dataStorage.paidByExternalCard(cardPayment);
+    return (client)? this.dataStorage.acctPayment(client, cardPayment) : this.dataStorage.paidByExternalCard(cardPayment);
   }
 
   getExternalCadTypes(): Observable<any>{
@@ -336,5 +336,14 @@ export class InvoiceService {
 
   weightItem(price: number, weight?: number): Observable<Invoice> {
     return this.dataStorage.weightItem(this.invoice.receiptNumber, price, weight);
+  }
+
+  acctCharge(c: string, amount: number): Observable<Invoice> {
+    return this.dataStorage.acctCharge(c, amount, this.receiptNumber);
+  }
+
+  acctPaymentCash(client, amount){
+    let cashPayment = new CardManualPayment(amount, null, null, null, null, null);
+    return this.dataStorage.acctPayment(client, <CardManualPayment>cashPayment);
   }
 }

@@ -4,6 +4,8 @@ import {Observable} from 'rxjs';
 import { ProcessHTTPMSgService } from './ProcessHTTPMSg.service';
 import { catchError } from 'rxjs/operators';
 import {ClientModel} from "../../models/client.model";
+import {CardManualPayment} from "../../models";
+import {Invoice} from "../../models/invoice.model";
 
 @Injectable({
   providedIn: 'root'
@@ -31,4 +33,17 @@ export class ClientService {
   }
 
 
+  acctCharge(url: string, client: string, amount: number, receiptNumber: string) : Observable<any> {
+    console.log('acctCharge', client, amount, receiptNumber);
+    return this._http.post<any>(url + this.path+ '/chargeAccount', { clientId: client, receiptNumber: receiptNumber, amount: amount})
+      .pipe(catchError(this.processHttpMsgService.handleError));
+  }
+
+  acctPayment(url: string, client: string, cardPayment: CardManualPayment) {
+    console.log('acctPayment', cardPayment);
+    let params = new HttpParams();
+    params = params.append('paymentMethod', 2 + '');
+    return this._http.post<Invoice>(url + this.path + '/' + client + '/chargeAccount/payment', cardPayment, {params})
+      .pipe(catchError(this.processHttpMsgService.handleError));
+  }
 }
