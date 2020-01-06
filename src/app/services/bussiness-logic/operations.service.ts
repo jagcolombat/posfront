@@ -81,12 +81,13 @@ export class OperationsService {
           operationsWithClear.filter(i => i === this.currentOperation).length > 0) {
           this.clearOp(false);
         } else {
-          this.cashService.getSystemConfig().subscribe(config => {
+          /*this.cashService.getSystemConfig().subscribe(config => {
             config.allowClear ? this.clearOp() :
               this.authService.adminLogged() ? this.clearOp() : this.manager('clear');
           }, err => {
             this.cashService.openGenericInfo('Error', 'Can\'t get configuration');
-          });
+          });*/
+          this.clearOp();
         }
       /*}
     })*/;
@@ -117,17 +118,33 @@ export class OperationsService {
       this.currentOperation === FinancialOpEnum.RECALL){
       this.invoiceService.createInvoice();
     } else if(this.invoiceService.invoiceProductSelected.length > 0 || this.invoiceService.digits){
-      this.invoiceService.invoiceProductSelected.length > 0 ?
+      if(this.invoiceService.invoiceProductSelected.length > 0) {
         this.cashService.openGenericInfo('Confirm', 'Do you want clear?', null,true)
           .afterClosed().subscribe(next => {
           if (next !== undefined && next.confirm) {
-            this.invoiceService.evDelProd.emit(true);
-            if (total) this.invoiceService.setTotal();
+            // If clear need manager auth
+            this.cashService.getSystemConfig().subscribe(config => {
+              // config.allowClear = false;
+              console.log('clear config', config);
+              config.allowClear ? this.deleteSelectedProducts() :
+                this.authService.adminLogged() ? this.deleteSelectedProducts() : this.manager('clear');
+            }, err => {
+              this.cashService.openGenericInfo('Error', 'Can\'t get configuration');
+            });
           }
-        }):
+        })
+      } else {
         this.invoiceService.evDelProd.emit(true);
+      }
+
     }
     this.evCleanAdminOperation.emit();
+  }
+
+  deleteSelectedProducts(){
+    this.invoiceService.evDelProd.emit(true);
+    this.invoiceService.invoiceProductSelected.splice(0);
+    this.invoiceService.setTotal();
   }
 
   void() {
@@ -152,6 +169,10 @@ export class OperationsService {
   plu() {
     console.log('plu');
     this.currentOperation = InvioceOpEnum.PLU;
+    // If is a weight format product
+    if(this.isWeightFormatProduct()){
+      this.getPriceAndUPCOfWFP();
+    }
     // Consume servicio de PLU con this.digits eso devuelve ProductOrder
     this.invoiceService.addProductByUpc(EOperationType.Plu).subscribe(prods => {
       this.selectProd(prods).subscribe(prod => {
@@ -521,7 +542,7 @@ export class OperationsService {
 
   clearCheckByAdmin(t?: Token) {
     console.log('clearCheckByAdmin', t);
-    this.clearOp();
+    this.deleteSelectedProducts();
     this.authService.token = t;
     this.resetInactivity(false);
   }
@@ -660,11 +681,9 @@ export class OperationsService {
   }
 
   scanProduct(){
-    if(this.invoiceService.numbers.length === 12 && this.invoiceService.numbers.startsWith('2') &&
-      this.invoiceService.numbers.substring(7, 11) !== '0000'){
-      this.invoiceService.priceWic = this.invoiceService.numbers.substring(7, 11);
-      let upc = this.invoiceService.numbers.substring(0, 6);
-      this.invoiceService.numbers = upc + '000000';
+    // If is a weight format product
+    if(this.isWeightFormatProduct()){
+      this.getPriceAndUPCOfWFP();
     }
     this.invoiceService.addProductByUpc(EOperationType.Scanner).subscribe(prods => {
       this.selectProd(prods).subscribe( prod => {
@@ -677,6 +696,17 @@ export class OperationsService {
       this.cashService.openGenericInfo('Error', 'Can\'t complete scan product operation');
     });
     this.resetInactivity(false);
+  }
+
+  isWeightFormatProduct(): boolean{
+    return this.invoiceService.numbers.length === 12 && this.invoiceService.numbers.startsWith('2') &&
+      this.invoiceService.numbers.substring(7, 11) !== '0000';
+  }
+
+  getPriceAndUPCOfWFP(){
+    this.invoiceService.priceWic = this.invoiceService.numbers.substring(7, 11);
+    let upc = this.invoiceService.numbers.substring(0, 6);
+    this.invoiceService.numbers = upc + '000000';
   }
 
   ebt(type?: number, splitAmount?: number) {
