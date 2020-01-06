@@ -41,7 +41,7 @@ export class CashService {
     this.disabledInvoiceAdminOp = false;
     this.disabledOtherAdminOp = false;
     this.disabledAdminOp = false;
-    this.disabledCustomerOp = [false, false, false, true];
+    this.disabledCustomerOp = [/*false,*/ false, false, true];
     this.evReviewEnableState.emit(false);
   }
 

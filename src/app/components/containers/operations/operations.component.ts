@@ -57,7 +57,7 @@ export class OperationsComponent implements OnInit {
   @Input() otherAdminOperations = [OtherOpEnum.PRINT_LAST, OtherOpEnum.NO_SALE, OtherOpEnum.PAID_OUT];
   @Input() otherAdminColor = ['blue', 'blue', 'blue'];
 
-  @Input() customerOperations = [CustomerOpEnum.CUSTOMER, CustomerOpEnum.ACCT_BALANCE, CustomerOpEnum.ACCT_PAYMENT,
+  @Input() customerOperations = [/*CustomerOpEnum.CUSTOMER, */CustomerOpEnum.ACCT_BALANCE, CustomerOpEnum.ACCT_PAYMENT,
     CustomerOpEnum.ACCT_CHARGE];
   @Input() customerColor = 'orange';
 

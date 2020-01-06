@@ -885,9 +885,9 @@ export class OperationsService {
                 if(!client){
                   (next && next.balance > 0) ? this.invoiceService.setInvoice(next) : this.invoiceService.createInvoice();
                 } else {
-                  console.log('External Card for Account Payment');
-                  this.cashService.openGenericInfo(InformationType.INFO, ' The account client ('+ client
-                    + ') was charged with ' + amount);
+                  console.log('External Card for Account Payment', next);
+                  this.cashService.openGenericInfo(InformationType.INFO, ' The account client ('+ next['name']
+                    + ') was charged with ' + amount.toFixed(2));
                 }
               },
               error1 => {
@@ -1433,7 +1433,7 @@ export class OperationsService {
             this.externalCardPayment(CustomerOpEnum.ACCT_PAYMENT, c);
             break;
         }
-      }, CustomerOpEnum.ACCT_CHARGE,
+      }, CustomerOpEnum.ACCT_PAYMENT,
       'Select a payment type', 'label')
   }
 
@@ -1441,8 +1441,8 @@ export class OperationsService {
     this.invoiceService.acctPaymentCash(client, amount).subscribe(
       next => {
         console.log('acctPaymentOp', next);
-        this.cashService.openGenericInfo(InformationType.INFO, ' The account client ('+ client
-          + ') was charged with ' + amount);
+        this.cashService.openGenericInfo(InformationType.INFO, ' The account client ('+ next['name']
+          + ') was charged with ' + amount.toFixed(2));
       },
       error1 => {
         console.error(error1);
