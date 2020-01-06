@@ -340,7 +340,7 @@ export class OperationsService {
   subTotal(){
     console.log('subTotal', this.currentOperation);
     let refund = this.currentOperation === FinancialOpEnum.REFUND;
-    if (this.invoiceService.invoice.productOrders.length > 0) {
+    if (this.invoiceService.invoice.productOrders.length > 0 || refund) {
       this.currentOperation = TotalsOpEnum.SUBTOTAL;
       this.cashService.totalsEnableState(false, refund);
     }
