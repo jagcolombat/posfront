@@ -448,10 +448,12 @@ export class OperationsService {
         if (order) { action(order); }
         else {
           if(noSelectionMsg) this.cashService.openGenericInfo('Error', noSelectionMsg);
+          this.cashService.resetEnableState();
         }
       });
     } else {
       this.cashService.openGenericInfo('Information', 'There aren\'t elements to select');
+      this.cashService.resetEnableState();
     }
   }
 
@@ -1406,6 +1408,7 @@ export class OperationsService {
       )
     } else {
       this.cashService.openGenericInfo(InformationType.INFO, 'Can\'t charge account because the amount not was specified');
+      this.cashService.resetEnableState();
     }
   }
 
