@@ -23,3 +23,12 @@ button[mat-raised-button] {
   color: white;
   cursor: default !important;
 }
+
+mat-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  height: 40px;
+  margin: 5px 15px;
+}

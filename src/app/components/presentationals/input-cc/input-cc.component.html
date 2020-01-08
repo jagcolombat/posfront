@@ -9,9 +9,10 @@
       <p>
         <mat-form-field>
           <input matInput placeholder="{{label}}" [type]="type" [(ngModel)]="digits" name="price" #price="ngModel"
-                 required [maxlength]="maxlength" [size]="maxlength" disabled [mask]="mask"/>
+                 required [minlength]="minlength" [maxlength]="maxlength" [size]="maxlength" disabled [mask]="mask"/>
           <mat-error *ngIf="price.errors?.required">{{label}} is required</mat-error>
         </mat-form-field>
+        <mat-error *ngIf="inputErr"><span class="fa fa-warning fa-lg"></span>{{label}} must have between 4 and 10 characters </mat-error>
       </p>
       <!--<app-input-price></app-input-price>-->
       <generic-keyboard (evKeys)="getKeys($event)" ></generic-keyboard>

@@ -12,8 +12,10 @@ export class InputCcComponent implements OnInit {
   @Input() type = 'text';
   inputDigits: boolean;
   digits = '';
+  minlength = 16;
   maxlength = 16;
   mask = '';
+  inputErr: boolean;
 
   constructor(public dialogRef: MatDialogRef<InputCcComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
@@ -27,13 +29,14 @@ export class InputCcComponent implements OnInit {
     }
     if(this.data.type){
       this.maxlength = this.data.type.max;
+      this.minlength = this.data.type.min;
       this.type = this.data.type.type;
       this.mask = (this.data.type.mask)? this.data.type.mask: '';
     }
   }
 
   getKeys(ev) {
-    if (ev.type === 1 && this.digits.length < this.maxlength) {
+    if (ev.type === 1 && this.digits.length < this.maxlength ) {
       this.inputNumber(ev.value);
     } else if (ev.value === 'Clear') {
       this.resetPrice();
@@ -65,7 +68,11 @@ export class InputCcComponent implements OnInit {
 
   sendData() {
     // console.log("addGenericProd", this.data);
-    this.dialogRef.close(this.data);
+    if (this.digits.length < this.maxlength && this.digits.length >= this.minlength) {
+      this.dialogRef.close(this.data);
+    } else {
+      this.inputErr = true;
+    }
   }
 
   back() {
@@ -75,6 +82,7 @@ export class InputCcComponent implements OnInit {
       this.cost = cost.toPrecision(this.digits.length);
       this.data.unitCost = cost;*/
       this.data.number = this.digits;
+      this.inputErr = false;
     } else {
       this.resetPrice();
     }
@@ -83,6 +91,7 @@ export class InputCcComponent implements OnInit {
   resetPrice() {
     this.data.number = '';
     this.digits = '';
+    this.inputErr = false;
     //this.cost = '0.00';
   }
 

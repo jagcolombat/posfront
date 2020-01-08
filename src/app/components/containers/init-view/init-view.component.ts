@@ -37,6 +37,7 @@ export class InitViewComponent implements OnInit, AfterViewInit, OnDestroy {
         this.loginScan = '';
       } else {
         console.log('no match with login card pattern', this.loginScan);
+        this.loginScan = '';
       }
     } else if((ev.keyCode > 48 && ev.keyCode < 57) || (ev.keyCode === 59  || ev.keyCode === 63 || ev.code === 'Comma' ||
       ev.code === 'Minus') || !isNaN(parseInt(ev.key)) ){

@@ -11,9 +11,17 @@
   <info-pos title="Subtotal" [value]="subtotal" format="currency" fxFlex="28"></info-pos>
   <info-pos title="Tax" [value]="tax" format="currency" fxFlex="19"></info-pos>
   <info-pos title="Total" [value]="total" format="currency" fxFlex="28"></info-pos>
-  <info-pos *ngIf="total-invoiceService.invoice?.balance > 0" title="Paid" [value]="total-invoiceService.invoice?.balance"
+
+  <info-pos *ngIf="total - (invoiceService.invoice?.balance > 0 ? invoiceService.invoice?.balance : invoiceService.invoice?.balance * -1) > 0" title="Paid"
+            [value]="total - (invoiceService.invoice?.balance > 0 ? invoiceService.invoice?.balance : invoiceService.invoice?.balance * -1)"
             format="currency" fxFlex="25" class="info-pos-button green"></info-pos>
+
   <info-pos *ngIf="fsTotal > 0" title="EBT Total" [value]="fsTotal" align="end" format="currency" fxFlex="25"></info-pos>
-  <info-pos *ngIf="invoiceService.invoice?.balance > 0" title="Balance" [value]="invoiceService.invoice?.balance"
+
+  <info-pos *ngIf="invoiceService.invoice?.balance > 0 " title="Balance"
+            [value]="invoiceService.invoice?.balance"
+            align="end" format="currency" fxFlex="25"></info-pos>
+  <info-pos *ngIf="invoiceService.invoice?.balance < 0 " title="Refund"
+            [value]="invoiceService.invoice?.balance"
             align="end" format="currency" fxFlex="25"></info-pos>
 </div>

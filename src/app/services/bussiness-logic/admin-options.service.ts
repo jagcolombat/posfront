@@ -23,6 +23,7 @@ import {Observable} from "rxjs";
 import {EmployeedModel, IPositionModel} from "../../models/employeed.model";
 import {EbtInquiryInfoComponent} from "../../components/presentationals/ebt-inquiry-info/ebt-inquiry-info.component";
 import {ClientModel} from "../../models/client.model";
+import {InformationType} from "../../utils/information-type.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -440,7 +441,10 @@ export class AdminOptionsService {
                           employee.companyId = 1;
                           console.log(AdminOpEnum.EMPLOYEE_SETUP, employee);
                           this.dataStorage.employSetup(employee).subscribe(
-                            next => { console.log(AdminOpEnum.EMPLOYEE_SETUP, next); },
+                            next => {
+                              console.log(AdminOpEnum.EMPLOYEE_SETUP, next);
+                              this.cashService.openGenericInfo(InformationType.INFO, 'The employee '+ next.userName +' was setup.')
+                              },
                             err => { this.cashService.openGenericInfo("Error","Can't setup the employee"); }
                           );
                         }
