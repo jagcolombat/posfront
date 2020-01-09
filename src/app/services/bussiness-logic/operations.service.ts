@@ -844,7 +844,7 @@ export class OperationsService {
 
   externalCardPayment(title='External Card', client?: any){
     console.log('External Card');
-    this.getPriceField(title, 'Amount').subscribe((amount) => {
+    this.getPriceField(title+ '. Total: ' +  this.getTotalToPaid(), 'Amount').subscribe((amount) => {
       console.log('Amount', amount.unitCost);
       if (amount.unitCost) {
         this.getNumField(title, 'Account', EFieldType.CVV).subscribe(cardNumber => {
@@ -853,20 +853,20 @@ export class OperationsService {
               if (authCode.number) {
                 this.getCreditCardType(amount.unitCost, cardNumber.number, authCode.number, client)
               } else {
-                this.cashService.openGenericInfo('Error', 'Can\'t complete external card payment operation '
-                  + 'because authorization number not was specified');
+                /*this.cashService.openGenericInfo('Error', 'Can\'t complete external card payment operation '
+                  + 'because authorization number not was specified');*/
                 this.cashService.resetEnableState();
               }
             });
           } else {
-            this.cashService.openGenericInfo('Error', 'Can\'t complete external card payment operation '
-              + 'because account number not was specified');
+            /*this.cashService.openGenericInfo('Error', 'Can\'t complete external card payment operation '
+              + 'because account number not was specified');*/
             this.cashService.resetEnableState();
           }
         });
       } else {
-        this.cashService.openGenericInfo('Error', 'Can\'t complete external card payment operation '
-          + 'because amount not was specified');
+        /*this.cashService.openGenericInfo('Error', 'Can\'t complete external card payment operation '
+          + 'because amount not was specified');*/
         this.cashService.resetEnableState();
       }
     });
@@ -1381,13 +1381,15 @@ export class OperationsService {
       },
       error1 => {
         this.cashService.openGenericInfo(InformationType.INFO, 'Can\'t get the clients');
+        this.cashService.resetEnableState();
+
       }, () => this.currentOperation = '');
 
   }
 
   private setAmount(c: any,  action: (i: any) => void){
     console.log('setAmount', c);
-    this.getPriceField(CustomerOpEnum.ACCT_CHARGE, 'Amount').subscribe(
+    this.getPriceField(CustomerOpEnum.ACCT_CHARGE + '. Total: ' +  this.getTotalToPaid(), 'Amount').subscribe(
       amount=> {
         console.log('setAmount', amount);
         action(amount.unitCost);
@@ -1407,7 +1409,7 @@ export class OperationsService {
         }, () => this.cashService.resetEnableState()
       )
     } else {
-      this.cashService.openGenericInfo(InformationType.INFO, 'Can\'t charge account because the amount not was specified');
+      //this.cashService.openGenericInfo(InformationType.INFO, 'Can\'t charge account because the amount not was specified');
       this.cashService.resetEnableState();
     }
   }
