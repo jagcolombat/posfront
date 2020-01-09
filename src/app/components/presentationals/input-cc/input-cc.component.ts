@@ -12,7 +12,7 @@ export class InputCcComponent implements OnInit {
   @Input() type = 'text';
   inputDigits: boolean;
   digits = '';
-  minlength = 16;
+  minlength = 0;
   maxlength = 16;
   mask = '';
   inputErr: boolean;
@@ -68,7 +68,7 @@ export class InputCcComponent implements OnInit {
 
   sendData() {
     // console.log("addGenericProd", this.data);
-    if (this.digits.length < this.maxlength && this.digits.length >= this.minlength) {
+    if (this.digits.length <= this.maxlength && (!this.minlength || this.digits.length >= this.minlength)) {
       this.dialogRef.close(this.data);
     } else {
       this.inputErr = true;

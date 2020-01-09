@@ -4,5 +4,8 @@ export enum PaymentMethodEnum {
   DEBIT_CARD,
   EBT_CARD,
   OTHER,
-  PAID_OUT
+  PAID_OUT,
+  EBT_CASH,
+  ACCOUNT_CHARGE,
+  CHECK
 }
