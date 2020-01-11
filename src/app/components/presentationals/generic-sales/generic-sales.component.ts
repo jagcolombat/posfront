@@ -33,7 +33,7 @@ export class GenericSalesComponent implements OnInit {
 
   populateSales(data){
     this.sales = data.map(payment => {
-      return {'type': PaymentMethodEnum[payment.type], 'total': payment.total}
+      return {'name': payment.name, 'total': payment.total}
     });
   }
 

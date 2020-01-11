@@ -34,7 +34,7 @@ export class SalesShopComponent implements OnInit {
     this.columnDefs = [
       {
         headerName: 'Payment type',
-        field: 'type',
+        field: 'name',
         width: 250
       },
       {
