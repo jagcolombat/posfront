@@ -342,7 +342,17 @@ export class OperationsService {
     let refund = this.currentOperation === FinancialOpEnum.REFUND;
     if (this.invoiceService.invoice.productOrders.length > 0 || ( this.cashService.systemConfig.fullRefund && refund )) {
       this.currentOperation = TotalsOpEnum.SUBTOTAL;
-      this.cashService.totalsEnableState(false, refund);
+      this.cashService.totalsDisabled();
+      this.invoiceService.subTotal().subscribe(
+        next => {
+          this.invoiceService.setInvoice(next);
+          this.cashService.totalsEnableState(false, refund);
+        },
+        err => {
+          this.cashService.openGenericInfo(InformationType.ERROR, err);
+          this.cashService.resetEnableState();
+        }
+      )
     }
   }
 

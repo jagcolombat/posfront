@@ -347,4 +347,8 @@ export class InvoiceService {
     let cashPayment = new CardManualPayment(amount, null, null, null, null, null);
     return this.dataStorage.acctPayment(client, <CardManualPayment>cashPayment, PaymentMethodEnum.CASH);
   }
+
+  subTotal(): Observable<Invoice>{
+    return this.dataStorage.subtotalInvoice(this.receiptNumber);
+  }
 }

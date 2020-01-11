@@ -163,6 +163,10 @@ export class DataStorageService {
     return this.invoiceService.applyDiscountInvoice(this.url, id, discount, productOrderIds, discountType);
   }
 
+  subtotalInvoice(receiptNumber: string): Observable<Invoice> {
+    return this.invoiceService.subtotalInvoice(this.url, receiptNumber);
+  }
+
   // Payment
   paidByCash(cashPayment: ICashPayment): Observable<any> {
     return this.paymentService.paidByCash(this.url, cashPayment);

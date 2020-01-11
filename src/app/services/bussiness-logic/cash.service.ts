@@ -84,6 +84,14 @@ export class CashService {
 
   }
 
+  totalsDisabled(){
+    console.log('totalsDisabled');
+    this.disabledInput = this.disabledFinOp = this.disabledTotalOp = true;
+    //this.disabledInvOp = [false, true, true, true];
+    //if(this.systemConfig && this.systemConfig.allowCardSplit) this.disabledOtherOp = false;
+    //this.splitAllow(true);
+  }
+
   disabledPaymentByCompany(){
     return (this.systemConfig.companyType === CompanyType.MARKET && this.systemConfig.allowEBT) ?
       [true, false, false, false, false, false] : false;
