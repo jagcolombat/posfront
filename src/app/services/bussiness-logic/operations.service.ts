@@ -854,7 +854,8 @@ export class OperationsService {
 
   externalCardPayment(title='External Card', client?: any){
     console.log('External Card');
-    this.getPriceField(title+ '. Total: ' +  this.getTotalToPaid(), 'Amount').subscribe((amount) => {
+    this.getPriceField(title+ '. Total: ' +  this.getTotalToPaid().toFixed(2), 'Amount')
+      .subscribe((amount) => {
       console.log('Amount', amount.unitCost);
       if (amount.unitCost) {
         this.getNumField(title, 'Account', EFieldType.CVV).subscribe(cardNumber => {
@@ -1399,7 +1400,8 @@ export class OperationsService {
 
   private setAmount(c: any,  action: (i: any) => void){
     console.log('setAmount', c);
-    this.getPriceField(CustomerOpEnum.ACCT_CHARGE + '. Total: ' +  this.getTotalToPaid(), 'Amount').subscribe(
+    this.getPriceField(CustomerOpEnum.ACCT_CHARGE + '. Total: ' +  this.getTotalToPaid().toFixed(2), 'Amount')
+      .subscribe(
       amount=> {
         console.log('setAmount', amount);
         action(amount.unitCost);

@@ -50,8 +50,8 @@ export class ProductGenericComponent implements OnInit {
     this.digits += value + '';
     const cost = parseFloat(this.digits) * 0.01;
     if (cost !== 0) {
-      this.cost = cost.toPrecision(this.digits.length);
-      this.data.unitCost = cost;
+      this.cost = cost.toFixed(2);
+      this.data.unitCost = +this.cost;
     } else {
       this.resetPrice();
     }
@@ -66,8 +66,8 @@ export class ProductGenericComponent implements OnInit {
     if (this.digits.length > 1 ) {
       this.digits = this.digits.slice(0, this.digits.length - 1);
       const cost = parseFloat(this.digits) * 0.01;
-      this.cost = cost.toPrecision(this.digits.length);
-      this.data.unitCost = cost;
+      this.cost = cost.toFixed(2);
+      this.data.unitCost = +this.cost;
     } else {
       this.resetPrice();
     }
