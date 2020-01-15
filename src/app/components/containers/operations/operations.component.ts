@@ -31,8 +31,8 @@ export class OperationsComponent implements OnInit {
   @Input() numpadOption = '@/FOR';
 
   @Input() paymentOperations = [PaymentOpEnum.EBT_CARD, PaymentOpEnum.DEBIT_CARD, PaymentOpEnum.CREDIT_CARD,
-    PaymentOpEnum.CASH, PaymentOpEnum.OTHER];
-  @Input() paymentColor = ['yellow', 'yellow', 'yellow', 'green', 'blue'];
+    PaymentOpEnum.CASH, PaymentOpEnum.CHECK, PaymentOpEnum.OTHER];
+  @Input() paymentColor = ['yellow', 'yellow', 'yellow', 'green', 'blue', 'blue'];
   @Input() paymentDisabled: boolean | boolean[] = this.operationService.cashService.disabledPayment;
 
   @Input() otherOperations = [OtherOpEnum.PRINT_LAST, OtherOpEnum.NO_SALE, OtherOpEnum.WEIGHT_ITEM];
@@ -95,15 +95,18 @@ export class OperationsComponent implements OnInit {
         // Remove EBT total and color
         this.totalsOperations.splice(0,1);
         this.totalColor.splice(0,1);
+        // Push in money operations other payment option
+        this.paymentOperations.splice(-1).map(op => this.moneyOperations.push(op));
+        this.paymentColor.splice(-1).map(op => this.moneyColor.push(op));
       } else {
         // Remove TXType operation
         //this.financeOperations.splice(1, 1);
         // Remove Table operation and relative color
         //this.otherOperations.splice(-1);
         //this.otherColor.splice(-1);
-        // Push in money operations cash and other payment options
-        this.paymentOperations.splice(-1).map(op => this.moneyOperations.push(op));
-        this.paymentColor.splice(-1).map(op => this.moneyColor.push(op));
+        // Push in money operations check and other payment options
+        this.paymentOperations.splice(-2).map(op => this.moneyOperations.push(op));
+        this.paymentColor.splice(-2).map(op => this.moneyColor.push(op));
         //this.operationService.cashService.disabledPayment=[true, false, true, true, true, true];
       }
       if(this.operationService.cashService.systemConfig.companyType !== CompanyType.RESTAURANT){
@@ -196,10 +199,10 @@ export class OperationsComponent implements OnInit {
         break;
       case PaymentOpEnum.CREDIT_CARD:
         this.operationService.externalCardPayment();
-        break;/*
-      case PaymentOpEnum.EBT_INQUIRY:
-        this.operationService.ebtInquiry();
-        break;*/
+        break;
+      case PaymentOpEnum.CHECK:
+        this.operationService.check();
+        break;
     }
   }
 

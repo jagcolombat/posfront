@@ -7,6 +7,7 @@ import { ProcessHTTPMSgService } from './ProcessHTTPMSg.service';
 import { catchError } from 'rxjs/operators';
 import {Invoice} from "../../models/invoice.model";
 import {ETransferType} from "../../utils/transfer-type.enum";
+import {CheckPayment} from "../../models/check.model";
 
 @Injectable({
   providedIn: 'root'
@@ -60,6 +61,11 @@ export class PaymentService {
 
   getPaymentMedia(url: string): Observable<any> {
     return this._http.get<any[]>(url + this.path + '/payment/media')
+      .pipe(catchError(this.processHttpMsgService.handleError));
+  }
+
+  paidByCheck(url: string, check: CheckPayment) {
+    return this._http.post<Invoice>(url + this.path + '/payment/check', check)
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 }

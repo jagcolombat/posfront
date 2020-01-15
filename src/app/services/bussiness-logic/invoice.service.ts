@@ -19,6 +19,7 @@ import {PaymentOpEnum} from 'src/app/utils/operations';
 import {EApplyDiscount} from "../../utils/apply-discount.enum";
 import {CardTypes} from "../../utils/card-payment-types.enum";
 import {PaymentMethodEnum} from "../../utils/operations/payment-method.enum";
+import {CheckPayment} from "../../models/check.model";
 
 @Injectable({
   providedIn: 'root'
@@ -350,5 +351,10 @@ export class InvoiceService {
 
   subTotal(): Observable<Invoice>{
     return this.dataStorage.subtotalInvoice(this.receiptNumber);
+  }
+
+  paidByCheck(amount: number, checkNumber: string, descrip?: string): Observable<Invoice> {
+    let checkPayment = new CheckPayment(this.invoice.receiptNumber, amount, checkNumber, descrip);
+    return this.dataStorage.paidByCheck(checkPayment);
   }
 }

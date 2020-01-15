@@ -31,6 +31,7 @@ import {EmployeedModel, IPositionModel} from "../../models/employeed.model";
 import {ClientService} from "./client.service";
 import {ClientModel} from "../../models/client.model";
 import {PaymentMethodEnum} from "../../utils/operations/payment-method.enum";
+import {CheckPayment} from "../../models/check.model";
 
 @Injectable({
   providedIn: 'root'
@@ -182,6 +183,10 @@ export class DataStorageService {
 
   paidByEBTCard(cashPayment: CreditCard, type: number): Observable<any> {
     return this.paymentService.paidByEBTCard(this.url, cashPayment, type);
+  }
+
+  paidByCheck(check: CheckPayment): Observable<any> {
+    return this.paymentService.paidByCheck(this.url, check);
   }
 
   paidByExternalCard(externalPayment: CardManualPayment): Observable<any> {

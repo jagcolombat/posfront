@@ -1467,4 +1467,41 @@ export class OperationsService {
       }
     )
   }
+
+  check() {
+    let title = 'Check Payment';
+    console.log(title);
+    this.getPriceField(title + '. Total: ' +  this.getTotalToPaid().toFixed(2), 'Amount')
+      .subscribe((amount) => {
+        console.log('Amount', amount.unitCost);
+        if (amount.unitCost) {
+          this.getNumField(title, 'Check number', EFieldType.NUMBER).subscribe(checkNumber => {
+            if (checkNumber.number) {
+              this.getField(title, 'Description', EFieldType.DESC).subscribe(descrip => {
+                this.paidByCheck(amount.unitCost, checkNumber.number, descrip.text);
+              });
+            } else {
+              this.cashService.resetEnableState();
+            }
+          });
+        } else {
+          this.cashService.resetEnableState();
+        }
+      });
+  }
+
+  private paidByCheck(amount: number, checkNumber: string, descrip?: string) {
+    this.invoiceService.paidByCheck(amount, checkNumber, descrip).subscribe(
+      next => {
+        console.log('paidByCheck', next);
+        (next && next.balance > 0) ? this.invoiceService.setInvoice(next) : this.invoiceService.createInvoice();
+      },
+      error1 => {
+        console.error('paidByCheck', error1);
+        this.cashService.openGenericInfo('Error', error1);
+        this.cashService.resetEnableState();
+      },
+      () => this.cashService.resetEnableState()
+    );
+  }
 }
