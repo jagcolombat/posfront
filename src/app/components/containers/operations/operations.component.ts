@@ -241,6 +241,9 @@ export class OperationsComponent implements OnInit {
       case PaymentOpEnum.CASH:
         this.operationService.cash(PaymentOpEnum.CASH);
         break;
+      case PaymentOpEnum.CHECK:
+        this.operationService.check();
+        break;
       case PaymentOpEnum.OTHER:
         this.operationService.cash(PaymentOpEnum.OTHER);
         break;
