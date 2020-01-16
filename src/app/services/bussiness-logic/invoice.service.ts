@@ -353,8 +353,10 @@ export class InvoiceService {
     return this.dataStorage.subtotalInvoice(this.receiptNumber);
   }
 
-  paidByCheck(amount: number, checkNumber: string, descrip?: string): Observable<Invoice> {
+  paidByCheck(amount: number, checkNumber: string, descrip?: string, client?: string): Observable<Invoice> {
     let checkPayment = new CheckPayment(this.invoice.receiptNumber, amount, checkNumber, descrip);
-    return this.dataStorage.paidByCheck(checkPayment);
+    return (client)? this.dataStorage.acctPayment(client, checkPayment, PaymentMethodEnum.CHECK) :
+      this.dataStorage.paidByCheck(checkPayment);
+
   }
 }

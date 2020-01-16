@@ -1440,7 +1440,7 @@ export class OperationsService {
   }
 
   private selectPaymentType(c: string) {
-    this.openDialogWithPag([{label: 'CARD'}, {label: 'CASH'}], i => {
+    this.openDialogWithPag([{label: 'CARD'}, {label: 'CASH'}, {label: 'CHECK'}], i => {
       console.log(i);
         switch (i.label) {
           case 'CASH':
@@ -1448,6 +1448,9 @@ export class OperationsService {
             break;
           case 'CARD':
             this.externalCardPayment(CustomerOpEnum.ACCT_PAYMENT, c);
+            break;
+          case 'CHECK':
+            this.check(c);
             break;
         }
       }, CustomerOpEnum.ACCT_PAYMENT,
@@ -1468,7 +1471,7 @@ export class OperationsService {
     )
   }
 
-  check() {
+  check(client?: string) {
     let title = 'Check Payment';
     console.log(title);
     this.getPriceField(title + '. Total: ' +  this.getTotalToPaid().toFixed(2), 'Amount')
@@ -1478,7 +1481,7 @@ export class OperationsService {
           this.getNumField(title, 'Check number', EFieldType.NUMBER).subscribe(checkNumber => {
             if (checkNumber.number) {
               this.getField(title, 'Description', EFieldType.DESC).subscribe(descrip => {
-                this.paidByCheck(amount.unitCost, checkNumber.number, descrip.text);
+                this.paidByCheck(amount.unitCost, checkNumber.number, descrip.text, client);
               });
             } else {
               this.cashService.resetEnableState();
@@ -1490,11 +1493,17 @@ export class OperationsService {
       });
   }
 
-  private paidByCheck(amount: number, checkNumber: string, descrip?: string) {
-    this.invoiceService.paidByCheck(amount, checkNumber, descrip).subscribe(
+  private paidByCheck(amount: number, checkNumber: string, descrip?: string, client?: string) {
+    this.invoiceService.paidByCheck(amount, checkNumber, descrip, client).subscribe(
       next => {
         console.log('paidByCheck', next);
-        (next && next.balance > 0) ? this.invoiceService.setInvoice(next) : this.invoiceService.createInvoice();
+        if(!client){
+          (next && next.balance > 0) ? this.invoiceService.setInvoice(next) : this.invoiceService.createInvoice();
+        } else {
+          console.log('Check for Account Payment', next);
+          this.cashService.openGenericInfo(InformationType.INFO, ' The account client ('+ next['name']
+            + ') was charged with ' + amount.toFixed(2));
+        }
       },
       error1 => {
         console.error('paidByCheck', error1);

@@ -309,7 +309,7 @@ export class DataStorageService {
     return this.clientService.acctCharge(this.url, c, amount, receiptNumber);
   }
 
-  acctPayment(client: string, cardPayment: CardManualPayment, paymentMethod: PaymentMethodEnum) {
+  acctPayment(client: string, cardPayment: CardManualPayment | CheckPayment, paymentMethod?: PaymentMethodEnum) {
     return this.clientService.acctPayment(this.url, client, cardPayment, paymentMethod);
   }
 }
