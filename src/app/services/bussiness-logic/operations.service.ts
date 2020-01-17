@@ -531,10 +531,13 @@ export class OperationsService {
 
   cancelCheck() {
     console.log('cancelar factura');
+    let dialog = this.cashService.openGenericInfo(InformationType.INFO, 'Voiding transaction');
     this.invoiceService.cancelInvoice().subscribe(next => {
+      dialog.close();
       this.invoiceService.createInvoice();
     },err => {
       console.error('cancelCheck failed');
+      dialog.close();
       this.cashService.openGenericInfo('Error', 'Can\'t complete void operation')
     });
     this.resetInactivity(false);
