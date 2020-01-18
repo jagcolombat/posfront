@@ -1504,6 +1504,12 @@ export class OperationsService {
         console.log('paidByCheck', next);
         if(!client){
           (next && next.balance > 0) ? this.invoiceService.setInvoice(next) : this.invoiceService.createInvoice();
+          if(next.change && next.change > 0) {
+            const dialogRef = this.cashService.dialog.open(CashPaymentComponent,
+              {
+                width: '300px', height: '240px', data: next.change > 0 ? next.change : 0, disableClose: true
+              })
+          }
         } else {
           console.log('Check for Account Payment', next);
           this.cashService.openGenericInfo(InformationType.INFO, ' The account client ('+ next['name']

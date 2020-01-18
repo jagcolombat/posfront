@@ -69,7 +69,7 @@ export class ProductOrderService implements OnDestroy {
     if(this.invoiceService.priceWic){
       if(product.unitCost) {
         this.quantityByProduct = Number(((+this.invoiceService.priceWic/100) / product.unitCost).toFixed(2));
-        this.invoiceService.addProductOrder(this.createProductOrder(product));
+        this.invoiceService.addProductOrder(this.createProductOrder(product, +this.invoiceService.priceWic/100));
       } else {
         this.cashService.openGenericInfo('Error', 'Can\'t add weight format product because unit cost is 0');
         this.invoiceService.resetDigits();
@@ -115,13 +115,15 @@ export class ProductOrderService implements OnDestroy {
     });
   }
 
-  private createProductOrder(prod: Product): ProductOrder {
+  private createProductOrder(prod: Product, totalWF?: number): ProductOrder {
     let qty = this.invoiceService.qty > 1 ? this.invoiceService.qty: this.quantityByProduct;
     if(this.quantityByProduct !== 1) this.quantityByProduct = 1;
     let tax = this.getTax(prod);
     let price = Number(prod.unitCost.toFixed(2));
     let total = Number((qty * price).toFixed(2));
-    return new ProductOrder(qty, prod.unitCost, total, tax, 0, prod.id, prod.upc, prod.name, prod.foodStamp, prod.isRefund);
+    //let total = Number((qty * price).toFixed(2));
+    return new ProductOrder(qty, prod.unitCost, totalWF ? totalWF : total, tax, 0, prod.id, prod.upc,
+      prod.name, prod.foodStamp, prod.isRefund);
   }
 
   private getTax(product: Product){

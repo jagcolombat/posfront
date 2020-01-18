@@ -23,6 +23,7 @@ export interface IInvoice {
   balance?: number;
   type?: ETXType;
   orderInfo?: string;
+  change?: number;
 }
 
 export class Invoice implements IInvoice {
@@ -44,7 +45,8 @@ export class Invoice implements IInvoice {
               public tip?: number,
               public balance?: number,
               public type = ETXType.DINEIN,
-              public orderInfo?: string
+              public orderInfo?: string,
+              public change?: number
               ) {
   }
 }
