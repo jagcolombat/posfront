@@ -346,7 +346,8 @@ export class OperationsService {
       this.invoiceService.subTotal().subscribe(
         next => {
           this.invoiceService.setInvoice(next);
-          this.cashService.totalsEnableState(false, refund);
+          (this.invoiceService.invoice.productOrders.length > 0)? this.cashService.totalsEnableState(false, refund):
+            this.cashService.resetEnableState();
         },
         err => {
           this.cashService.openGenericInfo(InformationType.ERROR, err);
@@ -389,6 +390,7 @@ export class OperationsService {
         (err: HttpErrorResponse) => {
           this.cashService.openGenericInfo('Error', 'Can\'t complete get check operation. ' +
             err.statusText);
+          this.invoiceService.resetDigits();
           this.cleanCurrentOp();
         });
   }
