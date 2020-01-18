@@ -7,5 +7,6 @@ export enum PaymentMethodEnum {
   EBT_CASH,
   ACCOUNT_CHARGE,
   CHECK,
+  TRANSFER,
   PAID_OUT
 }

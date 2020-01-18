@@ -20,6 +20,7 @@ import {EApplyDiscount} from "../../utils/apply-discount.enum";
 import {CardTypes} from "../../utils/card-payment-types.enum";
 import {PaymentMethodEnum} from "../../utils/operations/payment-method.enum";
 import {CheckPayment} from "../../models/check.model";
+import {TransferPayment} from "../../models/transfer.model";
 
 @Injectable({
   providedIn: 'root'
@@ -358,5 +359,10 @@ export class InvoiceService {
     return (client)? this.dataStorage.acctPayment(client, checkPayment, PaymentMethodEnum.CHECK) :
       this.dataStorage.paidByCheck(checkPayment);
 
+  }
+
+  acctPaymentTransfer(client: string, amount: any, descrip: any) {
+    let transferPayment = new TransferPayment(amount, descrip);
+    return this.dataStorage.acctPayment(client, transferPayment, PaymentMethodEnum.TRANSFER);
   }
 }

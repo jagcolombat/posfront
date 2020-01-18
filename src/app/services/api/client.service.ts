@@ -8,6 +8,7 @@ import {CardManualPayment} from "../../models";
 import {Invoice} from "../../models/invoice.model";
 import {PaymentMethodEnum} from "../../utils/operations/payment-method.enum";
 import {CheckPayment} from "../../models/check.model";
+import {TransferPayment} from "../../models/transfer.model";
 
 @Injectable({
   providedIn: 'root'
@@ -41,11 +42,11 @@ export class ClientService {
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
-  acctPayment(url: string, client: string, cardPayment: CardManualPayment | CheckPayment, paymentMethod: PaymentMethodEnum) {
-    console.log('acctPayment', cardPayment);
+  acctPayment(url: string, client: string, payment: CardManualPayment | CheckPayment | TransferPayment, paymentMethod: PaymentMethodEnum) {
+    console.log('acctPayment', payment);
     let params = new HttpParams();
     params = params.append('paymentMethod', paymentMethod + '');
-    return this._http.post<Invoice>(url + this.path + '/' + client + '/chargeAccount/payment', cardPayment, {params})
+    return this._http.post<Invoice>(url + this.path + '/' + client + '/chargeAccount/payment', payment, {params})
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 }

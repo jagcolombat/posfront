@@ -1392,7 +1392,7 @@ export class OperationsService {
     this.currentOperation = CustomerOpEnum.ACCT_CHARGE;
     this.clientService.getClients().subscribe(
       clients=> {
-        this.openDialogWithPag(clients, (c)=> this.setAmount(c.id, a => this.acctChargeOp(c.id, a)),
+        this.openDialogWithPag(clients, (c)=> this.setAmount(CustomerOpEnum.ACCT_CHARGE, c.id, a => this.acctChargeOp(c.id, a)),
           'Clients', 'Select a client:', 'name');
       },
       error1 => {
@@ -1403,15 +1403,26 @@ export class OperationsService {
 
   }
 
-  private setAmount(c: any,  action: (i: any) => void){
+  private setAmount(titleOp: string, c: any,  action: (i: any) => void){
     console.log('setAmount', c);
-    this.getPriceField(CustomerOpEnum.ACCT_CHARGE + '. Total: ' +  this.getTotalToPaid().toFixed(2), 'Amount')
+    this.getPriceField(titleOp + '. Total: ' +  this.getTotalToPaid().toFixed(2), 'Amount')
       .subscribe(
       amount=> {
         console.log('setAmount', amount);
         action(amount.unitCost);
       }
     )
+  }
+
+  private setDescription(titleOp: string, action: (i: any) => void){
+    console.log('setDescription');
+    this.getField(titleOp, 'Description', EFieldType.DESC)
+      .subscribe(
+        descrip=> {
+          console.log('setDescription', descrip);
+          action(descrip.text);
+        }
+      )
   }
 
   private acctChargeOp(client, amount){
@@ -1445,17 +1456,20 @@ export class OperationsService {
   }
 
   private selectPaymentType(c: string) {
-    this.openDialogWithPag([{label: 'CARD'}, {label: 'CASH'}, {label: 'CHECK'}], i => {
+    this.openDialogWithPag([{label: 'CARD'}, {label: 'CASH'}, {label: 'CHECK'}, {label: 'TRANSFER'}], i => {
       console.log(i);
         switch (i.label) {
           case 'CASH':
-            this.setAmount(c, (a) => this.acctPaymentCashOp(c, a));
+            this.setAmount(i.label, c, (a) => this.acctPaymentCashOp(c, a));
             break;
           case 'CARD':
             this.externalCardPayment(CustomerOpEnum.ACCT_PAYMENT, c);
             break;
           case 'CHECK':
             this.check(c);
+            break;
+          case 'TRANSFER':
+            this.setAmount(i.label, c,(a) => this.setDescription(i.label, (d) => this.acctPaymentTransferOp(c, a, d)));
             break;
         }
       }, CustomerOpEnum.ACCT_PAYMENT,
@@ -1523,5 +1537,19 @@ export class OperationsService {
       },
       () => this.cashService.resetEnableState()
     );
+  }
+
+  private acctPaymentTransferOp(client: string, amount: any, descrip: any) {
+    this.invoiceService.acctPaymentTransfer(client, amount, descrip).subscribe(
+      next => {
+        console.log('acctPaymentTransferOp', next);
+        this.cashService.openGenericInfo(InformationType.INFO, ' The account client ('+ next['name']
+          + ') was charged with ' + amount.toFixed(2));
+      },
+      error1 => {
+        console.error(error1);
+        this.cashService.openGenericInfo(InformationType.ERROR, error1);
+      }
+    )
   }
 }
