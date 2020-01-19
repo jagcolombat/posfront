@@ -1319,7 +1319,7 @@ export class OperationsService {
       );
     } else {
       // Send misc product to invoice
-      this.cashService.openGenericInfo('Information', 'Send misc product to invoice');
+      //this.cashService.openGenericInfo('Information', 'Send misc product to invoice');
       if(!this.cashService.systemConfig.externalScale){
         this.cashService.dialog.open(ProductGenericComponent,
           {
@@ -1340,7 +1340,7 @@ export class OperationsService {
           }
         });
       } else {
-        this.invoiceService.weightItem(price).subscribe(
+        this.invoiceService.weightItem(price, 0).subscribe(
           i => {
             this.invoiceService.setInvoice(i);
           },
