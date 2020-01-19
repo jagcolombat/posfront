@@ -1340,7 +1340,14 @@ export class OperationsService {
           }
         });
       } else {
-        this.invoiceService.weightItem(price);
+        this.invoiceService.weightItem(price).subscribe(
+          i => {
+            this.invoiceService.setInvoice(i);
+          },
+          err => {
+            this.invoiceService.resetDigits();
+            this.cashService.openGenericInfo('Error', 'Can\'t complete weight operation');
+          });
       }
     }
   }

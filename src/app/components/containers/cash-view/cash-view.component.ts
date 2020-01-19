@@ -54,6 +54,7 @@ export class CashViewComponent implements OnInit, OnDestroy {
     if(this.invoiceService.digits.startsWith('I') || this.invoiceService.digits.startsWith('R')){
       this.operationService.scanInvoice();
     } else {
+      //console.log('selectInputData', this.operationService.currentOperation, this.adminOpService.currentOperation);
       if(this.operationService.currentOperation === InvioceOpEnum.PRICE) {
         this.operationService.priceCheck();
       } else if (this.adminOpService.currentOperation === AdminOpEnum.CHANGE_PRICES) {

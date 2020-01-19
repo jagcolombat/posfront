@@ -438,15 +438,24 @@ export class AdminOptionsService {
                       code => {
                         if (code) {
                           employee.password = code.number;
-                          employee.companyId = 1;
-                          console.log(AdminOpEnum.EMPLOYEE_SETUP, employee);
-                          this.dataStorage.employSetup(employee).subscribe(
-                            next => {
-                              console.log(AdminOpEnum.EMPLOYEE_SETUP, next);
-                              this.cashService.openGenericInfo(InformationType.INFO, 'The employee '+ next.userName +' was setup.')
-                              },
-                            err => { this.cashService.openGenericInfo("Error","Can't setup the employee"); }
-                          );
+                          /*this.cashService.openGenericInfo('Password card', 'Swipe password card')
+                            .afterClosed().subscribe(
+                              pass => {
+                                console.log('Swipe password card', pass);
+                                //if(next.pass) employee.passwordByCard = next.pass;*/
+
+                                employee.companyId = 1;
+                                console.log(AdminOpEnum.EMPLOYEE_SETUP, employee);
+                                this.dataStorage.employSetup(employee).subscribe(
+                                  next => {
+                                    console.log(AdminOpEnum.EMPLOYEE_SETUP, next);
+                                    this.cashService.openGenericInfo(InformationType.INFO, 'The employee '+ next.userName +' was setup.')
+                                  },
+                                  err => { this.cashService.openGenericInfo("Error","Can't setup the employee"); }
+                                );
+
+                              /*}, err => { console.error(err)}, () => console.log('complete')
+                          )*/
                         }
                         else {
                           this.cashService.openGenericInfo("Error",

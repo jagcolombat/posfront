@@ -5,6 +5,7 @@ export interface IEmployeedModel {
     password?: string;
     userPositionId?: string;
     companyId?: number;
+    passwordByCard?: string;
 }
 
 export interface IPositionModel {
@@ -15,5 +16,5 @@ export interface IPositionModel {
 
 export class EmployeedModel implements IEmployeedModel{
   constructor(public firstname?: string, public lastname?: string, public username?: string, public password?: string,
-              public userPositionId?: string, public companyId?: number) {}
+              public userPositionId?: string, public companyId?: number, public passwordByCard?: string) {}
 }
