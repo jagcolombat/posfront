@@ -67,7 +67,7 @@ export class InvoiceService {
   addProductOrder(url: string, product: ProductOrder, invoiceId: string, operation: EOperationType): Observable<any> {
     let params = new HttpParams();
     params = params.append('operationType', operation + '' );
-    const productDto = {productId: product.productId, quantity: product.quantity, unitCost: product.unitCost};
+    const productDto = {productId: product.productId, quantity: product.quantity, unitCost: product.unitCost, total: product.total};
     return this._http.post(url + this.path + '/' + invoiceId + '/product', productDto, {params})
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
