@@ -5,6 +5,7 @@ import {Configuration} from "../../models/configuration.model";
 import {AuthService} from "../api/auth.service";
 import {DataStorageService} from "../api/data-storage.service";
 import {CompanyType} from "../../utils/company-type.enum";
+import {SwipeCredentialCardComponent} from "../../components/presentationals/swipe-credential-card/swipe-credential-card.component";
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +27,7 @@ export class CashService {
   disabledCustomerOp: boolean | boolean[] = false;
   systemConfig: Configuration;
   @Output() evReviewEnableState = new EventEmitter<boolean>();
+  @Output() evPassScanned = new EventEmitter<string>();
 
   constructor(public dialog: MatDialog, private dataStorage: DataStorageService, private authServ: AuthService) {
     this.resetEnableState();

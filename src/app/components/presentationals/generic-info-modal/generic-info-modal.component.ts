@@ -27,26 +27,4 @@ export class GenericInfoModalComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  swipeCard(pass: string){
-    let userTmp = pass.substr(1, pass.length-2);
-    console.log('handleKeyboardEvent', userTmp);
-    this.dialogRef.close('porfa');
-  }
-
-  handleKeyboardEvent(ev: KeyboardEvent) {
-    console.log('inputKeyboard', ev, isNaN(parseInt(ev.key)));
-    if(ev.key==='Enter' || ev.keyCode === 13){
-      if(this.passwordScan.startsWith(';') && this.passwordScan.endsWith('?')){
-        this.swipeCard(this.passwordScan);
-        //this.passwordScan = '';
-      } else {
-        console.log('no match with login card pattern', this.passwordScan);
-        this.passwordScan = '';
-      }
-    } else if((ev.keyCode > 48 && ev.keyCode < 57) || (ev.keyCode === 59  || ev.keyCode === 63 || ev.code === 'Comma' ||
-      ev.code === 'Minus') || !isNaN(parseInt(ev.key)) ){
-      this.passwordScan +=ev.key.toUpperCase();
-    }
-  }
-
 }

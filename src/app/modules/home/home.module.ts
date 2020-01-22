@@ -37,6 +37,7 @@ import {OrderInfoDetailsComponent} from "../../components/presentationals/order-
 import {ClientModule} from "../client/client.module";
 import {ClientViewComponent} from "../../components/containers/client-view/client-view.component";
 import {EbtInquiryInfoComponent} from "../../components/presentationals/ebt-inquiry-info/ebt-inquiry-info.component";
+import {SwipeCredentialCardComponent} from "../../components/presentationals/swipe-credential-card/swipe-credential-card.component";
 
 @NgModule({
   imports: [
@@ -76,7 +77,8 @@ import {EbtInquiryInfoComponent} from "../../components/presentationals/ebt-inqu
     CloseBatchComponent,
     InputCcComponent,
     OrderInfoComponent,
-    OrderInfoDetailsComponent
+    OrderInfoDetailsComponent,
+    SwipeCredentialCardComponent
   ],
   entryComponents: [
     AgeValidationComponent,
@@ -103,7 +105,8 @@ import {EbtInquiryInfoComponent} from "../../components/presentationals/ebt-inqu
     CloseBatchComponent,
     InputCcComponent,
     OrderInfoComponent,
-    OrderInfoDetailsComponent
+    OrderInfoDetailsComponent,
+    SwipeCredentialCardComponent
   ],
 })
 export class HomeModule { }

@@ -24,6 +24,7 @@ import {EmployeedModel, IPositionModel} from "../../models/employeed.model";
 import {EbtInquiryInfoComponent} from "../../components/presentationals/ebt-inquiry-info/ebt-inquiry-info.component";
 import {ClientModel} from "../../models/client.model";
 import {InformationType} from "../../utils/information-type.enum";
+import {InitViewService} from "./init-view.service";
 
 @Injectable({
   providedIn: 'root'
@@ -34,7 +35,8 @@ export class AdminOptionsService {
   currentOperation: AdminOpEnum | string;
 
   constructor(private invoiceService: InvoiceService, public cashService: CashService, private auth: AuthService,
-              private operationService: OperationsService, private dataStorage: DataStorageService, private router: Router) {
+              private operationService: OperationsService, private dataStorage: DataStorageService,
+              private initService: InitViewService, private router: Router) {
 
     this.operationService.evCancelCheck.subscribe(next => {
       next ? this.cancelCheck(): this.cancelCheckLoaded=false;
@@ -438,12 +440,12 @@ export class AdminOptionsService {
                       code => {
                         if (code) {
                           employee.password = code.number;
-                          /*this.cashService.openGenericInfo('Password card', 'Swipe password card')
-                            .afterClosed().subscribe(
-                              pass => {
-                                console.log('Swipe password card', pass);
-                                //if(next.pass) employee.passwordByCard = next.pass;*/
-
+                          this.operationService.openSwipeCredentialCard('Password card', 'Swipe password card')
+                            .subscribe(
+                              next => {
+                                console.log('Swipe password card', next);
+                                employee.passwordByCard = (next.pass) ? next.pass : this.initService.userScanned;
+                                this.initService.cleanUserScanned();
                                 employee.companyId = 1;
                                 console.log(AdminOpEnum.EMPLOYEE_SETUP, employee);
                                 this.dataStorage.employSetup(employee).subscribe(
@@ -454,8 +456,8 @@ export class AdminOptionsService {
                                   err => { this.cashService.openGenericInfo("Error","Can't setup the employee"); }
                                 );
 
-                              /*}, err => { console.error(err)}, () => console.log('complete')
-                          )*/
+                              }, err => { console.error(err)}, () => console.log('complete', this)
+                          )
                         }
                         else {
                           this.cashService.openGenericInfo("Error",
@@ -477,6 +479,16 @@ export class AdminOptionsService {
             " selected the name");
         }
       });
+  }
+
+  employSetupOp(employee: EmployeedModel){
+    this.dataStorage.employSetup(employee).subscribe(
+      next => {
+        console.log(AdminOpEnum.EMPLOYEE_SETUP, next);
+        this.cashService.openGenericInfo(InformationType.INFO, 'The employee '+ next.userName +' was setup.')
+      },
+      err => { this.cashService.openGenericInfo("Error","Can't setup the employee"); }
+    );
   }
 
   getUsersPosition(): Observable<any> {

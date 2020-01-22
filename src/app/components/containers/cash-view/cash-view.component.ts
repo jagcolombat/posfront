@@ -5,9 +5,9 @@ import {InvioceOpEnum} from "../../../utils/operations";
 import {WebsocketService} from "../../../services/api/websocket.service";
 import {Subscription} from "rxjs";
 import {ScannerData} from "../../../models/scanner.model";
-import {AdminOperationService} from "../../../services/api/admin.operation.service";
 import {AdminOpEnum} from "../../../utils/operations/admin-op.enum";
 import {AdminOptionsService} from "../../../services/bussiness-logic/admin-options.service";
+import {InitViewService} from "../../../services/bussiness-logic/init-view.service";
 
 @Component({
   selector: 'app-cash-view',
@@ -20,9 +20,11 @@ import {AdminOptionsService} from "../../../services/bussiness-logic/admin-optio
 export class CashViewComponent implements OnInit, OnDestroy {
 
   sub: Subscription[] = new Array<Subscription>();
+  passwordScan = '';
 
   constructor(private invoiceService: InvoiceService, private operationService: OperationsService,
-              private adminOpService: AdminOptionsService, private ws: WebsocketService) { }
+              private adminOpService: AdminOptionsService, private ws: WebsocketService, private initService: InitViewService) {
+  }
 
   ngOnInit() {
     //this.ws.start();
@@ -36,17 +38,24 @@ export class CashViewComponent implements OnInit, OnDestroy {
       if(ev.key==='Enter' || ev.keyCode === 13) {
         tmpMdl = this.operationService.cashService
         .openGenericInfo('Error', 'Not possible input keyboard');}*/
-    } else if((ev.key==='Enter' || ev.keyCode === 13) && this.invoiceService.digits){
-      /*if(this.invoiceService.digits.startsWith('I') || this.invoiceService.digits.startsWith('R')){
-        this.operationService.scanInvoice();
-      } else {
-        (this.operationService.currentOperation === InvioceOpEnum.PRICE)? this.operationService.priceCheck() :
-        this.operationService.scanProduct();
-      }*/
-      this.selectInputData();
+    } else if((ev.key==='Enter' || ev.keyCode === 13)){
+      (this.invoiceService.digits) ? this.selectInputData() : this.passwordCard();
     } else if((ev.keyCode > 48 && ev.keyCode < 57) || (ev.keyCode === 73  || ev.keyCode === 82 || ev.keyCode === 105 ||
         ev.keyCode === 114) || !isNaN(parseInt(ev.key)) ){
-      this.invoiceService.evNumpadInput.emit(ev.key.toUpperCase());
+
+      (this.passwordScan.startsWith(';')) ?
+        this.passwordScan += ev.key.toUpperCase() : this.invoiceService.evNumpadInput.emit(ev.key.toUpperCase());
+
+    } else if ((ev.keyCode === 59  || ev.keyCode === 63 || ev.code === 'Comma' || ev.code === 'Minus')){
+      this.passwordScan += ev.key.toUpperCase();
+    }
+  }
+
+  passwordCard() {
+    if ((this.passwordScan.startsWith(';'))) {
+      console.log('selectInputData passwordScan', this.passwordScan);
+      this.initService.evUserScanned.emit(this.passwordScan);
+      this.passwordScan = '';
     }
   }
 
@@ -83,5 +92,4 @@ export class CashViewComponent implements OnInit, OnDestroy {
     //this.ws.stop();
     this.sub.map(sub => sub.unsubscribe());
   }
-
 }

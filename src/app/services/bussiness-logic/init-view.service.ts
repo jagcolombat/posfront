@@ -8,4 +8,8 @@ export class InitViewService {
   @Input() userScanned: string;
 
   constructor() { }
+
+  cleanUserScanned() {
+    this.userScanned = '';
+  }
 }

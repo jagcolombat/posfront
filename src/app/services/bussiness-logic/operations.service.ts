@@ -36,6 +36,7 @@ import {EBTTypes} from "../../utils/card-payment-types.enum";
 import {CustomerOpEnum} from "../../utils/operations/customer.enum";
 import {ClientService} from "./client.service";
 import {InformationType} from "../../utils/information-type.enum";
+import {SwipeCredentialCardComponent} from "../../components/presentationals/swipe-credential-card/swipe-credential-card.component";
 
 @Injectable({
   providedIn: 'root'
@@ -1217,6 +1218,17 @@ export class OperationsService {
         width: '480px', height: '650px', data: {name: name, label: label, unitCost: 0.00},
         disableClose: true
       }).afterClosed();
+  }
+
+  openSwipeCredentialCard(title: string, content?: string) {
+    return this.cashService.dialog.open(SwipeCredentialCardComponent,{
+      width: '400px', height: '350px', data: {
+        title: title ? title : 'Swipe card',
+        content: content,
+        pass: 'test'
+      },
+      disableClose: true
+    }).afterClosed();
   }
 
   getOrderInfo()/*: Observable<Order>*/ {
