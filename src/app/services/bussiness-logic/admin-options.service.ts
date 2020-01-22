@@ -444,7 +444,7 @@ export class AdminOptionsService {
                             .subscribe(
                               next => {
                                 console.log('Swipe password card', next);
-                                employee.passwordByCard = (next.pass) ? next.pass : this.initService.userScanned;
+                                employee.passwordByCard = (next) ? next.pass : this.initService.userScanned;
                                 this.initService.cleanUserScanned();
                                 employee.companyId = 1;
                                 console.log(AdminOpEnum.EMPLOYEE_SETUP, employee);
@@ -453,7 +453,7 @@ export class AdminOptionsService {
                                     console.log(AdminOpEnum.EMPLOYEE_SETUP, next);
                                     this.cashService.openGenericInfo(InformationType.INFO, 'The employee '+ next.userName +' was setup.')
                                   },
-                                  err => { this.cashService.openGenericInfo("Error","Can't setup the employee"); }
+                                  err => { this.cashService.openGenericInfo("Error",err); }
                                 );
 
                               }, err => { console.error(err)}, () => console.log('complete', this)

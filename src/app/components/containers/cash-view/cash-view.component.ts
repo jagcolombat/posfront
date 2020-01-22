@@ -43,10 +43,10 @@ export class CashViewComponent implements OnInit, OnDestroy {
     } else if((ev.keyCode > 48 && ev.keyCode < 57) || (ev.keyCode === 73  || ev.keyCode === 82 || ev.keyCode === 105 ||
         ev.keyCode === 114) || !isNaN(parseInt(ev.key)) ){
 
-      (this.passwordScan.startsWith(';')) ?
+      (this.passwordScan.startsWith(';') || this.passwordScan.startsWith('%')) ?
         this.passwordScan += ev.key.toUpperCase() : this.invoiceService.evNumpadInput.emit(ev.key.toUpperCase());
 
-    } else if ((ev.keyCode === 59  || ev.keyCode === 63 || ev.code === 'Comma' || ev.code === 'Minus')){
+    } else if ((ev.keyCode === 59  || ev.keyCode === 63 || ev.keyCode === 37 || ev.code === 'Comma' || ev.code === 'Minus' || ev.code === 'Digit5')){
       this.passwordScan += ev.key.toUpperCase();
     }
   }
@@ -55,6 +55,9 @@ export class CashViewComponent implements OnInit, OnDestroy {
     if ((this.passwordScan.startsWith(';'))) {
       console.log('selectInputData passwordScan', this.passwordScan);
       this.initService.evUserScanned.emit(this.passwordScan);
+      this.passwordScan = '';
+    } else if ((this.passwordScan.startsWith('%'))) {
+      console.log('selectInputData passwordScan', this.passwordScan);
       this.passwordScan = '';
     }
   }

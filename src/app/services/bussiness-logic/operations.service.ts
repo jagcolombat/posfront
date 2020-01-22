@@ -1227,7 +1227,8 @@ export class OperationsService {
         content: content,
         pass: 'test'
       },
-      disableClose: true
+      disableClose: true,
+      autoFocus: false
     }).afterClosed();
   }
 

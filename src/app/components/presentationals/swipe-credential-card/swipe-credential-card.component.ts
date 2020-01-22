@@ -32,7 +32,7 @@ export class SwipeCredentialCardComponent implements OnInit, OnDestroy {
     let userTmp = pass.substr(1, pass.length-2);
     console.log('handleKeyboardEvent', userTmp);
     this.initService.userScanned = userTmp;
-    this.dialogRef.close(userTmp);
+    this.dialogRef.close({pass: userTmp});
   }
 
   ngOnDestroy() {

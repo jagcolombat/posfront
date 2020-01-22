@@ -27,7 +27,7 @@ export class CashService {
   disabledCustomerOp: boolean | boolean[] = false;
   systemConfig: Configuration;
   @Output() evReviewEnableState = new EventEmitter<boolean>();
-  @Output() evPassScanned = new EventEmitter<string>();
+  //@Output() evPassScanned = new EventEmitter<string>();
 
   constructor(public dialog: MatDialog, private dataStorage: DataStorageService, private authServ: AuthService) {
     this.resetEnableState();
