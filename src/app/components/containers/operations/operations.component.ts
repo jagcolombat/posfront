@@ -270,8 +270,8 @@ export class OperationsComponent implements OnInit {
   backKey(ev) {
     switch (ev) {
       case AdminOpEnum.PREV_SCREEN:
-        //this.adminOpService.backToUser();
-        this.router.navigateByUrl('/cash/dptos');
+        this.adminOpService.backToUser();
+        //this.router.navigateByUrl('/cash/dptos');
         break;
     }
   }

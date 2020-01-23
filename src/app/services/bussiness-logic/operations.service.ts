@@ -548,11 +548,14 @@ export class OperationsService {
 
   cancelCheckByAdmin(t?: Token) {
     console.log('cancelCheckByAdmin', t);
+    let dialog = this.cashService.openGenericInfo(InformationType.INFO, 'Voiding transaction');
     this.invoiceService.cancelInvoice().subscribe(next => {
+      dialog.close();
       this.authService.token = t;
       this.invoiceService.createInvoice();
     },err => {
       console.error('cancelCheck failed');
+      dialog.close();
       this.cashService.openGenericInfo('Error', 'Can\'t complete void operation')
     });
     this.resetInactivity(false);

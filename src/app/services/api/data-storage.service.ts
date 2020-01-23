@@ -149,7 +149,7 @@ export class DataStorageService {
 
   addProductOrderByInvoice(invoiceId: string, productOrder: ProductOrder, operationType: EOperationType,
                              isRefund = false): Observable<Invoice> {
-      return this.invoiceService.addProductOrder(this.url, productOrder, invoiceId, operationType);
+      return this.invoiceService.addProductOrder(this.url, productOrder, invoiceId, operationType, isRefund);
 
   }
 

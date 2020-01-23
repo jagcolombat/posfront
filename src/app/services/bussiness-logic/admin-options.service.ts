@@ -183,7 +183,8 @@ export class AdminOptionsService {
       this.router.navigateByUrl('/cash/dptos');
       this.invoiceService.getCashier();
     } else {
-      this.cashService.openGenericInfo('Information', 'Any user was logged previously')
+      //this.cashService.openGenericInfo('Information', 'Any user was logged previously')
+      this.router.navigateByUrl('/cash/dptos');
     }
   }
 
@@ -422,12 +423,24 @@ export class AdminOptionsService {
     });
   }
 
+  splitName(fullname: string, employee: EmployeedModel){
+    let splitFN = fullname.trim().split(" ");
+    employee.firstname = splitFN[0];
+    if(splitFN.length > 1){
+      employee.lastname = splitFN[splitFN.length - 1];
+      employee.username = employee.firstname.substr(0,3) + employee.lastname;
+    } else if (splitFN.length === 1){
+      employee.username = employee.firstname;
+    }
+    return employee;
+  }
+
   employSetup() {
     let employee = new EmployeedModel();
     this.operationService.getField(AdminOpEnum.EMPLOYEE_SETUP, 'Name', EFieldType.NAME).subscribe(
       name => {
         if(name){
-          employee.username = name.text;
+          employee = this.splitName(name.text, employee);
           this.getUsersPosition().subscribe(
             positions => {
               console.log(AdminOpEnum.EMPLOYEE_SETUP, positions);
