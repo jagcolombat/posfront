@@ -313,4 +313,8 @@ export class DataStorageService {
   acctPayment(client: string, payment: CardManualPayment | CheckPayment | TransferPayment, paymentMethod?: PaymentMethodEnum) {
     return this.clientService.acctPayment(this.url, client, payment, paymentMethod);
   }
+
+  clearInvoice(receiptNumber: string): Observable<Invoice> {
+    return this.invoiceService.clearInvoice(this.url, receiptNumber);
+  }
 }

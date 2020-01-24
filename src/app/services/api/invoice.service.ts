@@ -168,4 +168,9 @@ export class InvoiceService {
     return this._http.post<Invoice>(url + '/products/weightItem/invoice/' + receiptNumber, '', {params})
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
+
+  clearInvoice(url: string, receiptNumber: string): Observable<Invoice> {
+    return this._http.post<Invoice>(url +  this.path +  '/clear/' + receiptNumber, {})
+      .pipe(catchError(this.processHttpMsgService.handleError));
+  }
 }

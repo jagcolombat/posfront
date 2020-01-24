@@ -24,6 +24,7 @@ export interface IInvoice {
   type?: ETXType;
   orderInfo?: string;
   change?: number;
+  isPromotion?: boolean;
 }
 
 export class Invoice implements IInvoice {
@@ -46,7 +47,8 @@ export class Invoice implements IInvoice {
               public balance?: number,
               public type = ETXType.DINEIN,
               public orderInfo?: string,
-              public change?: number
+              public change?: number,
+              public isPromotion?: boolean
               ) {
   }
 }
