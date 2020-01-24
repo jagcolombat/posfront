@@ -25,6 +25,7 @@ import {EbtInquiryInfoComponent} from "../../components/presentationals/ebt-inqu
 import {ClientModel} from "../../models/client.model";
 import {InformationType} from "../../utils/information-type.enum";
 import {InitViewService} from "./init-view.service";
+import {DailyCloseComponent} from "../../components/presentationals/daily-close/daily-close.component";
 
 @Injectable({
   providedIn: 'root'
@@ -252,11 +253,11 @@ export class AdminOptionsService {
         },err=> console.error(err));
   }
 
-  doDayClose() {
+  doDayClose(emp?: any) {
     this.cashService.dayCloseEnableState();
     let dialogEv = this.cashService.openGenericInfo('Information', 'Closing day...');
 
-    this.dataStorage.dayClose().subscribe(
+    this.dataStorage.dayClose(emp).subscribe(
       next => {
         console.log(AdminOpEnum.WTDZ);
         this.cashService.openGenericInfo('Day Close', 'Complete '+AdminOpEnum.WTDZ.toLowerCase()+' operation');
@@ -271,9 +272,9 @@ export class AdminOptionsService {
     );
   }
 
-  private dayClosePrint() {
+  dayClosePrint(emp?: any) {
     this.cashService.dayCloseEnableState();
-    this.dataStorage.dayClosePrint().subscribe(
+    this.dataStorage.dayClosePrint(emp).subscribe(
       next => {
         console.log(AdminOpEnum.WTDZ);
         this.cashService.openGenericInfo('Day Close Print', 'Complete '+AdminOpEnum.WTDZ.toLowerCase()+' operation');
@@ -288,7 +289,7 @@ export class AdminOptionsService {
   }
 
   dayCloseType(){
-    let dayCloseTypes= new Array<any>({value: 1, text: 'Print'}, {value: 2, text: 'Close'});
+    /*let dayCloseTypes= new Array<any>({value: 1, text: 'Print'}, {value: 2, text: 'Close'});
     this.cashService.dialog.open(DialogDeliveryComponent,
       { width: '600px', height: '340px', data: {name: 'Day Close Types', label: 'Select a type', arr: dayCloseTypes},
         disableClose: true })
@@ -310,6 +311,35 @@ export class AdminOptionsService {
             });
           break;
       }
+    });*/
+    this.getEmployees( false,i => {
+      console.log('getEmployees', i);
+      this.cashService.dialog.open(DailyCloseComponent,
+      {
+        width: '480px', height: '400px', disableClose: true, data: {title: AdminOpEnum.WTDZ, empl: i }
+      })
+    });
+  }
+
+  getEmployees(allUsers: boolean, action: any){
+    this.dataStorage.getApplicationUsers().subscribe(next =>  {
+      console.log('getEmployees', next);
+      if(allUsers) next.unshift({id: "-1", userName: "All employees"});
+      action(next);
+    }, error1 => {
+      this.cashService.openGenericInfo('Error', 'Can\'t get the employees')
+    });
+  }
+
+  confirmDayClose(emp?: any){
+    this.cashService.openGenericInfo('Day Close', 'Do you want close day?', '', true)
+      .afterClosed().subscribe(next => {
+      console.log(next);
+      if(next){
+        this.doDayClose(emp);
+      }
+    }, err => {
+      this.cashService.openGenericInfo('Error', 'Can\'t complete '+ AdminOpEnum.WTDZ +' operation');
     });
   }
 

@@ -38,6 +38,8 @@ import {ClientModule} from "../client/client.module";
 import {ClientViewComponent} from "../../components/containers/client-view/client-view.component";
 import {EbtInquiryInfoComponent} from "../../components/presentationals/ebt-inquiry-info/ebt-inquiry-info.component";
 import {SwipeCredentialCardComponent} from "../../components/presentationals/swipe-credential-card/swipe-credential-card.component";
+import {AppComponent} from "../../app.component";
+import {DailyCloseComponent} from "../../components/presentationals/daily-close/daily-close.component";
 
 @NgModule({
   imports: [
@@ -78,7 +80,8 @@ import {SwipeCredentialCardComponent} from "../../components/presentationals/swi
     InputCcComponent,
     OrderInfoComponent,
     OrderInfoDetailsComponent,
-    SwipeCredentialCardComponent
+    SwipeCredentialCardComponent,
+    DailyCloseComponent
   ],
   entryComponents: [
     AgeValidationComponent,
@@ -106,7 +109,8 @@ import {SwipeCredentialCardComponent} from "../../components/presentationals/swi
     InputCcComponent,
     OrderInfoComponent,
     OrderInfoDetailsComponent,
-    SwipeCredentialCardComponent
+    SwipeCredentialCardComponent,
+    DailyCloseComponent
   ],
 })
 export class HomeModule { }

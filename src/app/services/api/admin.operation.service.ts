@@ -65,13 +65,17 @@ export class AdminOperationService {
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
-  getDayClosePrint(url: string): Observable<Report> {
-    return this._http.get<any>(url + this.path + '/op/report', {})
+  getDayClosePrint(url: string, emp = ''): Observable<Report> {
+    let params = new HttpParams();
+    params = params.append('empl', emp + '');
+    return this._http.get<any>(url + this.path + '/op/report', {params})
         .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
-  getDayClose(url: string): Observable<Report> {
-    return this._http.post<any>(url + this.path + '/op/report', {})
+  getDayClose(url: string, emp = ''): Observable<Report> {
+    let params = new HttpParams();
+    params = params.append('empl', emp + '');
+    return this._http.post<any>(url + this.path + '/op/report', {}, {params})
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 

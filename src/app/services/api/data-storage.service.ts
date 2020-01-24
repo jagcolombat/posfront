@@ -260,12 +260,12 @@ export class DataStorageService {
   }
 
   // Report
-  dayClose() {
-    return this.adminOperationService.getDayClose(this.url);
+  dayClose(empl?: any) {
+    return this.adminOperationService.getDayClose(this.url, empl);
   }
 
-  dayClosePrint() {
-    return this.adminOperationService.getDayClosePrint(this.url);
+  dayClosePrint(empl?: any) {
+    return this.adminOperationService.getDayClosePrint(this.url, empl);
   }
 
   getInvoiceByTransferType(authPending: EOperationType, auth: ETransferType) {
