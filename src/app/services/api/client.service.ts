@@ -56,7 +56,7 @@ export class ClientService {
   }
 
   setCredit(url: string, client: string, credit: number) {
-    return this._http.post<Invoice>(url + this.path + '/' + client + '/creditLimit/'+ credit, {})
+    return this._http.post<any>(url + this.path + '/' + client + '/creditLimit/'+ credit, {})
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 }

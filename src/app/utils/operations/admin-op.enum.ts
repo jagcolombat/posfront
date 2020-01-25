@@ -19,5 +19,6 @@ export enum AdminOpEnum {
   EMPLOYEE_SETUP = 'Employee Setup',
   CHANGE_PRICES = 'Change Prices',
   EBT_INQUIRY = 'EBT Inquiry',
-  CREDIT_LIMIT = 'Credit Limit'
+  CREDIT_LIMIT = 'Credit Limit',
+  REFUND_SALE = 'Refund Sale'
 }

@@ -325,4 +325,8 @@ export class DataStorageService {
   updateCreditLimit(client: string, credit: number) {
     return this.clientService.setCredit(this.url, client, credit);
   }
+
+  refundSale(receiptNumber: string) {
+    return this.invoiceService.refundSale(this.url, receiptNumber);
+  }
 }

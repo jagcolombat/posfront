@@ -642,10 +642,21 @@ export class AdminOptionsService {
         console.log('setCredit', c, credit);
         if(credit) {
           this.dataStorage.updateCreditLimit(c.id, credit.unitCost).subscribe(
-            next => console.log('updatedCredit', next), err => this.cashService.openGenericInfo(InformationType.ERROR, err)
+            next => {
+              console.log('updatedCredit', next);
+              this.cashService.openGenericInfo('Credit Limit', 'The credit limit of client '+ c.name +
+                ' is: $' + next.creditLimit.toFixed(2));
+            }, err => this.cashService.openGenericInfo(InformationType.ERROR, err)
+
           );
         }
       }
+    )
+  }
+
+  refundSale() {
+    this.dataStorage.refundSale(this.invoiceService.invoice.receiptNumber).subscribe(
+      next => console.log('refundSale', next), err => this.cashService.openGenericInfo(InformationType.ERROR, err)
     )
   }
 }
