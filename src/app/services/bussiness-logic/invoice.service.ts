@@ -369,4 +369,8 @@ export class InvoiceService {
     let transferPayment = new TransferPayment(amount, descrip);
     return this.dataStorage.acctPayment(client, transferPayment, PaymentMethodEnum.TRANSFER);
   }
+
+  printAcctBalance(client: string): Observable<any> {
+    return this.dataStorage.printAcctBalance(client);
+  }
 }

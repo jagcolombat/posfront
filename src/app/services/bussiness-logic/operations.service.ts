@@ -1406,8 +1406,8 @@ export class OperationsService {
     this.clientService.getClients().subscribe(
       clients=> {
         console.log(CustomerOpEnum.ACCT_BALANCE, clients);
-        this.openDialogWithPag(clients, (c)=> this.showBalance(c), 'Clients', 'Select a client:',
-          'name'/*, 'creditLimit','telephone'*/ );
+        this.openDialogWithPag(clients, (c)=> this.printBalance(c), 'Clients', 'Select a client:',
+          '', 'name','balance' );
       },
       error1 => {
         this.cashService.openGenericInfo(InformationType.INFO, 'Can\'t get the clients');
@@ -1418,6 +1418,16 @@ export class OperationsService {
   private showBalance(c: any) {
     this.cashService.openGenericInfo('Balance', 'The balance of client '+ c.name +' is: $'
       + c.balance.toFixed(2));
+  }
+
+  private printBalance(c: any) {
+    let dialog = this.cashService.openGenericInfo( InformationType.INFO, 'Printing balance');
+    this.invoiceService.printAcctBalance(c).subscribe(
+      next => dialog.close() , err => {
+        dialog.close();
+        this.cashService.openGenericInfo(InformationType.ERROR, err);
+      }
+    );
   }
 
   acctCharge() {

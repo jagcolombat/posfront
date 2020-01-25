@@ -67,14 +67,16 @@ export class AdminOperationService {
 
   getDayClosePrint(url: string, emp = ''): Observable<Report> {
     let params = new HttpParams();
-    params = params.append('empl', emp + '');
-    return this._http.get<any>(url + this.path + '/op/report', {params})
+    params = params.append('applicationUserId', emp + '');
+    params = params.append('closeDay', false + '');
+    return this._http.post<any>(url + this.path + '/op/report', {params})
         .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
   getDayClose(url: string, emp = ''): Observable<Report> {
     let params = new HttpParams();
-    params = params.append('empl', emp + '');
+    params = params.append('applicationUserId', emp + '');
+    params = params.append('closeDay', true + '');
     return this._http.post<any>(url + this.path + '/op/report', {}, {params})
       .pipe(catchError(this.processHttpMsgService.handleError));
   }

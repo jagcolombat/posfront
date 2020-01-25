@@ -1,7 +1,8 @@
 <button mat-button fxFlex="170px" *ngFor="let i of data.invoice | paginate: { itemsPerPage: sizePage, currentPage: page }"
         [mat-dialog-close]="i" [ngClass]="setColor(i.type)">
   <span *ngIf="data.label">{{i[data.label]}}</span>
-  <p *ngIf="data.detail && (data.detail === 'total' || data.detail === 'unitCost')">{{i[data.detail] | currency }}</p>
-  <p *ngIf="data.detail && (data.detail !== 'total' && data.detail !== 'unitCost')">{{i[data.detail]}}</p>
-  <span *ngIf="data.subdetail">{{i[data.subdetail]}}</span>
+  <p *ngIf="data.detail && (currencyProps.includes(data.detail))">{{i[data.detail] | currency }}</p>
+  <p *ngIf="data.detail && (!currencyProps.includes(data.detail))">{{i[data.detail]}}</p>
+  <span *ngIf="data.subdetail && (currencyProps.includes(data.subdetail))">{{i[data.subdetail] | currency }}</span>
+  <span *ngIf="data.subdetail && (!currencyProps.includes(data.subdetail))">{{i[data.subdetail]}}</span>
 </button>

@@ -317,4 +317,8 @@ export class DataStorageService {
   clearInvoice(receiptNumber: string): Observable<Invoice> {
     return this.invoiceService.clearInvoice(this.url, receiptNumber);
   }
+
+  printAcctBalance(client: string): Observable<any> {
+    return this.clientService.printAcctBalance(this.url, client);
+  }
 }

@@ -49,4 +49,9 @@ export class ClientService {
     return this._http.post<Invoice>(url + this.path + '/' + client + '/chargeAccount/payment', payment, {params})
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
+
+  printAcctBalance(url: string, client: string) {
+    return this._http.get<Invoice>(url + this.path + '/' + client + '/info')
+      .pipe(catchError(this.processHttpMsgService.handleError));
+  }
 }
