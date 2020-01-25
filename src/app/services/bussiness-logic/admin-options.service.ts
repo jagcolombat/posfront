@@ -319,7 +319,12 @@ export class AdminOptionsService {
       this.cashService.dialog.open(DailyCloseComponent,
       {
         width: '480px', height: '400px', disableClose: true, data: {title: AdminOpEnum.WTDZ, empl: i }
-      })
+      }).afterClosed().subscribe(
+        next => {
+          console.log('DailyCloseComponent', next);
+          next.closeDay ? this.confirmDayClose(next.employee) : this.dayClosePrint(next.employee);
+        }
+      )
     });
   }
 

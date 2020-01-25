@@ -8,7 +8,7 @@
     <sales-empl *ngIf="data.empl" [employes]="data.empl" (selectEmployed)="setEmployee($event)"></sales-empl>
   </div>
   <div mat-dialog-actions>
-    <button mat-raised-button [mat-dialog-close] (click)="print()">Print</button>
-    <button mat-raised-button [mat-dialog-close] (click)="close()">Close</button>
+    <button mat-raised-button (click)="print()">Print</button>
+    <button mat-raised-button (click)="close()">Close</button>
   </div>
 </div>

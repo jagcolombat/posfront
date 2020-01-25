@@ -69,7 +69,7 @@ export class AdminOperationService {
     let params = new HttpParams();
     params = params.append('applicationUserId', emp + '');
     params = params.append('closeDay', false + '');
-    return this._http.post<any>(url + this.path + '/op/report', {params})
+    return this._http.post<any>(url + this.path + '/op/report', {}, {params})
         .pipe(catchError(this.processHttpMsgService.handleError));
   }
 

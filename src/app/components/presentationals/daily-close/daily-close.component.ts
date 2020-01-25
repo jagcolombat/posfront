@@ -12,7 +12,7 @@ export class DailyCloseComponent implements OnInit {
   employeeId: string;
 
   constructor(public dialogRef: MatDialogRef<DailyCloseComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: any, private adminOpServ: AdminOptionsService) { }
+              @Inject(MAT_DIALOG_DATA) public data: any/*, private adminOpServ: AdminOptionsService*/) { }
 
   ngOnInit() {
   }
@@ -24,12 +24,14 @@ export class DailyCloseComponent implements OnInit {
 
   print(){
     console.log('setEmployee', 'print', this.employeeId);
-    this.employeeId ? this.adminOpServ.dayClosePrint(this.employeeId) : this.adminOpServ.dayClosePrint();
+    //this.employeeId ? this.adminOpServ.dayClosePrint(this.employeeId) : this.adminOpServ.dayClosePrint();
+    this.dialogRef.close({employee: this.employeeId, closeDay: false})
   }
 
   close(){
     console.log('setEmployee', 'print', this.employeeId);
-    this.employeeId ? this.adminOpServ.confirmDayClose(this.employeeId) : this.adminOpServ.confirmDayClose();
+    //this.employeeId ? this.adminOpServ.confirmDayClose(this.employeeId) : this.adminOpServ.confirmDayClose();
+    this.dialogRef.close({employee: this.employeeId, closeDay: true})
   }
 
 }
