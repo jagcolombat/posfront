@@ -321,4 +321,8 @@ export class DataStorageService {
   printAcctBalance(client: string): Observable<any> {
     return this.clientService.printAcctBalance(this.url, client);
   }
+
+  updateCreditLimit(client: string, credit: number) {
+    return this.clientService.setCredit(this.url, client, credit);
+  }
 }

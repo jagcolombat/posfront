@@ -14,11 +14,12 @@ export class AdminOptionsComponent implements OnInit {
     AdminOpEnum.APPLY_DISCOUNT, AdminOpEnum.CANCEL_CHECK, AdminOpEnum.REMOVE_HOLD/*, AdminOpEnum.AUTH_PENDING*/,
     AdminOpEnum.DEPARMENTS, AdminOpEnum.BACK_USER, AdminOpEnum.SET_USER/*, AdminOpEnum.CLOSE_BATCH*/, AdminOpEnum.CONFIG,
     AdminOpEnum.SYSTEM_VERSION/*, AdminOpEnum.EBT_INQUIRY*/, AdminOpEnum.CHARGE_ACCT_SETUP, AdminOpEnum.EMPLOYEE_SETUP,
-    AdminOpEnum.CHANGE_PRICES];
+    AdminOpEnum.CHANGE_PRICES, AdminOpEnum.CREDIT_LIMIT];
   page = 1;
   sizePage = 16;
   @Input() disable: boolean | boolean[] = this.adminOpService.cashService.disabledAdminOp;
-  adminOpColor = ['red','red','red','red','red','red','red','red','red','red'/*,'red','red','red'*/,'violet','violet','violet'];
+  adminOpColor = ['red','red','red','red','red','red','red','red','red','red'/*,'red','red','red'*/,'violet','violet',
+    'violet', 'violet'];
 
   constructor(private router: Router, public adminOpService: AdminOptionsService ) {
   }
@@ -80,6 +81,9 @@ export class AdminOptionsComponent implements OnInit {
         break;
       case AdminOpEnum.CHARGE_ACCT_SETUP.toUpperCase():
         this.adminOpService.chargeAccountSetup();
+        break;
+      case AdminOpEnum.CREDIT_LIMIT.toUpperCase():
+        this.adminOpService.updateCreditLimit();
         break;
     }
   }

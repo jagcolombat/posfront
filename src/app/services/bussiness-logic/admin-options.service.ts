@@ -26,6 +26,8 @@ import {ClientModel} from "../../models/client.model";
 import {InformationType} from "../../utils/information-type.enum";
 import {InitViewService} from "./init-view.service";
 import {DailyCloseComponent} from "../../components/presentationals/daily-close/daily-close.component";
+import {CustomerOpEnum} from "../../utils/operations/customer.enum";
+import {ClientService} from "./client.service";
 
 @Injectable({
   providedIn: 'root'
@@ -37,7 +39,7 @@ export class AdminOptionsService {
 
   constructor(private invoiceService: InvoiceService, public cashService: CashService, private auth: AuthService,
               private operationService: OperationsService, private dataStorage: DataStorageService,
-              private initService: InitViewService, private router: Router) {
+              private initService: InitViewService, private clientService: ClientService, private router: Router) {
 
     this.operationService.evCancelCheck.subscribe(next => {
       next ? this.cancelCheck(): this.cancelCheckLoaded=false;
@@ -618,5 +620,32 @@ export class AdminOptionsService {
             " specified the name");
         }
       });
+  }
+
+  updateCreditLimit() {
+    console.log(AdminOpEnum.CREDIT_LIMIT);
+    this.currentOperation = AdminOpEnum.CREDIT_LIMIT;
+    this.clientService.getClients().subscribe(
+      clients=> {
+        console.log(CustomerOpEnum.ACCT_BALANCE, clients);
+        this.operationService.openDialogWithPag(clients, (c)=> this.setCreditLimit(c), 'Clients', 'Select a client:',
+          '', 'name','creditLimit' );
+      },
+      error1 => {
+        this.cashService.openGenericInfo(InformationType.INFO, 'Can\'t get the clients');
+      }, () => this.currentOperation = '');
+  }
+
+  private setCreditLimit(c: any) {
+    this.operationService.getPriceField(AdminOpEnum.CREDIT_LIMIT, 'Amount').subscribe(
+      credit => {
+        console.log('setCredit', c, credit);
+        if(credit) {
+          this.dataStorage.updateCreditLimit(c.id, credit.unitCost).subscribe(
+            next => console.log('updatedCredit', next), err => this.cashService.openGenericInfo(InformationType.ERROR, err)
+          );
+        }
+      }
+    )
   }
 }

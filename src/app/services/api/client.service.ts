@@ -54,4 +54,9 @@ export class ClientService {
     return this._http.get<Invoice>(url + this.path + '/' + client + '/info')
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
+
+  setCredit(url: string, client: string, credit: number) {
+    return this._http.post<Invoice>(url + this.path + '/' + client + '/creditLimit/'+ credit, {})
+      .pipe(catchError(this.processHttpMsgService.handleError));
+  }
 }
