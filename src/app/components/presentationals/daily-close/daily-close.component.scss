@@ -2,3 +2,10 @@ div[mat-dialog-actions] {
   justify-content: center;
   margin-top: 20px;
 }
+.show {
+  display: flex;
+}
+
+.hide {
+  display: none;
+}

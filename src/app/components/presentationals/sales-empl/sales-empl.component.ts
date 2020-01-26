@@ -36,7 +36,8 @@ export class SalesEmplComponent implements OnInit {
   }
 
   select(ev) {
-    if(ev.value !== undefined) this.selectEmployed.emit(ev.value);
+    //if(ev.value !== undefined) this.selectEmployed.emit(ev.value);
+    this.selectEmployed.emit(ev.value);
   }
 
   private createColumnDefs() {
@@ -98,11 +99,16 @@ export class SalesEmplComponent implements OnInit {
 
   onPrint() {
     console.log('Print invoices by user', this.emplSel);
-     this.dataStorage.printInvoiceByUser(this.emplSel).subscribe(next => {
-      console.log(next);
-    }, error1 => {
-      console.error('getSales', error1);
-    });
+    if(this.emplSel){
+      this.dataStorage.printInvoiceByUser(this.emplSel).subscribe(next => {
+        console.log(next);
+      }, error1 => {
+        console.error('getSales', error1);
+      });
+    } else {
+      console.log('Debe seleccionar un empleado');
+    }
+
   }
 
   showTip(show: boolean) {

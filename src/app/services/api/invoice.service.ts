@@ -175,7 +175,7 @@ export class InvoiceService {
   }
 
   refundSale(url: string, receiptNumber: string) {
-    return this._http.post<Invoice>(url + this.path + '/refundSale/' + receiptNumber, {})
+    return this._http.post<Invoice>(url + this.path + '/' + receiptNumber + '/refundSale', {})
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 }

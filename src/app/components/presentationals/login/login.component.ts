@@ -4,6 +4,7 @@ import { AuthService } from "../../../services/api/auth.service";
 import { Router } from "@angular/router";
 import {InitViewService} from "../../../services/bussiness-logic/init-view.service";
 import {Subscription} from "rxjs";
+import {UserrolEnum} from "../../../utils/userrol.enum";
 
 @Component({
   selector: 'login',
@@ -12,7 +13,7 @@ import {Subscription} from "rxjs";
 })
 export class LoginComponent implements OnInit, OnDestroy {
   @Output() evRol = new EventEmitter<boolean>();
-  @Input() rol: string;
+  @Input() rol: UserrolEnum[];
   input = "";
   tryValidation:boolean;
   valid: boolean;
@@ -28,16 +29,16 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   login(){
     this.authService.login({ username: 'user', password: this.input }).subscribe(t => {
-      this.loginOK(t, this.rol);
+      this.loginOK(t);
     }, error1 => {
       this.loginFail(error1);
     });
   }
 
-  loginOK (data, rol?: string) {
-    console.log('loginOK', data, rol);
-    if (rol)  {
-      this.verifyRol(data, rol);
+  loginOK (data) {
+    console.log('loginOK', data);
+    if (this.rol)  {
+      this.verifyRol(data, this.rol);
     } else {
       this.validAuth();
     }
@@ -50,7 +51,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   verifyRol(data, rol) {
     console.log('verifyRol', data, rol);
-    if(rol === data.rol) {
+    if(this.rol.includes(data.rol)) {
       this.validAuth();
     } else {
       this.invalidAuth('User not authorized');

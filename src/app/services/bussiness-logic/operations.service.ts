@@ -37,6 +37,7 @@ import {CustomerOpEnum} from "../../utils/operations/customer.enum";
 import {ClientService} from "./client.service";
 import {InformationType} from "../../utils/information-type.enum";
 import {SwipeCredentialCardComponent} from "../../components/presentationals/swipe-credential-card/swipe-credential-card.component";
+import {UserrolEnum} from "../../utils/userrol.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -287,14 +288,18 @@ export class OperationsService {
 
   hold() {
     console.log('hold');
-    this.currentOperation = 'hold';
-    if (this.invoiceService.invoice.productOrders.length > 0) {
-      this.invoiceService.holdOrder().
-      subscribe(
-        next => this.invoiceService.createInvoice(),
-        err => this.cashService.openGenericInfo('Error', 'Can\'t complete hold order operation'));
+    if(this.authService.token.rol === UserrolEnum.SUPERVISOR ){
+      this.cashService.openGenericInfo(InformationType.INFO, UserrolEnum.SUPERVISOR +
+        ' hasn\'t access to hold order operation.')
     } else {
-      this.cashService.openGenericInfo('Error', 'Not possible Hold Order without products in this Invoice');
+      this.currentOperation = 'hold';
+      if (this.invoiceService.invoice.productOrders.length > 0) {
+        this.invoiceService.holdOrder().subscribe(
+          next => this.invoiceService.createInvoice(),
+          err => this.cashService.openGenericInfo('Error', 'Can\'t complete hold order operation'));
+      } else {
+        this.cashService.openGenericInfo('Error', 'Not possible Hold Order without products in this Invoice');
+      }
     }
     this.resetInactivity(true);
   }
@@ -1406,7 +1411,7 @@ export class OperationsService {
     this.clientService.getClients().subscribe(
       clients=> {
         console.log(CustomerOpEnum.ACCT_BALANCE, clients);
-        this.openDialogWithPag(clients, (c)=> this.printBalance(c), 'Clients', 'Select a client:',
+        this.openDialogWithPag(clients, (c)=> this.printBalance(c.id), 'Clients', 'Select a client:',
           '', 'name','balance' );
       },
       error1 => {
@@ -1420,12 +1425,15 @@ export class OperationsService {
       + c.balance.toFixed(2));
   }
 
-  private printBalance(c: any) {
+  private printBalance(clientId: string) {
     let dialog = this.cashService.openGenericInfo( InformationType.INFO, 'Printing balance');
-    this.invoiceService.printAcctBalance(c).subscribe(
-      next => dialog.close() , err => {
+    this.invoiceService.printAcctBalance(clientId).subscribe(
+      next => {
         dialog.close();
-        this.cashService.openGenericInfo(InformationType.ERROR, err);
+        console.log('printBalance', next);
+      },err => {
+          dialog.close();
+          this.cashService.openGenericInfo(InformationType.ERROR, err);
       }
     );
   }

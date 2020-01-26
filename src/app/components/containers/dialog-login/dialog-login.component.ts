@@ -10,11 +10,12 @@ import {Token} from "../../../models";
   styleUrls: ['./dialog-login.component.scss']
 })
 export class DialogLoginComponent implements OnInit, OnDestroy {
-  rol: string = UserrolEnum.ADMIN;
+  rol: UserrolEnum[];
   cashierToken: Token;
 
   constructor(public dialogRef: MatDialogRef<DialogLoginComponent>, private authService: AuthService) {
     this.cashierToken = this.authService.token;
+    this.rol = this.authService.adminRoles;
   }
 
   ngOnInit() {

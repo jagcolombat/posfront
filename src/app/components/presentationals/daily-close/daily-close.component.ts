@@ -15,6 +15,7 @@ export class DailyCloseComponent implements OnInit {
               @Inject(MAT_DIALOG_DATA) public data: any/*, private adminOpServ: AdminOptionsService*/) { }
 
   ngOnInit() {
+    console.log('employId', this.employeeId);
   }
 
   setEmployee(ev: any){

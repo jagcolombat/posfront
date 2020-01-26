@@ -18,6 +18,7 @@ export class AuthService {
   credentials: Credentials;
   headers: HttpHeaders;
   initialLogin: Token;
+  adminRoles=[UserrolEnum.ADMIN, UserrolEnum.SUPERVISOR]
 
   constructor(private http: HttpClient, private router: Router, private dialog: MatDialog) {
     this.headers = new HttpHeaders({
@@ -67,7 +68,7 @@ export class AuthService {
   }
 
   adminLogged() {
-    return (this.token && this.token.rol === UserrolEnum.ADMIN)? true : false;
+    return (this.token && this.adminRoles.includes(this.token.rol));
   }
 
   restoreInitialLogin() {

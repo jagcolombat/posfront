@@ -7,7 +7,7 @@
   <div mat-dialog-content class="content">
     <sales-empl *ngIf="data.empl" [employes]="data.empl" (selectEmployed)="setEmployee($event)"></sales-empl>
   </div>
-  <div mat-dialog-actions>
+  <div mat-dialog-actions [ngClass]="(employeeId) ? 'show': 'hide'">
     <button mat-raised-button (click)="print()">Print</button>
     <button mat-raised-button (click)="close()">Close</button>
   </div>

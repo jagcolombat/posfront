@@ -39,13 +39,15 @@ export class GenericSalesComponent implements OnInit {
 
   getSales(ev){
     console.log('getSales', ev);
-    this.dataStorage.getInvoiceByUser(ev).subscribe(next => {
-      console.log(next);
-      this.salesByUser = next;
-    }, error1 => {
-      console.error('getSales', error1);
-      this.cashService.openGenericInfo('Error', 'Can´t get sales by this user');
-    });
+    if(ev){
+      this.dataStorage.getInvoiceByUser(ev).subscribe(next => {
+        console.log(next);
+        this.salesByUser = next;
+      }, error1 => {
+        console.error('getSales', error1);
+        this.cashService.openGenericInfo('Error', 'Can´t get sales by this user');
+      });
+    }
   }
 
   reviewCheck(receiptNumber: string){

@@ -4,6 +4,7 @@ export enum AdminOpEnum {
   EMPLZ = 'Daily Inv RPRT',
   SYSZ = 'Daily PMNT Type',
   WTDZ = 'Day Close',
+  CCSZ = 'Cashier Close Shift',
   CHANGE_PRINTER = 'Change Printer',
   CLOSE_BROWSER = 'Close Browser',
   CANCEL_CHECK = 'Cancel Check',

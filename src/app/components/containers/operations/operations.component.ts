@@ -41,7 +41,7 @@ export class OperationsComponent implements OnInit {
   @Input() moneyOperations = ['1', '5', '10', '20', '50', '100'];
   @Input() moneyColor = ['one', 'five', 'ten', 'twenty', 'fifty', 'hundrey'];
 
-  @Input() reportOperations = [AdminOpEnum.EMPLZ, AdminOpEnum.SYSZ, AdminOpEnum.WTDZ];
+  @Input() reportOperations = [AdminOpEnum.EMPLZ, AdminOpEnum.SYSZ, AdminOpEnum.WTDZ, AdminOpEnum.CCSZ];
   @Input() reportColor = 'yellow';
 
   @Input() backOperations = [AdminOpEnum.PREV_SCREEN];
@@ -263,6 +263,9 @@ export class OperationsComponent implements OnInit {
         break;
       case AdminOpEnum.WTDZ:
         this.adminOpService.dayCloseType();
+        break;
+      case AdminOpEnum.CCSZ:
+        this.adminOpService.cashierCloseShift();
         break;
     }
   }

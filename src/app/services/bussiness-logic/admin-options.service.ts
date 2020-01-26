@@ -37,7 +37,7 @@ export class AdminOptionsService {
   private removeHoldLoaded: boolean;
   currentOperation: AdminOpEnum | string;
 
-  constructor(private invoiceService: InvoiceService, public cashService: CashService, private auth: AuthService,
+  constructor(private invoiceService: InvoiceService, public cashService: CashService, public auth: AuthService,
               private operationService: OperationsService, private dataStorage: DataStorageService,
               private initService: InitViewService, private clientService: ClientService, private router: Router) {
 
@@ -255,18 +255,22 @@ export class AdminOptionsService {
         },err=> console.error(err));
   }
 
-  doDayClose(emp?: any) {
+  doDayClose(emp?: any, op?: AdminOpEnum) {
     this.cashService.dayCloseEnableState();
-    let dialogEv = this.cashService.openGenericInfo('Information', 'Closing day...');
+    let dialogEv = this.cashService.openGenericInfo('Information', 'Closing '+ (emp ? 'cashier' : 'day') +'...');
 
     this.dataStorage.dayClose(emp).subscribe(
       next => {
-        console.log(AdminOpEnum.WTDZ);
-        this.cashService.openGenericInfo('Day Close', 'Complete '+AdminOpEnum.WTDZ.toLowerCase()+' operation');
+        console.log(op);
+        dialogEv.close();
+        this.cashService.openGenericInfo(emp ? 'Cashier' : 'Day' +' Close', 'Complete '+op.toLowerCase()+' operation');
       },
       err => {
+        dialogEv.close();
         this.cashService.openGenericInfo('Error', 'Can\'t complete '+
-        AdminOpEnum.WTDZ.toLowerCase()+' operation')},
+        op.toLowerCase()+' operation');
+        this.cashService.resetEnableState();
+      },
       () => {
         dialogEv.close();
         this.cashService.resetEnableState();
@@ -274,16 +278,18 @@ export class AdminOptionsService {
     );
   }
 
-  dayClosePrint(emp?: any) {
+  dayClosePrint(emp?: any, op?: AdminOpEnum) {
     this.cashService.dayCloseEnableState();
     this.dataStorage.dayClosePrint(emp).subscribe(
       next => {
-        console.log(AdminOpEnum.WTDZ);
-        this.cashService.openGenericInfo('Day Close Print', 'Complete '+AdminOpEnum.WTDZ.toLowerCase()+' operation');
+        console.log(op);
+        this.cashService.openGenericInfo('Day Close Print', 'Complete '+op.toLowerCase()+' operation');
       },
       err => {
         this.cashService.openGenericInfo('Error', 'Can\'t complete '+
-          AdminOpEnum.WTDZ.toLowerCase()+' print operation')},
+          op.toLowerCase()+' print operation');
+          this.cashService.resetEnableState();
+        },
       () => {
         this.cashService.resetEnableState();
       }
@@ -291,7 +297,7 @@ export class AdminOptionsService {
   }
 
   dayCloseType(){
-    /*let dayCloseTypes= new Array<any>({value: 1, text: 'Print'}, {value: 2, text: 'Close'});
+    let dayCloseTypes= new Array<any>({value: 1, text: 'Print'}, {value: 2, text: 'Close'});
     this.cashService.dialog.open(DialogDeliveryComponent,
       { width: '600px', height: '340px', data: {name: 'Day Close Types', label: 'Select a type', arr: dayCloseTypes},
         disableClose: true })
@@ -299,22 +305,22 @@ export class AdminOptionsService {
       console.log(next);
       switch (next) {
         case 1:
-          this.dayClosePrint();
+          this.dayClosePrint('', AdminOpEnum.WTDZ);
           break;
         case 2:
           this.cashService.openGenericInfo('Day Close', 'Do you want close day?', '', true)
             .afterClosed().subscribe(next => {
               console.log(next);
               if(next){
-                this.doDayClose();
+                this.doDayClose('', AdminOpEnum.WTDZ);
               }
             }, err => {
               this.cashService.openGenericInfo('Error', 'Can\'t complete '+ AdminOpEnum.WTDZ +' operation');
             });
           break;
       }
-    });*/
-    this.getEmployees( false,i => {
+    });
+    /*this.getEmployees( false,i => {
       console.log('getEmployees', i);
       this.cashService.dialog.open(DailyCloseComponent,
       {
@@ -323,6 +329,24 @@ export class AdminOptionsService {
         next => {
           console.log('DailyCloseComponent', next);
           next.closeDay ? this.confirmDayClose(next.employee) : this.dayClosePrint(next.employee);
+        }
+      )
+    });*/
+  }
+
+  cashierCloseShift(){
+    this.getEmployees( false,i => {
+      console.log('getEmployees', i);
+      this.cashService.dialog.open(DailyCloseComponent,
+        {
+          width: '480px', height: '400px', disableClose: true, data: {title: AdminOpEnum.CCSZ, empl: i }
+        }).afterClosed().subscribe(
+        next => {
+          console.log('DailyCloseComponent', next);
+          if(next){
+            next.closeDay ? this.confirmDayClose(next.employee, AdminOpEnum.CCSZ) :
+              this.dayClosePrint(next.employee, AdminOpEnum.CCSZ);
+          }
         }
       )
     });
@@ -338,15 +362,15 @@ export class AdminOptionsService {
     });
   }
 
-  confirmDayClose(emp?: any){
+  confirmDayClose(emp?: any, op?: AdminOpEnum){
     this.cashService.openGenericInfo('Day Close', 'Do you want close day?', '', true)
       .afterClosed().subscribe(next => {
       console.log(next);
       if(next){
-        this.doDayClose(emp);
+        this.doDayClose(emp, op);
       }
     }, err => {
-      this.cashService.openGenericInfo('Error', 'Can\'t complete '+ AdminOpEnum.WTDZ +' operation');
+      this.cashService.openGenericInfo('Error', 'Can\'t complete '+ op +' operation');
     });
   }
 
@@ -661,7 +685,11 @@ export class AdminOptionsService {
 
   refundSale() {
     this.dataStorage.refundSale(this.invoiceService.invoice.receiptNumber).subscribe(
-      next => console.log('refundSale', next), err => this.cashService.openGenericInfo(InformationType.ERROR, err)
+      next => {
+        console.log('refundSale', next);
+        this.invoiceService.setInvoice(next);
+      }, err => this.cashService.openGenericInfo(InformationType.ERROR, err)
+
     )
   }
 }
