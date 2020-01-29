@@ -1279,7 +1279,7 @@ export class OperationsService {
 
   notSale() {
     this.invoiceService.notSale().subscribe(d => {
-        console.log("Open cash drawer.")
+        console.log("Open cash drawer.", d);
     });
   }
 

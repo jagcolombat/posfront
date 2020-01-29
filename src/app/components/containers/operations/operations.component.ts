@@ -35,7 +35,7 @@ export class OperationsComponent implements OnInit {
   @Input() paymentColor = ['yellow', 'yellow', 'yellow', 'green', 'blue', 'blue'];
   @Input() paymentDisabled: boolean | boolean[] = this.operationService.cashService.disabledPayment;
 
-  @Input() otherOperations = [OtherOpEnum.PRINT_LAST, OtherOpEnum.NO_SALE, OtherOpEnum.WEIGHT_ITEM];
+  @Input() otherOperations = [OtherOpEnum.PRINT_LAST,/* OtherOpEnum.NO_SALE,*/ OtherOpEnum.WEIGHT_ITEM];
   @Input() otherColor = ['yellow', 'blue', 'blue', 'green','blue','blue'];
 
   @Input() moneyOperations = ['1', '5', '10', '20', '50', '100'];
