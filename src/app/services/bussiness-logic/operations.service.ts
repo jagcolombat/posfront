@@ -261,6 +261,7 @@ export class OperationsService {
   manager(action?: string) {
     console.log('manager');
     // this.currentOperation = 'manager';
+    this.authService.initialLogin = this.authService.token;
     if(this.authService.adminLogged()){
       if(action){
         this.actionByManager(action, this.authService.token);
@@ -268,7 +269,7 @@ export class OperationsService {
         this.router.navigateByUrl('/cash/options');
       }
     } else {
-      this.authService.initialLogin = this.authService.token;
+      //this.authService.initialLogin = this.authService.token;
       this.cashService.dialog.open(DialogLoginComponent, { width: '530px', height: '580px', disableClose: true})
         .afterClosed()
         .subscribe(loginValid => {
