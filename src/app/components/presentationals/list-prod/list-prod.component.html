@@ -1,9 +1,9 @@
-<div class="page">
+<div class="page" [ngClass]="getBreakTextType()">
   <button mat-button fxFlex="125px" *ngFor="let i of prods | paginate: { itemsPerPage: sizePage, currentPage: page }"
         (click)="doAction($event,i)"
         [ngClass]="getColorByProp(i)"
         [disabled]="stockService.cashService.disabledInput">
-    {{i.name.substring(0, 20) | uppercase }}
+    {{i.name.substring(0, 30) | uppercase }}
   </button>
   <div class="loading" *ngIf="loading">
     <span >Loading products....</span>

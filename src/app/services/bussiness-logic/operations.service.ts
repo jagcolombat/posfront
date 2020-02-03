@@ -1,6 +1,6 @@
 import {EventEmitter, Injectable, Output} from '@angular/core';
 import {InvoiceService} from "./invoice.service";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {AuthService} from "../api/auth.service";
 import {DialogLoginComponent} from "../../components/containers/dialog-login/dialog-login.component";
 import {Invoice} from "../../models/invoice.model";
@@ -52,10 +52,18 @@ export class OperationsService {
   @Output() evCleanAdminOperation = new EventEmitter<any>();
 
   constructor(private invoiceService: InvoiceService, public cashService: CashService,
-              private authService: AuthService, private clientService: ClientService, private router: Router) {
+              private authService: AuthService, private clientService: ClientService, private router: Router,
+              private route: ActivatedRoute) {
     this.invoiceService.evAddProd.subscribe(() => this.onAddProduct());
-    this.invoiceService.evCreateInvoice.subscribe(next => this.router.navigateByUrl('/cash/dptos'));
+    //If section products is showing
+    this.invoiceService.evCreateInvoice.subscribe(next => this.navigateToDept());
     this.counterInactivity();
+  }
+
+  navigateToDept(){
+    if(this.router.url.includes('products')){
+      this.router.navigateByUrl('/cash/dptos');
+    }
   }
 
   counterInactivity(){

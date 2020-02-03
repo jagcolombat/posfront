@@ -55,3 +55,15 @@ pos-paginator {
     padding: 5px;
   }
 }
+
+.break-all {
+  & button /deep/ span {
+    word-break: break-all;
+  }
+}
+
+.break-word {
+  & button /deep/ span {
+    word-wrap: break-word;
+  }
+}

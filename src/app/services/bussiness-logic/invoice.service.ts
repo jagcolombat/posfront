@@ -58,6 +58,11 @@ export class InvoiceService {
     //return this.cashier = (localStorage.getItem('userName')) ? localStorage.getItem('userName') : ''
   }
 
+  getUserId(): string {
+    return (this.authService.token && this.authService.token.user_id) ? this.authService.token.user_id : '';
+    //return this.cashier = (localStorage.getItem('userName')) ? localStorage.getItem('userName') : ''
+  }
+
   createInvoice(){
       this.dataStorage.createInvoice().subscribe(next => {
         console.info('createCheck successfull', next);

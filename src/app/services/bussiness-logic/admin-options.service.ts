@@ -185,6 +185,10 @@ export class AdminOptionsService {
       this.auth.restoreInitialLogin();
       this.router.navigateByUrl('/cash/dptos');
       this.invoiceService.getCashier();
+      this.invoiceService.setUser(this.invoiceService.getUserId()).subscribe(
+        next => console.log(this.invoiceService.cashier + ' was assigned to the invoice ' + next.receiptNumber),
+        error1 => this.cashService.openGenericInfo(InformationType.ERROR,
+          'Can\'t be assigned the user '+ this.invoiceService.cashier +' to invoice'));
     } else {
       //this.cashService.openGenericInfo('Information', 'Any user was logged previously')
       this.router.navigateByUrl('/cash/dptos');

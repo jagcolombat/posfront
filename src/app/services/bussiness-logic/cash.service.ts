@@ -5,7 +5,7 @@ import {Configuration} from "../../models/configuration.model";
 import {AuthService} from "../api/auth.service";
 import {DataStorageService} from "../api/data-storage.service";
 import {CompanyType} from "../../utils/company-type.enum";
-import {SwipeCredentialCardComponent} from "../../components/presentationals/swipe-credential-card/swipe-credential-card.component";
+import {BreakTextEnum} from "../../utils/breaktext.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -153,6 +153,7 @@ export class CashService {
     this.getSystemConfig().subscribe(next => {
       console.info('getConfig successfull', next);
       this.systemConfig = next;
+      if(!this.systemConfig.breakText) this.systemConfig.breakText = BreakTextEnum.ALL;
       this.splitAllow();
       // return prop ? next[prop]: next;
     }, err => {

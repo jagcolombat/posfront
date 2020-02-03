@@ -1,4 +1,5 @@
 import {CompanyType} from "../utils/company-type.enum";
+import {BreakTextEnum} from "../utils/breaktext.enum";
 
 export interface Configuration {
   posNumber?: number;
@@ -9,4 +10,5 @@ export interface Configuration {
   allowCardSplit?: boolean;
   fullRefund?: boolean;
   allowEBT?: boolean;
+  breakText?: BreakTextEnum;
 }

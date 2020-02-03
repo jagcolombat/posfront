@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { Product } from '../../../models/product.model';
-import { StockService } from "../../../services/bussiness-logic/stock.service";
+import {Component, OnInit} from '@angular/core';
+import {Product} from '../../../models/product.model';
+import {StockService} from "../../../services/bussiness-logic/stock.service";
 import {ActivatedRoute, Router} from "@angular/router";
-import { EOperationType } from "../../../utils/operation.type.enum";
-import { leaveFocusOnButton } from "../../../utils/functions/functions";
-import { DialogFilterComponent } from "../../containers/dialog-filter/dialog-filter.component";
+import {EOperationType} from "../../../utils/operation.type.enum";
+import {leaveFocusOnButton} from "../../../utils/functions/functions";
+import {DialogFilterComponent} from "../../containers/dialog-filter/dialog-filter.component";
 import {Observable} from "rxjs";
+import {BreakTextEnum} from "../../../utils/breaktext.enum";
 
 @Component({
   selector: 'app-list-prod',
@@ -24,10 +25,12 @@ export class ListProdComponent implements OnInit {
   filtered = false;
   textFilter: string;
   allProductsLoaded = false;
+  //breakWordOrAll = 'break-all';
 
   constructor( private router: Router, private route: ActivatedRoute, public stockService: StockService) {
     this.sizePage = this.stockService.getStockCountItems();
-    console.log(this.sizePage);
+    console.log(this.sizePage, this.stockService.cashService.systemConfig.breakText);
+    //this.breakWordOrAll = this.stockService.cashService.systemConfig.breakText;
   }
 
   ngOnInit() {
@@ -130,5 +133,9 @@ export class ListProdComponent implements OnInit {
       color = 'scalable';
     }
     return color;
+  }
+
+  getBreakTextType(){
+    return this.stockService.cashService.systemConfig.breakText;
   }
 }
