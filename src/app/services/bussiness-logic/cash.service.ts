@@ -6,6 +6,10 @@ import {AuthService} from "../api/auth.service";
 import {DataStorageService} from "../api/data-storage.service";
 import {CompanyType} from "../../utils/company-type.enum";
 import {BreakTextEnum} from "../../utils/breaktext.enum";
+import {AdminOpEnum} from "../../utils/operations/admin-op.enum";
+import {UserrolEnum} from "../../utils/userrol.enum";
+import {InformationType} from "../../utils/information-type.enum";
+import {FinancialOpEnum} from "../../utils/operations";
 
 @Injectable({
   providedIn: 'root'
@@ -26,12 +30,24 @@ export class CashService {
   disabledOtherAdminOp: boolean | boolean[] = false;
   disabledCustomerOp: boolean | boolean[] = false;
   systemConfig: Configuration;
+  noLet4Supervisor =  [AdminOpEnum.APPLY_DISCOUNT, AdminOpEnum.REMOVE_HOLD, AdminOpEnum.CHARGE_ACCT_SETUP,
+    AdminOpEnum.EMPLOYEE_SETUP, AdminOpEnum.CHANGE_PRICES, AdminOpEnum.CREDIT_LIMIT, AdminOpEnum.WTDZ,
+    FinancialOpEnum.HOLD].map(a => a.toUpperCase());
   @Output() evReviewEnableState = new EventEmitter<boolean>();
   //@Output() evPassScanned = new EventEmitter<string>();
 
   constructor(public dialog: MatDialog, private dataStorage: DataStorageService, private authServ: AuthService) {
     this.resetEnableState();
     if(this.authServ.token) this.setSystemConfig();
+  }
+
+  opDenyByUser(op: AdminOpEnum | FinancialOpEnum, userRol?: UserrolEnum ){
+    let opDeny = false;
+    if(this.authServ.token.rol === userRol && this.noLet4Supervisor.includes(op)){
+      this.openGenericInfo(InformationType.INFO, userRol + ' hasn\'t access to ' + op + ' operation.');
+      opDeny = true;
+    }
+    return opDeny;
   }
 
   resetEnableState() {
@@ -53,7 +69,7 @@ export class CashService {
     this.disabledInvOp = [false, true, true, true];
     this.disabledOtherOp = [true, true, true, true, true, false];
     this.disabledReportsAdminOp = true;
-    this.disabledFinanceAdminOp = true;
+    this.disabledFinanceAdminOp = [false, true, true, true, true, true];
     this.disabledInvoiceAdminOp = [true, false];
     this.disabledOtherAdminOp = true;
     this.disabledAdminOp = true;

@@ -8,6 +8,7 @@ import {AdminOpEnum} from "../../../utils/operations/admin-op.enum";
 import {AdminOptionsService} from "../../../services/bussiness-logic/admin-options.service";
 import {NavigationEnd, Router} from "@angular/router";
 import {CustomerOpEnum} from "../../../utils/operations/customer.enum";
+import {UserrolEnum} from "../../../utils/userrol.enum";
 
 @Component({
   selector: 'operations',
@@ -120,34 +121,36 @@ export class OperationsComponent implements OnInit {
   }
 
   financeKey(ev) {
-    switch (ev) {
-      case FinancialOpEnum.LOGOUT:
-        this.operationService.logout();
-        break;
-      case FinancialOpEnum.MANAGER:
-        this.operationService.manager();
-        break;
-      case FinancialOpEnum.HOLD:
-        this.operationService.hold();
-        break;
-      case FinancialOpEnum.RECALL:
-        this.operationService.recallCheck();
-        break;
-      case FinancialOpEnum.REVIEW:
-        this.operationService.reviewCheck();
-        break;
-      case FinancialOpEnum.REPRINT:
-        this.operationService.reprint();
-        break;
-      case FinancialOpEnum.REFUND:
-        this.operationService.refund();
-        break;
-      case FinancialOpEnum.TXTYPE:
-        this.operationService.txType();
-        break;
-      case OtherOpEnum.ORDER_INFO:
-        this.operationService.getOrderInfo();
-        break;
+    if(!this.adminOpService.cashService.opDenyByUser(ev.toUpperCase(), UserrolEnum.SUPERVISOR)) {
+      switch (ev) {
+        case FinancialOpEnum.LOGOUT:
+          this.operationService.logout();
+          break;
+        case FinancialOpEnum.MANAGER:
+          this.operationService.manager();
+          break;
+        case FinancialOpEnum.HOLD:
+          this.operationService.hold();
+          break;
+        case FinancialOpEnum.RECALL:
+          this.operationService.recallCheck();
+          break;
+        case FinancialOpEnum.REVIEW:
+          this.operationService.reviewCheck();
+          break;
+        case FinancialOpEnum.REPRINT:
+          this.operationService.reprint();
+          break;
+        case FinancialOpEnum.REFUND:
+          this.operationService.refund();
+          break;
+        case FinancialOpEnum.TXTYPE:
+          this.operationService.txType();
+          break;
+        case OtherOpEnum.ORDER_INFO:
+          this.operationService.getOrderInfo();
+          break;
+      }
     }
   }
 
@@ -254,19 +257,21 @@ export class OperationsComponent implements OnInit {
   }
 
   reportKey(ev) {
-    switch (ev) {
-      case AdminOpEnum.EMPLZ:
-        this.adminOpService.emplZ();
-        break;
-      case AdminOpEnum.SYSZ:
-        this.adminOpService.sysZ();
-        break;
-      case AdminOpEnum.WTDZ:
-        this.adminOpService.dayCloseType();
-        break;
-      case AdminOpEnum.CCSZ:
-        this.adminOpService.cashierCloseShift();
-        break;
+    if(!this.adminOpService.cashService.opDenyByUser(ev.toUpperCase(), UserrolEnum.SUPERVISOR)) {
+      switch (ev) {
+        case AdminOpEnum.EMPLZ:
+          this.adminOpService.emplZ();
+          break;
+        case AdminOpEnum.SYSZ:
+          this.adminOpService.sysZ();
+          break;
+        case AdminOpEnum.WTDZ:
+          this.adminOpService.dayCloseType();
+          break;
+        case AdminOpEnum.CCSZ:
+          this.adminOpService.cashierCloseShift();
+          break;
+      }
     }
   }
 

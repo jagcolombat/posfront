@@ -297,18 +297,13 @@ export class OperationsService {
 
   hold() {
     console.log('hold');
-    if(this.authService.token.rol === UserrolEnum.SUPERVISOR ){
-      this.cashService.openGenericInfo(InformationType.INFO, UserrolEnum.SUPERVISOR +
-        ' hasn\'t access to hold order operation.')
+    this.currentOperation = 'hold';
+    if (this.invoiceService.invoice.productOrders.length > 0) {
+      this.invoiceService.holdOrder().subscribe(
+        next => this.invoiceService.createInvoice(),
+        err => this.cashService.openGenericInfo('Error', 'Can\'t complete hold order operation'));
     } else {
-      this.currentOperation = 'hold';
-      if (this.invoiceService.invoice.productOrders.length > 0) {
-        this.invoiceService.holdOrder().subscribe(
-          next => this.invoiceService.createInvoice(),
-          err => this.cashService.openGenericInfo('Error', 'Can\'t complete hold order operation'));
-      } else {
-        this.cashService.openGenericInfo('Error', 'Not possible Hold Order without products in this Invoice');
-      }
+      this.cashService.openGenericInfo('Error', 'Not possible Hold Order without products in this Invoice');
     }
     this.resetInactivity(true);
   }

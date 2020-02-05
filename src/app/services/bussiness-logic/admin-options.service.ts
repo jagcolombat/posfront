@@ -181,6 +181,7 @@ export class AdminOptionsService {
   }
 
   backToUser() {
+    console.log('backUser', this.auth.token, this.auth.initialLogin);
     if(this.auth.initialLogin){
       this.auth.restoreInitialLogin();
       this.router.navigateByUrl('/cash/dptos');

@@ -3,8 +3,6 @@ import {Router} from "@angular/router";
 import {AdminOptionsService} from "../../../services/bussiness-logic/admin-options.service";
 import {AdminOpEnum} from "../../../utils/operations/admin-op.enum";
 import {UserrolEnum} from "../../../utils/userrol.enum";
-import {User} from "../../../models";
-import {InformationType} from "../../../utils/information-type.enum";
 
 @Component({
   selector: 'app-admin-options',
@@ -22,8 +20,6 @@ export class AdminOptionsComponent implements OnInit {
   @Input() disable: boolean | boolean[] = this.adminOpService.cashService.disabledAdminOp;
   adminOpColor = ['red','red','red','red','red','red','red','red','red','red','red'/*,'red','red'*/,'violet','violet',
     'violet', 'violet'];
-  noLet4Supervisor =  [AdminOpEnum.APPLY_DISCOUNT, AdminOpEnum.REMOVE_HOLD, AdminOpEnum.CHARGE_ACCT_SETUP,
-  AdminOpEnum.EMPLOYEE_SETUP, AdminOpEnum.CHANGE_PRICES].map(a => a.toUpperCase());
 
   constructor(private router: Router, public adminOpService: AdminOptionsService ) {
   }
@@ -33,10 +29,7 @@ export class AdminOptionsComponent implements OnInit {
 
   doAction(opt: AdminOpEnum) {
     console.log('doAction', opt);
-    if(this.adminOpService.auth.token.rol === UserrolEnum.SUPERVISOR && this.noLet4Supervisor.includes(opt)){
-      this.adminOpService.cashService.openGenericInfo(InformationType.INFO, UserrolEnum.SUPERVISOR +
-        ' hasn\'t access to ' + opt + ' operation.')
-    } else {
+    if(!this.adminOpService.cashService.opDenyByUser(opt, UserrolEnum.SUPERVISOR)) {
       switch (opt) {
         case AdminOpEnum.DEPARMENTS.toUpperCase():
           this.router.navigateByUrl('/cash/dptos');
