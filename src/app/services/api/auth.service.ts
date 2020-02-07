@@ -62,7 +62,7 @@ export class AuthService {
   logout()/*: Observable<any>*/ {
     //this.saveUser(this.token, false);
     //this.token = {};
-    this.token = this.initialLogin = {};
+    this.token = this.initialLogin = undefined;
     this.dialog.closeAll();
     this.router.navigateByUrl('/init');
     // return this.http.post(this.url, {});

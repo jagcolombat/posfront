@@ -278,7 +278,8 @@ export class OperationsService {
       }
     } else {
       //this.authService.initialLogin = this.authService.token;
-      this.cashService.dialog.open(DialogLoginComponent, { width: '530px', height: '580px', disableClose: true})
+      this.cashService.dialog.open(DialogLoginComponent, { width: '530px', height: '580px', disableClose: true,
+        autoFocus: false})
         .afterClosed()
         .subscribe(loginValid => {
           console.log('The dialog was closed', loginValid);
