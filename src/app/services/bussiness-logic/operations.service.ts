@@ -367,7 +367,8 @@ export class OperationsService {
       this.invoiceService.subTotal().subscribe(
         next => {
           this.invoiceService.setInvoice(next);
-          (this.invoiceService.invoice.productOrders.length > 0)? this.cashService.totalsEnableState(false, refund):
+          (this.invoiceService.invoice.productOrders.length > 0) ?
+            this.cashService.totalsEnableState(false, refund || next.isRefund):
             this.cashService.resetEnableState();
         },
         err => {
@@ -612,26 +613,17 @@ export class OperationsService {
     const totalToPaid = this.getTotalToPaid();
     if ((totalToPaid !== 0 || (totalToPaid === 0 && this.cashService.systemConfig.fullRefund) ) && this.invoiceService.invoice.isRefund) {
       console.log('paid refund, open cash!!!');
-      this.cashService.dialog.open(CashPaymentComponent,
-        {
-          width: '300px', height: '240px', data: totalToPaid, disableClose: true
-        })
-      //this.cashService.openGenericInfo('Open Cash', 'Paid Refund: ' + totalToPaid)
-        .afterClosed()
+      this.invoiceService.cash(totalToPaid, totalToPaid, opType)
         .subscribe(
-          result =>{
-            if (result !== '') {
-              this.invoiceService.cash(totalToPaid, totalToPaid, opType)
-                .subscribe(
-                  data =>
-                  {
-                    console.log(data);
-                    this.invoiceService.createInvoice();
-                  },
-                  err => this.cashService.openGenericInfo('Error', 'Error in refund paid'),
-                  () => this.cashService.resetEnableState())
-            }
-          });
+          data =>
+          {
+            console.log(data);
+            this.paymentReturn(totalToPaid).subscribe((result: string) => {
+              this.invoiceService.createInvoice();
+            });
+          },
+          err => this.cashService.openGenericInfo('Error', 'Error in refund paid'),
+          () => this.cashService.resetEnableState());
     } else if (totalToPaid > 0) {
       const dialogRef = this.cashService.dialog.open(CashOpComponent,
         {
@@ -659,13 +651,40 @@ export class OperationsService {
         this.invoiceService.invoice.balance = valueToReturn * -1;
       else
         this.invoiceService.invoice.balance = undefined;
-      this.cashReturn(valueToReturn, paid, total2Paid);
+      //this.cashReturn(valueToReturn, paid, total2Paid);
+      this.cashOp(valueToReturn, paid, total2Paid);
     } else {
       this.currentOperation = TotalsOpEnum.SUBTOTAL;
     }
   }
 
-  cashReturn(valueToReturn, payment, totalToPaid) {
+  cashOp(valueToReturn, payment, totalToPaid){
+    console.log('cash', this.currentOperation);
+    this.invoiceService.cash(payment, totalToPaid, <PaymentOpEnum>this.currentOperation)
+      .subscribe(data => {
+          console.log(data);
+          if(valueToReturn > 0){
+            this.paymentReturn(valueToReturn).subscribe((result: string) => {
+              //if (result !== '') {
+              if (+valueToReturn >= 0 || data.status === InvoiceStatus.PAID) this.invoiceService.createInvoice();
+              //}
+            });
+          }
+        },
+        err => {
+          console.log(err); this.cashService.openGenericInfo('Error', 'Can\'t complete cash operation')
+        },
+        () => this.cashService.resetEnableState());
+  }
+
+  paymentReturn(valueToReturn){
+    return this.cashService.dialog.open(CashPaymentComponent,
+      {
+        width: '350px', height: '260px', data: valueToReturn, disableClose: true
+      }).afterClosed();
+  }
+
+  /*cashReturn(valueToReturn, payment, totalToPaid) {
     const dialogRef = this.cashService.dialog.open(CashPaymentComponent,
       {
         width: '300px', height: '240px', data: valueToReturn > 0 ? valueToReturn : 0, disableClose: true
@@ -684,7 +703,7 @@ export class OperationsService {
               () => this.cashService.resetEnableState())
         }
       });
-  }
+  }*/
 
   reprint() {
     console.log('reprint');
@@ -1577,7 +1596,7 @@ export class OperationsService {
           if(next.change && next.change > 0) {
             const dialogRef = this.cashService.dialog.open(CashPaymentComponent,
               {
-                width: '300px', height: '240px', data: next.change > 0 ? next.change : 0, disableClose: true
+                width: '350px', height: '260px', data: next.change > 0 ? next.change : 0, disableClose: true
               })
           }
         } else {

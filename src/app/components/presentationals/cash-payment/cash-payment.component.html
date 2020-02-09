@@ -1,15 +1,15 @@
 <mat-toolbar color="primary">
-    Return
-    <span class="flex-spacer"></span>
-    <!--<button mat-raised-button mat-dialog-close>&times;</button>-->
-  </mat-toolbar>
-  
-  <form novalidate #loginForm="ngForm">
-    <mat-dialog-content>
-      <h2>{{ data | currency }}</h2>
-    </mat-dialog-content>
-    <mat-dialog-actions>
-      <button mat-raised-button mat-dialog-close>Cancel</button>
-      <button mat-raised-button class="background-primary text-floral-white" (click)="onPrint()">Done</button>
-    </mat-dialog-actions>
-  </form>
+  Return
+  <span class="flex-spacer"></span>
+  <!--<button mat-raised-button mat-dialog-close>&times;</button>-->
+</mat-toolbar>
+
+<form novalidate #loginForm="ngForm">
+  <mat-dialog-content>
+    <h1>{{ data | currency }}</h1>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <!--<button mat-raised-button mat-dialog-close>Cancel</button>-->
+    <button mat-raised-button class="background-primary text-floral-white" (click)="onPrint()">Done</button>
+  </mat-dialog-actions>
+</form>
