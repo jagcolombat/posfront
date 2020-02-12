@@ -669,6 +669,8 @@ export class OperationsService {
               if (+valueToReturn >= 0 || data.status === InvoiceStatus.PAID) this.invoiceService.createInvoice();
               //}
             });
+          } else if(valueToReturn === 0 || data.status === InvoiceStatus.PAID){
+            this.invoiceService.createInvoice();
           }
         },
         err => {
