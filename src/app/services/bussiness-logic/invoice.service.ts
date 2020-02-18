@@ -83,7 +83,8 @@ export class InvoiceService {
     this.dataStorage.addProductOrderByInvoice(this.invoice.receiptNumber, po, EOperationType.Add, this.invoice.isRefund)
       .subscribe(next => {
       console.log('addProductOrder-next', next);
-      (next.productOrders.length > 0) ? this.setInvoice(next): this.showErr('The invoice hasn\'t products');
+      (next.productOrders.length > 0 /*&& next.total >= this.invoice.total*/) ? this.setInvoice(next):
+        this.showErr('The invoice hasn\'t products');
     }, err => {
       this.showErr(err);
     });

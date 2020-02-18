@@ -69,7 +69,7 @@ export class OperationsService {
   counterInactivity(){
     this.timer = setTimeout(()=> {
       if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS)
-        this.logout();
+        this.logout(true);
       else
         this.resetInactivity(true);
     },this.inactivityTime * 60000);
@@ -532,25 +532,29 @@ export class OperationsService {
     )
   }
 
-  logout() {
+  logout(direct?: boolean) {
     console.log('logout');
     this.currentOperation = 'logout';
-
     if(this.invoiceService.invoice.status === InvoiceStatus.IN_PROGRESS){
       this.cashService.openGenericInfo('Error', 'Can\'t complete logout operation because check is in progress')
     } else {
-      this.cashService.openGenericInfo('Confirm', 'Do you want logout?', null,true)
-        .afterClosed().subscribe(next => {
-          console.log(next);
-          if(next !== undefined && next.confirm ) {
-            // Logout
-            this.authService.logout();
-            this.invoiceService.resetDigits();
-            this.cashService.resetEnableState();
-          }
-      });
+      direct ? this.logoutOp() :
+        this.cashService.openGenericInfo('Confirm', 'Do you want logout?', null,true)
+          .afterClosed().subscribe(next => {
+            console.log(next);
+            if(next !== undefined && next.confirm ) {
+              // Logout
+              this.logoutOp();
+            }
+        });
     }
     this.resetInactivity(false);
+  }
+
+  logoutOp() {
+    this.authService.logout();
+    this.invoiceService.resetDigits();
+    this.cashService.resetEnableState();
   }
 
   cancelCheck() {
