@@ -697,4 +697,23 @@ export class AdminOptionsService {
 
     )
   }
+
+  weeklyClose(op) {
+    this.cashService.dayCloseEnableState();
+    //let dialogEv = this.cashService.openGenericInfo('Information', 'Closing week...');
+
+    this.dataStorage.weeklyClosePrint(true).subscribe(
+      next => {
+        this.cashService.openGenericInfo('Weekly Close Print', 'Completed '+op.toLowerCase()+' operation');
+      },
+      err => {
+        this.cashService.openGenericInfo('Error', 'Can\'t complete '+
+          op.toLowerCase()+' print operation');
+        this.cashService.resetEnableState();
+      },
+      () => {
+        this.cashService.resetEnableState();
+      }
+    );
+  }
 }

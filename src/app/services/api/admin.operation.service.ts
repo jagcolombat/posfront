@@ -73,6 +73,15 @@ export class AdminOperationService {
         .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
+  getWeeklyClosePrint(url: string, close, from, to): Observable<Report> {
+    let params = new HttpParams();
+    params.append('closeWeek', close + '');
+    if(from) params.append('fromDate', from + '');
+    if(to) params.append('toDate', to + '');
+    return this._http.post<any>(url + this.path + '/op/report', {}, {params})
+      .pipe(catchError(this.processHttpMsgService.handleError));
+  }
+
   getDayClose(url: string, emp = ''): Observable<Report> {
     let params = new HttpParams();
     params = params.append('applicationUserId', emp + '');

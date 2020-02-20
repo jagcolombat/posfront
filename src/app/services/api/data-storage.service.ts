@@ -268,6 +268,10 @@ export class DataStorageService {
     return this.adminOperationService.getDayClosePrint(this.url, empl);
   }
 
+  weeklyClosePrint(close: boolean, from?: any, to?: any) {
+    return this.adminOperationService.getWeeklyClosePrint(this.url, close, from, to);
+  }
+
   getInvoiceByTransferType(authPending: EOperationType, auth: ETransferType) {
     return this.invoiceService.getInvoiceByTransferType(this.url, auth);
   }

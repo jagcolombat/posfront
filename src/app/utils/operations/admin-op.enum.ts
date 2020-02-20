@@ -21,5 +21,6 @@ export enum AdminOpEnum {
   CHANGE_PRICES = 'Change Prices',
   EBT_INQUIRY = 'EBT Inquiry',
   CREDIT_LIMIT = 'Credit Limit',
-  REFUND_SALE = 'Refund Sale'
+  REFUND_SALE = 'Refund Sale',
+  WEEKLY_CLOSE = 'Weekly Close'
 }
