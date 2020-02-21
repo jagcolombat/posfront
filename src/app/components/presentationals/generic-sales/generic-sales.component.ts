@@ -20,8 +20,9 @@ export class GenericSalesComponent implements OnInit {
   constructor( public dialogRef: MatDialogRef<GenericSalesComponent>,
                @Inject(MAT_DIALOG_DATA) public data: any, private dataStorage: DataStorageService,
                private cashService: CashService, private invoiceService: InvoiceService, private operationService: OperationsService) {
-    console.log(data);
+    console.log('GenericSalesComponent', data);
     if(this.data.content) this.populateSales(this.data.content);
+    if(this.data.empl) this.getSales(this.data.empl.id);
   }
 
   ngOnInit() {

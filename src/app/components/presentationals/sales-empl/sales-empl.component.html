@@ -1,10 +1,10 @@
-<mat-form-field>
+<!--<mat-form-field>
   <mat-label>Select a employed:</mat-label>
   <mat-select (selectionChange)="select($event)" [(value)] = 'emplSel'>
     <mat-option>None</mat-option>
     <mat-option *ngFor="let empl of employes" value="{{empl.id}}">{{empl.userName}}</mat-option>
   </mat-select>
-</mat-form-field>
+</mat-form-field>-->
 
 <ag-grid-angular [ngClass]="(sales && sales.length > 0 && emplSel) ? 'show': 'hide'"
   class="ag-theme-material"
@@ -15,5 +15,5 @@
 <button [ngClass]="(sales && sales.length > 0 && emplSel) ? 'show': 'hide'" mat-raised-button
           class="background-primary text-floral-white" (click)="onPrint()">Print</button>
 <i class="no-sale" *ngIf="sales && sales.length === 0 && emplSel !== undefined">
-  This employ haven't sold anything yet today
+  This employee haven't sold anything yet today
 </i>

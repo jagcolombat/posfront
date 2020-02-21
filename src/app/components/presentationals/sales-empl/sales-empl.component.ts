@@ -22,7 +22,7 @@ export class SalesEmplComponent implements OnInit {
   }
   @Output() selectEmployed = new EventEmitter<string>();
   @Output() selectInvoice = new EventEmitter<string>();
-  emplSel: any;
+  @Input() emplSel: any;
   public gridOptions: GridOptions;
   private gridApi: GridApi;
   columnDefs: any;
@@ -89,10 +89,15 @@ export class SalesEmplComponent implements OnInit {
 
   private setData() {
     console.log('setData', this.sales);
+    let salesTotal = 0;
+    let tipsTotal = 0;
     this.sales.forEach((v, i) => {
       this.sales[i].total = (v.total).toFixed(2);
+      salesTotal += +this.sales[i].total;
       this.sales[i]['tips']= (v.tips ? v.tips : 0.00).toFixed(2);
+      tipsTotal += +this.sales[i]['tips'];
     });
+    this.sales.push({receiptNumber: 'Totals: '+this.sales.length, total: salesTotal.toFixed(2), tips: tipsTotal.toFixed(2) });
     this.gridOptions.api.setRowData(this.sales);
     this.gridOptions.api.sizeColumnsToFit();
   }
@@ -100,7 +105,7 @@ export class SalesEmplComponent implements OnInit {
   onPrint() {
     console.log('Print invoices by user', this.emplSel);
     if(this.emplSel){
-      this.dataStorage.printInvoiceByUser(this.emplSel).subscribe(next => {
+      this.dataStorage.printInvoiceByUser(this.emplSel.id).subscribe(next => {
         console.log(next);
       }, error1 => {
         console.error('getSales', error1);
