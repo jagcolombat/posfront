@@ -1,11 +1,3 @@
-<!--<mat-form-field>
-  <mat-label>Select a employed:</mat-label>
-  <mat-select (selectionChange)="select($event)" [(value)] = 'emplSel'>
-    <mat-option>None</mat-option>
-    <mat-option *ngFor="let empl of employes" value="{{empl.id}}">{{empl.userName}}</mat-option>
-  </mat-select>
-</mat-form-field>-->
-
 <ag-grid-angular [ngClass]="(sales && sales.length > 0 && emplSel) ? 'show': 'hide'"
                   #topGrid
                   class="ag-theme-material"

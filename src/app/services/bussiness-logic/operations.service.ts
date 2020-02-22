@@ -54,13 +54,17 @@ export class OperationsService {
   constructor(private invoiceService: InvoiceService, public cashService: CashService,
               private authService: AuthService, private clientService: ClientService, private router: Router,
               private route: ActivatedRoute) {
+    console.log('OperationService', this.inactivityTime);
     this.invoiceService.evAddProd.subscribe(() => this.onAddProduct());
     //If section products is showing
     this.invoiceService.evCreateInvoice.subscribe(next => this.navigateToDept());
+    // If was added a product update inactivity time
+    this.invoiceService.evUpdateProds.subscribe(ev => this.resetInactivity(true));
     this.counterInactivity();
   }
 
   navigateToDept(){
+    this.resetInactivity(true);
     if(this.router.url.includes('products')){
       this.router.navigateByUrl('/cash/dptos');
     }
@@ -76,7 +80,7 @@ export class OperationsService {
   }
 
   resetInactivity(cont: boolean) {
-    console.log('resetInactivity');
+    console.log('resetInactivity', cont);
     clearTimeout(this.timer);
     if(cont) this.counterInactivity();
   }
