@@ -10,7 +10,7 @@
 
 ag-grid-angular {
   width: 400px;
-  height: 400px;
+  height: 340px;
   margin-bottom: 10px;
 }
 
@@ -21,42 +21,3 @@ ag-grid-angular {
 .hide {
   display: none;
 }
-/*table {
-  width: 90%;
-  margin-left: 30px;
-  border-collapse: collapse;
-
-  caption {
-    background: lightblue;
-    padding: 10px;
-  }
-
-  thead {
-    background: lightcyan;
-    padding: 10px;
-
-    td {
-      padding: 8px;
-      font-weight: bold;
-
-      &:last-of-type {
-        text-align: end;
-      }
-    }
-  }
-
-  tbody {
-    height: 100px !important;
-    max-height: 100px !important;
-    overflow-y: auto;
-
-    td {
-      padding: 8px;
-      border-bottom: 1px solid gray;
-
-      &:last-of-type {
-        text-align: end;
-      }
-    }
-  }
-}*/

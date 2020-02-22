@@ -65,7 +65,7 @@ export class AdminOperationService {
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
-  getDayClosePrint(url: string, emp = ''): Observable<Report> {
+  getDayClosePrint(url: string, emp: string = ''): Observable<Report> {
     let params = new HttpParams();
     params = params.append('applicationUserId', emp + '');
     params = params.append('closeDay', false + '');

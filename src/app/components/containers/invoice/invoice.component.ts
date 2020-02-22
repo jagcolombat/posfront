@@ -21,6 +21,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
   subscription: Subscription [] = [];
 
   constructor(public invoiceService: InvoiceService) {
+    console.log('invoice', invoiceService);
     this.subscription.push(this.invoiceService.evNumpadInput.subscribe(num => this.setDigits(num)));
     // this.subscription.push(this.invoiceService.evAddProd.subscribe(num => this.resetDigits()));
     this.subscription.push(this.invoiceService.evDelProd.subscribe(() => this.resetDigits()));

@@ -264,7 +264,7 @@ export class DataStorageService {
     return this.adminOperationService.getDayClose(this.url, empl);
   }
 
-  dayClosePrint(empl?: any) {
+  dayClosePrint(empl?: string) {
     return this.adminOperationService.getDayClosePrint(this.url, empl);
   }
 

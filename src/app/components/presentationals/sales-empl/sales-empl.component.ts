@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import { GridOptions, GridApi } from 'ag-grid-community';
 import { DataStorageService } from 'src/app/services/api/data-storage.service';
 import {CompanyType} from "../../../utils/company-type.enum";
@@ -26,6 +26,20 @@ export class SalesEmplComponent implements OnInit {
   public gridOptions: GridOptions;
   private gridApi: GridApi;
   columnDefs: any;
+  bottomOptions = <GridOptions>{
+    alignedGrids: [],
+    suppressHorizontalScroll: true,
+    rowStyle: {fontWeight: 'bold', fontSize: '16px'}
+  };
+
+  @ViewChild('topGrid') topGrid;
+  @ViewChild('bottomGrid') bottomGrid;
+
+  bottomData = [{
+    receiptNumber: 'Total',
+    total: 0,
+    tips: 0
+  }]
 
   constructor(private dataStorage: DataStorageService, private cashService: CashService) {
     this.updateGridOptions();
@@ -97,7 +111,8 @@ export class SalesEmplComponent implements OnInit {
       this.sales[i]['tips']= (v.tips ? v.tips : 0.00).toFixed(2);
       tipsTotal += +this.sales[i]['tips'];
     });
-    this.sales.push({receiptNumber: 'Totals: '+this.sales.length, total: salesTotal.toFixed(2), tips: tipsTotal.toFixed(2) });
+    this.bottomData[0].total = +salesTotal.toFixed(2);
+    this.bottomData[0].tips = +tipsTotal.toFixed(2);
     this.gridOptions.api.setRowData(this.sales);
     this.gridOptions.api.sizeColumnsToFit();
   }
@@ -119,5 +134,9 @@ export class SalesEmplComponent implements OnInit {
   showTip(show: boolean) {
     this.gridOptions.columnApi.setColumnVisible('tips', show);
     this.gridOptions.api.sizeColumnsToFit();
+
+    this.bottomOptions.columnApi.setColumnVisible('tips', show);
+    this.bottomOptions.api.sizeColumnsToFit();
+    this.bottomOptions.alignedGrids.push(this.gridOptions);
   }
 }

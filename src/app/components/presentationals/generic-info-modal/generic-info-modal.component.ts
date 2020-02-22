@@ -27,4 +27,8 @@ export class GenericInfoModalComponent implements OnInit {
     this.dialogRef.close();
   }
 
+  close(){
+    return (this.data.disableClose === undefined || this.data.disableClose === false) ? true: false;
+  }
+
 }

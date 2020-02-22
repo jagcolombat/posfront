@@ -7,9 +7,21 @@
 </mat-form-field>-->
 
 <ag-grid-angular [ngClass]="(sales && sales.length > 0 && emplSel) ? 'show': 'hide'"
-  class="ag-theme-material"
-  [gridOptions]="gridOptions"
-  [columnDefs]="columnDefs"
+                  #topGrid
+                  class="ag-theme-material"
+                  [gridOptions]="gridOptions"
+                  [columnDefs]="columnDefs"
+>
+</ag-grid-angular>
+
+<ag-grid-angular [ngClass]="(sales && sales.length > 0 && emplSel) ? 'show': 'hide'"
+                 style="width:100%; height: 60px"
+                 #bottomGrid
+                 [rowData]="bottomData"
+                 [gridOptions]="bottomOptions"
+                 headerHeight="0"
+                 class="ag-theme-material"
+                 [columnDefs]="columnDefs"
 >
 </ag-grid-angular>
 <button [ngClass]="(sales && sales.length > 0 && emplSel) ? 'show': 'hide'" mat-raised-button
