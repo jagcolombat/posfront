@@ -10,6 +10,9 @@ import {ProductGenericComponent} from "../../components/presentationals/product-
 import {ProductGeneric} from "../../models/product-generic";
 import {Subscription} from "rxjs";
 import {CashService} from "./cash.service";
+import {EOperationType} from "../../utils/operation.type.enum";
+import {OperationsService} from "./operations.service";
+import {InvioceOpEnum} from "../../utils/operations";
 
 export const AGE = 18;
 
@@ -22,7 +25,8 @@ export class ProductOrderService implements OnDestroy {
   quantityByProduct = 1;
   subscription: Subscription [] = [];
 
-  constructor(public dialog: MatDialog, private invoiceService: InvoiceService, private cashService: CashService) {
+  constructor(public dialog: MatDialog, private invoiceService: InvoiceService, private cashService: CashService,
+              private operationService: OperationsService) {
     this.subscription.push(this.invoiceService.evAddProdByUPC.subscribe(prod => this.addProduct(prod)));
   }
 
@@ -58,7 +62,10 @@ export class ProductOrderService implements OnDestroy {
       } else if (product.scalable) {
         this.productScalable(product);
       } else if (product.generic) {
-        (product.prefixIsPrice)? this.prefixIsPrice(product): this.openDialogGenericProd(product);
+        console.log('Product generic', this.operationService.currentOperation);
+        (product.prefixIsPrice && this.operationService.currentOperation !== InvioceOpEnum.PLU)?
+          this.prefixIsPrice(product):
+          this.openDialogGenericProd(product);
       }
     } else {
       this.invoiceService.addProductOrder(this.createProductOrder(product));

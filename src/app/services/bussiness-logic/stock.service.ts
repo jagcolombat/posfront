@@ -7,6 +7,8 @@ import {ProductOrderService} from "./product-order.service";
 import {EOperationType} from "../../utils/operation.type.enum";
 import {CashService} from "./cash.service";
 import {environment as env} from "../../../environments/environment";
+import {OperationsService} from "./operations.service";
+import {StockOpEnum} from "../../utils/operations/stock-op.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +20,7 @@ export class StockService {
   productsFiltered = new Array<any>();
 
   constructor(private dataStore: DataStorageService, public productOrderService: ProductOrderService,
-              public cashService: CashService) {
+              public cashService: CashService, private operationService: OperationsService) {
   }
 
   getDepartments(): Observable<Department[]> {
@@ -40,6 +42,11 @@ export class StockService {
   getStockCountItems() {
     console.log(env.screenH);
     return (Math.floor((env.screenH/2)/100)*4);
+  }
+
+  addProduct(p: Product){
+    this.operationService.currentOperation = StockOpEnum.ADD_PROD;
+    this.productOrderService.addProduct(p);
   }
 
 }

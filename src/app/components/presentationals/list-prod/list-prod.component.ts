@@ -63,7 +63,8 @@ export class ListProdComponent implements OnInit {
   doAction(ev, prod: Product) {
     console.log('doAction', ev, prod);
     leaveFocusOnButton(ev);
-    this.stockService.productOrderService.addProduct(prod);
+    //this.stockService.productOrderService.addProduct(prod);
+    this.stockService.addProduct(prod);
   }
 
   setPage(ev){

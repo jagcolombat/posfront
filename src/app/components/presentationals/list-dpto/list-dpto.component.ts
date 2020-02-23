@@ -41,7 +41,7 @@ export class ListDptoComponent implements OnInit {
   getGenericProdByDpto(dpto: Department) {
     this.stockService.getProductsByDepartment(dpto.id).subscribe(prods => {
       prods.filter(p => p.name === dpto.name)
-      .map(pg =>  this.stockService.productOrderService.addProduct(pg));
+      .map(pg =>  this.stockService.addProduct(pg));
     });
   }
 
