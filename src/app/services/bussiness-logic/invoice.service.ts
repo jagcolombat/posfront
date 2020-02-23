@@ -49,7 +49,7 @@ export class InvoiceService {
   @Output() evUpdateProds = new EventEmitter<ProductOrder[]>();
   evCreateInvoice = new BehaviorSubject<boolean>(true);
 
-  constructor(public authService: AuthService, private dataStorage: DataStorageService, private cashService: CashService) {
+  constructor(public authService: AuthService, private dataStorage: DataStorageService, public cashService: CashService) {
     //this.setSystemConfig();
   }
 
