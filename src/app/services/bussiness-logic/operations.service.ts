@@ -25,7 +25,7 @@ import {AdminOpEnum} from "../../utils/operations/admin-op.enum";
 import {ETXType} from "../../utils/delivery.enum";
 import {DialogDeliveryComponent} from "../../components/presentationals/dialog-delivery/dialog-delivery.component";
 import {Table} from "../../models/table.model";
-import {Observable, of} from "rxjs";
+import {Observable, of, Subscription} from "rxjs";
 import {InputCcComponent} from "../../components/presentationals/input-cc/input-cc.component";
 import {dataValidation, operationsWithClear} from "../../utils/functions/functions";
 import {Order} from "../../models/order.model";
@@ -37,7 +37,6 @@ import {CustomerOpEnum} from "../../utils/operations/customer.enum";
 import {ClientService} from "./client.service";
 import {InformationType} from "../../utils/information-type.enum";
 import {SwipeCredentialCardComponent} from "../../components/presentationals/swipe-credential-card/swipe-credential-card.component";
-import {UserrolEnum} from "../../utils/userrol.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -371,9 +370,13 @@ export class OperationsService {
       this.invoiceService.subTotal().subscribe(
         next => {
           this.invoiceService.setInvoice(next);
-          (this.invoiceService.invoice.productOrders.length > 0) ?
-            this.cashService.totalsEnableState(false, refund || next.isRefund):
-            this.cashService.resetEnableState();
+          if(this.invoiceService.invoice.status === InvoiceStatus.PAID){
+            this.invoiceService.warnInvoicePaid();
+          } else {
+            (this.invoiceService.invoice.productOrders.length > 0) ?
+              this.cashService.totalsEnableState(false, refund || next.isRefund):
+              this.cashService.resetEnableState();
+          }
         },
         err => {
           this.cashService.openGenericInfo(InformationType.ERROR, err);
@@ -641,7 +644,11 @@ export class OperationsService {
         // this.paymentData = data;
         this.cashPaid(data, totalToPaid)
       });
-    }
+    } /*else if (totalToPaid === 0){
+      console.log('this invoice is paid', this.invoiceService.invoice);
+      this.invoiceService.createInvoice();
+      this.cashService.openGenericInfo(InformationType.INFO, 'The invoice was paid');
+    }*/
     this.currentOperation = opType;
     this.resetInactivity(false);
   }
@@ -668,9 +675,14 @@ export class OperationsService {
 
   cashOp(valueToReturn, payment, totalToPaid){
     console.log('cash', this.currentOperation);
-    this.invoiceService.cash(payment, totalToPaid, <PaymentOpEnum>this.currentOperation)
+    let opMsg = 'cash payment';
+    let dialogInfoEvents = this.cashService.openGenericInfo('Cash','Paiding by cash...', undefined, undefined, true);
+
+    let $cashing = this.invoiceService.cash(payment, totalToPaid, <PaymentOpEnum>this.currentOperation)
       .subscribe(data => {
           console.log(data);
+          dialogInfoEvents.close();
+          clearTimeout(timeOut);
           if(valueToReturn > 0){
             this.paymentReturn(valueToReturn).subscribe((result: string) => {
               //if (result !== '') {
@@ -682,9 +694,22 @@ export class OperationsService {
           }
         },
         err => {
-          console.log(err); this.cashService.openGenericInfo('Error', 'Can\'t complete cash operation')
+          console.log(err); this.cashService.openGenericInfo('Error', 'Can\'t complete cash operation');
+          dialogInfoEvents.close();
+          clearTimeout(timeOut);
         },
-        () => this.cashService.resetEnableState());
+        () => { this.cashService.resetEnableState(); clearTimeout(timeOut)});
+
+    let timeOut = this.paxTimeOut($cashing, dialogInfoEvents, opMsg);
+  }
+
+  paxTimeOut($op: Subscription, dialogInfoEvents: MatDialogRef<any, any>, opMsg: string): number {
+    return setTimeout(()=> {
+      dialogInfoEvents.close();
+      $op.unsubscribe();
+      this.cashService.openGenericInfo('Error', 'Can\'t complete '+ opMsg +' operation coz timeout');
+      this.cashService.resetEnableState();
+    }, this.cashService.systemConfig.paxTimeout*1000);
   }
 
   paymentReturn(valueToReturn){

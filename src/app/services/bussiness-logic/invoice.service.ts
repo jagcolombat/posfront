@@ -21,6 +21,7 @@ import {CardTypes} from "../../utils/card-payment-types.enum";
 import {PaymentMethodEnum} from "../../utils/operations/payment-method.enum";
 import {CheckPayment} from "../../models/check.model";
 import {TransferPayment} from "../../models/transfer.model";
+import {InformationType} from "../../utils/information-type.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -84,17 +85,24 @@ export class InvoiceService {
       .subscribe(next => {
       console.log('addProductOrder-next', next);
       (next.productOrders.length > 0 /*&& next.total >= this.invoice.total*/) ? this.setInvoice(next):
-        this.showErr('The invoice hasn\'t products');
+        this.showErr('The invoice hasn\'t products', next);
     }, err => {
       this.showErr(err);
     });
   }
 
-  private showErr(err: any){
+  private showErr(err: any, i?: Invoice){
     console.error('addProductOrder', err);
     // this.delPOFromInvoice(po);
     this.resetDigits();
-    this.cashService.openGenericInfo('Error', err);
+    (i && i.status === InvoiceStatus.CREATED) ? this.warnInvoicePaid(): this.cashService.openGenericInfo('Error', err);
+  }
+
+  warnInvoicePaid(){
+    console.log('this invoice is paid', this.invoice);
+    this.cashService.openGenericInfo(InformationType.INFO, 'The invoice was paid');
+    this.createInvoice();
+    this.cashService.resetEnableState();
   }
 
   updateClientAge(clientAge: number) {

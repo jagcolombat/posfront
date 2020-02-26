@@ -11,4 +11,5 @@ export interface Configuration {
   fullRefund?: boolean;
   allowEBT?: boolean;
   breakText?: BreakTextEnum;
+  paxTimeout?: number;
 }
