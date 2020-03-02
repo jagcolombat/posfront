@@ -28,6 +28,7 @@ export class ProductOrderService implements OnDestroy {
   constructor(public dialog: MatDialog, private invoiceService: InvoiceService, private cashService: CashService,
               private operationService: OperationsService) {
     this.subscription.push(this.invoiceService.evAddProdByUPC.subscribe(prod => this.addProduct(prod)));
+    this.subscription.push(this.operationService.evAddProdGen.subscribe(prod => this.productGeneric(prod)));
   }
 
   addProduct(product: Product): void {
@@ -62,14 +63,23 @@ export class ProductOrderService implements OnDestroy {
       } else if (product.scalable) {
         this.productScalable(product);
       } else if (product.generic) {
-        console.log('Product generic', this.operationService.currentOperation);
-        (product.prefixIsPrice && this.operationService.currentOperation !== InvioceOpEnum.PLU)?
-          this.prefixIsPrice(product):
-          this.openDialogGenericProd(product);
+        console.log('adminLogged', this.invoiceService.authService.adminLogged());
+        this.cashService.systemConfig.allowAddProdGen ?
+          this.productGeneric(product):
+          this.invoiceService.authService.adminLogged() ?
+            this.productGeneric(product) :
+            this.operationService.manager('prodGen', product);
       }
     } else {
       this.invoiceService.addProductOrder(this.createProductOrder(product));
     }
+  }
+
+  productGeneric(product: Product){
+    console.log('Product generic', this.operationService.currentOperation);
+    (product.prefixIsPrice && this.operationService.currentOperation !== InvioceOpEnum.PLU)?
+      this.prefixIsPrice(product):
+      this.openDialogGenericProd(product);
   }
 
   productWeightFormat(product: Product){

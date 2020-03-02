@@ -49,6 +49,7 @@ export class OperationsService {
   @Output() evCancelCheck = new EventEmitter<any>();
   @Output() evRemoveHold = new EventEmitter<any>();
   @Output() evCleanAdminOperation = new EventEmitter<any>();
+  @Output() evAddProdGen = new EventEmitter<Product>();
 
   constructor(private invoiceService: InvoiceService, public cashService: CashService,
               private authService: AuthService, private clientService: ClientService, private router: Router,
@@ -255,7 +256,7 @@ export class OperationsService {
     this.invoiceService.evNumpadInput.emit(ev)
   }
 
-  actionByManager(action: string, token: any){
+  actionByManager(action: string, token: any, data?: any){
     switch (action) {
       case 'void':
         this.cancelCheckByAdmin(token);
@@ -266,16 +267,19 @@ export class OperationsService {
       case 'refund':
         this.refundCheckByAdmin(token);
         break;
+      case 'prodGen':
+        this.prodGenCheckByAdmin(token, data);
+        break;
     }
   }
 
-  manager(action?: string) {
-    console.log('manager');
+  manager(action?: string, data?: any) {
+    console.log('manager', action, data);
     // this.currentOperation = 'manager';
     this.authService.initialLogin = this.authService.token;
     if(this.authService.adminLogged()){
       if(action){
-        this.actionByManager(action, this.authService.token);
+        this.actionByManager(action, this.authService.token, data);
       } else {
         this.router.navigateByUrl('/cash/options');
       }
@@ -288,7 +292,7 @@ export class OperationsService {
           console.log('The dialog was closed', loginValid);
           if (loginValid.valid) {
             if (action) {
-              this.actionByManager(action, loginValid.token);
+              this.actionByManager(action, loginValid.token, data);
             } else {
               this.invoiceService.getCashier();
               this.router.navigateByUrl('/cash/options');
@@ -603,6 +607,13 @@ export class OperationsService {
   refundCheckByAdmin(t?: Token) {
     console.log('refundCheckByAdmin', t);
     this.refundOp();
+    this.authService.token = t;
+    this.resetInactivity(false);
+  }
+
+  prodGenCheckByAdmin(t?: Token, data?: Product) {
+    console.log('prodGenCheckByAdmin', t, data);
+    this.evAddProdGen.emit(<Product> data);
     this.authService.token = t;
     this.resetInactivity(false);
   }

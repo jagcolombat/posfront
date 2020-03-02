@@ -12,4 +12,5 @@ export interface Configuration {
   allowEBT?: boolean;
   breakText?: BreakTextEnum;
   paxTimeout?: number;
+  allowAddProdGen: boolean;
 }

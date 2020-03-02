@@ -170,6 +170,7 @@ export class CashService {
     this.getSystemConfig().subscribe(next => {
       console.info('getConfig successfull', next);
       if(!next.paxTimeout) next.paxTimeout = 60;
+      if(!next.allowAddProdGen) next.allowAddProdGen = true;
       this.systemConfig = next;
       if(!this.systemConfig.breakText) this.systemConfig.breakText = BreakTextEnum.ALL;
       this.splitAllow();
