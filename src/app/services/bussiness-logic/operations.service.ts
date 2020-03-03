@@ -37,6 +37,7 @@ import {CustomerOpEnum} from "../../utils/operations/customer.enum";
 import {ClientService} from "./client.service";
 import {InformationType} from "../../utils/information-type.enum";
 import {SwipeCredentialCardComponent} from "../../components/presentationals/swipe-credential-card/swipe-credential-card.component";
+import {PAXConnTypeEnum} from "../../utils/pax-conn-type.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -687,7 +688,7 @@ export class OperationsService {
   cashOp(valueToReturn, payment, totalToPaid){
     console.log('cash', this.currentOperation);
     let opMsg = 'cash payment';
-    let dialogInfoEvents = this.cashService.openGenericInfo('Cash','Paiding by cash...', undefined, undefined, true);
+    let dialogInfoEvents = this.cashService.openGenericInfo('Cash','Paying by cash...', undefined, undefined, true);
 
     let $cashing = this.invoiceService.cash(payment, totalToPaid, <PaymentOpEnum>this.currentOperation)
       .subscribe(data => {
@@ -848,18 +849,23 @@ export class OperationsService {
     if(this.invoiceService.invoice.isRefund) {
       this.cash();
     } else if (this.invoiceService.invoice.total !== 0) {
+      let opMsg = 'debit card payment';
       let dialogInfoEvents = this.openInfoEventDialog('Debit Card');
-      this.invoiceService.debit(this.invoiceService.invoice.total)
+      let $debit = this.invoiceService.debit(this.invoiceService.invoice.total)
         .subscribe(data => {
           console.log(data);
           dialogInfoEvents.close();
+          clearTimeout(timeOut);
           this.invoiceService.createInvoice();
         },err => {
           console.log(err);
           dialogInfoEvents.close();
+          clearTimeout(timeOut);
           this.cashService.openGenericInfo('Error', 'Can\'t complete debit operation');
           this.cashService.resetEnableState();
-        });
+        }, () => clearTimeout(timeOut));
+
+      let timeOut = this.paxTimeOut($debit, dialogInfoEvents, opMsg);
     }
     this.resetInactivity(false);
   }
@@ -891,19 +897,25 @@ export class OperationsService {
   }
 
   private creditOp(splitAmount?: number){
-      let dialogInfoEvents = this.openInfoEventDialog('Credit Card');
-      this.invoiceService.credit(splitAmount ? splitAmount : this.invoiceService.invoice.balance, this.invoiceService.invoice.tip)
-        .subscribe(data => {
-            console.log(data);
-            dialogInfoEvents.close();
-            (data && data.balance > 0) ? this.invoiceService.setInvoice(data) : this.invoiceService.createInvoice();
-          },
-          err => {
-            console.log(err);
-            dialogInfoEvents.close();
-            this.cashService.openGenericInfo('Error', 'Can\'t complete credit operation');
-            this.cashService.resetEnableState();
-          });
+    let opMsg = 'credit card payment';
+    let dialogInfoEvents = this.openInfoEventDialog('Credit Card');
+    let $credit = this.invoiceService.credit(splitAmount ? splitAmount : this.invoiceService.invoice.balance,
+      this.invoiceService.invoice.tip)
+      .subscribe(data => {
+          console.log(data);
+          dialogInfoEvents.close();
+          clearTimeout(timeOut);
+          (data && data.balance > 0) ? this.invoiceService.setInvoice(data) : this.invoiceService.createInvoice();
+        },
+        err => {
+          console.log(err);
+          dialogInfoEvents.close();
+          clearTimeout(timeOut);
+          this.cashService.openGenericInfo('Error', 'Can\'t complete credit operation');
+          this.cashService.resetEnableState();
+        }, () => clearTimeout(timeOut));
+
+    let timeOut = this.paxTimeOut($credit, dialogInfoEvents, opMsg);
   }
 
   private creditManualOp(title, splitAmount?: number){
@@ -1672,5 +1684,40 @@ export class OperationsService {
         this.cashService.openGenericInfo(InformationType.ERROR, error1);
       }
     )
+  }
+
+  choosePAXConnType(op?: PaymentOpEnum) {
+    let ccTypes= new Array<any>({value: 1, text: 'Online'}, {value: 2, text: 'Offline'});
+    this.cashService.dialog.open(DialogDeliveryComponent,
+      { width: '600px', height: '340px', data: {name: 'PAX Connection Types', label: 'Select a type', arr: ccTypes},
+        disableClose: true })
+      .afterClosed().subscribe(next => {
+      console.log(next);
+      switch (next) {
+        case 1:
+          op === PaymentOpEnum.CREDIT_CARD ? this.credit() : this.debit();
+          break;
+        case 2:
+          this.externalCardPayment();
+          break;
+        default:
+          this.cashService.resetEnableState();
+          this.resetTotalFromFS();
+      }
+    });
+  }
+
+  detectPAXConn(op?: PaymentOpEnum){
+    switch (this.cashService.systemConfig.paxConnType) {
+      case PAXConnTypeEnum.BOTH:
+        this.choosePAXConnType(op);
+        break;
+      case PAXConnTypeEnum.OFFLINE:
+        this.externalCardPayment();
+        break;
+      case PAXConnTypeEnum.ONLINE:
+        op === PaymentOpEnum.CREDIT_CARD ? this.credit() : this.debit();
+        break;
+    }
   }
 }

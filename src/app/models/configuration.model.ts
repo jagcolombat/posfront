@@ -1,5 +1,6 @@
 import {CompanyType} from "../utils/company-type.enum";
 import {BreakTextEnum} from "../utils/breaktext.enum";
+import {PAXConnTypeEnum} from "../utils/pax-conn-type.enum";
 
 export interface Configuration {
   posNumber?: number;
@@ -12,5 +13,6 @@ export interface Configuration {
   allowEBT?: boolean;
   breakText?: BreakTextEnum;
   paxTimeout?: number;
-  allowAddProdGen: boolean;
+  allowAddProdGen?: boolean;
+  paxConnType?: PAXConnTypeEnum;
 }

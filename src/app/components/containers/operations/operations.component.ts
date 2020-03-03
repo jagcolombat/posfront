@@ -198,10 +198,10 @@ export class OperationsComponent implements OnInit {
         this.operationService.setEBTCardType();
         break;
       case PaymentOpEnum.DEBIT_CARD:
-        this.operationService.externalCardPayment();
+        this.operationService.detectPAXConn(PaymentOpEnum.DEBIT_CARD);
         break;
       case PaymentOpEnum.CREDIT_CARD:
-        this.operationService.externalCardPayment();
+        this.operationService.detectPAXConn(PaymentOpEnum.CREDIT_CARD);
         break;
       case PaymentOpEnum.CHECK:
         this.operationService.check();

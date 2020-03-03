@@ -10,6 +10,7 @@ import {AdminOpEnum} from "../../utils/operations/admin-op.enum";
 import {UserrolEnum} from "../../utils/userrol.enum";
 import {InformationType} from "../../utils/information-type.enum";
 import {FinancialOpEnum} from "../../utils/operations";
+import {PAXConnTypeEnum} from "../../utils/pax-conn-type.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -171,6 +172,7 @@ export class CashService {
       console.info('getConfig successfull', next);
       if(!next.paxTimeout) next.paxTimeout = 60;
       if(!next.allowAddProdGen) next.allowAddProdGen = true;
+      if(!next.paxConnType) next.paxConnType = PAXConnTypeEnum.OFFLINE;
       this.systemConfig = next;
       if(!this.systemConfig.breakText) this.systemConfig.breakText = BreakTextEnum.ALL;
       this.splitAllow();
