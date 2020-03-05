@@ -9,7 +9,7 @@
       <mat-label>Admin privileges for Clear and Void:</mat-label>
       <mat-checkbox [(value)] = 'adminClearVoid' (change)="setAdmin4ClearVoid($event)"></mat-checkbox>
     </mat-form-field>-->
-    <mat-form-field *ngIf="!closeBatch">
+    <mat-form-field>
       <mat-label>Inactivity time for Logout (min):</mat-label>
       <mat-select (selectionChange)="setTime4Logout($event)" [(value)] = 'timeLogout'>
         <mat-option>None</mat-option>
