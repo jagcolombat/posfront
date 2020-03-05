@@ -1,0 +1,38 @@
+.content {
+  font-size: 18px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 10px 20px;
+}
+
+[mat-dialog-content] {
+  flex-direction: column;
+}
+
+button[mat-raised-button] {
+  cursor: default !important;
+}
+
+mat-form-field {
+  width: 90%;
+}
+
+mat-dialog-actions{
+  justify-content: center;
+}
+
+ag-grid-angular {
+  width: 700px;
+  height: 330px;
+}
+
+.show {
+  display: initial;
+}
+
+.hide {
+  display: none;
+}

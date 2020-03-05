@@ -4,6 +4,6 @@ export const environment = {
   baseURL:  'http://localhost:5000/api/1.0',
   WEBSOCKET: 'http://localhost:5000/events',
   CLIENTVIEW: 'http://localhost:5000/entity',
-  version: '2.27.4',
+  version: '2.28.0',
   screenH: 0
 };

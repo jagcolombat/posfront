@@ -27,6 +27,7 @@ import {InformationType} from "../../utils/information-type.enum";
 import {InitViewService} from "./init-view.service";
 import {CustomerOpEnum} from "../../utils/operations/customer.enum";
 import {ClientService} from "./client.service";
+import {CloseBatchComponent} from "../../components/presentationals/close-batch/close-batch.component";
 
 @Injectable({
   providedIn: 'root'
@@ -256,12 +257,13 @@ export class AdminOptionsService {
   }
 
   closeBatch() {
-    this.cashService.dialog.open(AdminConfigComponent,
+    this.cashService.dialog.open(CloseBatchComponent,
       {
         width: '750px', height: '600px', disableClose: true, data: {title: AdminOpEnum.CLOSE_BATCH}
       }).afterClosed().subscribe(
         next => {
           if(next){
+            console.log('closeBatch', next);
             this.dataStorage.closeBatch(next).subscribe(
             next => console.log('closeBatch', next),
             err => this.cashService.openGenericInfo('Error','Can\'t complete close batch operation'))

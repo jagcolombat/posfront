@@ -1,3 +1,33 @@
-<p>
-  close-batch works!
-</p>
+<div oncontextmenu="return false">
+  <mat-toolbar color="primary">
+    {{ data.title }}
+    <span class="flex-spacer"></span>
+    <button mat-raised-button mat-dialog-close color="primary">&times;</button>
+  </mat-toolbar>
+  <div mat-dialog-content class="content">
+    <mat-form-field>
+      <mat-label>Type:</mat-label>
+      <mat-select (selectionChange)="setTypeCloseBatch($event)" [(value)] = 'typeCloseBatch'>
+        <mat-option>None</mat-option>
+        <mat-option value="{{cb.SUMMARY}}">{{cb[cb.SUMMARY]}}</mat-option>
+        <mat-option value="{{cb.DETAILS}}">{{cb[cb.DETAILS]}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <ag-grid-angular [ngClass]="(cbReport && this.typeCloseBatch == 0) ? 'show': 'hide'"
+                     class="ag-theme-material"
+                     [gridOptions]="gridOptionsSummary"
+                     [columnDefs]="colDefsSummary"
+    >
+    </ag-grid-angular>
+    <ag-grid-angular [ngClass]="(cbReport && typeCloseBatch == 1) ? 'show': 'hide'"
+                     class="ag-theme-material"
+                     [gridOptions]="gridOptionsDetails"
+                     [columnDefs]="colDefsDetails"
+    >
+    </ag-grid-angular>
+  </div>
+  <mat-dialog-actions>
+    <button mat-raised-button mat-dialog-close [disabled]="loading">Cancel</button>
+    <button mat-raised-button [disabled]="loading" class="background-primary text-floral-white" (click)="done()">Done</button>
+  </mat-dialog-actions>
+</div>

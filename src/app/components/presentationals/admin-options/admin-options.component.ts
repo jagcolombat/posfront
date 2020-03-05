@@ -3,6 +3,9 @@ import {Router} from "@angular/router";
 import {AdminOptionsService} from "../../../services/bussiness-logic/admin-options.service";
 import {AdminOpEnum} from "../../../utils/operations/admin-op.enum";
 import {UserrolEnum} from "../../../utils/userrol.enum";
+import {CompanyType} from "../../../utils/company-type.enum";
+import {PAXConnTypeEnum} from "../../../utils/pax-conn-type.enum";
+import {Observable, of} from "rxjs";
 
 @Component({
   selector: 'app-admin-options',
@@ -10,18 +13,44 @@ import {UserrolEnum} from "../../../utils/userrol.enum";
   styleUrls: ['./admin-options.component.scss']
 })
 export class AdminOptionsComponent implements OnInit {
-  options = [AdminOpEnum.CHANGE_PRINTER, AdminOpEnum.CLOSE_BROWSER,
-    AdminOpEnum.APPLY_DISCOUNT, AdminOpEnum.CANCEL_CHECK, AdminOpEnum.REMOVE_HOLD/*, AdminOpEnum.AUTH_PENDING*/,
-    AdminOpEnum.DEPARMENTS, AdminOpEnum.BACK_USER, AdminOpEnum.SET_USER/*, AdminOpEnum.CLOSE_BATCH*/, AdminOpEnum.REFUND_SALE,
-    AdminOpEnum.CONFIG, AdminOpEnum.SYSTEM_VERSION/*, AdminOpEnum.EBT_INQUIRY*/, AdminOpEnum.CHARGE_ACCT_SETUP,
-    AdminOpEnum.EMPLOYEE_SETUP, AdminOpEnum.CHANGE_PRICES, AdminOpEnum.CREDIT_LIMIT];
+  @Input() options = [AdminOpEnum.CHANGE_PRINTER, AdminOpEnum.CLOSE_BROWSER,
+    AdminOpEnum.APPLY_DISCOUNT, AdminOpEnum.CANCEL_CHECK, AdminOpEnum.REMOVE_HOLD
+    /*AdminOpEnum.DEPARMENTS, AdminOpEnum.BACK_USER*/, AdminOpEnum.SET_USER, AdminOpEnum.REFUND_SALE,
+    AdminOpEnum.AUTH_PENDING, AdminOpEnum.CLOSE_BATCH, AdminOpEnum.EBT_INQUIRY,
+    AdminOpEnum.CONFIG, AdminOpEnum.SYSTEM_VERSION,
+    AdminOpEnum.CHARGE_ACCT_SETUP, AdminOpEnum.EMPLOYEE_SETUP, AdminOpEnum.CHANGE_PRICES, AdminOpEnum.CREDIT_LIMIT];
+  $options: Observable<AdminOpEnum[]>;
   page = 1;
   sizePage = 16;
   @Input() disable: boolean | boolean[] = this.adminOpService.cashService.disabledAdminOp;
-  adminOpColor = ['red','red','red','red','red','red','red','red','red','red','red'/*,'red','red'*/,'violet','violet',
+  @Input() adminOpColor = ['red','red','red','red','red','red','red','red','red','red','red','red','violet','violet',
     'violet', 'violet'];
 
   constructor(private router: Router, public adminOpService: AdminOptionsService ) {
+
+    this.adminOpService.cashService.getSystemConfig().subscribe(config => {
+      if(this.adminOpService.cashService.systemConfig.paxConnType !== PAXConnTypeEnum.ONLINE){
+        // Add PAX options and colors
+        console.log('paxConnType', PAXConnTypeEnum.ONLINE);
+        this.options.splice(this.options.indexOf(AdminOpEnum.CLOSE_BATCH), 1);
+        this.adminOpColor.splice(this.options.indexOf(AdminOpEnum.CLOSE_BATCH), 1);
+      }
+      if(!this.adminOpService.cashService.systemConfig.allowEBT){
+        // Add EBT options and colors
+        console.log('allowEBT');
+        this.options.splice(this.options.indexOf(AdminOpEnum.EBT_INQUIRY), 1);
+        this.adminOpColor.splice(this.options.indexOf(AdminOpEnum.EBT_INQUIRY), 1);
+      }
+      if(this.adminOpService.cashService.systemConfig.companyType !== CompanyType.RESTAURANT){
+        // Add Restaurant options and colors
+        console.log('companyType', this.adminOpService.cashService.systemConfig.companyType);
+        this.options.splice(this.options.indexOf(AdminOpEnum.AUTH_PENDING), 1);
+        this.adminOpColor.splice(0, 1);
+      }
+      this.$options = of(this.options.map(o=> <AdminOpEnum> o.toUpperCase()));
+    }, err => {
+      this.adminOpService.cashService.openGenericInfo('Error', 'Can\'t get configuration');
+    });
   }
 
   ngOnInit() {

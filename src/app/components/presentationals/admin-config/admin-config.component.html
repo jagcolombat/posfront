@@ -21,26 +21,6 @@
         <mat-option value="0.5">0.5</mat-option>
       </mat-select>
     </mat-form-field>
-    <mat-form-field *ngIf="closeBatch">
-      <mat-label>Type:</mat-label>
-      <mat-select (selectionChange)="setTypeCloseBatch($event)" [(value)] = 'typeCloseBatch'>
-        <mat-option>None</mat-option>
-        <mat-option value="{{cb.SUMMARY}}">{{cb[cb.SUMMARY]}}</mat-option>
-        <mat-option value="{{cb.DETAILS}}">{{cb[cb.DETAILS]}}</mat-option>
-      </mat-select>
-    </mat-form-field>
-    <ag-grid-angular [ngClass]="(cbReport && this.typeCloseBatch == 0) ? 'show': 'hide'"
-                     class="ag-theme-material"
-                     [gridOptions]="gridOptionsSummary"
-                     [columnDefs]="colDefsSummary"
-    >
-    </ag-grid-angular>
-    <ag-grid-angular [ngClass]="(cbReport && typeCloseBatch == 1) ? 'show': 'hide'"
-                     class="ag-theme-material"
-                     [gridOptions]="gridOptionsDetails"
-                     [columnDefs]="colDefsDetails"
-    >
-    </ag-grid-angular>
   </div>
   <mat-dialog-actions>
     <button mat-raised-button mat-dialog-close [disabled]="loading">Cancel</button>

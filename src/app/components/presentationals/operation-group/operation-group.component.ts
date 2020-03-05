@@ -21,12 +21,17 @@ export class OperationGroupComponent implements OnInit, OnChanges {
 
   ngOnChanges(sc: SimpleChanges){
     console.log('onchanges', sc);
-    /*if(sc.disable){
+    /*if(sc['operations']){
+      this.setUpperCase();
     }*/
   }
 
   ngOnInit() {
-    if(this.upperCase) this.operations=this.operations.map(o=> o.toUpperCase());
+    this.setUpperCase();
+  }
+
+  setUpperCase(){
+    if(this.upperCase && this.operations) this.operations=this.operations.map(o=> o.toUpperCase());
   }
 
   pressKey(ev, val: string | number) {

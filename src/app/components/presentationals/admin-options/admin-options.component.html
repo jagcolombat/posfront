@@ -3,7 +3,7 @@
           (click)="doAction($event, i)" class="normal" [disabled]="adminOpService.cashService.disabledAdminOp">
     {{ i | uppercase }}
   </button>-->
-  <operation-group id="admin" [operations]="options"
+  <operation-group id="admin" [operations]="$options | async"
                    [colors]="adminOpColor"
                    [btnSize]="'130px'"
                    [upperCase]="true"
