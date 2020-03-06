@@ -32,20 +32,17 @@ export class AdminOptionsComponent implements OnInit {
       if(this.adminOpService.cashService.systemConfig.paxConnType !== PAXConnTypeEnum.ONLINE){
         // Add PAX options and colors
         console.log('paxConnType', PAXConnTypeEnum.ONLINE);
-        this.options.splice(this.options.indexOf(AdminOpEnum.CLOSE_BATCH), 1);
-        this.adminOpColor.splice(this.options.indexOf(AdminOpEnum.CLOSE_BATCH), 1);
+        this.removeOption(this.options.indexOf(AdminOpEnum.CLOSE_BATCH));
       }
       if(!this.adminOpService.cashService.systemConfig.allowEBT){
         // Add EBT options and colors
         console.log('allowEBT');
-        this.options.splice(this.options.indexOf(AdminOpEnum.EBT_INQUIRY), 1);
-        this.adminOpColor.splice(this.options.indexOf(AdminOpEnum.EBT_INQUIRY), 1);
+        this.removeOption(this.options.indexOf(AdminOpEnum.EBT_INQUIRY));
       }
       if(this.adminOpService.cashService.systemConfig.companyType !== CompanyType.RESTAURANT){
         // Add Restaurant options and colors
         console.log('companyType', this.adminOpService.cashService.systemConfig.companyType);
-        this.options.splice(this.options.indexOf(AdminOpEnum.AUTH_PENDING), 1);
-        this.adminOpColor.splice(0, 1);
+        this.removeOption(this.options.indexOf(AdminOpEnum.AUTH_PENDING));
       }
       this.$options = of(this.options.map(o=> <AdminOpEnum> o.toUpperCase()));
     }, err => {
@@ -54,6 +51,11 @@ export class AdminOptionsComponent implements OnInit {
   }
 
   ngOnInit() {
+  }
+
+  removeOption(ind: number){
+    this.options.splice(ind, 1);
+    this.adminOpColor.splice(ind, 1);
   }
 
   doAction(opt: AdminOpEnum) {

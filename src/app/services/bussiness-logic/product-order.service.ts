@@ -100,7 +100,7 @@ export class ProductOrderService implements OnDestroy {
 
   productScalable(product: Product){
     this.cashService.systemConfig.externalScale ?
-      this.invoiceService.addProductOrder(this.createProductOrder(product)) :
+      product.generic ? this.openDialogGenericProd(product): this.invoiceService.addProductOrder(this.createProductOrder(product)) :
       this.openDialogScalableProd(product);
   }
 

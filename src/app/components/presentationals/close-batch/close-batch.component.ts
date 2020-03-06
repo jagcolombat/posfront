@@ -18,7 +18,7 @@ export class CloseBatchComponent implements OnInit {
   cbReport: Report;
   public gridOptionsSummary: GridOptions;
   public gridOptionsDetails: GridOptions;
-  loading = false;
+  loading = true;
   colDefsSummary = [
     {
       headerName: 'Type',
@@ -77,21 +77,24 @@ export class CloseBatchComponent implements OnInit {
   setTypeCloseBatch($event: any) {
     console.log('setTypeCloseBatch', $event, this.typeCloseBatch);
     this.loading = true;
-    if(!this.cbReport && this.typeCloseBatch !== undefined){
-      this.dataStorage.getCloseBatchReport(this.typeCloseBatch).subscribe(
-        next => {
-          console.log(next);
-          this.loading = false;
-          this.cbReport = next;
-          this.setDataByType();
-        },
-        err => {
-          console.error(err);
-          this.cashService.openGenericInfo('Error','Can\'t complete close batch report operation');
-        });
-    } else {
-      this.setDataByType();
+    if(this.typeCloseBatch !== undefined){
+      if(!this.cbReport){
+        this.dataStorage.getCloseBatchReport(this.typeCloseBatch).subscribe(
+          next => {
+            console.log(next);
+            this.loading = false;
+            this.cbReport = next;
+            this.setDataByType();
+          },
+          err => {
+            console.error(err);
+            this.cashService.openGenericInfo('Error','Can\'t complete close batch report operation');
+          });
+      } else {
+        this.setDataByType();
+      }
     }
+
   }
 
   setDataByType(){
