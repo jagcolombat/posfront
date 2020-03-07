@@ -9,13 +9,17 @@ import {CashService} from "../../../services/bussiness-logic/cash.service";
   styleUrls: ['./admin-config.component.scss']
 })
 export class AdminConfigComponent implements OnInit {
-  timeLogout: number;
+  timeLogout: string;
   adminClearVoid: boolean;
+  allowAddProdGen: boolean;
   loading = false;
 
   constructor( public dialogRef: MatDialogRef<AdminConfigComponent>,
                @Inject(MAT_DIALOG_DATA) public data: any, private dataStorage: DataStorageService,
                private cashService: CashService) {
+    console.log('adminConfig', this.cashService.systemConfig);
+    this.allowAddProdGen = this.cashService.systemConfig.allowAddProdGen;
+    if(this.cashService.systemConfig.inactivityTime) this.timeLogout = this.cashService.systemConfig.inactivityTime+'';
   }
 
   ngOnInit() {
@@ -33,7 +37,13 @@ export class AdminConfigComponent implements OnInit {
     console.log('setAdmin4ClearVoid', $event, this.adminClearVoid)
   }
 
+  setAddProdGen($event: any){
+    console.log('setAddProdGen', $event, this.allowAddProdGen);
+    this.allowAddProdGen = $event.checked;
+  }
+
   done(){
+    this.cashService.systemConfig.allowAddProdGen = this.allowAddProdGen;
     if(this.timeLogout)
       this.dialogRef.close(this.timeLogout);
     else {

@@ -9,6 +9,7 @@ import { Invoice } from 'src/app/models/invoice.model';
 import { CloseBatch } from 'src/app/utils/close.batch.enum';
 import { Report } from 'src/app/models/report.model';
 import {EmployeedModel, IPositionModel} from "../../models/employeed.model";
+import {AdminOpEnum} from "../../utils/operations/admin-op.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -75,9 +76,9 @@ export class AdminOperationService {
 
   getWeeklyClosePrint(url: string, close, from, to): Observable<Report> {
     let params = new HttpParams();
-    params.append('closeWeek', close + '');
-    if(from) params.append('fromDate', from + '');
-    if(to) params.append('toDate', to + '');
+    params = params.append('closeWeek', close + '');
+    if(from) params = params.append('fromDate', from + '');
+    if(to) params = params.append('toDate', to + '');
     return this._http.post<any>(url + this.path + '/op/report', {}, {params})
       .pipe(catchError(this.processHttpMsgService.handleError));
   }

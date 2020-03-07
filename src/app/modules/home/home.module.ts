@@ -40,6 +40,7 @@ import {EbtInquiryInfoComponent} from "../../components/presentationals/ebt-inqu
 import {SwipeCredentialCardComponent} from "../../components/presentationals/swipe-credential-card/swipe-credential-card.component";
 import {AppComponent} from "../../app.component";
 import {DailyCloseComponent} from "../../components/presentationals/daily-close/daily-close.component";
+import {SetDateComponent} from "../../components/presentationals/set-date/set-date.component";
 
 @NgModule({
   imports: [
@@ -81,7 +82,8 @@ import {DailyCloseComponent} from "../../components/presentationals/daily-close/
     OrderInfoComponent,
     OrderInfoDetailsComponent,
     SwipeCredentialCardComponent,
-    DailyCloseComponent
+    DailyCloseComponent,
+    SetDateComponent
   ],
   entryComponents: [
     AgeValidationComponent,
@@ -110,7 +112,8 @@ import {DailyCloseComponent} from "../../components/presentationals/daily-close/
     OrderInfoComponent,
     OrderInfoDetailsComponent,
     SwipeCredentialCardComponent,
-    DailyCloseComponent
+    DailyCloseComponent,
+    SetDateComponent
   ],
 })
 export class HomeModule { }

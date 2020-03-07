@@ -64,3 +64,11 @@ mat-toolbar /deep/ button[mat-dialog-close] {
     font-size: 24px !important;
   }
 }
+
+mat-datepicker-content /deep/ mat-calendar-header {
+  & /deep/ button[mat-button] {
+    color: black !important;
+    height: 45px !important;
+    font-weight: normal !important;
+  }
+}

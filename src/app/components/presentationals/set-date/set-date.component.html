@@ -1,0 +1,25 @@
+<div oncontextmenu="return false">
+  <mat-toolbar color="primary">
+    {{ title }}
+    <span class="flex-spacer"></span>
+    <button mat-raised-button mat-dialog-close color="primary">&times;</button>
+  </mat-toolbar>
+  <div mat-dialog-content>
+    <p>{{ subtitle }}</p>
+    <mat-form-field>
+      <input matInput [matDatepicker]="picker" placeholder="Choose a date" (dateInput)="addEvent('input', $event)"
+        (dateChange)="addEvent('change', $event)" [value]="date" disabled>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker touchUi disabled="false"></mat-datepicker>
+    </mat-form-field>
+    <!--<div class="buttons">
+      <button mat-button fxFlex="170px" *ngFor="let i of data.arr" [mat-dialog-close]="i.value" [ngClass]="i.color">
+        {{i.text | uppercase}}
+      </button>
+    </div>-->
+  </div>
+  <div mat-dialog-actions>
+    <button mat-raised-button (click)="lastClose()">Last Close</button>
+    <button mat-raised-button (click)="dateClose()">Date</button>
+  </div>
+</div>

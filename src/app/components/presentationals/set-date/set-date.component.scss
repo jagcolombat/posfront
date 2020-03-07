@@ -1,0 +1,23 @@
+.content {
+  font-size: 18px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+[mat-dialog-content] {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+[mat-dialog-actions] {
+  justify-content: center;
+}
+
+mat-datepicker-toggle {
+  font-size: xx-large;
+}

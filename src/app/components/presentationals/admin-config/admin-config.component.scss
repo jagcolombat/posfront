@@ -1,23 +1,28 @@
+div[oncontextmenu]{
+  height: 95%;
+  display: flex;
+  flex-direction: column;
+}
+
 .content {
   font-size: 18px;
-  width: 100%;
+  width: 95%;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: start;
+  justify-content: start;
   flex-direction: column;
-  padding: 10px 20px;
+  padding: 10px 30px;
+  flex: 1;
 }
 
-sales-shop, sales-empl {
-  width: 90%;
-}
-
-.price {
-  font-size: 24px;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+mat-slide-toggle {
+  & /deep/ .mat-slide-toggle-content {
+    font-size: inherit !important;
+    color: rgba(0, 0, 0, .60);
+  }
+  & /deep/ .mat-slide-toggle-label {
+    justify-content: space-between;
+  }
 }
 
 [mat-dialog-content] {
@@ -28,8 +33,15 @@ button[mat-raised-button] {
   cursor: default !important;
 }
 
-mat-form-field {
-  width: 90%;
+mat-form-field, mat-slide-toggle {
+  width: 100%;
+  //border-bottom: dashed 1px gray;
+  //height: 75px;
+}
+
+mat-list {
+  width: inherit;
+  height: inherit;
 }
 
 mat-dialog-actions{

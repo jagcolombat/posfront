@@ -5,6 +5,7 @@ import {Router} from "@angular/router";
 import {EOperationType} from "../../../utils/operation.type.enum";
 import {leaveFocusOnButton} from "../../../utils/functions/functions";
 import {DialogFilterComponent} from "../../containers/dialog-filter/dialog-filter.component";
+import {InformationType} from "../../../utils/information-type.enum";
 
 @Component({
   selector: 'list-dpto',
@@ -39,10 +40,13 @@ export class ListDptoComponent implements OnInit {
   }
 
   getGenericProdByDpto(dpto: Department) {
-    this.stockService.getProductsByDepartment(dpto.id).subscribe(prods => {
-      prods.filter(p => p.name === dpto.name)
-      .map(pg =>  this.stockService.addProduct(pg));
-    });
+    this.stockService.getProductsByDepartment(dpto.id).subscribe(
+      prods => {
+        let prodsFiltered = prods.filter(p => p.name === dpto.name);
+        prodsFiltered.length > 0 ?
+          prodsFiltered.map(pg => this.stockService.addProduct(pg)):
+          this.stockService.cashService.openGenericInfo(InformationType.INFO, 'Generic product not found');
+      });
   }
 
   setPage(ev){

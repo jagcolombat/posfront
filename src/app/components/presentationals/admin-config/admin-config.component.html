@@ -9,18 +9,28 @@
       <mat-label>Admin privileges for Clear and Void:</mat-label>
       <mat-checkbox [(value)] = 'adminClearVoid' (change)="setAdmin4ClearVoid($event)"></mat-checkbox>
     </mat-form-field>-->
-    <mat-form-field>
-      <mat-label>Inactivity time for Logout (min):</mat-label>
-      <mat-select (selectionChange)="setTime4Logout($event)" [(value)] = 'timeLogout'>
-        <mat-option>None</mat-option>
-        <mat-option value="60">60</mat-option>
-        <mat-option value="30">30</mat-option>
-        <mat-option value="15">15</mat-option>
-        <mat-option value="5">5</mat-option>
-        <mat-option value="1">1</mat-option>
-        <mat-option value="0.5">0.5</mat-option>
-      </mat-select>
-    </mat-form-field>
+    <mat-list>
+      <mat-list-item>
+        <mat-form-field>
+          <mat-label>Inactivity time for Logout (min):</mat-label>
+          <mat-select (selectionChange)="setTime4Logout($event)" [(value)] = 'timeLogout'>
+            <mat-option>None</mat-option>
+            <mat-option value="60">60</mat-option>
+            <mat-option value="30">30</mat-option>
+            <mat-option value="15">15</mat-option>
+            <mat-option value="5">5</mat-option>
+            <mat-option value="1">1</mat-option>
+            <mat-option value="0.5">0.5</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </mat-list-item>
+      <mat-list-item>
+        <mat-slide-toggle [checked]='allowAddProdGen' (change)="setAddProdGen($event)" labelPosition="before"
+                          ariaLabel="Add Generic Product for all users">
+          Allow to all users add generic product
+        </mat-slide-toggle>
+      </mat-list-item>
+    </mat-list>
   </div>
   <mat-dialog-actions>
     <button mat-raised-button mat-dialog-close [disabled]="loading">Cancel</button>

@@ -33,6 +33,7 @@ import {ClientModel} from "../../models/client.model";
 import {PaymentMethodEnum} from "../../utils/operations/payment-method.enum";
 import {CheckPayment} from "../../models/check.model";
 import {TransferPayment} from "../../models/transfer.model";
+import {AdminOpEnum} from "../../utils/operations/admin-op.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -260,12 +261,18 @@ export class DataStorageService {
   }
 
   // Report
-  dayClose(empl?: any) {
-    return this.adminOperationService.getDayClose(this.url, empl);
+  dayClose(empl?: any, date?: any) {
+    let result = (date !== null && date !== undefined) ?
+      this.adminOperationService.getWeeklyClosePrint(this.url, true, date.from, date.to) :
+      this.adminOperationService.getDayClose(this.url, empl);
+    return result;
   }
 
-  dayClosePrint(empl?: string) {
-    return this.adminOperationService.getDayClosePrint(this.url, empl);
+  dayClosePrint(empl?: string, date?: any) {
+    let result = (date !== null && date !== undefined) ?
+      this.adminOperationService.getWeeklyClosePrint(this.url, false, date.from, date.to) :
+      this.adminOperationService.getDayClosePrint(this.url, empl);
+    return result;
   }
 
   weeklyClosePrint(close: boolean, from?: any, to?: any) {

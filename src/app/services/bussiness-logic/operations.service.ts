@@ -55,7 +55,7 @@ export class OperationsService {
   constructor(private invoiceService: InvoiceService, public cashService: CashService,
               private authService: AuthService, private clientService: ClientService, private router: Router,
               private route: ActivatedRoute) {
-    console.log('OperationService', this.inactivityTime);
+    //console.log('OperationService', this.inactivityTime);
     this.invoiceService.evAddProd.subscribe(() => this.onAddProduct());
     //If section products is showing
     this.invoiceService.evCreateInvoice.subscribe(next => this.navigateToDept());
@@ -77,7 +77,11 @@ export class OperationsService {
         this.logout(true);
       else
         this.resetInactivity(true);
-    },this.inactivityTime * 60000);
+    },this.getInactivityTime() * 60000);
+  }
+
+  getInactivityTime(): number{
+    return (this.cashService.systemConfig) ? this.cashService.systemConfig.inactivityTime : 60;
   }
 
   resetInactivity(cont: boolean) {
