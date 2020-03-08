@@ -12,7 +12,9 @@
   <info-pos title="Tax" [value]="tax" format="currency" fxFlex="19"></info-pos>
   <info-pos title="Total" [value]="total" format="currency" fxFlex="28"></info-pos>
 
-  <info-pos *ngIf="total - (invoiceService.invoice?.balance > 0 ? invoiceService.invoice?.balance : invoiceService.invoice?.balance * -1) > 0" title="Paid"
+  <info-pos *ngIf=" invoiceService.invoice?.balance !== 0 &&
+            (total - (invoiceService.invoice?.balance > 0 ? invoiceService.invoice?.balance : invoiceService.invoice?.balance * -1) > 0)"
+            title="Paid"
             [value]="total - (invoiceService.invoice?.balance > 0 ? invoiceService.invoice?.balance : invoiceService.invoice?.balance * -1)"
             format="currency" fxFlex="25" class="info-pos-button green"></info-pos>
 
