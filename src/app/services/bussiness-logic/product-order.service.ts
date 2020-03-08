@@ -13,6 +13,7 @@ import {CashService} from "./cash.service";
 import {EOperationType} from "../../utils/operation.type.enum";
 import {OperationsService} from "./operations.service";
 import {InvioceOpEnum} from "../../utils/operations";
+import {StockOpEnum} from "../../utils/operations/stock-op.enum";
 
 export const AGE = 18;
 
@@ -32,6 +33,7 @@ export class ProductOrderService implements OnDestroy {
   }
 
   addProduct(product: Product): void {
+    this.operationService.currentOperation = StockOpEnum.ADD_PROD;
     if ( product.followDepartment ) {
       const dpto = this.departments.find(dpto => dpto.id === product.departmentId);
       // const isAgeVerification = this.departments.find(dpto => dpto.id === product.departmentId).ageVerification;

@@ -38,6 +38,7 @@ import {ClientService} from "./client.service";
 import {InformationType} from "../../utils/information-type.enum";
 import {SwipeCredentialCardComponent} from "../../components/presentationals/swipe-credential-card/swipe-credential-card.component";
 import {PAXConnTypeEnum} from "../../utils/pax-conn-type.enum";
+import {StockOpEnum} from "../../utils/operations/stock-op.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -618,6 +619,7 @@ export class OperationsService {
 
   prodGenCheckByAdmin(t?: Token, data?: Product) {
     console.log('prodGenCheckByAdmin', t, data);
+    this.currentOperation = StockOpEnum.ADD_PROD;
     this.evAddProdGen.emit(<Product> data);
     this.authService.token = t;
     this.resetInactivity(false);

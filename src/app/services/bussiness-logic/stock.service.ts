@@ -45,7 +45,6 @@ export class StockService {
   }
 
   addProduct(p: Product){
-    this.operationService.currentOperation = StockOpEnum.ADD_PROD;
     this.productOrderService.addProduct(p);
   }
 
