@@ -585,7 +585,7 @@ export class OperationsService {
       dialog.close();
       this.cashService.openGenericInfo('Error', 'Can\'t complete void operation')
     });
-    this.resetInactivity(false);
+    this.resetInactivity(true);
   }
 
   cancelCheckByAdmin(t?: Token) {
@@ -600,21 +600,21 @@ export class OperationsService {
       dialog.close();
       this.cashService.openGenericInfo('Error', 'Can\'t complete void operation')
     });
-    this.resetInactivity(false);
+    this.resetInactivity(true);
   }
 
   clearCheckByAdmin(t?: Token) {
     console.log('clearCheckByAdmin', t);
     this.deleteSelectedProducts();
     this.authService.token = t;
-    this.resetInactivity(false);
+    this.resetInactivity(true);
   }
 
   refundCheckByAdmin(t?: Token) {
     console.log('refundCheckByAdmin', t);
     this.refundOp();
     this.authService.token = t;
-    this.resetInactivity(false);
+    this.resetInactivity(true);
   }
 
   prodGenCheckByAdmin(t?: Token, data?: Product) {
@@ -622,7 +622,7 @@ export class OperationsService {
     this.currentOperation = StockOpEnum.ADD_PROD;
     this.evAddProdGen.emit(<Product> data);
     this.authService.token = t;
-    this.resetInactivity(false);
+    this.resetInactivity(true);
   }
 
   openInfoEventDialog(title: string): MatDialogRef<any, any> {
@@ -668,7 +668,7 @@ export class OperationsService {
       this.cashService.openGenericInfo(InformationType.INFO, 'The invoice was paid');
     }*/
     this.currentOperation = opType;
-    this.resetInactivity(false);
+    this.resetInactivity(true);
   }
 
   cashMoney(paid){
@@ -847,7 +847,7 @@ export class OperationsService {
           this.cashService.resetEnableState();
         }, () => dialogInfoEvents.close());
     }
-    this.resetInactivity(false);
+    this.resetInactivity(true);
   }
 
   debit() {
@@ -873,7 +873,7 @@ export class OperationsService {
 
       let timeOut = this.paxTimeOut($debit, dialogInfoEvents, opMsg);
     }
-    this.resetInactivity(false);
+    this.resetInactivity(true);
   }
 
   credit() {
@@ -899,7 +899,7 @@ export class OperationsService {
         this.setCreditCardType();
       }
     }
-    this.resetInactivity(false);
+    this.resetInactivity(true);
   }
 
   private creditOp(splitAmount?: number){
@@ -1051,6 +1051,7 @@ export class OperationsService {
 
   public printLast() {
     this.invoiceService.printLastInvoice();
+    this.resetInactivity(true);
   }
 
   scanInvoice() {
@@ -1097,6 +1098,7 @@ export class OperationsService {
     } else {
       this.cashService.openGenericInfo('Error', 'Paid out operation is not allow if a invoice is in progress');
     }
+    this.resetInactivity(true);
   }
 
   keyboard(action?: FinancialOpEnum | AdminOpEnum){
@@ -1356,6 +1358,7 @@ export class OperationsService {
         }
       );
     }
+    this.resetInactivity(true);
   }
 
   showOrderInfo(order: Order){
@@ -1369,6 +1372,7 @@ export class OperationsService {
     this.invoiceService.notSale().subscribe(d => {
         console.log("Open cash drawer.", d);
     });
+    this.resetInactivity(true);
   }
 
   /*ebtInquiry() {
@@ -1422,6 +1426,7 @@ export class OperationsService {
             this.setWeightedProduct();
           }*/
       });
+    this.resetInactivity(true);
   }
 
   setWeightedProduct(price: number){
@@ -1491,6 +1496,7 @@ export class OperationsService {
     } else {
       this.cashService.openGenericInfo('Error', 'There is not amount to pay')
     }
+    this.resetInactivity(true);
   }
 
   acctBalance() {
@@ -1649,6 +1655,7 @@ export class OperationsService {
           this.cashService.resetEnableState();
         }
       });
+    this.resetInactivity(true);
   }
 
   private paidByCheck(amount: number, checkNumber: string, descrip?: string, client?: string) {

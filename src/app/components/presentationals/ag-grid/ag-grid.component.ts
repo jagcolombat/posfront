@@ -27,6 +27,7 @@ export class AgGridComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.invoiceService.evDelAllProds.subscribe(ev => this.clearData()));
     this.subscriptions.push(this.invoiceService.evDelProd.subscribe(ev => this.onRemoveSelected()));
     this.subscriptions.push(this.invoiceService.evUpdateProds.subscribe(ev => this.updateItems(ev)));
+    this.subscriptions.push(this.invoiceService.evAddProd.subscribe(ev => this.onAddRow(ev)));
     this.subscriptions.push(this.cashService.evReviewEnableState.subscribe(ev => this.updateSelectable(ev)));
   }
 
@@ -214,5 +215,9 @@ export class AgGridComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscriptions.map(sub => sub.unsubscribe());
+  }
+
+  private addItem(ev: any) {
+
   }
 }

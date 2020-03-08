@@ -84,7 +84,9 @@ export class InvoiceService {
     this.dataStorage.addProductOrderByInvoice(this.invoice.receiptNumber, po, EOperationType.Add, this.invoice.isRefund)
       .subscribe(next => {
       console.log('addProductOrder-next', next);
-      (next.productOrders.length > 0 /*&& next.total >= this.invoice.total*/) ? this.setInvoice(next):
+      (next.productOrders.length > 0 /*&& next.total >= this.invoice.total*/) ?
+        //this.setInvoice(next):
+        this.addPO2Invoice(next):
         this.showErr('The invoice hasn\'t products', next);
     }, err => {
       this.showErr(err);
@@ -111,10 +113,19 @@ export class InvoiceService {
     .subscribe( data => console.log(data), err => console.log(err) );
   }
 
-  addPO2Invoice(po: ProductOrder){
-    // this.invoice.productsOrders.push(po);
-    // this.setTotal();
-    this.evAddProd.emit(po);
+  addPO2Invoice(inv: Invoice){
+    this.invoice.productOrders.push(inv.productOrders[0]);
+    this.updateTotals(inv);
+    this.evAddProd.emit(inv.productOrders[0]);
+  }
+
+  updateTotals(inv: Invoice){
+    this.invoice.subTotal = inv.subTotal;
+    this.invoice.tax = inv.tax;
+    this.invoice.total = inv.total;
+    this.invoice.fsTotal = inv.fsTotal;
+    this.invoice.balance = inv.balance;
+    this.setTotal();
   }
 
   delPOFromInvoice(po: ProductOrder[]): Observable<any> {

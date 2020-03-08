@@ -162,6 +162,7 @@ export class AdminOptionsService {
     }, error1 => {
       this.cashService.openGenericInfo('Error', 'Can\'t complete '+ AdminOpEnum.SYSZ +' operation')
     });
+    this.operationService.resetInactivity(true);
   }
 
   emplZ() {
@@ -177,6 +178,7 @@ export class AdminOptionsService {
     }, error1 => {
       this.cashService.openGenericInfo('Error', 'Can\'t complete '+ AdminOpEnum.EMPLZ +' operation')
     });
+    this.operationService.resetInactivity(true);
   }
 
   showSalesByEmployee(emp: any){
