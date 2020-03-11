@@ -39,6 +39,7 @@ import {InformationType} from "../../utils/information-type.enum";
 import {SwipeCredentialCardComponent} from "../../components/presentationals/swipe-credential-card/swipe-credential-card.component";
 import {PAXConnTypeEnum} from "../../utils/pax-conn-type.enum";
 import {StockOpEnum} from "../../utils/operations/stock-op.enum";
+import {UserrolEnum} from "../../utils/userrol.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -287,26 +288,33 @@ export class OperationsService {
       if(action){
         this.actionByManager(action, this.authService.token, data);
       } else {
-        this.router.navigateByUrl('/cash/options');
+        this.authService.token.rol === UserrolEnum.ADMIN ?
+          this.router.navigateByUrl('/cash/options'):
+          this.adminLogin().subscribe( res => this.adminLoginOp(res));
       }
     } else {
       //this.authService.initialLogin = this.authService.token;
-      this.cashService.dialog.open(DialogLoginComponent, { width: '530px', height: '580px', disableClose: true,
-        autoFocus: false})
-        .afterClosed()
-        .subscribe(loginValid => {
-          console.log('The dialog was closed', loginValid);
-          if (loginValid.valid) {
-            if (action) {
-              this.actionByManager(action, loginValid.token, data);
-            } else {
-              this.invoiceService.getCashier();
-              this.router.navigateByUrl('/cash/options');
-            }
-          }
-        });
+      this.adminLogin().subscribe(loginValid => this.adminLoginOp(loginValid, action, data));
     }
     this.resetInactivity(true);
+  }
+
+  adminLogin(){
+    return this.cashService.dialog.open(DialogLoginComponent, { width: '530px', height: '580px', disableClose: true,
+      autoFocus: false})
+      .afterClosed()
+  }
+
+  adminLoginOp(response, action?: any, data?: any){
+    console.log('The dialog was closed', response);
+    if (response.valid) {
+      if (action) {
+        this.actionByManager(action, response.token, data);
+      } else {
+        this.invoiceService.getCashier();
+        this.router.navigateByUrl('/cash/options');
+      }
+    }
   }
 
   hold() {
