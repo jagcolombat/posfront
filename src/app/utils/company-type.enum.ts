@@ -1,3 +1,3 @@
 export enum CompanyType {
-  RESTAURANT=5, MARKET=2
+  RESTAURANT=5, MARKET=2, ISLANDS = 6
 }

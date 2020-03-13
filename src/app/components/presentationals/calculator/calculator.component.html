@@ -7,7 +7,7 @@
     <button mat-button fxFlex="100px" [fxLayoutGap]="space" *ngFor="let j of numbers" class="numbers"
             (click)="sendKey(j, 'number')">{{j}}</button>
   </div>
-  <div class="column">
+  <div class="column" fxFlex="20">
     <button mat-button fxFlex="100px" [fxLayoutGap]="space" *ngFor="let k of leftOperations;" class="left"
             (click)="sendKey(k, 'left')" [disabled]="valid && k === 'Enter'">{{k}}</button>
   </div>

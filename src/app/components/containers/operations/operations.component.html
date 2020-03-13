@@ -3,43 +3,43 @@
                  (evPressKeys)="financeKey($event)" [disable]="operationService.cashService.disabledFinOp"
                   [showElements]="!authService.adminLogged()">
 </operation-group>-->
-<operation-group fxFlex.lg="9" fxFlex.lt-lg="11" fxFlex.md="10" fxFlex.gt-lg="8"
+<operation-group fxFlex.lt-md="9" fxFlex.md="11" fxFlex.gt-md="17" fxFlex.lg="18" fxFlex.gt-lg="16"
                  [operations]="financeOperations" [colors]="financeColor"
                  (evPressKeys)="financeKey($event)" [disable]="operationService.cashService.disabledFinOp"
                  [showElements]="!showForAdmin">
 </operation-group>
 
-<operation-group id="other" fxFlex.lg="9" fxFlex.lt-lg="11" fxFlex.md="10" fxFlex.gt-lg="8"
+<!--<operation-group id="other" fxFlex.lg="9" fxFlex.lt-lg="11" fxFlex.md="10" fxFlex.gt-lg="8"
                  [operations]="otherOperations" [colors]="otherColor"
                  (evPressKeys)="otherKey($event)" [disable]="operationService.cashService.disabledOtherOp"
                  *ngIf="!showForAdmin">
-</operation-group>
+</operation-group>-->
 
-<div fxFlex.lg="42" fxFlex.lt-lg="47" fxFlex.md="45" fxFlex.gt-lg="48" class="border">
-  <operation-group fxFlex="20" fxFlex.lt-lg="25" fxFlex.md="23" [operations]="invoiceOperations" [colors]="invoiceColor"
+<div fxFlex.lg="42" fxFlex.md="45" fxFlex.gt-lg="48" class="border">
+  <operation-group fxFlex="20" fxFlex.md="25" [operations]="invoiceOperations" [colors]="invoiceColor"
                    (evPressKeys)="invoiceKey($event)" [disable]="operationService.cashService.disabledInvOp"
                    [showElements]="!showForAdmin"></operation-group>
 
-  <numpad fxFlex="60" fxFlex.lt-lg="50" fxFlex.md="54" lastKey="@/FOR" (evPressKeys)="numpadKey($event)"
+  <numpad fxFlex="60" fxFlex.md="50" lastKey="@/FOR" (evPressKeys)="numpadKey($event)"
           [disableOp]="operationService.cashService.disabledInput"></numpad>
 
-  <operation-group fxFlex="20" fxFlex.lt-lg="25" fxFlex.md="23" [operations]="totalsOperations" [colors]="totalColor" layout="two-layout"
+  <operation-group fxFlex="20" fxFlex.md="25" [operations]="totalsOperations" [colors]="totalColor" layout="two-layout"
                    (evPressKeys)="totalKey($event)" [disable]="operationService.cashService.disabledTotalOp"
                    *ngIf="!showForAdmin"></operation-group>
 
-  <operation-group fxFlex="20" fxFlex.lt-lg="25" fxFlex.md="23" [operations]="backOperations" [colors]="backColor"
+  <operation-group fxFlex="20" fxFlex.md="25" [operations]="backOperations" [colors]="backColor"
                    layout="two-layout" (evPressKeys)="backKey($event)" [disable]="operationService.cashService.disabledTotalOp"
                    *ngIf="showForAdmin"></operation-group>
 </div>
 
-<div fxFlex.lg="44" fxFlex.lt-lg="33" fxFlex.gt-lg="35" fxFlex.md="34" class="border">
-  <operation-group id="payment" fxFlex="20" fxFlex.lt-lg="33" [operations]="paymentOperations" [colors]="paymentColor"
+<div fxFlex.lg="44" fxFlex.lt-lg="42" fxFlex.gt-lg="35" fxFlex.md="44" class="border">
+  <operation-group id="payment" fxFlex="20" fxFlex.md="25" [operations]="paymentOperations" [colors]="paymentColor"
                    (evPressKeys)="paymentKey($event)" [disable]="operationService.cashService.disabledPayment"
                    *ngIf="!showForAdmin">
   </operation-group>
 
 
-  <operation-group id="money" fxFlex="40" fxFlex.lt-lg="33" [operations]="moneyOperations" [colors]="moneyColor"
+  <operation-group id="money" fxFlex="40" fxFlex.md="25" [operations]="moneyOperations" [colors]="moneyColor"
                    btnSize="100px" showText="false" (evPressKeys)="moneyKey($event)"
                    [disable]="operationService.cashService.disabledPaymentMoney"
                    *ngIf="!showForAdmin">
@@ -50,31 +50,31 @@
                    *ngIf="!authService.adminLogged()">
   </operation-group>-->
 
-  <operation-group id="customer" fxFlex="20" fxFlex.lt-lg="33" [operations]="customerOperations" [colors]="customerColor"
+  <operation-group id="customer" fxFlex="20" fxFlex.md="25" [operations]="customerOperations" [colors]="customerColor"
                    btnSize="100px" (evPressKeys)="customerKey($event)" [disable]="operationService.cashService.disabledCustomerOp"
                    *ngIf="!showForAdmin">
   </operation-group>
 
-  <operation-group id="reports" fxFlex="20" fxFlex.lt-lg="25" [operations]="reportOperations" [colors]="reportColor"
+  <operation-group id="reports" fxFlex="20" fxFlex.md="25" [operations]="reportOperations" [colors]="reportColor"
                    (evPressKeys)="reportKey($event)" [disable]="operationService.cashService.disabledReportsAdminOp"
                    *ngIf="showForAdmin">
   </operation-group>
 
-  <operation-group fxFlex.lg="40" fxFlex.lt-lg="25" [operations]="financeAdminOperations" [colors]="financeAdminColor"
+  <operation-group fxFlex.lg="40" fxFlex.md="25" [operations]="financeAdminOperations" [colors]="financeAdminColor"
                    (evPressKeys)="financeKey($event)" [disable]="operationService.cashService.disabledFinanceAdminOp"
                    *ngIf="showForAdmin">
   </operation-group>
 
-  <operation-group fxFlex.lg="20" fxFlex.lt-lg="25" [operations]="invoiceAdminOperations" [colors]="invoiceAdminColor"
+  <operation-group fxFlex.lg="20" fxFlex.md="25" [operations]="invoiceAdminOperations" [colors]="invoiceAdminColor"
                    (evPressKeys)="invoiceKey($event)" [disable]="operationService.cashService.disabledInvoiceAdminOp"
                    *ngIf="showForAdmin">
   </operation-group>
 
-  <operation-group fxFlex.lg="20" fxFlex.lt-lg="25" [operations]="otherAdminOperations" [colors]="otherAdminColor"
+  <operation-group fxFlex.lg="20" fxFlex.md="25" [operations]="otherAdminOperations" [colors]="otherAdminColor"
                    (evPressKeys)="otherKey($event)" [disable]="operationService.cashService.disabledOtherAdminOp"
                    *ngIf="showForAdmin">
   </operation-group>
-  <operation-group fxFlex.lg="20" fxFlex.lt-lg="25" [operations]="restaurantOperations" [colors]="restaurantColor"
+  <operation-group fxFlex.lg="20" fxFlex.md="25" [operations]="restaurantOperations" [colors]="restaurantColor"
                    (evPressKeys)="restaurantKey($event)"
                    *ngIf="!showForAdmin ">
   </operation-group>

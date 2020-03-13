@@ -60,7 +60,7 @@ export class CashService {
     this.disabledInvoiceAdminOp = false;
     this.disabledOtherAdminOp = false;
     this.disabledAdminOp = false;
-    this.disabledCustomerOp = [/*false,*/ false, false, true];
+    this.disabledCustomerOp = [true, false, false, true];
     this.evReviewEnableState.emit(false);
   }
 
@@ -88,7 +88,6 @@ export class CashService {
     this.disabledInput = this.disabledFinOp = this.disabledTotalOp = true;
     this.disabledInvOp = [false, true, true, true];
     //if(this.systemConfig && this.systemConfig.allowCardSplit) this.disabledOtherOp = false;
-    this.splitAllow(true);
     if(fs){
       this.disabledPayment = [false, true, true, true, true, true]
     } else if (refund) {
@@ -100,7 +99,7 @@ export class CashService {
       this.disabledPaymentMoney = false;
       this.disabledCustomerOp = false;
     }
-
+    this.splitAllow(true);
   }
 
   totalsDisabled(){
@@ -189,7 +188,7 @@ export class CashService {
   }
 
   private splitAllow(enabled?: boolean) {
-    this.disabledOtherOp = (this.systemConfig && this.systemConfig.allowCardSplit && !enabled) ?
-      [true, false, false, false, false, false, false] : false;
+    this.disabledCustomerOp = (this.systemConfig && this.systemConfig.allowCardSplit && !enabled) ?
+      [true, false, false, true] : false;
   }
 }

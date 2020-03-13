@@ -17,7 +17,7 @@ import {UserrolEnum} from "../../../utils/userrol.enum";
 })
 export class OperationsComponent implements OnInit {
 
-  @Input() financeOperations = [FinancialOpEnum.MANAGER, FinancialOpEnum.LOGOUT];
+  @Input() financeOperations = [FinancialOpEnum.MANAGER, OtherOpEnum.PRINT_LAST, FinancialOpEnum.LOGOUT];
   @Input() financeColor = 'green';
   @Input() financeDisabled: boolean | boolean []= this.operationService.cashService.disabledFinOp;
 
@@ -36,8 +36,8 @@ export class OperationsComponent implements OnInit {
   @Input() paymentColor = ['yellow', 'yellow', 'yellow', 'green', 'blue', 'blue'];
   @Input() paymentDisabled: boolean | boolean[] = this.operationService.cashService.disabledPayment;
 
-  @Input() otherOperations = [OtherOpEnum.PRINT_LAST,/* OtherOpEnum.NO_SALE,*/ OtherOpEnum.WEIGHT_ITEM];
-  @Input() otherColor = ['yellow', 'blue', 'blue', 'green','blue','blue'];
+  /*@Input() otherOperations = [OtherOpEnum.WEIGHT_ITEM];
+  @Input() otherColor = ['yellow', 'blue', 'blue', 'green','blue','blue'];*/
 
   @Input() moneyOperations = ['1', '5', '10', '20', '50', '100'];
   @Input() moneyColor = ['one', 'five', 'ten', 'twenty', 'fifty', 'hundrey'];
@@ -58,9 +58,9 @@ export class OperationsComponent implements OnInit {
   @Input() otherAdminOperations = [OtherOpEnum.PRINT_LAST, OtherOpEnum.NO_SALE, OtherOpEnum.PAID_OUT];
   @Input() otherAdminColor = ['blue', 'blue', 'blue'];
 
-  @Input() customerOperations = [/*CustomerOpEnum.CUSTOMER, */CustomerOpEnum.ACCT_BALANCE, CustomerOpEnum.ACCT_PAYMENT,
+  @Input() customerOperations: Array<CustomerOpEnum | OtherOpEnum> = [/*CustomerOpEnum.CUSTOMER, */CustomerOpEnum.ACCT_BALANCE, CustomerOpEnum.ACCT_PAYMENT,
     CustomerOpEnum.ACCT_CHARGE];
-  @Input() customerColor = 'orange';
+  @Input() customerColor = ['orange', 'orange', 'orange'];
 
   @Input() restaurantOperations = [FinancialOpEnum.TXTYPE, OtherOpEnum.ORDER_INFO, OtherOpEnum.TABLES];
   @Input() restaurantColor = 'green';
@@ -85,8 +85,8 @@ export class OperationsComponent implements OnInit {
     // this.operationService.cashService.systemConfig.companyType = CompanyType.RESTAURANT;
     this.operationService.cashService.getSystemConfig().subscribe(config => {
       if(this.operationService.cashService.systemConfig.allowCardSplit){
-        this.otherOperations.unshift(OtherOpEnum.SPLIT_CARD);
-        this.otherColor.unshift('yellow');
+        this.customerOperations.unshift(OtherOpEnum.SPLIT_CARD);
+        this.customerColor.unshift('yellow');
       }
       if(this.operationService.cashService.systemConfig.companyType === CompanyType.RESTAURANT ||
         !this.operationService.cashService.systemConfig.allowEBT){
@@ -114,6 +114,13 @@ export class OperationsComponent implements OnInit {
         // Remove restaurant operations
         this.restaurantOperations.splice(0);
         this.restaurantColor = '';
+      }
+      if(this.operationService.cashService.systemConfig.companyType !== CompanyType.ISLANDS){
+        // Push in finance operations reprint, hold order, review and recall check options before logout
+        let logoutOp = this.financeOperations.splice(-1);
+        console.log('logoutOp', logoutOp);
+        this.financeAdminOperations.splice(0, 4).map(op => this.financeOperations.push(op));
+        this.financeOperations.push(logoutOp[0]);
       }
     }, err => {
       this.operationService.cashService.openGenericInfo('Error', 'Can\'t get configuration');
@@ -232,10 +239,10 @@ export class OperationsComponent implements OnInit {
         break;
       case OtherOpEnum.WEIGHT_ITEM:
         this.operationService.weightItem();
-        break;
+        break;/*
       case OtherOpEnum.SPLIT_CARD:
         this.operationService.splitCard();
-        break;
+        break;*/
     }
   }
 
@@ -302,6 +309,9 @@ export class OperationsComponent implements OnInit {
         break;
       case CustomerOpEnum.ACCT_CHARGE:
         this.operationService.acctCharge();
+        break;
+      case OtherOpEnum.SPLIT_CARD:
+        this.operationService.splitCard();
         break;
     }
   }
