@@ -22,6 +22,7 @@ import {LoginComponent} from "../../components/presentationals/login/login.compo
 import {AnnounceComponent} from "../../components/presentationals/announce/announce.component";
 import {PromotionsComponent} from "../../components/presentationals/promotions/promotions.component";
 import {SlideshowModule} from "ng-simple-slideshow";
+import {LoadingComponent} from "../../components/presentationals/loading/loading.component";
 
 // export const options: Partial<IConfig>| (() => Partial<IConfig>);
 
@@ -58,7 +59,8 @@ import {SlideshowModule} from "ng-simple-slideshow";
     InfoPosComponent,
     InputCalculatorComponent,
     AnnounceComponent,
-    PromotionsComponent
+    PromotionsComponent,
+    LoadingComponent
   ],
   declarations: [CalculatorComponent,
     GenericKeyboardComponent,
@@ -71,6 +73,8 @@ import {SlideshowModule} from "ng-simple-slideshow";
     InfoPosComponent,
     InputCalculatorComponent,
     AnnounceComponent,
-    PromotionsComponent]
+    PromotionsComponent,
+    LoadingComponent
+  ]
 })
 export class SharedModule { }

@@ -30,6 +30,24 @@
           Allow to all users add generic product
         </mat-slide-toggle>
       </mat-list-item>
+      <mat-list-item>
+        <mat-slide-toggle [checked]='allowDeleteProd' (change)="setDeleteProd($event)" labelPosition="before"
+                          ariaLabel="Allow delete products from invoice for all users">
+          Delete products from invoice only admin users
+        </mat-slide-toggle>
+      </mat-list-item>
+      <!--<mat-list-item>
+        <mat-slide-toggle [checked]='allowEBT' (change)="setEBT($event)" labelPosition="before"
+                          ariaLabel="Allow EBT Options">
+          Allow EBT Options
+        </mat-slide-toggle>
+      </mat-list-item>
+      <mat-list-item>
+        <mat-slide-toggle [checked]='allowSplitPayment' (change)="setSplitPayment($event)" labelPosition="before"
+                          ariaLabel="Allow split payment">
+          Allow split payment
+        </mat-slide-toggle>
+      </mat-list-item>-->
     </mat-list>
   </div>
   <mat-dialog-actions>

@@ -12,6 +12,9 @@ export class AdminConfigComponent implements OnInit {
   timeLogout: string;
   adminClearVoid: boolean;
   allowAddProdGen: boolean;
+  allowDeleteProd: boolean;
+  allowEBT: boolean;
+  allowSplitPayment: boolean;
   loading = false;
 
   constructor( public dialogRef: MatDialogRef<AdminConfigComponent>,
@@ -19,6 +22,9 @@ export class AdminConfigComponent implements OnInit {
                private cashService: CashService) {
     console.log('adminConfig', this.cashService.systemConfig);
     this.allowAddProdGen = this.cashService.systemConfig.allowAddProdGen;
+    this.allowDeleteProd = this.cashService.systemConfig.allowClear;
+    this.allowEBT = this.cashService.systemConfig.allowEBT;
+    this.allowSplitPayment = this.cashService.systemConfig.allowCardSplit;
     if(this.cashService.systemConfig.inactivityTime) this.timeLogout = this.cashService.systemConfig.inactivityTime+'';
   }
 
@@ -42,8 +48,26 @@ export class AdminConfigComponent implements OnInit {
     this.allowAddProdGen = $event.checked;
   }
 
+  setDeleteProd($event: any){
+    console.log('setDeleteProd', $event, this.allowDeleteProd);
+    this.allowDeleteProd = $event.checked;
+  }
+
+  setEBT($event: any){
+    console.log('setEBT', $event, this.allowEBT);
+    this.allowEBT = $event.checked;
+  }
+
+  setSplitPayment($event: any){
+    console.log('setSplitPayment', $event, this.allowSplitPayment);
+    this.allowSplitPayment = $event.checked;
+  }
+
   done(){
     this.cashService.systemConfig.allowAddProdGen = this.allowAddProdGen;
+    this.cashService.systemConfig.allowClear = this.allowDeleteProd;
+    this.cashService.systemConfig.allowEBT = this.allowEBT;
+    this.cashService.systemConfig.allowCardSplit = this.allowSplitPayment;
     if(this.timeLogout)
       this.dialogRef.close(this.timeLogout);
     else {

@@ -1,15 +1,16 @@
-<div class="page" [ngClass]="getBreakTextType()">
+<div class="page" [ngClass]="getBreakTextType()" *ngIf="!loading && prods.length">
   <button mat-button fxFlex="125px" *ngFor="let i of prods | paginate: { itemsPerPage: sizePage, currentPage: page }"
         (click)="doAction($event,i)"
         [ngClass]="getColorByProp(i)"
         [disabled]="stockService.cashService.disabledInput">
     {{i.name.substring(0, 30) | uppercase }}
   </button>
-  <div class="loading" *ngIf="loading">
-    <span >Loading products....</span>
-  </div>
+
 </div>
-<div class="paginator">
+
+<app-loading *ngIf="!loading && !prods.length" message="There are not products."></app-loading>
+
+<div class="paginator" *ngIf="!loading">
   <pos-paginator [hidden]="stockService.cashService.disabledInput" [countElements]="prods.length" [sizePage]="sizePage"
                  (evSetPage)="setPage($event)">
     <button class="filter" mat-button (click)="filter()">
@@ -18,3 +19,5 @@
     <button class="dpto" mat-button [routerLink]="['/cash/dptos']"> << DPTOS </button>
   </pos-paginator>
 </div>
+
+<app-loading *ngIf="loading" message="Loading products...."></app-loading>

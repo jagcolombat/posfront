@@ -9,7 +9,7 @@
 
 div.page {
   display: flex;
-  flex: 1;
+  //flex: 1;
   flex-wrap: wrap;
   margin-left: 10px;
   overflow: auto;
@@ -44,16 +44,11 @@ pos-paginator {
   }
 }
 
-.loading {
+app-loading {
   display: flex;
   flex: 1;
   justify-content: center;
   align-items: center;
-
-  span {
-    border: 1px solid gray;
-    padding: 5px;
-  }
 }
 
 .break-all {
