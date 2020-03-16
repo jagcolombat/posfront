@@ -36,7 +36,19 @@
           Delete products from invoice only admin users
         </mat-slide-toggle>
       </mat-list-item>
-      <!--<mat-list-item>
+      <mat-list-item>
+        <mat-slide-toggle [checked]='paxConnType' (change)="setPaxConnType($event)" labelPosition="before"
+                          ariaLabel="PAX Online">
+          PAX Online
+        </mat-slide-toggle>
+      </mat-list-item>
+      <mat-list-item>
+        <mat-slide-toggle [checked]='externalScale' (change)="setExternalScale($event)" labelPosition="before"
+                          ariaLabel="External Scale">
+          External Scale
+        </mat-slide-toggle>
+      </mat-list-item>
+      <mat-list-item>
         <mat-slide-toggle [checked]='allowEBT' (change)="setEBT($event)" labelPosition="before"
                           ariaLabel="Allow EBT Options">
           Allow EBT Options
@@ -46,6 +58,18 @@
         <mat-slide-toggle [checked]='allowSplitPayment' (change)="setSplitPayment($event)" labelPosition="before"
                           ariaLabel="Allow split payment">
           Allow split payment
+        </mat-slide-toggle>
+      </mat-list-item>
+      <mat-list-item>
+        <mat-slide-toggle [checked]='restaurant' (change)="setRestaurant($event)" labelPosition="before"
+                          ariaLabel="Set this POS for Restaurant">
+          Set this POS for Restaurant
+        </mat-slide-toggle>
+      </mat-list-item>
+      <!--<mat-list-item>
+        <mat-slide-toggle [checked]='islands' (change)="setIslands($event)" labelPosition="before"
+                          ariaLabel="Set this POS for Islands">
+          Set this POS for Islands
         </mat-slide-toggle>
       </mat-list-item>-->
     </mat-list>

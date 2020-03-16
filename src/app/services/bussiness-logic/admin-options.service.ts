@@ -185,7 +185,7 @@ export class AdminOptionsService {
     console.log('showSalesByEmployee', emp);
     this.cashService.dialog.open(GenericSalesComponent,
       {
-        width: '480px', height: '640px', disableClose: true, data: {title: AdminOpEnum.EMPLZ, empl: emp }
+        width: '500px', height: '640px', disableClose: true, data: {title: AdminOpEnum.EMPLZ, empl: emp }
       })
   }
 
@@ -214,7 +214,7 @@ export class AdminOptionsService {
       console.log('configOption', next);*/
       this.cashService.dialog.open(AdminConfigComponent,
         {
-          width: '480px', height: '600px', disableClose: true, data: {title: 'Configuration'}
+          width: '500px', height: '640px', disableClose: true, data: {title: 'Configuration'}
         }).afterClosed().subscribe(next => {
           if(next){
             console.log('configOption', next);

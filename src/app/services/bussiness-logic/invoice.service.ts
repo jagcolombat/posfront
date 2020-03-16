@@ -117,6 +117,7 @@ export class InvoiceService {
     this.invoice.productOrders.push(inv.productOrders[0]);
     this.updateTotals(inv);
     this.evAddProd.emit(inv.productOrders[0]);
+    this.resetDigits();
   }
 
   updateTotals(inv: Invoice){

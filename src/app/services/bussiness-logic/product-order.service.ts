@@ -121,17 +121,30 @@ export class ProductOrderService implements OnDestroy {
   }
 
   private openDialogScalableProd(product: Product): void {
-    const dialogRef = this.dialog.open(ProductGenericComponent,
-      {
-        width: '480px', height: '650px', data: {name: product.name, label: 'Weight (Lbs)', unitCost: 0}, disableClose: true
+    console.log('openDialogScalableProd', product);
+    if(this.invoiceService.qty > 0 && this.invoiceService.qty !== 1){
+      this.addProdScalable(product, this.invoiceService.qty);
+    } else {
+      const dialogRef = this.dialog.open(ProductGenericComponent,
+        {
+          width: '480px', height: '650px', data: {name: product.name, label: 'Weight (Lbs)', unitCost: 0}, disableClose: true
+        });
+      dialogRef.afterClosed().subscribe( (data: ProductGeneric) => {
+        if(data) {
+          /*this.quantityByProduct = data.unitCost;
+          product.generic ? this.openDialogGenericProd(product):
+            this.invoiceService.addProductOrder(this.createProductOrder(product));*/
+          this.addProdScalable(product, data.unitCost);
+        }
       });
-    dialogRef.afterClosed().subscribe( (data: ProductGeneric) => {
-      if(data) {
-        this.quantityByProduct = data.unitCost;
-        product.generic ? this.openDialogGenericProd(product):
-          this.invoiceService.addProductOrder(this.createProductOrder(product));
-      }
-    });
+    }
+
+  }
+
+  addProdScalable(product: Product, amount: number){
+    this.quantityByProduct = amount;
+    product.generic ? this.openDialogGenericProd(product):
+      this.invoiceService.addProductOrder(this.createProductOrder(product));
   }
 
   private createProductOrder(prod: Product, totalWF?: number): ProductOrder {

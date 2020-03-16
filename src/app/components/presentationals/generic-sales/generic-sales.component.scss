@@ -6,10 +6,11 @@
   justify-content: center;
   flex-direction: column;
   padding: 10px;
+  margin-left: -10px;
 }
 
 sales-shop, sales-empl {
-  width: 90%;
+  width: 100%;
 }
 
 .price {
