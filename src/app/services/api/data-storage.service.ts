@@ -170,6 +170,10 @@ export class DataStorageService {
     return this.invoiceService.subtotalInvoice(this.url, receiptNumber);
   }
 
+  fsSubtotalInvoice(receiptNumber: string): Observable<Invoice> {
+    return this.invoiceService.fsSubtotalInvoice(this.url, receiptNumber);
+  }
+
   // Payment
   paidByCash(cashPayment: ICashPayment): Observable<any> {
     return this.paymentService.paidByCash(this.url, cashPayment);

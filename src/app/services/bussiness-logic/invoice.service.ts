@@ -114,6 +114,8 @@ export class InvoiceService {
   }
 
   addPO2Invoice(inv: Invoice){
+    this.invoice.status = inv.status;
+    this.invoice.paymentStatus = inv.paymentStatus;
     this.invoice.productOrders.push(inv.productOrders[0]);
     this.updateTotals(inv);
     this.evAddProd.emit(inv.productOrders[0]);
@@ -378,6 +380,10 @@ export class InvoiceService {
 
   subTotal(): Observable<Invoice>{
     return this.dataStorage.subtotalInvoice(this.receiptNumber);
+  }
+
+  fsSubTotal(): Observable<Invoice>{
+    return this.dataStorage.fsSubtotalInvoice(this.receiptNumber);
   }
 
   clear(): Observable<Invoice>{

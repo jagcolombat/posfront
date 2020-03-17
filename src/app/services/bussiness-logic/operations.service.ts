@@ -404,6 +404,31 @@ export class OperationsService {
     }
   }
 
+  ebtSubTotal(){
+    console.log('ebtSubTotal', this.currentOperation);
+    let refund = this.currentOperation === FinancialOpEnum.REFUND;
+    if (this.invoiceService.invoice.productOrders.length > 0 || ( this.cashService.systemConfig.fullRefund && refund )) {
+      this.currentOperation = TotalsOpEnum.FS_SUBTOTAL;
+      this.cashService.totalsDisabled();
+      this.invoiceService.fsSubTotal().subscribe(
+        next => {
+          this.invoiceService.setInvoice(next);
+          if(this.invoiceService.invoice.status === InvoiceStatus.PAID){
+            this.invoiceService.warnInvoicePaid();
+          } else {
+            (this.invoiceService.invoice.productOrders.length > 0) ?
+              this.cashService.totalsEnableState(true, refund || next.isRefund):
+              this.cashService.resetEnableState();
+          }
+        },
+        err => {
+          this.cashService.openGenericInfo(InformationType.ERROR, err);
+          this.cashService.resetEnableState();
+        }
+      )
+    }
+  }
+
   fsSubTotal(){
     console.log('fsSubTotal');
     if (this.invoiceService.invoice.productOrders.length > 0) {

@@ -188,7 +188,7 @@ export class OperationsComponent implements OnInit {
         this.operationService.subTotal();
         break;
       case 'F/S Subtotal':
-        this.operationService.fsSubTotal();
+        this.operationService.ebtSubTotal();
         break;
     }
   }

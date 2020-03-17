@@ -117,6 +117,11 @@ export class InvoiceService {
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
+  fsSubtotalInvoice(url: string, receiptNumber: string): Observable<Invoice> {
+    return this._http.post<Invoice>(url +  this.path +  '/fsSubtotal/' + receiptNumber, {})
+      .pipe(catchError(this.processHttpMsgService.handleError));
+  }
+
   getInvoiceByIdRefund (url: string, id: string): Observable<Invoice> {
     return this._http.post<Invoice>(url + this.path + '/' + id + '/status/refund', {})
             .pipe(catchError(this.processHttpMsgService.handleError));
