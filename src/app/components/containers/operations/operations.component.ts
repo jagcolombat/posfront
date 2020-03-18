@@ -9,6 +9,7 @@ import {AdminOptionsService} from "../../../services/bussiness-logic/admin-optio
 import {NavigationEnd, Router} from "@angular/router";
 import {CustomerOpEnum} from "../../../utils/operations/customer.enum";
 import {UserrolEnum} from "../../../utils/userrol.enum";
+import {PAXConnTypeEnum} from "../../../utils/pax-conn-type.enum";
 
 @Component({
   selector: 'operations',
@@ -84,7 +85,8 @@ export class OperationsComponent implements OnInit {
   ngOnInit() {
     // this.operationService.cashService.systemConfig.companyType = CompanyType.RESTAURANT;
     this.operationService.cashService.getSystemConfig().subscribe(config => {
-      if(this.operationService.cashService.systemConfig.allowCardSplit){
+      if(this.operationService.cashService.systemConfig.allowCardSplit &&
+        this.operationService.cashService.systemConfig.paxConnType === PAXConnTypeEnum.ONLINE ){
         this.customerOperations.unshift(OtherOpEnum.SPLIT_CARD);
         this.customerColor.unshift('yellow');
       }
