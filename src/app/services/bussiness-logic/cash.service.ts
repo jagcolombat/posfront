@@ -54,13 +54,13 @@ export class CashService {
   resetEnableState() {
     this.disabledInput = this.disabledFinOp = this.disabledInvOp = this.disabledTotalOp = this.disabledAdminOp = false;
     this.disabledPayment = this.disabledPaymentMoney = true;
-    this.splitAllow(false);
     this.disabledFinanceAdminOp = false;
     this.disabledReportsAdminOp = false;
     this.disabledInvoiceAdminOp = false;
     this.disabledOtherAdminOp = false;
     this.disabledAdminOp = false;
     this.disabledCustomerOp = [true, false, false, true];
+    this.splitAllow(false);
     this.evReviewEnableState.emit(false);
   }
 
@@ -188,7 +188,12 @@ export class CashService {
   }
 
   private splitAllow(enabled?: boolean) {
-    this.disabledCustomerOp = (this.systemConfig && this.systemConfig.allowCardSplit && !enabled) ?
-      [true, false, false, true] : false;
+    /*this.disabledCustomerOp = (this.systemConfig && this.systemConfig.allowCardSplit && !enabled) ?
+      [true, false, false, true] : false;*/
+    if(this.systemConfig && (this.systemConfig.allowCardSplit && this.systemConfig.paxConnType === PAXConnTypeEnum.ONLINE)){
+      this.disabledCustomerOp = !enabled ? [true, false, false, true] : false;
+    } else if(this.systemConfig && (!this.systemConfig.allowCardSplit || this.systemConfig.paxConnType !== PAXConnTypeEnum.ONLINE)){
+      this.disabledCustomerOp = !enabled ? [false, false, true] : false;
+    }
   }
 }

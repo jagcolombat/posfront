@@ -27,8 +27,9 @@ export class WebsocketService {
 
   start() {
     // Conection for events
+    console.log('Before Connection', this.connection);
     this.connection.start().then(function () {
-      console.log('Connected!');
+      console.log('Connected!', this.connection);
     }).catch(function (err) {
       return console.error(err.toString());
     });
@@ -40,9 +41,11 @@ export class WebsocketService {
     });
 
     this.connection.on('scanner-event', (data: ScannerData) => {
-      console.log(data.message);
+      console.log('scanner-event', data.message);
       this.evScanner.emit(data);
     });
+
+    this.connection.onclose((e)=> console.log('close connection ws', e));
 
     this.connectionClientView.on('app-invoice', (data: any) => {
       console.log('invoice-updated-event', data);

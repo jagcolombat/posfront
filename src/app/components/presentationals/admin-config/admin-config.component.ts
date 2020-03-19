@@ -79,6 +79,7 @@ export class AdminConfigComponent implements OnInit {
   setPaxConnType($event: any){
     console.log('setPaxConnType', $event, this.paxConnType);
     this.paxConnType = $event.checked;
+    this.needLogout = true;
   }
 
   setExternalScale($event: any){
