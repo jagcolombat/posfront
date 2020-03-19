@@ -79,7 +79,7 @@ export class AdminOperationService {
     params = params.append('closeWeek', close + '');
     if(from) params = params.append('fromDate', from + '');
     if(to) params = params.append('toDate', to + '');
-    return this._http.post<any>(url + this.path + '/op/report', {}, {params})
+    return this._http.post<any>(url + this.path + '/op/report/week', {}, {params})
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 

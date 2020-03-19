@@ -94,6 +94,7 @@ export class AdminConfigComponent implements OnInit {
   }
 
   done(){
+    let conf = Object(this.cashService.systemConfig);
     this.cashService.systemConfig.allowAddProdGen = this.allowAddProdGen;
     this.cashService.systemConfig.allowClear = this.allowDeleteProd;
     this.cashService.systemConfig.allowEBT = this.allowEBT;
@@ -101,15 +102,24 @@ export class AdminConfigComponent implements OnInit {
     this.cashService.systemConfig.paxConnType = this.paxConnType ? PAXConnTypeEnum.ONLINE : PAXConnTypeEnum.OFFLINE;
     this.cashService.systemConfig.externalScale = this.externalScale;
     this.cashService.systemConfig.companyType = this.restaurant ? CompanyType.RESTAURANT : CompanyType.MARKET;
-    if(this.needLogout){
-      this.cashService.openGenericInfo(InformationType.INFO,
-        'Please logout and login for apply the new configuration successfully');
-    }
-    if(this.timeLogout)
-      this.dialogRef.close(this.timeLogout);
-    else {
+    this.cashService.systemConfig.inactivityTime = +this.timeLogout;
+    this.dataStorage.setConfiguration(this.cashService.systemConfig).subscribe(value => {
+      console.log('set configuration', value);
+      if(this.needLogout){
+        this.cashService.openGenericInfo(InformationType.INFO,
+          'Please logout and login for apply the new configuration successfully');
+      }
+      if(this.timeLogout)
+        this.dialogRef.close(this.timeLogout);
+      else {
+        this.dialogRef.close();
+      }
+    }, error1 => {
+      console.error(error1);
+      this.cashService.systemConfig = conf;
       this.dialogRef.close();
-    }
+    });
+
   }
 
 }

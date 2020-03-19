@@ -9,6 +9,7 @@ import { ProcessHTTPMSgService } from './ProcessHTTPMSg.service';
   providedIn: 'root'
 })
 export class ConfigurationService {
+  path = '/configurations';
 
   constructor(private _http: HttpClient, private processHttpMsgService: ProcessHTTPMSgService) { }
 
@@ -16,6 +17,11 @@ export class ConfigurationService {
     return this._http.get<Configuration>(url + '/configurations')
     .pipe(map(data => data))
     .pipe(catchError(this.processHttpMsgService.handleError));
+  }
+
+  setAll(url: string, config: Configuration): Observable<Configuration> {
+    return this._http.post<Configuration>(url + this.path, config)
+      .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
 }

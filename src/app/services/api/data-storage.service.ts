@@ -213,6 +213,10 @@ export class DataStorageService {
     return this.configurationService.getAll(this.url);
   }
 
+  setConfiguration(config: Configuration): Observable<Configuration> {
+    return this.configurationService.setAll(this.url, config);
+  }
+
   // Admin Operations
   getApplicationUsers(): Observable<User[]> {
     return this.adminOperationService.getApplicationUsers(this.url);

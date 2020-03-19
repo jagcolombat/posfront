@@ -218,7 +218,7 @@ export class AdminOptionsService {
         }).afterClosed().subscribe(next => {
           if(next){
             console.log('configOption', next);
-            this.operationService.inactivityTime = this.cashService.systemConfig.inactivityTime = +next;
+            this.operationService.inactivityTime = +next;
             this.operationService.resetInactivity(true);
           }
       })/*
@@ -330,17 +330,23 @@ export class AdminOptionsService {
 
   dayClosePrint(emp?: string, op?: AdminOpEnum, title?: string, date?: any) {
     this.cashService.dayCloseEnableState();
+    let dialogEv = this.cashService.openGenericInfo('Information', 'Printing close '+ (emp ? 'cashier' : 'day')
+      +'...', undefined, undefined, true);
     this.dataStorage.dayClosePrint(emp, date).subscribe(
       next => {
         console.log(op);
+        dialogEv.close();
         this.cashService.openGenericInfo(title +' Close Print', 'Complete '+op.toLowerCase()+' operation');
       },
       err => {
+        dialogEv.close();
+        console.error(err);
         this.cashService.openGenericInfo('Error', 'Can\'t complete '+
           op.toLowerCase()+' print operation');
         this.cashService.resetEnableState();
       },
       () => {
+        dialogEv.close();
         this.cashService.resetEnableState();
       }
     );
