@@ -326,6 +326,7 @@ export class AdminOptionsService {
         this.cashService.resetEnableState();
       }
     );
+    this.operationService.resetInactivity(true);
   }
 
   dayClosePrint(emp?: string, op?: AdminOpEnum, title?: string, date?: any) {
@@ -350,6 +351,7 @@ export class AdminOptionsService {
         this.cashService.resetEnableState();
       }
     );
+    this.operationService.resetInactivity(true);
   }
 
   confirmDayClose(emp?: string, op?: AdminOpEnum, title?: string, date?: any){
