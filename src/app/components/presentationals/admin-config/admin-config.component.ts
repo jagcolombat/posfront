@@ -94,7 +94,7 @@ export class AdminConfigComponent implements OnInit {
   }
 
   done(){
-    let conf = Object(this.cashService.systemConfig);
+    let conf = Object.assign({}, this.cashService.systemConfig);
     this.cashService.systemConfig.allowAddProdGen = this.allowAddProdGen;
     this.cashService.systemConfig.allowClear = this.allowDeleteProd;
     this.cashService.systemConfig.allowEBT = this.allowEBT;
@@ -116,7 +116,7 @@ export class AdminConfigComponent implements OnInit {
       }
     }, error1 => {
       console.error(error1);
-      this.cashService.systemConfig = conf;
+      this.cashService.systemConfig = Object.assign({}, conf);
       this.dialogRef.close();
     });
 
