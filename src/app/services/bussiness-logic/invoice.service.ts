@@ -86,7 +86,7 @@ export class InvoiceService {
       console.log('addProductOrder-next', next);
       (next.productOrders.length > 0 /*&& next.total >= this.invoice.total*/) ?
         //this.setInvoice(next):
-        this.addPO2Invoice(next):
+        (next.isRefund)? this.setInvoice(next): this.addPO2Invoice(next):
         this.showErr('The invoice hasn\'t products', next);
     }, err => {
       this.showErr(err);

@@ -26,4 +26,7 @@
   <info-pos *ngIf="invoiceService.invoice?.balance < 0 " title="Refund"
             [value]="invoiceService.invoice?.balance"
             align="end" format="currency" fxFlex="25"></info-pos>
+  <info-pos *ngIf="invoiceService.invoice?.isPromotion && invoiceService.invoice?.totalPromo > 0" title="Promo"
+            [value]="invoiceService.invoice?.totalPromo"
+            align="end" format="currency" fxFlex="25"></info-pos>
 </div>
