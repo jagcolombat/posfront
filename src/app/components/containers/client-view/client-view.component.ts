@@ -4,6 +4,7 @@ import {WebsocketService} from "../../../services/api/websocket.service";
 import {Subscription} from "rxjs";
 import {InvoiceService} from "../../../services/bussiness-logic/invoice.service";
 import {CashPaymentComponent} from "../../presentationals/cash-payment/cash-payment.component";
+import {Invoice} from "../../../models/invoice.model";
 
 @Component({
   selector: 'client-view',
@@ -32,7 +33,7 @@ export class ClientViewComponent implements OnInit, OnDestroy {
     this.invoiceService.cashier = data.entity.applicationUserName;
     //data.entity.addProduct = this.addProduct = !this.addProduct;
     (data.entity.addProduct && data.entity.productOrders.length > 0) ?
-      this.invoiceService.addPO2Invoice(data.entity): this.invoiceService.setInvoice(data.entity);
+      this.addPO2Invoice(data.entity): this.invoiceService.setInvoice(data.entity);
     //Payment return
     if(data.entity.change > 0 || data.entity.change < 0){
       this.showPaymentReturn(data.entity.change);
@@ -47,5 +48,9 @@ export class ClientViewComponent implements OnInit, OnDestroy {
       {
         width: '350px', height: '260px', data: valueToReturn, disableClose: true
       });
+  }
+
+  private addPO2Invoice(inv: Invoice) {
+    !this.invoiceService.invoice ? this.invoiceService.setInvoice(inv): this.invoiceService.addPO2Invoice(inv);
   }
 }
