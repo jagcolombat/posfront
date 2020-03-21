@@ -14,6 +14,7 @@ export class ClientViewComponent implements OnInit, OnDestroy {
   public env = env;
   modalPaymentReturn: any;
   sub: Subscription[] = new Array<Subscription>();
+  //addProduct = true;
 
   constructor(private invoiceService: InvoiceService, private ws: WebsocketService) {
   }
@@ -29,7 +30,9 @@ export class ClientViewComponent implements OnInit, OnDestroy {
   private invoiceUpdated(data: any) {
     console.log('invoiceUpdated', data);
     this.invoiceService.cashier = data.entity.applicationUserName;
-    this.invoiceService.setInvoice(data.entity);
+    //data.entity.addProduct = this.addProduct = !this.addProduct;
+    (data.entity.addProduct && data.entity.productOrders.length > 0) ?
+      this.invoiceService.addPO2Invoice(data.entity): this.invoiceService.setInvoice(data.entity);
     //Payment return
     if(data.entity.change > 0 || data.entity.change < 0){
       this.showPaymentReturn(data.entity.change);

@@ -387,6 +387,11 @@ export class OperationsService {
       this.cashService.totalsDisabled();
       this.invoiceService.subTotal().subscribe(
         next => {
+          /*next.isPromotion = true;
+          next.total = this.invoiceService.invoice.total - 0.50;*/
+          // console.log('promoTotal', next.total, this.invoiceService.invoice.total);
+          // Calculate total discount by promotion
+          if(next.isPromotion && !next.isRefund) next.totalPromo = this.invoiceService.invoice.total - next.total;
           this.invoiceService.setInvoice(next);
           if(this.invoiceService.invoice.status === InvoiceStatus.PAID){
             this.invoiceService.warnInvoicePaid();
@@ -412,12 +417,14 @@ export class OperationsService {
       this.cashService.totalsDisabled();
       this.invoiceService.fsSubTotal().subscribe(
         next => {
+          // Calculate total discount by promotion
+          if(next.isPromotion && !next.isRefund) next.totalPromo = this.invoiceService.invoice.total - next.total;
           this.invoiceService.setInvoice(next);
           if(this.invoiceService.invoice.status === InvoiceStatus.PAID){
             this.invoiceService.warnInvoicePaid();
           } else {
             (this.invoiceService.invoice.productOrders.length > 0) ?
-              this.cashService.totalsEnableState(true, refund || next.isRefund):
+              this.cashService.totalsEnableState(this.invoiceService.invoice.fsTotal > 0, refund || next.isRefund):
               this.cashService.resetEnableState();
           }
         },
@@ -738,14 +745,20 @@ export class OperationsService {
             this.paymentReturn(valueToReturn).subscribe((result: string) => {
               //if (result !== '') {
               if (+valueToReturn >= 0 || data.status === InvoiceStatus.PAID) this.invoiceService.createInvoice();
+              else {
+                console.log('Invoice not is paid', data, valueToReturn);
+              }
               //}
             });
           } else if(valueToReturn === 0 || data.status === InvoiceStatus.PAID){
             this.invoiceService.createInvoice();
+          } else {
+            console.log('Invoice not is paid', data, valueToReturn);
           }
         },
         err => {
-          console.log(err); this.cashService.openGenericInfo('Error', 'Can\'t complete cash operation');
+          console.error(err);
+          this.cashService.openGenericInfo('Error', 'Can\'t complete cash operation');
           dialogInfoEvents.close();
           clearTimeout(timeOut);
         },
