@@ -5,6 +5,7 @@ import {CashService} from "../../../services/bussiness-logic/cash.service";
 import {PAXConnTypeEnum} from "../../../utils/pax-conn-type.enum";
 import {InformationType} from "../../../utils/information-type.enum";
 import {CompanyType} from "../../../utils/company-type.enum";
+import {Configuration} from "../../../models/configuration.model";
 
 @Component({
   selector: 'admin-config',
@@ -20,9 +21,10 @@ export class AdminConfigComponent implements OnInit {
   allowSplitPayment: boolean;
   paxConnType: boolean;
   externalScale: boolean;
-  restaurant: boolean;
+  fullRefund: boolean;
   loading = false;
   needLogout = false;
+  companyType: CompanyType | string;
 
   constructor( public dialogRef: MatDialogRef<AdminConfigComponent>,
                @Inject(MAT_DIALOG_DATA) public data: any, private dataStorage: DataStorageService,
@@ -34,7 +36,8 @@ export class AdminConfigComponent implements OnInit {
     this.allowSplitPayment = this.cashService.systemConfig.allowCardSplit;
     this.externalScale = this.cashService.systemConfig.externalScale;
     this.paxConnType = this.cashService.systemConfig.paxConnType === PAXConnTypeEnum.ONLINE;
-    this.restaurant = this.cashService.systemConfig.companyType === CompanyType.RESTAURANT;
+    this.fullRefund = this.cashService.systemConfig.fullRefund;
+    this.companyType = this.cashService.systemConfig.companyType+'';
 
     if(this.cashService.systemConfig.inactivityTime) this.timeLogout = this.cashService.systemConfig.inactivityTime+'';
   }
@@ -87,10 +90,15 @@ export class AdminConfigComponent implements OnInit {
     this.externalScale = $event.checked;
   }
 
-  setRestaurant($event: any){
-    console.log('setRestaurant', $event, this.restaurant);
-    this.restaurant = $event.checked;
+  setCompanyType($event: any){
+    console.log('setCompanyType', $event, this.companyType);
+    this.companyType = $event.value;
     this.needLogout = true;
+  }
+
+  setFullRefund($event: any){
+    console.log('setFullRefund', $event, this.fullRefund);
+    this.fullRefund = $event.checked;
   }
 
   done(){
@@ -101,10 +109,12 @@ export class AdminConfigComponent implements OnInit {
     this.cashService.systemConfig.allowCardSplit = this.allowSplitPayment;
     this.cashService.systemConfig.paxConnType = this.paxConnType ? PAXConnTypeEnum.ONLINE : PAXConnTypeEnum.OFFLINE;
     this.cashService.systemConfig.externalScale = this.externalScale;
-    this.cashService.systemConfig.companyType = this.restaurant ? CompanyType.RESTAURANT : CompanyType.MARKET;
+    this.cashService.systemConfig.companyType = <CompanyType>this.companyType;
+    this.cashService.systemConfig.fullRefund = this.fullRefund;
     this.cashService.systemConfig.inactivityTime = +this.timeLogout;
     this.dataStorage.setConfiguration(this.cashService.systemConfig).subscribe(value => {
-      console.log('set configuration', value);
+      console.log('set configuration', value, conf);
+      this.cashService.systemConfig = <Configuration> value;
       if(this.needLogout){
         this.cashService.openGenericInfo(InformationType.INFO,
           'Please logout and login for apply the new configuration successfully');
