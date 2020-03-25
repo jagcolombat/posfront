@@ -159,6 +159,9 @@ export class OperationsComponent implements OnInit {
         case OtherOpEnum.ORDER_INFO:
           this.operationService.getOrderInfo();
           break;
+        case OtherOpEnum.PRINT_LAST:
+          this.operationService.printLast();
+          break;
       }
     }
   }

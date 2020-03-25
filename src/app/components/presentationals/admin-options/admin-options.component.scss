@@ -1,3 +1,5 @@
+@import "~src/variable";
+
 :host {
   display: flex;
   flex-direction: column;
@@ -13,11 +15,14 @@ div.page {
 }
 
 .normal {
-  background-color: #ed5f5f;
-  border-color: #913939;
+  /*background-color: #ed5f5f;
+  border-color: #913939;*/
+  @include red;
 }
 
+/*
 .generic {
   background-color: #ff9b3e;
   border-color: #ffac41;
 }
+*/

@@ -1,10 +1,13 @@
+@import "~src/variable";
+
 :host, div.column {
   flex-wrap: wrap;
 }
 
 button[mat-button] {
-  background-color: rgba(19, 34, 87, 0.71);
-  border-color: rgba(13, 20, 40, 0.71);
+  /*background-color: rgba(19, 34, 87, 0.71);
+  border-color: rgba(13, 20, 40, 0.71);*/
+  @include violet;
 }
 
 button[mat-button].left {
@@ -12,32 +15,37 @@ button[mat-button].left {
 }
 
 button[mat-button].left:first-of-type{
-  background-color: #fff05f;
+  /*background-color: #fff05f;
   border-color: #b6a74a;
-  color: black;
+  color: black;*/
+  @include yellow;
 }
 button[mat-button].left:last-of-type{
-  background-color: #ed5f5f;
-  border-color: #913939;
+  /*background-color: #ed5f5f;
+  border-color: #913939;*/
+  @include red;
   height: 170px;
 }
 
 button[mat-button].right{
-  background-color: #1fff9c;
+  /*background-color: #1fff9c;
   border-color: #1a9f57;
-  color: black;
+  color: black;*/
+  @include green;
 }
 
 .blue {
-  background-color: #2ae1ff;
+  /*background-color: #2ae1ff;
   border-color: #22539f;
-  color: black;
+  color: black;*/
+  @include blue;
 }
 
 button[mat-button].right:last-of-type, button[mat-button].right:first-of-type{
-  background-color: #ed5f5f;
+  /*background-color: #ed5f5f;
   border-color: #913939;
-  color: white;
+  color: white;*/
+  @include red;
 }
 
 button[mat-button].numbers{
@@ -47,9 +55,7 @@ button[mat-button].numbers{
 }
 
 button[mat-button].numbers:last-of-type{
-  background-color: lightgrey;
-  border-color: darkgray;
-  color: black;
+  @include light-gray;
   & /deep/ span {
     font-size: 18px !important;
   }

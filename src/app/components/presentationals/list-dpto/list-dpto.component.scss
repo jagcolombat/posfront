@@ -1,3 +1,5 @@
+@import "~src/variable";
+
 :host {
   display: flex;
   flex-direction: column;
@@ -16,13 +18,11 @@
 }*/
 
 .normal {
-  background-color: #ed5f5f;
-  border-color: #913939;
+  @include red;
 }
 
 .generic {
-  background-color: #ff9b3e;
-  border-color: #ffac41;
+  @include orange;
 }
 
 div.page {
@@ -41,6 +41,6 @@ pos-paginator {
   button.filter {
     width: 120px;
     height: 85px;
-    background-color: #5b4cab;
+    background-color: $dark-violet-background;
   }
 }

@@ -1,0 +1,59 @@
+$red-background: #f34141;
+$red-border: #913939;
+$orange-background: #ff9b3e;
+$orange-border: #ffac41;
+$yellow-background: #fff05f;
+$yellow-border: #b6a74a;
+$green-background: #1fff9c;
+$green-border: #1a9f57;
+$blue-background: #2ae1ff;
+$blue-border: #22539f;
+$violet-background: #9a61ff;
+$dark-violet-background: #5b4cab;
+$violet-border: #5b4cab;
+$gray-background: lightgrey;
+$gray-border: darkgray;
+$white: #fff;
+$black: #000;
+
+@mixin red {
+  background-color: $red-background;
+  border-color: $red-border;
+  color: $white;
+}
+
+@mixin orange {
+  background-color: $orange-background;
+  border-color: $orange-border;
+  color: $white;
+}
+
+@mixin yellow {
+  background-color: $yellow-background;
+  border-color: $yellow-border;
+  color: $black !important;
+}
+
+@mixin green {
+  background-color: $green-background;
+  border-color: $green-border;
+  color: $black !important;
+}
+
+@mixin blue {
+  background-color: $blue-background;
+  border-color: $blue-border;
+  color: $black !important;
+}
+
+@mixin violet {
+  background-color: $dark-violet-background;
+  border-color: $violet-border;
+  color: $white;
+}
+
+@mixin light-gray {
+  background-color: $gray-background;
+  border-color: $gray-border;
+  color: black;
+}

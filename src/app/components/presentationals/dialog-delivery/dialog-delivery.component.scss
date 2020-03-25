@@ -1,7 +1,7 @@
+@import "~src/variable";
+
 [mat-dialog-content] button {
-  background-color: #ed5f5f;
-  border-color: #913939;
-  color: white;
+  @include red;
 }
 [mat-dialog-content] button /deep/ span {
   font-size: 16px;
@@ -21,27 +21,18 @@
   cursor: default !important;
 }*/
 
-
 .yellow {
-  background-color: #fff05f !important;
-  border-color: #b6a74a !important;
-  color: black !important;
+  @include yellow;
 }
 
 .green {
-  background-color: #1fff9c !important;
-  border-color: #1a9f57 !important;
-  color: black !important;
+  @include green;
 }
 
 .red {
-  background-color: #ed5f5f;
-  border-color: #913939;
-  color: white;
+  @include red;
 }
 
 .blue {
-  background-color: #2ae1ff !important;
-  border-color: #22539f !important;
-  color: black !important;
+  @include blue;
 }

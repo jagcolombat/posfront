@@ -3,6 +3,7 @@
 @import '../node_modules/font-awesome/css/font-awesome.css';
 @import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
 /* You can add global styles to this file, and also import other style files */
+@import "~src/variable.scss";
 html {
   min-height: 100vh;
   height: 100vh;
@@ -31,7 +32,7 @@ button[mat-button] /deep/ span {
   word-wrap: break-word;
   max-width: 100px;
   white-space: normal !important;
-  font-size: 13px !important;
+  font-size: 14px !important;
 }
 
 button.mat-raised-button {
@@ -71,4 +72,33 @@ mat-datepicker-content /deep/ mat-calendar-header {
     height: 45px !important;
     font-weight: normal !important;
   }
+}
+
+.yellow {
+  @include yellow;
+}
+
+.green {
+  @include green;
+}
+
+.red {
+  @include red;
+}
+
+.blue {
+  @include blue;
+}
+
+
+.violet {
+  @include violet;
+}
+
+.orange {
+  @include orange;
+}
+
+.gray {
+  @include light-gray;
 }
