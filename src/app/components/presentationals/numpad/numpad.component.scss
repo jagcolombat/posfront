@@ -5,9 +5,9 @@
 }
 
 button[mat-button] {
-  /*background-color: rgba(19, 34, 87, 0.71);
-  border-color: rgba(13, 20, 40, 0.71);*/
-  @include violet;
+  background-color: rgba(19, 34, 87, 0.71);
+  border-color: rgba(13, 20, 40, 0.71);
+  //@include violet;
   & /deep/ span {
     font-size: 20px !important;
   }
