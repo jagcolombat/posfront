@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {TypeKey} from "../../../utils/typekey.enum";
 import {ValueCalculator} from "../../../models/value-calculator.model";
+import {OperationsService} from "../../../services/bussiness-logic/operations.service";
 
 @Component({
   selector: 'calculator',
@@ -15,17 +16,18 @@ export class CalculatorComponent implements OnInit {
   @Input() valid: boolean;
   space = "10px";
 
-  constructor() { }
+  constructor(private op: OperationsService) { }
 
   ngOnInit() {
   }
 
   sendKey(val: string | number, type: string) {
-    console.log(TypeKey[type.toUpperCase()]);
+    //console.log(TypeKey[type.toUpperCase()]);
     if(TypeKey[type.toUpperCase()] === TypeKey.NUMBER && val === this.numbers[this.numbers.length-1]) {
       type = "for";
     }
     this.evKeys.emit(new ValueCalculator(val, TypeKey[type.toUpperCase()]));
+    this.op.resetInactivity(true, 'calculator ' + val);
   }
 
 }

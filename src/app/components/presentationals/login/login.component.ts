@@ -77,7 +77,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   getKeys(ev) {
-    console.log(ev);
+    // console.log(ev);
     if(ev.type === 1) {
       this.input += ev.value;
       this.tryValidation = false;

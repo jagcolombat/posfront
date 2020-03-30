@@ -29,19 +29,19 @@ export class AdminOptionsComponent implements OnInit {
   constructor(private router: Router, public adminOpService: AdminOptionsService ) {
 
     this.adminOpService.cashService.getSystemConfig().subscribe(config => {
-      if(this.adminOpService.cashService.systemConfig.paxConnType !== PAXConnTypeEnum.ONLINE){
+      if(config.paxConnType !== PAXConnTypeEnum.ONLINE){
         // Add PAX options and colors
         console.log('paxConnType', PAXConnTypeEnum.ONLINE);
         this.removeOption(this.options.indexOf(AdminOpEnum.CLOSE_BATCH));
       }
-      if(!this.adminOpService.cashService.systemConfig.allowEBT){
+      if(!config.allowEBT){
         // Add EBT options and colors
         console.log('allowEBT');
         this.removeOption(this.options.indexOf(AdminOpEnum.EBT_INQUIRY));
       }
-      if(this.adminOpService.cashService.systemConfig.companyType !== CompanyType.RESTAURANT){
+      if(config.companyType !== CompanyType.RESTAURANT){
         // Add Restaurant options and colors
-        console.log('companyType', this.adminOpService.cashService.systemConfig.companyType);
+        console.log('companyType', config.companyType);
         this.removeOption(this.options.indexOf(AdminOpEnum.AUTH_PENDING));
       }
       this.$options = of(this.options.map(o=> <AdminOpEnum> o.toUpperCase()));

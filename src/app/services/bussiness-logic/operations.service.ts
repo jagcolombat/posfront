@@ -86,8 +86,8 @@ export class OperationsService {
     return (this.cashService.systemConfig) ? this.cashService.systemConfig.inactivityTime : 60;
   }
 
-  resetInactivity(cont: boolean) {
-    console.log('resetInactivity', cont);
+  resetInactivity(cont: boolean, msg?: string) {
+    console.log('resetInactivity', cont, msg);
     clearTimeout(this.timer);
     if(cont) this.counterInactivity();
   }

@@ -20,7 +20,7 @@ export class OperationGroupComponent implements OnInit, OnChanges {
   constructor() { }
 
   ngOnChanges(sc: SimpleChanges){
-    console.log('onchanges', sc);
+    //console.log('onchanges', sc);
     /*if(sc['operations']){
       this.setUpperCase();
     }*/
@@ -45,6 +45,7 @@ export class OperationGroupComponent implements OnInit, OnChanges {
   }
 
   setDisabled(index) {
-    return typeof this.disable === 'boolean' ? this.disable : this.disable[this.operations.indexOf(index)]
+    return typeof this.disable === 'boolean' ? this.disable :
+      this.disable === undefined ? this.disable : this.disable[this.operations.indexOf(index)]
   }
 }

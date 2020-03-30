@@ -38,8 +38,8 @@ export class CashService {
   //@Output() evPassScanned = new EventEmitter<string>();
 
   constructor(public dialog: MatDialog, private dataStorage: DataStorageService, private authServ: AuthService) {
-    this.resetEnableState();
-    if(this.authServ.token) this.setSystemConfig();
+    //this.resetEnableState();
+    //if(this.authServ.token) this.setSystemConfig();
   }
 
   opDenyByUser(op: AdminOpEnum | FinancialOpEnum, userRol?: UserrolEnum ){
@@ -59,7 +59,7 @@ export class CashService {
     this.disabledInvoiceAdminOp = false;
     this.disabledOtherAdminOp = false;
     this.disabledAdminOp = false;
-    this.disabledCustomerOp = [true, false, false, true];
+    //this.disabledCustomerOp = [true, false, false, true];
     this.splitAllow(false);
     this.evReviewEnableState.emit(false);
   }
@@ -175,7 +175,8 @@ export class CashService {
       if(!next.inactivityTime) next.inactivityTime = 60;
       this.systemConfig = next;
       if(!this.systemConfig.breakText) this.systemConfig.breakText = BreakTextEnum.ALL;
-      this.splitAllow();
+      this.resetEnableState();
+      //this.splitAllow();
       // return prop ? next[prop]: next;
     }, err => {
       console.error('getConfig failed');
@@ -187,13 +188,15 @@ export class CashService {
     return this.dataStorage.getOrder(inv);
   }
 
-  private splitAllow(enabled?: boolean) {
+private splitAllow(enabled?: boolean) {
     /*this.disabledCustomerOp = (this.systemConfig && this.systemConfig.allowCardSplit && !enabled) ?
       [true, false, false, true] : false;*/
     if(this.systemConfig && (this.systemConfig.allowCardSplit && this.systemConfig.paxConnType === PAXConnTypeEnum.ONLINE)){
       this.disabledCustomerOp = !enabled ? [true, false, false, true] : false;
     } else if(this.systemConfig && (!this.systemConfig.allowCardSplit || this.systemConfig.paxConnType !== PAXConnTypeEnum.ONLINE)){
       this.disabledCustomerOp = !enabled ? [false, false, true] : false;
+    } else {
+      console.log('splitAllow', this.systemConfig, this.disabledCustomerOp);
     }
   }
 }

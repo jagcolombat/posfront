@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {leaveFocusOnButton} from "../../../utils/functions/functions";
+import {OperationsService} from "../../../services/bussiness-logic/operations.service";
 
 @Component({
   selector: 'numpad',
@@ -14,16 +15,17 @@ export class NumpadComponent implements OnInit {
   @Input() numbers = [1,2,3,4,5,6,7,8,9,0,"00"];
   @Input() widthKey = '100px';
 
-  constructor() { }
+  constructor(private op: OperationsService) { }
 
   ngOnInit() {
     this.numbers.push(this.lastKey);
   }
 
   pressKey(ev, val: string | number) {
-    console.log(val);
+    //console.log(val);
     leaveFocusOnButton(ev);
     this.evPressKeys.emit(val);
+    this.op.resetInactivity(true, 'numpad');
   }
 
 }

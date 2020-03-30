@@ -74,10 +74,10 @@ export class OperationsComponent implements OnInit {
               private adminOpService: AdminOptionsService, private router: Router) {
     this.router.events.subscribe(ev => {
       if(ev instanceof NavigationEnd) {
-        console.log('evRoute', this.router.url);
+        // console.log('evRoute', this.router.url);
         this.routeAdmin = this.isRouteAdmin(this.router.url);
         this.showForAdmin = (this.routeAdmin && this.authService.adminLogged() ? true : false)
-        console.log('for admin', this.routeAdmin, this.authService.adminLogged(), this.showForAdmin);
+        // console.log('for admin', this.routeAdmin, this.authService.adminLogged(), this.showForAdmin);
       }
     });
   }
@@ -85,13 +85,11 @@ export class OperationsComponent implements OnInit {
   ngOnInit() {
     // this.operationService.cashService.systemConfig.companyType = CompanyType.RESTAURANT;
     this.operationService.cashService.getSystemConfig().subscribe(config => {
-      if(this.operationService.cashService.systemConfig.allowCardSplit &&
-        this.operationService.cashService.systemConfig.paxConnType === PAXConnTypeEnum.ONLINE ){
+      if(config.allowCardSplit && config.paxConnType === PAXConnTypeEnum.ONLINE ){
         this.customerOperations.unshift(OtherOpEnum.SPLIT_CARD);
         this.customerColor.unshift('yellow');
       }
-      if(this.operationService.cashService.systemConfig.companyType === CompanyType.RESTAURANT ||
-        !this.operationService.cashService.systemConfig.allowEBT){
+      if(config.companyType === CompanyType.RESTAURANT || !config.allowEBT){
         // Remove EBT options and colors
         this.paymentOperations.splice(0,1);
         this.paymentColor.splice(0,1);
@@ -112,12 +110,12 @@ export class OperationsComponent implements OnInit {
         this.paymentColor.splice(-2).map(op => this.moneyColor.push(op));
         //this.operationService.cashService.disabledPayment=[true, false, true, true, true, true];
       }
-      if(this.operationService.cashService.systemConfig.companyType !== CompanyType.RESTAURANT){
+      if(config.companyType !== CompanyType.RESTAURANT){
         // Remove restaurant operations
         this.restaurantOperations.splice(0);
         this.restaurantColor = '';
       }
-      if(this.operationService.cashService.systemConfig.companyType !== CompanyType.ISLANDS){
+      if(config.companyType !== CompanyType.ISLANDS){
         // Push in finance operations reprint, hold order, review and recall check options before logout
         let logoutOp = this.financeOperations.splice(-1);
         console.log('logoutOp', logoutOp);
