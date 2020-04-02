@@ -79,12 +79,18 @@
           Full refund
         </mat-slide-toggle>
       </mat-list-item>
-      <!--<mat-list-item>
-        <mat-slide-toggle [checked]='islands' (change)="setIslands($event)" labelPosition="before"
-                          ariaLabel="Set this POS for Islands">
-          Set this POS for Islands
+      <mat-list-item>
+        <mat-slide-toggle [checked]='breakWord' (change)="setBreakWord($event)" labelPosition="before"
+                          ariaLabel="Break products name by word">
+          Break products name by word
         </mat-slide-toggle>
-      </mat-list-item>-->
+      </mat-list-item>
+      <mat-list-item>
+        <mat-slide-toggle [checked]='closeChange' (change)="setCloseChange($event)" labelPosition="before"
+                          ariaLabel="Close return cash automatically">
+          Close return cash automatically
+        </mat-slide-toggle>
+      </mat-list-item>
     </mat-list>
   </div>
   <mat-dialog-actions>

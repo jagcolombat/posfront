@@ -6,6 +6,7 @@ import {PAXConnTypeEnum} from "../../../utils/pax-conn-type.enum";
 import {InformationType} from "../../../utils/information-type.enum";
 import {CompanyType} from "../../../utils/company-type.enum";
 import {Configuration} from "../../../models/configuration.model";
+import {BreakTextEnum} from "../../../utils/breaktext.enum";
 
 @Component({
   selector: 'admin-config',
@@ -25,6 +26,8 @@ export class AdminConfigComponent implements OnInit {
   loading = false;
   needLogout = false;
   companyType: CompanyType | string;
+  breakWord: boolean;
+  closeChange: boolean;
 
   constructor( public dialogRef: MatDialogRef<AdminConfigComponent>,
                @Inject(MAT_DIALOG_DATA) public data: any, private dataStorage: DataStorageService,
@@ -38,6 +41,8 @@ export class AdminConfigComponent implements OnInit {
     this.paxConnType = this.cashService.systemConfig.paxConnType === PAXConnTypeEnum.ONLINE;
     this.fullRefund = this.cashService.systemConfig.fullRefund;
     this.companyType = this.cashService.systemConfig.companyType+'';
+    this.breakWord = this.cashService.systemConfig.breakText === BreakTextEnum.WORD;
+    this.closeChange = this.cashService.systemConfig.closeChange;
 
     if(this.cashService.systemConfig.inactivityTime) this.timeLogout = this.cashService.systemConfig.inactivityTime+'';
   }
@@ -101,6 +106,18 @@ export class AdminConfigComponent implements OnInit {
     this.fullRefund = $event.checked;
   }
 
+  setBreakWord($event: any){
+    console.log('setBreakWord', $event, this.breakWord);
+    this.breakWord = $event.checked;
+    //this.needLogout = true;
+  }
+
+  setCloseChange($event: any){
+    console.log('setCloseChange', $event, this.closeChange);
+    this.closeChange = $event.checked;
+    //this.needLogout = true;
+  }
+
   done(){
     let conf = Object.assign({}, this.cashService.systemConfig);
     this.cashService.systemConfig.allowAddProdGen = this.allowAddProdGen;
@@ -112,6 +129,8 @@ export class AdminConfigComponent implements OnInit {
     this.cashService.systemConfig.companyType = <CompanyType>this.companyType;
     this.cashService.systemConfig.fullRefund = this.fullRefund;
     this.cashService.systemConfig.inactivityTime = +this.timeLogout;
+    this.cashService.systemConfig.breakText = this.breakWord ? BreakTextEnum.WORD : BreakTextEnum.ALL;
+    this.cashService.systemConfig.closeChange = this.closeChange;
     this.dataStorage.setConfiguration(this.cashService.systemConfig).subscribe(value => {
       console.log('set configuration', value, conf);
       this.cashService.systemConfig = <Configuration> value;

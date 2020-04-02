@@ -687,8 +687,10 @@ export class OperationsService {
           data =>
           {
             console.log(data);
-            this.paymentReturn(totalToPaid).subscribe((result: string) => {
-              this.invoiceService.createInvoice();
+            this.paymentReturn(totalToPaid).subscribe((result: any) => {
+              (result.closeAutomatic) ?
+                this.logoutOp() :
+                this.invoiceService.createInvoice();
             });
           },
           err => this.cashService.openGenericInfo('Error', 'Error in refund paid'),
@@ -742,10 +744,14 @@ export class OperationsService {
           dialogInfoEvents.close();
           clearTimeout(timeOut);
           if(valueToReturn > 0){
-            this.paymentReturn(valueToReturn).subscribe((result: string) => {
+            this.paymentReturn(valueToReturn).subscribe((result: any) => {
               //if (result !== '') {
-              if (+valueToReturn >= 0 || data.status === InvoiceStatus.PAID) this.invoiceService.createInvoice();
-              else {
+              //this.paymentReturn(totalToPaid).subscribe((result: any) => {
+              if(result.closeAutomatic){
+                this.logoutOp();
+              } else if (+valueToReturn >= 0 || data.status === InvoiceStatus.PAID) {
+                this.invoiceService.createInvoice();
+              } else {
                 console.log('Invoice not is paid', data, valueToReturn);
               }
               //}
@@ -776,10 +782,11 @@ export class OperationsService {
     }, this.cashService.systemConfig.paxTimeout*1000);
   }
 
-  paymentReturn(valueToReturn){
+  paymentReturn(valueToReturn, close?: boolean){
+    close = this.cashService.systemConfig.closeChange;
     return this.cashService.dialog.open(CashPaymentComponent,
       {
-        width: '350px', height: '260px', data: valueToReturn, disableClose: true
+        width: '350px', height: '260px', data: {value: valueToReturn, close: close, closeAutomatic: false}, disableClose: true
       }).afterClosed();
   }
 

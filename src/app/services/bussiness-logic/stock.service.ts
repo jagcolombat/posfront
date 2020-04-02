@@ -20,7 +20,7 @@ export class StockService {
   productsFiltered = new Array<any>();
 
   constructor(private dataStore: DataStorageService, public productOrderService: ProductOrderService,
-              public cashService: CashService, private operationService: OperationsService) {
+              public cashService: CashService, public operationService: OperationsService) {
   }
 
   getDepartments(): Observable<Department[]> {
@@ -32,11 +32,13 @@ export class StockService {
   }
 
   getProductsByFilter(filter: string, pageNumber?: number, pageSize?: number): Observable<Product[]> {
+    this.operationService.resetInactivity(true, 'Filter Prod');
     return this.dataStore.getProductsByUpc(filter, EOperationType.List, pageNumber, pageSize);
   }
 
   setOperation(typeOp: EOperationType, entity: string, desc: string){
-    this.dataStore.registryOperation({operationType: typeOp, entityName: entity, description: desc})
+    this.dataStore.registryOperation({operationType: typeOp, entityName: entity, description: desc});
+    this.operationService.resetInactivity(true, entity);
   }
 
   getStockCountItems() {

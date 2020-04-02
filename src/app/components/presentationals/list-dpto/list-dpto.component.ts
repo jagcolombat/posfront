@@ -37,6 +37,7 @@ export class ListDptoComponent implements OnInit {
     } else {
       this.router.navigateByUrl('/cash/products/' + dpto.id + '/' + dpto.tax);
     }
+    this.stockService.operationService.resetInactivity(true, 'select dept');
   }
 
   getGenericProdByDpto(dpto: Department) {
@@ -74,6 +75,7 @@ export class ListDptoComponent implements OnInit {
           });
         }
       });
+    this.stockService.operationService.resetInactivity(true, 'Filter Dept');
   }
 
 }

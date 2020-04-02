@@ -39,7 +39,7 @@ export class AdminOptionsService {
   currentOperation: AdminOpEnum | string;
 
   constructor(private invoiceService: InvoiceService, public cashService: CashService, public auth: AuthService,
-              private operationService: OperationsService, private dataStorage: DataStorageService,
+              public operationService: OperationsService, private dataStorage: DataStorageService,
               private initService: InitViewService, private clientService: ClientService, private router: Router) {
 
     this.operationService.evCancelCheck.subscribe(next => {
@@ -162,7 +162,7 @@ export class AdminOptionsService {
     }, error1 => {
       this.cashService.openGenericInfo('Error', 'Can\'t complete '+ AdminOpEnum.SYSZ +' operation')
     });
-    this.operationService.resetInactivity(true);
+    this.operationService.resetInactivity(true, 'sysZ');
   }
 
   emplZ() {
@@ -178,7 +178,7 @@ export class AdminOptionsService {
     }, error1 => {
       this.cashService.openGenericInfo('Error', 'Can\'t complete '+ AdminOpEnum.EMPLZ +' operation')
     });
-    this.operationService.resetInactivity(true);
+    this.operationService.resetInactivity(true, 'empZ');
   }
 
   showSalesByEmployee(emp: any){
@@ -219,7 +219,7 @@ export class AdminOptionsService {
           if(next){
             console.log('configOption', next);
             this.operationService.inactivityTime = +next;
-            this.operationService.resetInactivity(true);
+            this.operationService.resetInactivity(true, 'set configOption');
           }
       })/*
     }, error1 => {
@@ -326,7 +326,7 @@ export class AdminOptionsService {
         this.cashService.resetEnableState();
       }
     );
-    this.operationService.resetInactivity(true);
+    this.operationService.resetInactivity(true, 'doDayClose');
   }
 
   dayClosePrint(emp?: string, op?: AdminOpEnum, title?: string, date?: any) {
@@ -351,7 +351,7 @@ export class AdminOptionsService {
         this.cashService.resetEnableState();
       }
     );
-    this.operationService.resetInactivity(true);
+    this.operationService.resetInactivity(true, 'dayClosePrint');
   }
 
   confirmDayClose(emp?: string, op?: AdminOpEnum, title?: string, date?: any){

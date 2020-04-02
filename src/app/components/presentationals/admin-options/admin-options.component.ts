@@ -122,7 +122,7 @@ export class AdminOptionsComponent implements OnInit {
           break;
       }
     }
-
+    this.adminOpService.operationService.resetInactivity(true, 'Admin options action');
   }
 
   setDisabled(index) {

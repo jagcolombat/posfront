@@ -16,4 +16,5 @@ export interface Configuration {
   allowAddProdGen?: boolean;
   paxConnType?: PAXConnTypeEnum;
   inactivityTime?: number;
+  closeChange?: boolean;
 }

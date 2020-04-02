@@ -110,6 +110,7 @@ export class ListProdComponent implements OnInit {
           });
         }
       });
+    this.stockService.operationService.resetInactivity(true, 'Filter prod');
   }
 
   private addProds(prods: Observable<Product[]>){
