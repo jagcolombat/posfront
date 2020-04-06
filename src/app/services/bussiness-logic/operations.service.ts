@@ -12,12 +12,12 @@ import {EOperationType} from "../../utils/operation.type.enum";
 import {CashService} from "./cash.service";
 import {Product, Token} from "../../models";
 import {FinancialOpEnum, InvioceOpEnum, PaymentOpEnum, TotalsOpEnum} from "../../utils/operations";
-import {HttpErrorResponse} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {GenericInfoEventsComponent} from "../../components/presentationals/generic-info-events/generic-info-events.component";
 import {PaidOutComponent} from "../../components/presentationals/paid-out/paid-out.component";
 import {DialogPaidoutComponent} from "../../components/containers/dialog-paidout/dialog-paidout.component";
 import {DialogFilterComponent} from "../../components/containers/dialog-filter/dialog-filter.component";
-import {MatDialogRef} from "@angular/material";
+import {MatDialog, MatDialogRef} from "@angular/material";
 import {CompanyType} from "../../utils/company-type.enum";
 import {PaymentStatus} from "../../utils/payment-status.enum";
 import {ProductGenericComponent} from "../../components/presentationals/product-generic/product-generic.component";
@@ -609,9 +609,16 @@ export class OperationsService {
   }
 
   logoutOp() {
-    this.authService.logout();
-    this.invoiceService.resetDigits();
-    this.cashService.resetEnableState();
+    this.authService.logout().subscribe(value => {
+      console.log('logoutOp', value);
+      this.authService.token = this.authService.initialLogin = undefined;
+      this.cashService.dialog.closeAll();
+      this.invoiceService.resetDigits();
+      this.cashService.resetEnableState();
+      this.router.navigateByUrl('/init');
+    },error1 => {
+      this.cashService.openGenericInfo(InformationType.ERROR, error1);
+    });
   }
 
   cancelCheck() {

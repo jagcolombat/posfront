@@ -20,7 +20,7 @@ export class AuthService {
   initialLogin: Token;
   adminRoles=[UserrolEnum.ADMIN, UserrolEnum.SUPERVISOR]
 
-  constructor(private http: HttpClient, private router: Router, private dialog: MatDialog) {
+  constructor(private http: HttpClient) {
     this.headers = new HttpHeaders({
       'Content-Type': 'application/json'
     });
@@ -59,13 +59,10 @@ export class AuthService {
     );
   }
 
-  logout()/*: Observable<any>*/ {
+  logout(): Observable<any> {
     //this.saveUser(this.token, false);
     //this.token = {};
-    this.token = this.initialLogin = undefined;
-    this.dialog.closeAll();
-    this.router.navigateByUrl('/init');
-    // return this.http.post(this.url, {});
+    return this.http.post(this.url+ '/login/pos/out', {});
   }
 
   adminLogged() {

@@ -1,6 +1,9 @@
 <div #init fxLayout="row" class="container" fxLayoutAlign="space-between">
   <div id="right" fxFlex.lt-lg="54" fxFlex.md="60" fxFlex.lg="64" fxFlex.xl="70" fxLayout="column" fxLayoutAlign="space-between">
-    <invoice fxFlex="100" class="border container" fxLayout="column" style="padding: 5px;"></invoice>
+    <invoice *ngIf="logged" fxFlex="100" class="border container" fxLayout="column" style="padding: 5px;"></invoice>
+    <div *ngIf="!logged" fxLayoutAlign="center center" fxFlex="100" class="border" >
+      <img id="logo" src="{{env.myVarForImageURLS}}/assets/supermarket.jpg" fxFlex="100" alt="Logo"/>
+    </div>
   </div>
 
   <div id="left" fxFlex.lt-lg="46" fxFlex.md="40" fxFlex.lg="35" fxFlex.xl="30" fxLayout="column" fxLayoutAlign="space-between" class="border">
