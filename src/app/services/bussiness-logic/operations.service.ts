@@ -1723,12 +1723,15 @@ export class OperationsService {
       next => {
         console.log('paidByCheck', next);
         if(!client){
-          (next && next.balance > 0) ? this.invoiceService.setInvoice(next) : this.invoiceService.createInvoice();
-          if(next.change && next.change > 0) {
-            const dialogRef = this.cashService.dialog.open(CashPaymentComponent,
-              {
-                width: '350px', height: '260px', data: next.change > 0 ? next.change : 0, disableClose: true
-              })
+          if(next && next.balance > 0) this.invoiceService.setInvoice(next);
+          else if(next.change && next.change > 0) {
+            this.paymentReturn(next.change).subscribe((result: any) => {
+              (result.closeAutomatic) ?
+                this.logoutOp() :
+                this.invoiceService.createInvoice();
+            });
+          } else if(next.balance <= 0){
+            this.invoiceService.createInvoice();
           }
         } else {
           console.log('Check for Account Payment', next);
