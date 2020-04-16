@@ -9,7 +9,7 @@
 }
 
 ag-grid-angular {
-  width: 500px;
+  width: 550px;
   height: 470px;
   margin-bottom: 2px;
   font: 400 18px "Roboto", sans-serif;
@@ -19,10 +19,13 @@ ag-grid-angular {
   & /deep/ button.ag-paging-button {
     background-size: 32px !important;
     margin: 0 8px !important;
+    cursor: none !important;
   }
-
   & /deep/ .ag-header {
     font-size: 15px !important;
+  }
+  & /deep/ .ag-font-style {
+    cursor: none !important;
   }
 }
 

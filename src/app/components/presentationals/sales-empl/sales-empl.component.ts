@@ -65,7 +65,8 @@ export class SalesEmplComponent implements OnInit {
         headerName: 'Total',
         field: 'total',
         type: 'numericColumn',
-        width: 120
+        width: 120,
+        valueFormatter: this.thousandFormatter
       },
       {
         headerName: 'Tips',
@@ -74,6 +75,10 @@ export class SalesEmplComponent implements OnInit {
         width: 120
       }
     ];
+  }
+
+  thousandFormatter(params){
+    return Number(params.value).toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
   }
 
   updateGridOptions(){
