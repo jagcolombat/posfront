@@ -57,4 +57,18 @@ export class GenericSalesComponent implements OnInit {
     this.dialogRef.close();
   }
 
+  onPrint() {
+    console.log('Print invoices by user', this.data.empl);
+    if( this.data.empl){
+      this.dataStorage.printInvoiceByUser( this.data.empl.id).subscribe(next => {
+        console.log(next);
+      }, error1 => {
+        console.error('getSales', error1);
+      });
+    } else {
+      console.log('Debe seleccionar un empleado');
+    }
+
+  }
+
 }

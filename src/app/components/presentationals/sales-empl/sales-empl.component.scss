@@ -9,9 +9,21 @@
 }
 
 ag-grid-angular {
-  width: 450px;
-  height: 340px;
-  margin-bottom: 10px;
+  width: 500px;
+  height: 470px;
+  margin-bottom: 2px;
+  font: 400 18px "Roboto", sans-serif;
+  & /deep/ .ag-paging-row-summary-panel {
+    margin-left: 10px !important;
+  }
+  & /deep/ button.ag-paging-button {
+    background-size: 32px !important;
+    margin: 0 8px !important;
+  }
+
+  & /deep/ .ag-header {
+    font-size: 15px !important;
+  }
 }
 
 .show {

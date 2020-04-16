@@ -185,7 +185,7 @@ export class AdminOptionsService {
     console.log('showSalesByEmployee', emp);
     this.cashService.dialog.open(GenericSalesComponent,
       {
-        width: '500px', height: '640px', disableClose: true, data: {title: AdminOpEnum.EMPLZ, empl: emp }
+        width: '550px', height: '680px', disableClose: true, data: {title: AdminOpEnum.EMPLZ, empl: emp }
       })
   }
 

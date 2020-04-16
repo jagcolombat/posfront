@@ -26,14 +26,14 @@ export class SalesEmplComponent implements OnInit {
   public gridOptions: GridOptions;
   private gridApi: GridApi;
   columnDefs: any;
-  bottomOptions = <GridOptions>{
+  /*bottomOptions = <GridOptions>{
     alignedGrids: [],
     suppressHorizontalScroll: true,
     rowStyle: {fontWeight: 'bold', fontSize: '16px'}
   };
 
   @ViewChild('topGrid') topGrid;
-  @ViewChild('bottomGrid') bottomGrid;
+  @ViewChild('bottomGrid') bottomGrid;*/
 
   bottomData = [{
     receiptNumber: 'Total',
@@ -80,7 +80,7 @@ export class SalesEmplComponent implements OnInit {
     this.gridOptions = <GridOptions>{
       rowData: [],
       onGridReady: () => {
-        if(this.cashService.systemConfig.companyType === CompanyType.MARKET) {
+        if(this.cashService.systemConfig.companyType !== CompanyType.RESTAURANT) {
           this.showTip(false);
         }
         this.gridOptions.api.sizeColumnsToFit();
@@ -95,7 +95,7 @@ export class SalesEmplComponent implements OnInit {
       onBodyScroll: (ev) => {
         this.gridOptions.api.sizeColumnsToFit();
       },
-      rowHeight: 60,
+      rowHeight: 50,
       rowStyle: {'font-size': '16px'}
     };
     this.createColumnDefs();
@@ -117,7 +117,7 @@ export class SalesEmplComponent implements OnInit {
     this.gridOptions.api.sizeColumnsToFit();
   }
 
-  onPrint() {
+  /*onPrint() {
     console.log('Print invoices by user', this.emplSel);
     if(this.emplSel){
       this.dataStorage.printInvoiceByUser(this.emplSel.id).subscribe(next => {
@@ -129,14 +129,14 @@ export class SalesEmplComponent implements OnInit {
       console.log('Debe seleccionar un empleado');
     }
 
-  }
+  }*/
 
   showTip(show: boolean) {
     this.gridOptions.columnApi.setColumnVisible('tips', show);
     this.gridOptions.api.sizeColumnsToFit();
 
-    this.bottomOptions.columnApi.setColumnVisible('tips', show);
-    this.bottomOptions.api.sizeColumnsToFit();
-    this.bottomOptions.alignedGrids.push(this.gridOptions);
+    //this.gridOptions.columnApi.setColumnVisible('tips', show);
+    //this.gridOptions.api.sizeColumnsToFit();
+    //this.gridOptions.alignedGrids.push(this.gridOptions);
   }
 }

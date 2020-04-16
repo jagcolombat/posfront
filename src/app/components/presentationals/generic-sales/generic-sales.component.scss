@@ -28,3 +28,15 @@ sales-shop, sales-empl {
 button[mat-raised-button] {
   cursor: default !important;
 }
+
+.show {
+  display: initial;
+}
+
+.hide {
+  display: none;
+}
+
+[mat-dialog-actions] {
+  justify-content: center;
+}

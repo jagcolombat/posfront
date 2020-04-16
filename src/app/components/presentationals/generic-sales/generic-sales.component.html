@@ -10,4 +10,8 @@
                 (selectInvoice)="reviewCheck($event)">
     </sales-empl>
   </div>
+  <div mat-dialog-actions *ngIf="data.empl">
+    <button [ngClass]="(salesByUser && salesByUser.length > 0 && data.empl) ? 'show': 'hide'" mat-raised-button
+            class="background-primary text-floral-white" (click)="onPrint()">Print</button>
+  </div>
 </div>

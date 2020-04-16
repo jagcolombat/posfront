@@ -530,7 +530,7 @@ export class OperationsService {
     if (dataArr.length > 0) {
       const dialogRef = this.cashService.dialog.open(DialogInvoiceComponent,
         {
-          width: '780px', height: '660px',
+          width: '780px', height: '680px',
           data: {invoice: dataArr, title: title, subtitle: subTitle, label:label, detail: detail, subdetail: subdetail},
           disableClose: true
         });

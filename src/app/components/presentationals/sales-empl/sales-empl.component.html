@@ -3,10 +3,13 @@
                   class="ag-theme-material"
                   [gridOptions]="gridOptions"
                   [columnDefs]="columnDefs"
+                 pagination="true"
+                 paginationAutoPageSize="true"
+                 [pinnedBottomRowData]="bottomData"
 >
 </ag-grid-angular>
 
-<ag-grid-angular [ngClass]="(sales && sales.length > 0 && emplSel) ? 'show': 'hide'"
+<!--<ag-grid-angular [ngClass]="(sales && sales.length > 0 && emplSel) ? 'show': 'hide'"
                  style="width:100%; height: 60px"
                  #bottomGrid
                  [rowData]="bottomData"
@@ -15,9 +18,9 @@
                  class="ag-theme-material"
                  [columnDefs]="columnDefs"
 >
-</ag-grid-angular>
-<button [ngClass]="(sales && sales.length > 0 && emplSel) ? 'show': 'hide'" mat-raised-button
-          class="background-primary text-floral-white" (click)="onPrint()">Print</button>
+</ag-grid-angular>-->
+<!--<button [ngClass]="(sales && sales.length > 0 && emplSel) ? 'show': 'hide'" mat-raised-button
+          class="background-primary text-floral-white" (click)="onPrint()">Print</button>-->
 <i class="no-sale" *ngIf="sales && sales.length === 0 && emplSel !== undefined">
   This employee haven't sold anything yet today
 </i>
