@@ -37,6 +37,7 @@ export class SalesEmplComponent implements OnInit {
 
   bottomData = [{
     receiptNumber: 'Total',
+    date: '',
     total: 0,
     tips: 0
   }]
@@ -59,7 +60,13 @@ export class SalesEmplComponent implements OnInit {
       {
         headerName: 'Receipt number',
         field: 'receiptNumber',
-        width: 200
+        width: 210
+      },
+      {
+        headerName: 'Datetime',
+        field: 'date',
+        width: 220,
+        valueFormatter: this.dateFormatter
       },
       {
         headerName: 'Total',
@@ -72,13 +79,17 @@ export class SalesEmplComponent implements OnInit {
         headerName: 'Tips',
         field: 'tips',
         type: 'numericColumn',
-        width: 120
+        width: 100
       }
     ];
   }
 
   thousandFormatter(params){
     return Number(params.value).toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+  }
+
+  dateFormatter(params){
+    return params.value !== '' ? new Date(params.value).toLocaleString('en-US', {hour12: false}) : '';
   }
 
   updateGridOptions(){
