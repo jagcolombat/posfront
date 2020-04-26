@@ -119,7 +119,10 @@ export class OperationsComponent implements OnInit {
         // Push in finance operations reprint, hold order, review and recall check options before logout
         let logoutOp = this.financeOperations.splice(-1);
         console.log('logoutOp', logoutOp);
-        this.financeAdminOperations.splice(0, 4).map(op => this.financeOperations.push(op));
+        this.financeAdminOperations.splice(0, 4).map( op => {
+          this.financeOperations.push(op);
+          if(op === FinancialOpEnum.REPRINT) this.financeAdminOperations.unshift(op);
+        });
         this.financeOperations.push(logoutOp[0]);
       }
     }, err => {

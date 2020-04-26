@@ -57,11 +57,10 @@ export class CashViewComponent implements OnInit, OnDestroy {
     if ((this.passwordScan.startsWith(';'))) {
       console.log('selectInputData passwordScan', this.passwordScan);
       this.initService.evUserScanned.emit(this.passwordScan);
-      this.passwordScan = '';
     } else if ((this.passwordScan.startsWith('%'))) {
       console.log('selectInputData passwordScan', this.passwordScan);
-      this.passwordScan = '';
     }
+    this.passwordScan = '';
   }
 
   selectInputData(){

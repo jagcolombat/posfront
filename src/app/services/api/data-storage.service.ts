@@ -34,6 +34,7 @@ import {PaymentMethodEnum} from "../../utils/operations/payment-method.enum";
 import {CheckPayment} from "../../models/check.model";
 import {TransferPayment} from "../../models/transfer.model";
 import {AdminOpEnum} from "../../utils/operations/admin-op.enum";
+import {IGiftModel} from "../../models/gift-card.model";
 
 @Injectable({
   providedIn: 'root'
@@ -343,6 +344,10 @@ export class DataStorageService {
 
   updateCreditLimit(client: string, credit: number) {
     return this.clientService.setCredit(this.url, client, credit);
+  }
+
+  setGiftCard(gift: IGiftModel): Observable<any> {
+    return this.clientService.giftCard(this.url, gift);
   }
 
   refundSale(receiptNumber: string) {

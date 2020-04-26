@@ -10,8 +10,12 @@ export class ProcessHTTPMSgService {
 constructor() { }
 
   public handleError(response: HttpErrorResponse | any) {
+      console.error('handleError', response);
       let errMsg: string;
-      if (response.error instanceof ErrorEvent) {
+
+      if(response.status === 504){
+        errMsg = 'Timeout trying connect with server. Please review server status or contact to support team.';
+      } else if (response.error instanceof ErrorEvent) {
         errMsg = response.error.message;
       } else if (response.error && response.error.message) {
         errMsg = response.error.message;

@@ -13,10 +13,10 @@ import {Observable, of} from "rxjs";
   styleUrls: ['./admin-options.component.scss']
 })
 export class AdminOptionsComponent implements OnInit {
-  @Input() options = [AdminOpEnum.CHANGE_PRINTER, AdminOpEnum.CLOSE_BROWSER,
+  @Input() options = [/*AdminOpEnum.CLOSE_BROWSER,*/
     AdminOpEnum.APPLY_DISCOUNT, AdminOpEnum.CANCEL_CHECK, AdminOpEnum.REMOVE_HOLD
     /*AdminOpEnum.DEPARMENTS, AdminOpEnum.BACK_USER*/, AdminOpEnum.SET_USER, AdminOpEnum.REFUND_SALE,
-    AdminOpEnum.AUTH_PENDING, AdminOpEnum.CLOSE_BATCH, AdminOpEnum.EBT_INQUIRY,
+    AdminOpEnum.AUTH_PENDING, AdminOpEnum.CLOSE_BATCH, AdminOpEnum.EBT_INQUIRY, AdminOpEnum.CLIENT, AdminOpEnum.GIFT_CARD,
     AdminOpEnum.CONFIG, AdminOpEnum.SYSTEM_VERSION,
     AdminOpEnum.CHARGE_ACCT_SETUP, AdminOpEnum.EMPLOYEE_SETUP, AdminOpEnum.CHANGE_PRICES, AdminOpEnum.CREDIT_LIMIT];
   $options: Observable<AdminOpEnum[]>;
@@ -119,6 +119,12 @@ export class AdminOptionsComponent implements OnInit {
           break;
         case AdminOpEnum.REFUND_SALE.toUpperCase():
           this.adminOpService.refundSale();
+          break;
+        case AdminOpEnum.CLIENT.toUpperCase():
+          this.adminOpService.clientSetup();
+          break;
+        case AdminOpEnum.GIFT_CARD.toUpperCase():
+          this.adminOpService.giftCard();
           break;
       }
     }

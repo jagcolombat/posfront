@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import {catchError, map} from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Credentials, Token } from '../../models/index';
 import jwt_decode from 'jwt-decode';
@@ -8,6 +8,7 @@ import { baseURL } from '../../utils/url.path.enum';
 import { Router } from "@angular/router";
 import {MatDialog} from "@angular/material";
 import {UserrolEnum} from "../../utils/userrol.enum";
+import {ProcessHTTPMSgService} from "./ProcessHTTPMSg.service";
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,7 @@ export class AuthService {
   initialLogin: Token;
   adminRoles=[UserrolEnum.ADMIN, UserrolEnum.SUPERVISOR]
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private processHttpMsgService: ProcessHTTPMSgService) {
     this.headers = new HttpHeaders({
       'Content-Type': 'application/json'
     });
@@ -56,13 +57,14 @@ export class AuthService {
         //this.saveUser(token, true);
         return token;
       })
-    );
+    ).pipe(catchError(this.processHttpMsgService.handleError));
   }
 
   logout(): Observable<any> {
     //this.saveUser(this.token, false);
     //this.token = {};
-    return this.http.post(this.url+ '/login/pos/out', {});
+    return this.http.post(this.url+ '/login/pos/out', {})
+      .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
   adminLogged() {

@@ -617,6 +617,7 @@ export class OperationsService {
       this.cashService.resetEnableState();
       this.router.navigateByUrl('/init');
     },error1 => {
+      console.error('LogoutOp', error1)
       this.cashService.openGenericInfo(InformationType.ERROR, error1);
     });
   }
@@ -922,7 +923,8 @@ export class OperationsService {
           console.log(data);
           dialogInfoEvents.close();
           clearTimeout(timeOut);
-          this.invoiceService.createInvoice();
+          //this.invoiceService.createInvoice();
+          (data && data.balance > 0) ? this.invoiceService.setInvoice(data) : this.invoiceService.createInvoice();
         },err => {
           console.log(err);
           dialogInfoEvents.close();

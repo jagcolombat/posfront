@@ -29,6 +29,8 @@ import {CustomerOpEnum} from "../../utils/operations/customer.enum";
 import {ClientService} from "./client.service";
 import {CloseBatchComponent} from "../../components/presentationals/close-batch/close-batch.component";
 import {SetDateComponent} from "../../components/presentationals/set-date/set-date.component";
+import {Client, IClient} from "../../models/order.model";
+import {GiftCardModel, GiftModel, IGiftCardModel} from "../../models/gift-card.model";
 
 @Injectable({
   providedIn: 'root'
@@ -37,6 +39,7 @@ export class AdminOptionsService {
   private cancelCheckLoaded: boolean;
   private removeHoldLoaded: boolean;
   currentOperation: AdminOpEnum | string;
+  private gift: GiftModel;
 
   constructor(private invoiceService: InvoiceService, public cashService: CashService, public auth: AuthService,
               public operationService: OperationsService, private dataStorage: DataStorageService,
@@ -507,6 +510,7 @@ export class AdminOptionsService {
   }
 
   employSetup() {
+    // this.currentOperation = AdminOpEnum.EMPLOYEE_SETUP;
     let employee = new EmployeedModel();
     this.operationService.getField(AdminOpEnum.EMPLOYEE_SETUP, 'Name', EFieldType.NAME).subscribe(
       name => {
@@ -616,6 +620,40 @@ export class AdminOptionsService {
     //this.resetInactivity(false);
   }
 
+  clientSetup(){
+    let client;
+    this.operationService.getField(AdminOpEnum.CLIENT, 'Name', EFieldType.NAME).subscribe(
+      name => {
+        if(name){
+          client = new ClientModel(name.text/*, credit.number*/);
+          this.operationService.getField(AdminOpEnum.CLIENT, 'Address', EFieldType.ADDRESS).subscribe(
+            address => {
+              if(address) client.address = address.text;
+              this.operationService.getNumField(AdminOpEnum.CLIENT, 'Phone', EFieldType.PHONE).subscribe(
+                phone => {
+                  if(phone) client.phone = phone.number;
+                  this.operationService.getField(AdminOpEnum.CLIENT, 'Company', EFieldType.NAME).subscribe(
+                    company => {
+                      if(company) client.company = company.text;
+                      this.dataStorage.clientSetup(client).subscribe(
+                        next => {
+                          console.log(AdminOpEnum.CLIENT, next);
+                          this.cashService.openGenericInfo('Information', 'Client setup operation successful');
+                        },
+                        err => {
+                          this.cashService.openGenericInfo("Error", "Can't setup the client");
+                        }
+                      );
+                    });
+                });
+            });
+        } else {
+          this.cashService.openGenericInfo("Error", "Can't setup the charge account because no was" +
+            " specified the name");
+        }
+      });
+  }
+
   chargeAccountSetup() {
     let client;
     this.operationService.getField(AdminOpEnum.CHARGE_ACCT_SETUP, 'Name', EFieldType.NAME).subscribe(
@@ -639,7 +677,8 @@ export class AdminOptionsService {
                               this.dataStorage.clientSetup(client).subscribe(
                                 next => {
                                   console.log(AdminOpEnum.CHARGE_ACCT_SETUP, next);
-                                  this.cashService.openGenericInfo('Information', 'Charge account setup operation succesfull');
+                                  this.cashService.openGenericInfo('Information',
+                                    'Charge account setup operation successful');
                                 },
                                 err => {
                                   this.cashService.openGenericInfo("Error", "Can't setup the charge account");
@@ -692,6 +731,93 @@ export class AdminOptionsService {
       }
     )
   }
+
+  giftCard() {
+    console.log(AdminOpEnum.GIFT_CARD);
+    this.currentOperation = AdminOpEnum.GIFT_CARD;
+    this.clientService.getClients().subscribe(
+      clients=> {
+        console.log(this.currentOperation, clients);
+        this.operationService.openDialogWithPag(clients, (c)=> this.setGiftCard(c), 'Clients',
+          'Select a client:','', 'name','creditLimit' );
+      },
+      error1 => {
+        this.cashService.openGenericInfo(InformationType.INFO, 'Can\'t get the clients');
+      }, () => this.currentOperation = '');
+  }
+
+  setGiftCard(c: any){
+    console.log('setGiftCard', c);
+    this.operationService.getPriceField(AdminOpEnum.GIFT_CARD, 'Amount').subscribe(
+      amount => {
+        console.log('getGiftCard', amount);
+        if (amount) {
+          this.gift = new GiftModel(c.id, amount);
+          this.getGiftCard();
+        } else {
+          this.cashService.openGenericInfo(InformationType.INFO,
+            'Can\'t set the gift cards because wasn\'t set the amount');
+        }
+      });
+  }
+
+  getGiftCard() {
+    this.operationService.getNumField(AdminOpEnum.GIFT_CARD, 'Card ID').subscribe(
+      card => {
+        console.log('getGiftCard', card);
+        if(card) {
+          this.operationService.openSwipeCredentialCard(AdminOpEnum.GIFT_CARD, 'Swipe card')
+            .subscribe(
+              next => {
+                console.log('Swipe card', next);
+                let passwordByCard = (next) ? next.pass : this.initService.userScanned;
+                this.initService.cleanUserScanned();
+                this.gift.giftCards.push(new GiftCardModel(card.number, passwordByCard));
+                this.finishSetGiftCards();
+              }, err => { console.error(err)}, () => console.log('complete', this)
+            );
+        } else {
+          console.log('getGiftCard', 'no set card');
+          this.saveGiftCards();
+        }
+      }
+    )
+  }
+
+  finishSetGiftCards(c?: any){
+    this.cashService.openGenericInfo(AdminOpEnum.GIFT_CARD, 'Have you finish to set gift cards', null,
+      true, true).afterClosed().subscribe(next=> {
+        console.log('finishSetGiftCards', next);
+        (next && next.confirm) ? this.saveGiftCards() : this.getGiftCard();
+      })
+  }
+
+  saveGiftCards(){
+    console.log('finish set cards', this.gift);
+    this.dataStorage.setGiftCard(this.gift).subscribe(
+      next => { this.cashService.openGenericInfo(InformationType.INFO,
+        'Gift card operation executed successfully') },
+      error1 => {});
+    this.gift = new GiftModel();
+  }
+
+  /*swipeCard(title?: string): Observable<any>{
+    this.operationService.openSwipeCredentialCard(title, 'Swipe card')
+      .subscribe(
+        next => {
+          console.log('Swipe card', next);
+          let passwordByCard = (next) ? next.pass : this.initService.userScanned;
+          this.initService.cleanUserScanned();
+          /!*this.dataStorage.employSetup(employee).subscribe(
+            next => {
+              console.log(AdminOpEnum.EMPLOYEE_SETUP, next);
+              this.cashService.openGenericInfo(InformationType.INFO, 'The employee '+ next.userName +' was setup.')
+            },
+            err => { this.cashService.openGenericInfo("Error",err); }
+          );*!/
+        }, err => { console.error(err)}, () => console.log('complete', this)
+      )
+  }*/
 
   refundSale() {
     this.dataStorage.refundSale(this.invoiceService.invoice.receiptNumber).subscribe(
