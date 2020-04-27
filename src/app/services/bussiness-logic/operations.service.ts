@@ -785,7 +785,7 @@ export class OperationsService {
     return setTimeout(()=> {
       dialogInfoEvents.close();
       $op.unsubscribe();
-      this.cashService.openGenericInfo('Error', 'Can\'t complete '+ opMsg +' operation coz timeout');
+      this.cashService.openGenericInfo('Error', 'Can\'t complete '+ opMsg +' operation because timeout. Try again');
       this.cashService.resetEnableState();
     }, this.cashService.systemConfig.paxTimeout*1000);
   }
@@ -924,7 +924,7 @@ export class OperationsService {
           dialogInfoEvents.close();
           clearTimeout(timeOut);
           //this.invoiceService.createInvoice();
-          (data && data.balance > 0) ? this.invoiceService.setInvoice(data) : this.invoiceService.createInvoice();
+          this.setOrCreateInvoice(data);
         },err => {
           console.log(err);
           dialogInfoEvents.close();
@@ -973,7 +973,7 @@ export class OperationsService {
           console.log(data);
           dialogInfoEvents.close();
           clearTimeout(timeOut);
-          (data && data.balance > 0) ? this.invoiceService.setInvoice(data) : this.invoiceService.createInvoice();
+          this.setOrCreateInvoice(data);
         },
         err => {
           console.log(err);
@@ -1000,7 +1000,7 @@ export class OperationsService {
                       this.invoiceService.invoice.tip, number.number, cvv.number, date.number, zipcode.number)
                       .subscribe(data => {
                           console.log(data);
-                          (data && data.balance > 0) ? this.invoiceService.setInvoice(data) : this.invoiceService.createInvoice();
+                          this.setOrCreateInvoice(data);
                         },
                         err => {
                           console.log(err);
@@ -1098,6 +1098,11 @@ export class OperationsService {
           + 'operation because there aren\'t card types to select');
         this.cashService.resetEnableState();
       })
+  }
+
+  private setOrCreateInvoice(data: Invoice){
+    (data && data.balance > 0 && data.status !== InvoiceStatus.PAID) ?
+      this.invoiceService.setInvoice(data) : this.invoiceService.createInvoice();
   }
 
   private resetTotalFromFS() {
