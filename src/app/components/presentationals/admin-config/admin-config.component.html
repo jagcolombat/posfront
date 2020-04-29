@@ -91,6 +91,12 @@
           Close return cash automatically
         </mat-slide-toggle>
       </mat-list-item>
+      <mat-list-item>
+        <mat-slide-toggle [checked]='giftCard' (change)="setGiftCard($event)" labelPosition="before"
+                          ariaLabel="Allow Gift Card">
+          Allow Gift Card
+        </mat-slide-toggle>
+      </mat-list-item>
     </mat-list>
   </div>
   <mat-dialog-actions>

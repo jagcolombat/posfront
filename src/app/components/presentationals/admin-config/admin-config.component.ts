@@ -28,6 +28,7 @@ export class AdminConfigComponent implements OnInit {
   companyType: CompanyType | string;
   breakWord: boolean;
   closeChange: boolean;
+  giftCard: boolean;
 
   constructor( public dialogRef: MatDialogRef<AdminConfigComponent>,
                @Inject(MAT_DIALOG_DATA) public data: any, private dataStorage: DataStorageService,
@@ -43,6 +44,7 @@ export class AdminConfigComponent implements OnInit {
     this.companyType = this.cashService.systemConfig.companyType+'';
     this.breakWord = this.cashService.systemConfig.breakText === BreakTextEnum.WORD;
     this.closeChange = this.cashService.systemConfig.closeChange;
+    this.giftCard = this.cashService.systemConfig.allowGiftCard;
 
     if(this.cashService.systemConfig.inactivityTime) this.timeLogout = this.cashService.systemConfig.inactivityTime+'';
   }
@@ -118,6 +120,12 @@ export class AdminConfigComponent implements OnInit {
     //this.needLogout = true;
   }
 
+  setGiftCard($event: any){
+    console.log('setGiftCard', $event, this.giftCard);
+    this.giftCard = $event.checked;
+    this.needLogout = true;
+  }
+
   done(){
     let conf = Object.assign({}, this.cashService.systemConfig);
     this.cashService.systemConfig.allowAddProdGen = this.allowAddProdGen;
@@ -131,12 +139,20 @@ export class AdminConfigComponent implements OnInit {
     this.cashService.systemConfig.inactivityTime = +this.timeLogout;
     this.cashService.systemConfig.breakText = this.breakWord ? BreakTextEnum.WORD : BreakTextEnum.ALL;
     this.cashService.systemConfig.closeChange = this.closeChange;
+    this.cashService.systemConfig.allowGiftCard = this.giftCard;
     this.dataStorage.setConfiguration(this.cashService.systemConfig).subscribe(value => {
       console.log('set configuration', value, conf);
       this.cashService.systemConfig = <Configuration> value;
       if(this.needLogout){
         this.cashService.openGenericInfo(InformationType.INFO,
-          'Please logout and login for apply the new configuration successfully');
+          'Please logout and login for apply the new configuration successfully. Do you want logout?',
+          null, true).afterClosed().subscribe(
+            next => {
+              if(next && next.confirm){
+                this.cashService.evLogout.emit(true);
+              }
+            }
+        );
       }
       if(this.timeLogout)
         this.dialogRef.close(this.timeLogout);

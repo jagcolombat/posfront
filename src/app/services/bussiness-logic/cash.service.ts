@@ -35,7 +35,7 @@ export class CashService {
     AdminOpEnum.EMPLOYEE_SETUP, AdminOpEnum.CHANGE_PRICES, AdminOpEnum.CREDIT_LIMIT, AdminOpEnum.WTDZ,
     FinancialOpEnum.HOLD].map(a => a.toUpperCase());
   @Output() evReviewEnableState = new EventEmitter<boolean>();
-  //@Output() evPassScanned = new EventEmitter<string>();
+  @Output() evLogout = new EventEmitter<boolean>();
 
   constructor(public dialog: MatDialog, private dataStorage: DataStorageService, private authServ: AuthService) {
     //this.resetEnableState();

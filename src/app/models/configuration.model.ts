@@ -17,4 +17,5 @@ export interface Configuration {
   paxConnType?: PAXConnTypeEnum;
   inactivityTime?: number;
   closeChange?: boolean;
+  allowGiftCard?: boolean;
 }

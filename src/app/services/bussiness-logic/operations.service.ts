@@ -63,6 +63,8 @@ export class OperationsService {
     this.invoiceService.evCreateInvoice.subscribe(next => this.navigateToDept());
     // If was added a product update inactivity time
     this.invoiceService.evUpdateProds.subscribe(ev => this.resetInactivity(true));
+    //
+    this.cashService.evLogout.subscribe(ev => this.logout(ev));
     this.counterInactivity();
   }
 
