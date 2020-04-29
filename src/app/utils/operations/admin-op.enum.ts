@@ -23,6 +23,6 @@ export enum AdminOpEnum {
   CREDIT_LIMIT = 'Credit Limit',
   REFUND_SALE = 'Refund Sale',
   WEEKLY_CLOSE = 'Weekly Close',
-  CLIENT = 'Set Client',
+  CLIENT = 'Client Setup',
   GIFT_CARD = 'Gift Card'
 }

@@ -18,31 +18,36 @@ export class AdminOptionsComponent implements OnInit {
     /*AdminOpEnum.DEPARMENTS, AdminOpEnum.BACK_USER*/, AdminOpEnum.SET_USER, AdminOpEnum.REFUND_SALE,
     AdminOpEnum.AUTH_PENDING, AdminOpEnum.CLOSE_BATCH, AdminOpEnum.EBT_INQUIRY, AdminOpEnum.CLIENT, AdminOpEnum.GIFT_CARD,
     AdminOpEnum.CONFIG, AdminOpEnum.SYSTEM_VERSION,
-    AdminOpEnum.CHARGE_ACCT_SETUP, AdminOpEnum.EMPLOYEE_SETUP, AdminOpEnum.CHANGE_PRICES, AdminOpEnum.CREDIT_LIMIT];
+    /*AdminOpEnum.CHARGE_ACCT_SETUP,*/ AdminOpEnum.EMPLOYEE_SETUP, AdminOpEnum.CHANGE_PRICES, AdminOpEnum.CREDIT_LIMIT];
   $options: Observable<AdminOpEnum[]>;
   page = 1;
   sizePage = 16;
   @Input() disable: boolean | boolean[] = this.adminOpService.cashService.disabledAdminOp;
   @Input() adminOpColor = ['red','red','red','red','red','red','red','red','red','red','red','red','violet','violet',
-    'violet', 'violet'];
+    'violet'];
 
   constructor(private router: Router, public adminOpService: AdminOptionsService ) {
 
     this.adminOpService.cashService.getSystemConfig().subscribe(config => {
       if(config.paxConnType !== PAXConnTypeEnum.ONLINE){
-        // Add PAX options and colors
+        // Remove PAX options and colors
         console.log('paxConnType', PAXConnTypeEnum.ONLINE);
         this.removeOption(this.options.indexOf(AdminOpEnum.CLOSE_BATCH));
       }
       if(!config.allowEBT){
-        // Add EBT options and colors
+        // Remove EBT options and colors
         console.log('allowEBT');
         this.removeOption(this.options.indexOf(AdminOpEnum.EBT_INQUIRY));
       }
       if(config.companyType !== CompanyType.RESTAURANT){
-        // Add Restaurant options and colors
+        // Remove Restaurant options and colors
         console.log('companyType', config.companyType);
         this.removeOption(this.options.indexOf(AdminOpEnum.AUTH_PENDING));
+      }
+      if(!config.allowGiftCard){
+        // Remove EBT options and colors
+        console.log('allowGiftCard');
+        this.removeOption(this.options.indexOf(AdminOpEnum.GIFT_CARD));
       }
       this.$options = of(this.options.map(o=> <AdminOpEnum> o.toUpperCase()));
     }, err => {
