@@ -62,7 +62,7 @@ export class ClientService {
   }
 
   giftCard(url: string, gift: IGiftModel): Observable<any> {
-    return this._http.post<any>(url + this.path + '/' + gift.clientId + '/giftCard/', gift)
+    return this._http.post<any>(url + this.path + '/' + gift.clientId + '/giftCard', gift)
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 }

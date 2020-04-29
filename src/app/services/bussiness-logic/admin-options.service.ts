@@ -752,7 +752,7 @@ export class AdminOptionsService {
       amount => {
         console.log('getGiftCard', amount);
         if (amount) {
-          this.gift = new GiftModel(c.id, amount);
+          this.gift = new GiftModel(c.id, amount.unitCost);
           this.getGiftCard();
         } else {
           this.cashService.openGenericInfo(InformationType.INFO,

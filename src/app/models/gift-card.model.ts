@@ -10,7 +10,9 @@ export interface IGiftCardModel {
 }
 
 export class GiftModel implements IGiftModel{
-  constructor(public clientId?:string, public amount?: number, public giftCards?: IGiftCardModel[]){}
+  constructor(public clientId?:string, public amount?: number, public giftCards?: IGiftCardModel[]){
+    this.giftCards = new Array<IGiftCardModel>();
+  }
 }
 
 export class GiftCardModel implements IGiftCardModel{
