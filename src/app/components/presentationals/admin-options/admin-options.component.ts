@@ -46,7 +46,7 @@ export class AdminOptionsComponent implements OnInit {
       }
       if(!config.allowGiftCard){
         // Remove EBT options and colors
-        console.log('allowGiftCard');
+        console.log('allowGiftCard', config.allowGiftCard);
         this.removeOption(this.options.indexOf(AdminOpEnum.GIFT_CARD));
       }
       this.$options = of(this.options.map(o=> <AdminOpEnum> o.toUpperCase()));

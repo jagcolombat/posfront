@@ -12,6 +12,8 @@ export class SetDateComponent implements OnInit {
   title = "Set Date";
   subtitle = "Choose a date:";
   date = new Date();
+  minDate  = new Date(2020, 0, 1);
+  maxDate  = new Date();
   response = {lastClose: false, date: null};
 
   constructor(
@@ -36,7 +38,7 @@ export class SetDateComponent implements OnInit {
   dateClose(){
     this.response.date = {};
     this.response.date['from'] = this.getFormatDate(new Date(this.date), true);
-    this.response.date['to'] = this.getFormatDate(new Date(this.date), false) ;
+    this.response.date['to'] = this.getFormatDate(new Date(this.date), false);
     this.dialogRef.close(this.response);
   }
 

@@ -22,6 +22,7 @@ import {PaymentMethodEnum} from "../../utils/operations/payment-method.enum";
 import {CheckPayment} from "../../models/check.model";
 import {TransferPayment} from "../../models/transfer.model";
 import {InformationType} from "../../utils/information-type.enum";
+import {GiftCardPayment} from "../../models/gift-card.model";
 
 @Injectable({
   providedIn: 'root'
@@ -404,5 +405,11 @@ export class InvoiceService {
 
   printAcctBalance(client: string): Observable<any> {
     return this.dataStorage.printAcctBalance(client);
+  }
+
+  paidByGift(amount: number, card: string): Observable<Invoice> {
+    let giftCardPayment = new GiftCardPayment(amount, card);
+    return this.dataStorage.paidByGift(this.receiptNumber, giftCardPayment);
+
   }
 }

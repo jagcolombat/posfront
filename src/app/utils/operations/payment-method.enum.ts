@@ -8,5 +8,6 @@ export enum PaymentMethodEnum {
   ACCOUNT_CHARGE,
   CHECK,
   TRANSFER,
-  PAID_OUT
+  PAID_OUT,
+  GIFT_CARD
 }

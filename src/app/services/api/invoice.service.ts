@@ -9,6 +9,7 @@ import { catchError } from 'rxjs/operators';
 import { ProcessHTTPMSgService } from './ProcessHTTPMSg.service';
 import {ETransferType} from '../../utils/transfer-type.enum';
 import {EApplyDiscount} from '../../utils/apply-discount.enum';
+import {IGiftCardPaymentModel} from "../../models/gift-card.model";
 
 @Injectable({
   providedIn: 'root'

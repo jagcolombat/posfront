@@ -34,7 +34,7 @@ import {PaymentMethodEnum} from "../../utils/operations/payment-method.enum";
 import {CheckPayment} from "../../models/check.model";
 import {TransferPayment} from "../../models/transfer.model";
 import {AdminOpEnum} from "../../utils/operations/admin-op.enum";
-import {IGiftModel} from "../../models/gift-card.model";
+import {IGiftCardPaymentModel, IGiftModel} from "../../models/gift-card.model";
 
 @Injectable({
   providedIn: 'root'
@@ -202,6 +202,10 @@ export class DataStorageService {
 
   getPaymentMedia(): Observable<any> {
     return this.paymentService.getPaymentMedia(this.url);
+  }
+
+  paidByGift(receiptNumber: string, gift: IGiftCardPaymentModel): Observable<any> {
+    return this.paymentService.paidByGift(this.url, receiptNumber, gift);
   }
 
   // Journey

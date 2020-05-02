@@ -8,7 +8,7 @@
     <p>{{ subtitle }}</p>
     <mat-form-field>
       <input matInput [matDatepicker]="picker" placeholder="Choose a date" (dateInput)="addEvent('input', $event)"
-        (dateChange)="addEvent('change', $event)" [value]="date" disabled>
+        (dateChange)="addEvent('change', $event)" [value]="date" disabled [max]="maxDate" [min]="minDate">
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker touchUi disabled="false"></mat-datepicker>
     </mat-form-field>

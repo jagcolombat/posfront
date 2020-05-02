@@ -40,6 +40,9 @@ import {SwipeCredentialCardComponent} from "../../components/presentationals/swi
 import {PAXConnTypeEnum} from "../../utils/pax-conn-type.enum";
 import {StockOpEnum} from "../../utils/operations/stock-op.enum";
 import {UserrolEnum} from "../../utils/userrol.enum";
+import {PaymentMethodEnum} from "../../utils/operations/payment-method.enum";
+import {GiftCardModel, GiftCardPayment} from "../../models/gift-card.model";
+import {InitViewService} from "./init-view.service";
 
 @Injectable({
   providedIn: 'root'
@@ -55,8 +58,8 @@ export class OperationsService {
   @Output() evAddProdGen = new EventEmitter<Product>();
 
   constructor(private invoiceService: InvoiceService, public cashService: CashService,
-              private authService: AuthService, private clientService: ClientService, private router: Router,
-              private route: ActivatedRoute) {
+              private authService: AuthService, private clientService: ClientService, private initService: InitViewService,
+              private router: Router, private route: ActivatedRoute) {
     //console.log('OperationService', this.inactivityTime);
     this.invoiceService.evAddProd.subscribe(() => this.onAddProduct());
     //If section products is showing
@@ -684,7 +687,8 @@ export class OperationsService {
   }
 
   getTotalToPaid(){
-    return this.invoiceService.invoice.balance !== undefined ? this.invoiceService.invoice.balance: this.invoiceService.invoice.total;
+    return this.invoiceService.invoice.balance !== undefined ?
+      this.invoiceService.invoice.balance: this.invoiceService.invoice.total;
   }
 
   cash(opType?: PaymentOpEnum) {
@@ -706,10 +710,7 @@ export class OperationsService {
           err => this.cashService.openGenericInfo('Error', 'Error in refund paid'),
           () => this.cashService.resetEnableState());
     } else if (totalToPaid > 0) {
-      const dialogRef = this.cashService.dialog.open(CashOpComponent,
-        {
-          width: '480px', height: '660px', data: totalToPaid, disableClose: true
-        }).afterClosed().subscribe(data => {
+      this.getTotalField(totalToPaid).subscribe(data => {
         console.log('The dialog was closed', data);
         // this.paymentData = data;
         this.cashPaid(data, totalToPaid)
@@ -746,7 +747,8 @@ export class OperationsService {
   cashOp(valueToReturn, payment, totalToPaid){
     console.log('cash', this.currentOperation);
     let opMsg = 'cash payment';
-    let dialogInfoEvents = this.cashService.openGenericInfo('Cash','Paying by cash...', undefined, undefined, true);
+    let dialogInfoEvents = this.cashService.openGenericInfo('Cash','Paying by cash...', undefined,
+      undefined, true);
 
     let $cashing = this.invoiceService.cash(payment, totalToPaid, <PaymentOpEnum>this.currentOperation)
       .subscribe(data => {
@@ -1397,6 +1399,13 @@ export class OperationsService {
       }).afterClosed();
   }
 
+  getTotalField(totalToPaid: number){
+    return this.cashService.dialog.open(CashOpComponent,
+      {
+        width: '480px', height: '660px', data: totalToPaid, disableClose: true
+      }).afterClosed();
+  }
+
   openSwipeCredentialCard(title: string, content?: string) {
     return this.cashService.dialog.open(SwipeCredentialCardComponent,{
       width: '400px', height: '350px', data: {
@@ -1804,5 +1813,78 @@ export class OperationsService {
         op === PaymentOpEnum.CREDIT_CARD ? this.credit() : this.debit();
         break;
     }
+  }
+
+  setOtherPaymentType() {
+    let ccTypes= new Array<any>(
+      {value: PaymentMethodEnum.OTHER, text: 'Others'},
+            {value: PaymentMethodEnum.GIFT_CARD, text: 'Gift Card'}
+      );
+    if(!this.cashService.systemConfig.allowGiftCard) ccTypes.splice(-1);
+    this.cashService.dialog.open(DialogDeliveryComponent,{ width: '600px', height: '340px',
+      data: {name: 'Other Payment Types', label: 'Select a type', arr: ccTypes},
+      disableClose: true }).afterClosed().subscribe(next => {
+      console.log(next);
+        if(next !== "") {
+          switch (next) {
+            case PaymentMethodEnum.OTHER:
+              this.cash(PaymentOpEnum.OTHER);
+              break;
+            case PaymentMethodEnum.GIFT_CARD:
+              this.giftCardPayment();
+              break;
+          }
+        }
+    });
+  }
+
+  giftCardPayment(){
+    this.currentOperation = PaymentOpEnum.GIFT_CARD;
+    this.getTotalField(this.getTotalToPaid()).subscribe(
+      amount => {
+        console.log('giftCardPayment Amount', amount);
+        if (amount) {
+          this.cashService.disabledInput = false;
+          this.openSwipeCredentialCard(PaymentOpEnum.GIFT_CARD, 'Swipe card')
+            .subscribe(
+              next => {
+                console.log('Swipe card', next);
+                if(next){
+                  let passwordByCard = (next) ? next.pass : this.initService.userScanned;
+                  if(this.initService.userScanned) this.initService.cleanUserScanned();
+                  if(passwordByCard) this.giftCardPaymentOp(amount, passwordByCard);
+                } else {
+                  this.cashService.resetEnableState();
+                }
+              }
+            );
+        } else {
+          this.cashService.resetEnableState();
+        }
+    });
+  }
+
+  giftCardPaymentOp(amount, cardPin){
+    let opMsg = 'gift card payment';
+    let dialogInfoEvents = this.cashService.openGenericInfo('Gift Card','Paying by gift card...',
+      undefined, undefined, true);
+    let $gift = this.invoiceService.paidByGift(amount, cardPin)
+      .subscribe(data => {
+          console.log(data);
+          dialogInfoEvents.close();
+          clearTimeout(timeOut);
+          this.setOrCreateInvoice(data);
+        },
+        err => {
+          console.log(err);
+          dialogInfoEvents.close();
+          clearTimeout(timeOut);
+          this.cashService.openGenericInfo('Error', err);
+        }, () => {
+          clearTimeout(timeOut);
+          this.cashService.resetEnableState();
+        });
+
+    let timeOut = this.paxTimeOut($gift, dialogInfoEvents, opMsg);
   }
 }

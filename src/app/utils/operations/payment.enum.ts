@@ -4,5 +4,6 @@ export enum PaymentOpEnum {
     DEBIT_CARD = 'Debit Card',
     CASH = 'Cash',
     OTHER = 'Other',
-    CHECK = 'Check'
+    CHECK = 'Check',
+    GIFT_CARD = 'Gift Card'
 }

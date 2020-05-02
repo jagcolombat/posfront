@@ -289,8 +289,16 @@ export class AdminOptionsService {
     //this.dayCloseType('', AdminOpEnum.WTDZ);
   }
 
+  currentDate(date): boolean {
+    let currentDate = new Date().toISOString().split('T')[0];
+    let selectedDate = date.from.split(' ')[0];
+    console.log('currentDate', currentDate, selectedDate);
+    return currentDate === selectedDate;
+  }
+
   dayCloseType(emp?: string, op?: AdminOpEnum, date?: any){
     let dayCloseTypes= new Array<any>({value: 1, text: 'Print'}, {value: 2, text: 'Close'});
+    if (date && this.currentDate(date)) dayCloseTypes.splice(-1);
     let title = emp ? 'Cashier' : 'Day';
     this.cashService.dialog.open(DialogDeliveryComponent,
       { width: '600px', height: '340px', data: {name: 'Close Types', label: 'Select a type', arr: dayCloseTypes},
@@ -774,7 +782,7 @@ export class AdminOptionsService {
                 this.initService.cleanUserScanned();
                 this.gift.giftCards.push(new GiftCardModel(card.number, passwordByCard));
                 this.finishSetGiftCards();
-              }, err => { console.error(err)}, () => console.log('complete', this)
+              }, err => { console.error(err)}
             );
         } else {
           console.log('getGiftCard', 'no set card');

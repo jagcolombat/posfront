@@ -205,7 +205,7 @@ export class OperationsComponent implements OnInit {
         this.operationService.cash(PaymentOpEnum.CASH);
         break;
       case PaymentOpEnum.OTHER:
-        this.operationService.cash(PaymentOpEnum.OTHER);
+        this.operationService.setOtherPaymentType();
         break;
       case PaymentOpEnum.EBT_CARD:
         this.operationService.setEBTCardType();
@@ -261,7 +261,7 @@ export class OperationsComponent implements OnInit {
         this.operationService.check();
         break;
       case PaymentOpEnum.OTHER:
-        this.operationService.cash(PaymentOpEnum.OTHER);
+        this.operationService.setOtherPaymentType();
         break;
       default:
         this.operationService.cashMoney(+ev);

@@ -8,6 +8,7 @@ import { catchError } from 'rxjs/operators';
 import {Invoice} from "../../models/invoice.model";
 import {ETransferType} from "../../utils/transfer-type.enum";
 import {CheckPayment} from "../../models/check.model";
+import {IGiftCardPaymentModel} from "../../models/gift-card.model";
 
 @Injectable({
   providedIn: 'root'
@@ -66,6 +67,13 @@ export class PaymentService {
 
   paidByCheck(url: string, check: CheckPayment) {
     return this._http.post<Invoice>(url + this.path + '/payment/check', check)
+      .pipe(catchError(this.processHttpMsgService.handleError));
+  }
+
+  paidByGift(url: string, receiptNumber: string, gift: IGiftCardPaymentModel) {
+    let params = new HttpParams();
+    params = params.append('receiptNumber', receiptNumber);
+    return this._http.post<Invoice>(url + this.path + '/payment/giftcard', gift, {params})
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 }
