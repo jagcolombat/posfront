@@ -173,7 +173,6 @@ export class CashService {
       //if(!next.allowAddProdGen) next.allowAddProdGen = true;
       if(!next.paxConnType) next.paxConnType = PAXConnTypeEnum.OFFLINE;
       if(!next.inactivityTime) next.inactivityTime = 60;
-      if(!next.allowGiftCard) next.allowGiftCard = true;
       this.systemConfig = next;
       if(!this.systemConfig.breakText) this.systemConfig.breakText = BreakTextEnum.ALL;
       this.resetEnableState();
