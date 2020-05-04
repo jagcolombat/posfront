@@ -29,8 +29,7 @@ import {CustomerOpEnum} from "../../utils/operations/customer.enum";
 import {ClientService} from "./client.service";
 import {CloseBatchComponent} from "../../components/presentationals/close-batch/close-batch.component";
 import {SetDateComponent} from "../../components/presentationals/set-date/set-date.component";
-import {Client, IClient} from "../../models/order.model";
-import {GiftCardModel, GiftModel, IGiftCardModel} from "../../models/gift-card.model";
+import {GiftCardModel, GiftModel} from "../../models/gift-card.model";
 import {thousandFormatter} from "../../utils/functions/transformers";
 
 @Injectable({
@@ -40,7 +39,6 @@ export class AdminOptionsService {
   private cancelCheckLoaded: boolean;
   private removeHoldLoaded: boolean;
   currentOperation: AdminOpEnum | string;
-  private gift: GiftModel;
 
   constructor(private invoiceService: InvoiceService, public cashService: CashService, public auth: AuthService,
               public operationService: OperationsService, private dataStorage: DataStorageService,
@@ -748,7 +746,7 @@ export class AdminOptionsService {
       clients=> {
         console.log(this.currentOperation, clients);
         this.operationService.openDialogWithPag(clients, (c)=> this.setGiftCard(c), 'Clients',
-          'Select a client:','', 'name','creditLimit' );
+          'Select a client:','', 'name','giftAmount' );
       },
       error1 => {
         this.cashService.openGenericInfo(InformationType.INFO, 'Can\'t get the clients');
@@ -761,8 +759,7 @@ export class AdminOptionsService {
       amount => {
         console.log('getGiftCard', amount);
         if (amount) {
-          this.gift = new GiftModel(c.id, amount.unitCost);
-          this.getGiftCard();
+          this.getGiftCard(c.id, amount.unitCost);
         } else {
           this.cashService.openGenericInfo(InformationType.INFO,
             'Can\'t set the gift cards because wasn\'t set the amount');
@@ -782,36 +779,46 @@ export class AdminOptionsService {
                 let passwordByCard = (next) ? next.pass : this.initService.userScanned;
                 this.initService.cleanUserScanned();
                 // Validar si la tarjeta existe o es valida. Guardar tarjeta (cliente y tarjeta)
-                // En caso de validez invocar finishSetGiftCards
-                // sino mostrar error y al cerrar el dialogo invocar getGifCard
-                // Nota: no sera necesario adicionar la tarjeta al objeto gift
-                this.gift.giftCards.push(new GiftCardModel(card.number, passwordByCard));
-                this.finishSetGiftCards();
+                this.validGiftCard(c, new GiftCardModel(card.number, passwordByCard)).subscribe(
+                  next => { // En caso de validez invocar finishSetGiftCards
+                    this.finishSetGiftCards(c, amount);
+                    },
+                  error1 => { // sino mostrar error y al cerrar el dialogo invocar finishSetGiftCards
+                    this.cashService.openGenericInfo(InformationType.ERROR, error1)
+                      .afterClosed().subscribe(
+                        next => { this.finishSetGiftCards(c, amount); }
+                    )
+                  });
               }, err => { console.error(err)}
             );
         } else {
           console.log('getGiftCard', 'no set card');
-          this.saveGiftCards();
+          this.saveGiftCards(c, amount);
         }
       }
     )
+  }
+
+  private validGiftCard(client: string, card: GiftCardModel) {
+    return this.dataStorage.validGiftCard(client, card);
   }
 
   finishSetGiftCards(c?: string, amount?: number){
     this.cashService.openGenericInfo(AdminOpEnum.GIFT_CARD, 'Have you finish to set gift cards', null,
       true, true).afterClosed().subscribe(next=> {
         console.log('finishSetGiftCards', next);
-        (next && next.confirm) ? this.saveGiftCards() : this.getGiftCard();
+        (next && next.confirm) ? this.saveGiftCards(c, amount) : this.getGiftCard(c, amount);
       })
   }
 
   saveGiftCards(c?: string, amount?: number){
-    console.log('finish set cards', this.gift);
-    this.dataStorage.setGiftCard(this.gift).subscribe(
+    console.log('finish set cards', c, amount);
+    this.dataStorage.setGiftCard(new GiftModel(c, amount)).subscribe(
       next => { this.cashService.openGenericInfo(InformationType.INFO,
         'Gift card operation executed successfully') },
-      error1 => {});
-    this.gift = new GiftModel();
+      error1 => {
+        this.cashService.openGenericInfo(InformationType.ERROR, error1);
+      });
   }
 
   /*swipeCard(title?: string): Observable<any>{
@@ -844,13 +851,26 @@ export class AdminOptionsService {
 
   weeklyClose(op) {
     this.cashService.dayCloseEnableState();
-    //let dialogEv = this.cashService.openGenericInfo('Information', 'Closing week...');
+    this.cashService.dialog.open(SetDateComponent,
+      { width: '400px', height: '340px', data: {title: 'Weekly Close', subtitle: 'Set date', onlyDate: true},
+        disableClose: true })
+      .afterClosed().subscribe(next => {
+      console.log('afterCloseSetDate', next);
+      //if(next.lastClose) this.dayCloseType('', AdminOpEnum.WTDZ);
+      if(next.date) this.weeklyCloseOp( AdminOpEnum.WEEKLY_CLOSE, next.date.to);
+    });
 
-    this.dataStorage.weeklyClosePrint(true).subscribe(
+  }
+
+  weeklyCloseOp(op: any, date?: any){
+    let dialogEv = this.cashService.openGenericInfo('Information', 'Closing week...');
+    this.dataStorage.weeklyClosePrint(true, null, date).subscribe(
       next => {
+        dialogEv.close();
         this.cashService.openGenericInfo('Weekly Close Print', 'Completed '+op.toLowerCase()+' operation');
       },
       err => {
+        dialogEv.close();
         this.cashService.openGenericInfo('Error', 'Can\'t complete '+
           op.toLowerCase()+' print operation');
         this.cashService.resetEnableState();

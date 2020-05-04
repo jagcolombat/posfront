@@ -9,7 +9,7 @@ import {Invoice} from "../../models/invoice.model";
 import {PaymentMethodEnum} from "../../utils/operations/payment-method.enum";
 import {CheckPayment} from "../../models/check.model";
 import {TransferPayment} from "../../models/transfer.model";
-import {IGiftModel} from "../../models/gift-card.model";
+import {GiftCardModel, IGiftModel} from "../../models/gift-card.model";
 
 @Injectable({
   providedIn: 'root'
@@ -62,7 +62,12 @@ export class ClientService {
   }
 
   giftCard(url: string, gift: IGiftModel): Observable<any> {
-    return this._http.post<any>(url + this.path + '/' + gift.clientId + '/giftCard', gift)
+    return this._http.put<any>(url + this.path + '/' + gift.clientId + '/giftCard', { amount: gift.amount })
+      .pipe(catchError(this.processHttpMsgService.handleError));
+  }
+
+  validGiftCard(url: string, client: string, card: GiftCardModel) {
+    return this._http.post<any>(url + this.path + '/' + client + '/giftCard', card)
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 }
