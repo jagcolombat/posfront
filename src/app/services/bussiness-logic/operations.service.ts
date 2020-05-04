@@ -1880,6 +1880,7 @@ export class OperationsService {
           dialogInfoEvents.close();
           clearTimeout(timeOut);
           this.cashService.openGenericInfo('Error', err);
+          this.cashService.resetEnableState();
         }, () => {
           clearTimeout(timeOut);
           this.cashService.resetEnableState();

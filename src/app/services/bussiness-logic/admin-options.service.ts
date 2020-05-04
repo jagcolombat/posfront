@@ -31,6 +31,7 @@ import {CloseBatchComponent} from "../../components/presentationals/close-batch/
 import {SetDateComponent} from "../../components/presentationals/set-date/set-date.component";
 import {Client, IClient} from "../../models/order.model";
 import {GiftCardModel, GiftModel, IGiftCardModel} from "../../models/gift-card.model";
+import {thousandFormatter} from "../../utils/functions/transformers";
 
 @Injectable({
   providedIn: 'root'
@@ -731,7 +732,7 @@ export class AdminOptionsService {
             next => {
               console.log('updatedCredit', next);
               this.cashService.openGenericInfo('Credit Limit', 'The credit limit of client '+ c.name +
-                ' is: $' + next.creditLimit.toFixed(2));
+                ' is: $' + thousandFormatter(next.creditLimit));
             }, err => this.cashService.openGenericInfo(InformationType.ERROR, err)
 
           );
@@ -769,7 +770,7 @@ export class AdminOptionsService {
       });
   }
 
-  getGiftCard() {
+  getGiftCard(c?: string, amount?: number) {
     this.operationService.getNumField(AdminOpEnum.GIFT_CARD, 'Card ID').subscribe(
       card => {
         console.log('getGiftCard', card);
@@ -780,6 +781,10 @@ export class AdminOptionsService {
                 console.log('Swipe card', next);
                 let passwordByCard = (next) ? next.pass : this.initService.userScanned;
                 this.initService.cleanUserScanned();
+                // Validar si la tarjeta existe o es valida. Guardar tarjeta (cliente y tarjeta)
+                // En caso de validez invocar finishSetGiftCards
+                // sino mostrar error y al cerrar el dialogo invocar getGifCard
+                // Nota: no sera necesario adicionar la tarjeta al objeto gift
                 this.gift.giftCards.push(new GiftCardModel(card.number, passwordByCard));
                 this.finishSetGiftCards();
               }, err => { console.error(err)}
@@ -792,7 +797,7 @@ export class AdminOptionsService {
     )
   }
 
-  finishSetGiftCards(c?: any){
+  finishSetGiftCards(c?: string, amount?: number){
     this.cashService.openGenericInfo(AdminOpEnum.GIFT_CARD, 'Have you finish to set gift cards', null,
       true, true).afterClosed().subscribe(next=> {
         console.log('finishSetGiftCards', next);
@@ -800,7 +805,7 @@ export class AdminOptionsService {
       })
   }
 
-  saveGiftCards(){
+  saveGiftCards(c?: string, amount?: number){
     console.log('finish set cards', this.gift);
     this.dataStorage.setGiftCard(this.gift).subscribe(
       next => { this.cashService.openGenericInfo(InformationType.INFO,

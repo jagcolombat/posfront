@@ -3,6 +3,7 @@ import { GridOptions, GridApi } from 'ag-grid-community';
 import { DataStorageService } from 'src/app/services/api/data-storage.service';
 import {CompanyType} from "../../../utils/company-type.enum";
 import {CashService} from "../../../services/bussiness-logic/cash.service";
+import {dateFormatter, thousandFormatter} from "../../../utils/functions/transformers";
 
 @Component({
   selector: 'sales-empl',
@@ -85,11 +86,14 @@ export class SalesEmplComponent implements OnInit {
   }
 
   thousandFormatter(params){
-    return Number(params.value).toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+    return thousandFormatter(params.value);
+    //Number(params.value).toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+
   }
 
   dateFormatter(params){
-    return params.value !== '' ? new Date(params.value).toLocaleString('en-US', {hour12: false}) : '';
+    return dateFormatter(params.value)
+    //params.value !== '' ? new Date(params.value).toLocaleString('en-US', {hour12: false}) : '';
   }
 
   updateGridOptions(){

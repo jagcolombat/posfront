@@ -13,7 +13,7 @@ constructor() { }
       console.error('handleError', response);
       let errMsg: string;
 
-      if(response.status === 504){
+      if(response.status === 504 || (response.status === 0 && response.statusText === 'Unknown Error') ){
         errMsg = 'Timeout trying connect with server. Please review server status or contact to support team.';
       } else if (response.error instanceof ErrorEvent) {
         errMsg = response.error.message;
