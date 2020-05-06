@@ -648,14 +648,14 @@ export class AdminOptionsService {
                           this.cashService.openGenericInfo('Information', 'Client setup operation successful');
                         },
                         err => {
-                          this.cashService.openGenericInfo("Error", "Can't setup the client");
+                          this.cashService.openGenericInfo("Error", "Cannot setup the client");
                         }
                       );
                     });
                 });
             });
         } else {
-          this.cashService.openGenericInfo("Error", "Can't setup the charge account because no was" +
+          this.cashService.openGenericInfo("Error", "Cannot setup the client because no was" +
             " specified the name");
         }
       });
@@ -813,12 +813,18 @@ export class AdminOptionsService {
 
   saveGiftCards(c?: string, amount?: number){
     console.log('finish set cards', c, amount);
-    this.dataStorage.setGiftCard(new GiftModel(c, amount)).subscribe(
-      next => { this.cashService.openGenericInfo(InformationType.INFO,
-        'Gift card operation executed successfully') },
-      error1 => {
-        this.cashService.openGenericInfo(InformationType.ERROR, error1);
-      });
+    this.cashService.openGenericInfo(AdminOpEnum.GIFT_CARD,
+      'Are you sure to set gift card', null, true).afterClosed().subscribe(
+        next=> {
+          if(next && next.confirm){
+            this.dataStorage.setGiftCard(new GiftModel(c, amount)).subscribe(
+              next => { this.cashService.openGenericInfo(InformationType.INFO,
+                'Gift card operation executed successfully') },
+              error1 => {
+                this.cashService.openGenericInfo(InformationType.ERROR, error1);
+              });
+          }
+        });
   }
 
   /*swipeCard(title?: string): Observable<any>{

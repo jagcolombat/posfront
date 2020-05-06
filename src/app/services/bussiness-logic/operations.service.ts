@@ -178,9 +178,9 @@ export class OperationsService {
   }
 
   deleteSelectedProducts(){
-    this.invoiceService.evDelProd.emit(true);
+    this.invoiceService.evDelProd.emit(true);/*
     this.invoiceService.invoiceProductSelected.splice(0);
-    this.invoiceService.setTotal();
+    this.invoiceService.setTotal();*/
   }
 
   void() {
