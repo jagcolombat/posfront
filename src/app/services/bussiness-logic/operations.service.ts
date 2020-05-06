@@ -616,15 +616,21 @@ export class OperationsService {
   logoutOp() {
     this.authService.logout().subscribe(value => {
       console.log('logoutOp', value);
-      this.authService.token = this.authService.initialLogin = undefined;
-      this.cashService.dialog.closeAll();
-      this.invoiceService.resetDigits();
-      this.cashService.resetEnableState();
-      this.router.navigateByUrl('/init');
+      this.logoutOpResponse();
     },error1 => {
-      console.error('LogoutOp', error1)
-      this.cashService.openGenericInfo(InformationType.ERROR, error1);
+      console.error('LogoutOp', error1);
+      (error1.includes('Timeout trying connect with server'))? this.logoutOpResponse() :
+        this.cashService.openGenericInfo(InformationType.ERROR, error1);
     });
+  }
+
+  logoutOpResponse(){
+    this.authService.token = this.authService.initialLogin = undefined;
+    this.cashService.dialog.closeAll();
+    this.invoiceService.resetDigits();
+    this.cashService.resetEnableState();
+    this.router.navigateByUrl('/init');
+    this.resetInactivity(false);
   }
 
   cancelCheck() {
@@ -1615,8 +1621,9 @@ export class OperationsService {
     this.currentOperation = CustomerOpEnum.ACCT_CHARGE;
     this.clientService.getClients().subscribe(
       clients=> {
-        this.openDialogWithPag(clients, (c)=> this.setAmount(CustomerOpEnum.ACCT_CHARGE, c.id, a => this.acctChargeOp(c.id, a)),
-          'Clients', 'Select a client:', 'name');
+        this.openDialogWithPag(clients, (c)=> this.setAmount(CustomerOpEnum.ACCT_CHARGE, c.id,
+            a => this.acctChargeOp(c.id, a)),'Clients', 'Select a client:', null, 'name',
+          'balance');
       },
       error1 => {
         this.cashService.openGenericInfo(InformationType.INFO, 'Can\'t get the clients');

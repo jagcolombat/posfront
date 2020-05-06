@@ -804,7 +804,7 @@ export class AdminOptionsService {
   }
 
   finishSetGiftCards(c?: string, amount?: number){
-    this.cashService.openGenericInfo(AdminOpEnum.GIFT_CARD, 'Have you finish to set gift cards', null,
+    this.cashService.openGenericInfo(AdminOpEnum.GIFT_CARD, 'Have you finish to set gift cards?', null,
       true, true).afterClosed().subscribe(next=> {
         console.log('finishSetGiftCards', next);
         (next && next.confirm) ? this.saveGiftCards(c, amount) : this.getGiftCard(c, amount);
@@ -814,7 +814,7 @@ export class AdminOptionsService {
   saveGiftCards(c?: string, amount?: number){
     console.log('finish set cards', c, amount);
     this.cashService.openGenericInfo(AdminOpEnum.GIFT_CARD,
-      'Are you sure to set gift card', null, true).afterClosed().subscribe(
+      'Do you want to set up the amount?', null, true).afterClosed().subscribe(
         next=> {
           if(next && next.confirm){
             this.dataStorage.setGiftCard(new GiftModel(c, amount)).subscribe(
