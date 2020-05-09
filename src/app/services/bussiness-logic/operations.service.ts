@@ -1009,20 +1009,20 @@ export class OperationsService {
 
   private creditOp(splitAmount?: number, context?: any){
     let opMsg = 'credit card payment';
-    let dialogInfoEvents = this.openInfoEventDialog('Paying by credit card');
-    let $credit = this.invoiceService.credit(splitAmount ? splitAmount : this.invoiceService.invoice.balance,
-      this.invoiceService.invoice.tip)
+    let dialogInfoEvents = context.openInfoEventDialog('Paying by credit card');
+    let $credit = context.invoiceService.credit(splitAmount ? splitAmount : context.invoiceService.invoice.balance,
+      context.invoiceService.invoice.tip)
       .subscribe(data => {
-          this.closeTimeout(dialogInfoEvents, timeOut, data);
-          this.setOrCreateInvoice(data);
+          context.closeTimeout(dialogInfoEvents, timeOut, data);
+          context.setOrCreateInvoice(data);
         },
         err => {
-          this.closeTimeout(dialogInfoEvents, timeOut, err);
-          this.cashService.openGenericInfo('Error', err);
-          this.cashService.resetEnableState();
+          context.closeTimeout(dialogInfoEvents, timeOut, err);
+          context.cashService.openGenericInfo('Error', err);
+          context.cashService.resetEnableState();
         });
 
-    let timeOut = this.paxTimeOut($credit, dialogInfoEvents, opMsg);
+    let timeOut = context.paxTimeOut($credit, dialogInfoEvents, opMsg);
   }
 
   private creditManualOp(title, splitAmount?: number){
