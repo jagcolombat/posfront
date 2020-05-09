@@ -41,6 +41,7 @@ import {StockOpEnum} from "../../utils/operations/stock-op.enum";
 import {UserrolEnum} from "../../utils/userrol.enum";
 import {PaymentMethodEnum} from "../../utils/operations/payment-method.enum";
 import {InitViewService} from "./init-view.service";
+import {ScanOpEnum} from "../../utils/operations/scanner-op.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -499,9 +500,8 @@ export class OperationsService {
   getCheckById(typeOp: EOperationType, action: (i: Invoice) => void) {
     this.invoiceService.getInvoicesById(typeOp)
       .subscribe(next => action(next),
-        (err: HttpErrorResponse) => {
-          this.cashService.openGenericInfo('Error', 'Can\'t complete get check operation. ' +
-            err.statusText);
+        (err) => {
+          this.cashService.openGenericInfo('Error', err);
           this.invoiceService.resetDigits();
           this.cleanCurrentOp();
         });
@@ -706,7 +706,6 @@ export class OperationsService {
 
   prodGenCheckByAdmin(t?: Token, data?: Product) {
     console.log('prodGenCheckByAdmin', t, data);
-    this.currentOperation = StockOpEnum.ADD_PROD;
     this.evAddProdGen.emit(<Product> data);
     this.authService.token = t;
     this.resetInactivity(true);
@@ -892,6 +891,7 @@ export class OperationsService {
   }
 
   scanProduct(){
+    this.currentOperation = ScanOpEnum.SCAN_PROD;
     // If is a weight format product
     if(this.isWeightFormatProduct()){
       this.getPriceAndUPCOfWFP();

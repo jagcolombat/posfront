@@ -14,6 +14,7 @@ import {EOperationType} from "../../utils/operation.type.enum";
 import {OperationsService} from "./operations.service";
 import {InvioceOpEnum} from "../../utils/operations";
 import {StockOpEnum} from "../../utils/operations/stock-op.enum";
+import {ScanOpEnum} from "../../utils/operations/scanner-op.enum";
 
 export const AGE = 18;
 
@@ -33,7 +34,8 @@ export class ProductOrderService implements OnDestroy {
   }
 
   addProduct(product: Product): void {
-    this.operationService.currentOperation = StockOpEnum.ADD_PROD;
+    if(!this.isAddByPluOrScan())
+      this.operationService.currentOperation = StockOpEnum.ADD_PROD;
     if ( product.followDepartment ) {
       const dpto = this.departments.find(dpto => dpto.id === product.departmentId);
       // const isAgeVerification = this.departments.find(dpto => dpto.id === product.departmentId).ageVerification;
@@ -47,6 +49,11 @@ export class ProductOrderService implements OnDestroy {
     } else {
       this.onCreateProductOrder(product);
     }
+  }
+
+  isAddByPluOrScan(){
+    return this.operationService.currentOperation === InvioceOpEnum.PLU ||
+      this.operationService.currentOperation === ScanOpEnum.SCAN_PROD;
   }
 
   onAgeVerification() {
@@ -79,7 +86,7 @@ export class ProductOrderService implements OnDestroy {
 
   productGeneric(product: Product){
     console.log('Product generic', this.operationService.currentOperation);
-    (product.prefixIsPrice && this.operationService.currentOperation !== InvioceOpEnum.PLU)?
+    (product.prefixIsPrice && !this.isAddByPluOrScan())?
       this.prefixIsPrice(product):
       this.openDialogGenericProd(product);
   }
