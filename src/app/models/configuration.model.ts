@@ -18,4 +18,5 @@ export interface Configuration {
   inactivityTime?: number;
   closeChange?: boolean;
   allowGiftCard?: boolean;
+  allowLastProdClear?: boolean;
 }

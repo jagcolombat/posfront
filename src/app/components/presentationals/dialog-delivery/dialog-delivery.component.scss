@@ -1,8 +1,8 @@
 @import "~src/variable";
 
-[mat-dialog-content] button {
+/*[mat-dialog-content] button {
   @include red;
-}
+}*/
 [mat-dialog-content] button /deep/ span {
   font-size: 16px;
   font-weight: normal;

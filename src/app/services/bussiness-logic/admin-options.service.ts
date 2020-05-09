@@ -604,7 +604,7 @@ export class AdminOptionsService {
   ebtInquiry() {
     console.log('EBT Inquiry');
     //this.currentOperation = 'EBT Inquiry';
-    if (this.invoiceService.invoice.total !== 0 || this.invoiceService.invoice.fsTotal !== 0) {
+    //if (this.invoiceService.invoice.total !== 0 || this.invoiceService.invoice.fsTotal !== 0) {
       this.invoiceService.ebtInquiry()
         .subscribe(data => {
           console.log(data);
@@ -623,7 +623,7 @@ export class AdminOptionsService {
           this.cashService.openGenericInfo('Error', err);
           this.cashService.resetEnableState()
         });
-    }
+    //}
     //this.resetInactivity(false);
   }
 

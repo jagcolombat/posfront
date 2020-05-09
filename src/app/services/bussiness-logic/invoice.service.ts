@@ -50,6 +50,7 @@ export class InvoiceService {
   @Output() evUpdateTotals = new EventEmitter<any>();
   @Output() evUpdateProds = new EventEmitter<ProductOrder[]>();
   evCreateInvoice = new BehaviorSubject<boolean>(true);
+  lastProdAdd: ProductOrder;
 
   constructor(public authService: AuthService, private dataStorage: DataStorageService, public cashService: CashService) {
     //this.setSystemConfig();
@@ -72,6 +73,7 @@ export class InvoiceService {
         this.invoice = <Invoice> next;
         this.isReviewed = false;
         this.evDelAllProds.emit();
+        this.lastProdAdd = null;
         this.setTotal();
         this.evCreateInvoice.next(true);
       }, err => {
@@ -118,6 +120,7 @@ export class InvoiceService {
     this.invoice.status = inv.status;
     this.invoice.paymentStatus = inv.paymentStatus;
     this.invoice.productOrders.push(inv.productOrders[0]);
+    this.lastProdAdd = inv.productOrders[0];
     this.updateTotals(inv);
     this.evAddProd.emit(inv.productOrders[0]);
     this.resetDigits();
@@ -237,7 +240,7 @@ export class InvoiceService {
   }
 
   creditManual(payment: number, tip?: number, ccnumber?: string, cvv?: string, ccdate?: string, zip?: string,
-               street: string='havana ave'): Observable<Invoice> {
+               street?: string): Observable<Invoice> {
     const creditPayment = new CreditCardModel(payment, tip, this.invoice.receiptNumber,PaymentStatus.SAlE, ccnumber, cvv,
       ccdate, SwipeMethod.MANUAL, zip, street);
     return this.dataStorage.paidByCreditCard(creditPayment);
