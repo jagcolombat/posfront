@@ -94,7 +94,6 @@ export class CloseBatchComponent implements OnInit {
         this.setDataByType();
       }
     }
-
   }
 
   setDataByType(){

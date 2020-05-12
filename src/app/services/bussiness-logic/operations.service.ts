@@ -67,6 +67,7 @@ export class OperationsService {
     this.invoiceService.evUpdateProds.subscribe(ev => this.resetInactivity(true));
     //
     this.cashService.evLogout.subscribe(ev => this.logout(ev));
+    this.cashService.evReviewEnableState.subscribe(ev => this.currentOperation = '');
     this.counterInactivity();
   }
 
@@ -79,7 +80,8 @@ export class OperationsService {
 
   counterInactivity(){
     this.timer = setTimeout(()=> {
-      if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS)
+      if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS &&
+        this.currentOperation !== AdminOpEnum.CLOSE_BATCH)
         this.logout(true);
       else
         this.resetInactivity(true);
@@ -957,7 +959,7 @@ export class OperationsService {
     this.resetInactivity(true);
   }
 
-  setTip(action?: (i?: any) => void, op?: PaymentOpEnum, context?: any){
+  setTip(action?: (i?: any, j?: any) => void, op?: PaymentOpEnum, context?: any){
     if (this.cashService.systemConfig.companyType === CompanyType.RESTAURANT &&
       this.invoiceService.invoice.paymentStatus === PaymentStatus.AUTH) {
       this.cashService.dialog.open(ProductGenericComponent,
@@ -968,7 +970,7 @@ export class OperationsService {
         next=> {
           console.log(next);
           this.invoiceService.invoice.tip = next.unitCost;
-          action(context);
+          (op === PaymentOpEnum.CREDIT_CARD) ? action(null, context) : action(context);
         },
         err=> {console.error(err)})
     } else {
@@ -977,6 +979,7 @@ export class OperationsService {
   }
 
   debitOp(context?: any){
+    if(!context) context = this;
     let opMsg = 'debit card payment';
     let dialogInfoEvents = context.openInfoEventDialog('Paying by debit card');
     let $debit = context.invoiceService.debit(context.invoiceService.invoice.balance, context.invoiceService.invoice.tip)
@@ -1008,6 +1011,7 @@ export class OperationsService {
   }
 
   private creditOp(splitAmount?: number, context?: any){
+    if(!context) context = this;
     let opMsg = 'credit card payment';
     let dialogInfoEvents = context.openInfoEventDialog('Paying by credit card');
     let $credit = context.invoiceService.credit(splitAmount ? splitAmount : context.invoiceService.invoice.balance,

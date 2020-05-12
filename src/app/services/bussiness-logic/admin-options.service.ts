@@ -108,7 +108,6 @@ export class AdminOptionsService {
     /*} else {
       this.cashService.openGenericInfo('Error', 'Can\'t apply discount without products')
     }*/
-
   }
 
   applyDiscountOp(data, type: EApplyDiscount){
@@ -197,7 +196,7 @@ export class AdminOptionsService {
 
   backToUser() {
     console.log('backUser', this.auth.token, this.auth.initialLogin);
-    if(this.auth.initialLogin){
+    if(this.auth.initialLogin && (this.auth.token.user_id !== this.auth.initialLogin.user_id)){
       this.auth.restoreInitialLogin();
       this.router.navigateByUrl('/cash/dptos');
       this.invoiceService.getCashier();
@@ -262,6 +261,7 @@ export class AdminOptionsService {
   }
 
   closeBatch() {
+    this.operationService.currentOperation = AdminOpEnum.CLOSE_BATCH;
     this.cashService.dialog.open(CloseBatchComponent,
       {
         width: '750px', height: '600px', disableClose: true, data: {title: AdminOpEnum.CLOSE_BATCH}
@@ -271,9 +271,14 @@ export class AdminOptionsService {
             console.log('closeBatch', next);
             this.dataStorage.closeBatch(next).subscribe(
             next => console.log('closeBatch', next),
-            err => this.cashService.openGenericInfo('Error','Can\'t complete close batch operation'))
-          };
-        },err=> console.error(err));
+            err => {
+              this.cashService.openGenericInfo('Error','Can\'t complete close batch operation');
+              this.operationService.currentOperation = '';
+            }, () => this.operationService.currentOperation = '')
+          } else {
+            this.operationService.currentOperation = '';
+          }
+        });
   }
 
   closeDay(){
