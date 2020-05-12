@@ -989,10 +989,10 @@ export class OperationsService {
       },err => {
         context.closeTimeout(dialogInfoEvents, timeOut, err);
         context.cashService.openGenericInfo('Error', err);
-        this.cashService.resetEnableState();
+        context.cashService.resetEnableState();
       });
 
-    let timeOut = this.paxTimeOut($debit, dialogInfoEvents, opMsg);
+    let timeOut = context.paxTimeOut($debit, dialogInfoEvents, opMsg);
   }
 
   closeTimeout(dialog: MatDialogRef<any>, timeOut: number, data?: any){
