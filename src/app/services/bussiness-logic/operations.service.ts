@@ -67,7 +67,7 @@ export class OperationsService {
     this.invoiceService.evUpdateProds.subscribe(ev => this.resetInactivity(true));
     //
     this.cashService.evLogout.subscribe(ev => this.logout(ev));
-    this.cashService.evReviewEnableState.subscribe(ev => this.currentOperation = '');
+    this.cashService.evResetEnableState.subscribe(ev => this.currentOperation = '');
     this.counterInactivity();
   }
 
@@ -123,7 +123,6 @@ export class OperationsService {
 
   clearOp(total:boolean = true){
     if(operationsWithClear.filter(i => i === this.currentOperation).length > 0){
-        this.cashService.resetEnableState();
         this.invoiceService.isReviewed = false;
         if(this.currentOperation === FinancialOpEnum.REVIEW ||
           this.currentOperation === FinancialOpEnum.REPRINT ||
@@ -150,7 +149,8 @@ export class OperationsService {
           );
         }
       }
-        this.currentOperation = '';
+      this.currentOperation = '';
+      this.cashService.resetEnableState();
     } else if(this.invoiceService.invoiceProductSelected.length <= 0 && !this.invoiceService.digits &&
       this.currentOperation === FinancialOpEnum.RECALL){
       this.invoiceService.createInvoice();
@@ -168,7 +168,7 @@ export class OperationsService {
                 this.deleteSelectedProducts();
               }
               //If desire delete only the last products
-              else if (config.allowLastProdClear){
+              else if (config.allowLastProdClear && this.invoiceService.lastProdAdd){
                 this.deleteLastProduct();
               } else {
                 this.delSelProdByAdmin();
@@ -200,12 +200,7 @@ export class OperationsService {
     if(this.invoiceService.invoiceProductSelected.length === 1){
       let prodSel = this.invoiceService.invoiceProductSelected[0];
       if(prodSel.id === this.invoiceService.lastProdAdd.id){
-        /*this.invoiceService.invoice.productOrders.filter((p, i, a) =>
-          p.id === prodSel.id && i === a.length - 1).map(p2d => {
-          console.log('product2Delete', p2d);
-          this.invoiceService.evDelProd.emit(true);
-        });*/
-        this.invoiceService.evDelProd.emit(true);
+        this.deleteSelectedProducts();
       } else {
         this.delSelProdByAdmin();
       }
