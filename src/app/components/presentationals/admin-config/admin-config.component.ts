@@ -29,6 +29,7 @@ export class AdminConfigComponent implements OnInit {
   breakWord: boolean;
   closeChange: boolean;
   giftCard: boolean;
+  clearLastProd: boolean;
 
   constructor( public dialogRef: MatDialogRef<AdminConfigComponent>,
                @Inject(MAT_DIALOG_DATA) public data: any, private dataStorage: DataStorageService,
@@ -45,6 +46,7 @@ export class AdminConfigComponent implements OnInit {
     this.breakWord = this.cashService.systemConfig.breakText === BreakTextEnum.WORD;
     this.closeChange = this.cashService.systemConfig.closeChange;
     this.giftCard = this.cashService.systemConfig.allowGiftCard;
+    this.clearLastProd = this.cashService.systemConfig.allowLastProdClear;
 
     if(this.cashService.systemConfig.inactivityTime) this.timeLogout = this.cashService.systemConfig.inactivityTime+'';
   }
@@ -126,6 +128,12 @@ export class AdminConfigComponent implements OnInit {
     this.needLogout = true;
   }
 
+  setClearLastProd($event: any){
+    console.log('setClearLastClose', $event, this.clearLastProd);
+    this.clearLastProd = $event.checked;
+    this.needLogout = false;
+  }
+
   done(){
     let conf = Object.assign({}, this.cashService.systemConfig);
     this.cashService.systemConfig.allowAddProdGen = this.allowAddProdGen;
@@ -140,6 +148,7 @@ export class AdminConfigComponent implements OnInit {
     this.cashService.systemConfig.breakText = this.breakWord ? BreakTextEnum.WORD : BreakTextEnum.ALL;
     this.cashService.systemConfig.closeChange = this.closeChange;
     this.cashService.systemConfig.allowGiftCard = this.giftCard;
+    this.cashService.systemConfig.allowLastProdClear = this.clearLastProd;
     this.dataStorage.setConfiguration(this.cashService.systemConfig).subscribe(value => {
       console.log('set configuration', value, conf);
       this.cashService.systemConfig = <Configuration> value;

@@ -163,7 +163,7 @@ export class OperationsService {
             this.cashService.getSystemConfig().subscribe(config => {
               // config.allowClear = false;
               console.log('clear config', config);
-              if(config.allowLastProdClear === undefined) config.allowLastProdClear = true;
+              if(config.allowLastProdClear === undefined) config.allowLastProdClear = false;
               if(config.allowClear){
                 this.deleteSelectedProducts();
               }

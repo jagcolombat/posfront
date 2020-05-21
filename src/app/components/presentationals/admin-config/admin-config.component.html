@@ -97,6 +97,12 @@
           Allow Gift Card
         </mat-slide-toggle>
       </mat-list-item>
+      <mat-list-item>
+        <mat-slide-toggle [checked]='clearLastProd' (change)="setClearLastProd($event)" labelPosition="before"
+                          ariaLabel="Allow Clear Last Product">
+          Allow Clear Last Product
+        </mat-slide-toggle>
+      </mat-list-item>
     </mat-list>
   </div>
   <mat-dialog-actions>
