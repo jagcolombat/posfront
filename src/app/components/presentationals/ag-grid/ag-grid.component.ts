@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output, OnDestroy, Input} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output, OnDestroy, Input, SimpleChanges, OnChanges} from '@angular/core';
 import { GridOptions, GridApi, ColDef } from 'ag-grid-community';
 import { InvoiceService } from "../../../services/bussiness-logic/invoice.service";
 import { ProductOrder } from "../../../models/product-order.model";
@@ -11,8 +11,9 @@ import { CashService } from "../../../services/bussiness-logic/cash.service";
   templateUrl: './ag-grid.component.html',
   styleUrls: ['./ag-grid.component.scss']
 })
-export class AgGridComponent implements OnInit, OnDestroy {
+export class AgGridComponent implements OnInit, /*OnChanges,*/ OnDestroy {
   @Output() updateData = new EventEmitter<boolean>();
+  //@Input() products: ProductOrder[];
   public gridOptions: GridOptions;
   private gridApi: GridApi;
   public context: any;
@@ -30,6 +31,15 @@ export class AgGridComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.invoiceService.evAddProd.subscribe(ev => this.onAddRow(ev)));
     this.subscriptions.push(this.cashService.evReviewEnableState.subscribe(ev => this.updateSelectable(ev)));
   }
+
+  /*ngOnChanges(sc: SimpleChanges){
+    console.log('onchanges ag-grid', sc);
+    if(sc['products']){
+      console.log('onchanges ag-grid products', sc['products'].currentValue);
+      /!*let po = sc['products'].map(p => console.log(p))*!/
+      this.updateItems(<ProductOrder[]>sc['products'].currentValue);
+    }
+  }*/
 
   ngOnInit() {
     //this.gridApi = this.gridOptions.api;

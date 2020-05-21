@@ -26,6 +26,7 @@ export class ClientViewComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.sub.push(this.ws.evInvoiceUpdated.subscribe(data => this.invoiceUpdated(data)));
     this.sub.push(this.ws.evOperation.subscribe(data => this.getOperation(data)));
+    this.sub.push(this.ws.evReconnect.subscribe(data => this.wsReconnet(data)));
   }
 
   ngOnDestroy(): void {
@@ -64,6 +65,13 @@ export class ClientViewComponent implements OnInit, OnDestroy {
     if(data.operationType === EOperationType.Disconnect){
       this.logged = false;
       this.invoiceService.cashService.dialog.closeAll();
+    }
+  }
+
+  private wsReconnet(data?: boolean) {
+    console.log('wsReconnet', this.ws.isConnected())
+    if(!this.ws.isConnected()){
+      this.ws.start();
     }
   }
 }

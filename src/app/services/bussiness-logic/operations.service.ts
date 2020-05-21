@@ -901,7 +901,7 @@ export class OperationsService {
     }, err => {
       console.error('addProductByUpc', err);
       this.invoiceService.resetDigits();
-      this.cashService.openGenericInfo('Error', 'Can\'t complete scan product operation');
+      this.cashService.openGenericInfo('Error', err);
     });
     this.resetInactivity(false);
   }

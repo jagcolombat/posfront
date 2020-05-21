@@ -4,11 +4,5 @@
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true
-  },
-  "/events/*": {
-    "target": "http://localhost:5000",
-    "secure": false,
-    "logLevel": "debug",
-    "changeOrigin": true
   }
 }

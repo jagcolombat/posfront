@@ -2,6 +2,9 @@ import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {InvoiceService} from "../../../services/bussiness-logic/invoice.service";
 import {AgGridComponent} from "../../presentationals/ag-grid/ag-grid.component";
 import {Subscription} from "rxjs";
+import {AdminOptionsService} from "../../../services/bussiness-logic/admin-options.service";
+import {Router} from "@angular/router";
+import {ProductOrder} from "../../../models/product-order.model";
 
 @Component({
   selector: 'invoice',
@@ -10,6 +13,7 @@ import {Subscription} from "rxjs";
 })
 export class InvoiceComponent implements OnInit, OnDestroy {
   @ViewChild('productstable') productstable: AgGridComponent;
+  prodOrders: ProductOrder[];
   cashier: string;
   subtotal = 0;
   tax = 0;
@@ -19,8 +23,9 @@ export class InvoiceComponent implements OnInit, OnDestroy {
   fsTotal = 0;
   balance = 0;
   subscription: Subscription [] = [];
+  isClientView = (route: string) => (route.startsWith('/client') ? true : false);
 
-  constructor(public invoiceService: InvoiceService) {
+  constructor(public invoiceService: InvoiceService, private router: Router) {
     console.log('invoice', invoiceService);
     this.subscription.push(this.invoiceService.evNumpadInput.subscribe(num => this.setDigits(num)));
     // this.subscription.push(this.invoiceService.evAddProd.subscribe(num => this.resetDigits()));
@@ -29,8 +34,17 @@ export class InvoiceComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.cashier = this.invoiceService.getCashier();
-    this.invoiceService.createInvoice();
+    /*if(this.isClientView(this.router.url) && this.invoiceService.invoice){
+      this.invoiceService.setTotal();
+      //this.productstable.products = this.invoiceService.invoice.productOrders;
+      //this.invoiceService.evUpdateProds.emit(this.invoiceService.invoice.productOrders);
+      this.prodOrders = this.invoiceService.invoice.productOrders;
+    } else {*/
+    /*(this.invoiceService.invoice)?
+      this.invoiceService.setInvoice(this.invoiceService.invoice):*/
+      this.cashier = this.invoiceService.getCashier();
+      this.invoiceService.createInvoice();
+    //}
   }
 
   updateTotals(){

@@ -8,7 +8,8 @@ export const environment = {
   baseURL:  '/api/1.0',
   WEBSOCKET: '/events',
   CLIENTVIEW: '/entity',
-  version: '2.41.5',
+  serverURL: 'http://localhost:5000',
+  version: '2.42.0',
   screenH: 0
 };
 

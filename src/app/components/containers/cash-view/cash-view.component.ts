@@ -8,6 +8,7 @@ import {ScannerData} from "../../../models/scanner.model";
 import {AdminOpEnum} from "../../../utils/operations/admin-op.enum";
 import {AdminOptionsService} from "../../../services/bussiness-logic/admin-options.service";
 import {InitViewService} from "../../../services/bussiness-logic/init-view.service";
+import {InformationType} from "../../../utils/information-type.enum";
 
 @Component({
   selector: 'app-cash-view',
@@ -21,16 +22,19 @@ export class CashViewComponent implements OnInit, OnDestroy {
 
   sub: Subscription[] = new Array<Subscription>();
   passwordScan = '';
+  dialogWSCloseConn: any;
 
   constructor(private invoiceService: InvoiceService, private operationService: OperationsService,
               private adminOpService: AdminOptionsService, private ws: WebsocketService, private initService: InitViewService) {
+    this.sub.push(this.ws.evScanner.subscribe(data => this.inputScanner(data)));
+    this.sub.push(this.ws.evScannerPaidClose.subscribe(data => this.wsCloseConn(data)));
+    this.sub.push(this.ws.evClientClose.subscribe(data => this.wsCloseClientConn(data)));
   }
 
   ngOnInit() {
     //this.ws.start();
     //this.invoiceService.cashService.resetEnableState();
     if(this.invoiceService.authService.token) this.invoiceService.cashService.setSystemConfig();
-    this.sub.push(this.ws.evScanner.subscribe(data => this.inputScanner(data)));
   }
 
   handleKeyboardEvent(ev: KeyboardEvent) {
@@ -95,5 +99,28 @@ export class CashViewComponent implements OnInit, OnDestroy {
     // Add 'implements OnDestroy' to the class.
     //this.ws.stop();
     this.sub.map(sub => sub.unsubscribe());
+  }
+
+  private wsCloseConn(data: any) {
+    console.log('wsCloseConn', data);
+    if(!this.dialogWSCloseConn) this.showMsgWSClose();
+  }
+
+  private wsCloseClientConn(data: any) {
+    console.log('wsCloseClientConn', data);
+    if(!this.dialogWSCloseConn) this.showMsgWSClose();
+  }
+
+  showMsgWSClose(){
+    this.dialogWSCloseConn = this.operationService.cashService.openGenericInfo(InformationType.INFO,
+      'Scanner is not working. Select Yes to retry', null, true, true);
+    this.dialogWSCloseConn.afterClosed().subscribe(
+      next => {
+        if(next && next.confirm){
+          this.ws.start();
+          this.ws.evReconnect.emit();
+          this.dialogWSCloseConn = null;
+        }
+      });
   }
 }
