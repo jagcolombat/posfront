@@ -97,7 +97,8 @@ export class CashService {
       this.disabledPaymentMoney = this.disabledPaymentMoneyByCompany();
       this.disabledCustomerOp = false;
     } else {
-      this.disabledPayment = this.disabledPaymentByCompany();
+      //this.disabledPayment = this.disabledPaymentByCompany();
+      this.disabledPayment = false;
       this.disabledPaymentMoney = false;
       this.disabledCustomerOp = false;
     }

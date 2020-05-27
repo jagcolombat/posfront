@@ -920,10 +920,13 @@ export class OperationsService {
   ebt(type?: number, splitAmount?: number) {
     console.log('EBT Card');
     this.currentOperation = 'EBT Card';
-
+    let amount2Paid;
     if (this.invoiceService.invoice.total !== 0 || this.invoiceService.invoice.fsTotal !== 0) {
       let dialogInfoEvents = this.openInfoEventDialog('Paying by EBT card');
-      this.invoiceService.ebt(splitAmount ? splitAmount : this.invoiceService.invoice.fsTotal, type)
+
+      amount2Paid = (type === EBTTypes.EBT_CASH && this.invoiceService.invoice.fsTotal === 0)?
+        this.invoiceService.invoice.balance: this.invoiceService.invoice.fsTotal;
+      this.invoiceService.ebt(splitAmount ? splitAmount : amount2Paid, type)
         .subscribe(data => {
           console.log(data);
           if(data.status === InvoiceStatus.PAID) {
@@ -1309,6 +1312,7 @@ export class OperationsService {
 
   setEBTCardType() {
     let ccTypes= new Array<any>({value: EBTTypes.EBT, text: 'EBT'}, {value: EBTTypes.EBT_CASH, text: 'EBT Cash'});
+    if(this.invoiceService.invoice.fsTotal === 0) ccTypes.splice(0, 1);
     this.cashService.dialog.open(DialogDeliveryComponent,
       { width: '600px', height: '340px', data: {name: 'EBT Card Types', label: 'Select a type', arr: ccTypes},
         disableClose: true })
