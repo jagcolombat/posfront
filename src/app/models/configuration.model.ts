@@ -19,4 +19,5 @@ export interface Configuration {
   closeChange?: boolean;
   allowGiftCard?: boolean;
   allowLastProdClear?: boolean;
+  allowPromotion?: boolean;
 }

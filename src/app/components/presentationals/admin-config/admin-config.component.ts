@@ -30,6 +30,7 @@ export class AdminConfigComponent implements OnInit {
   closeChange: boolean;
   giftCard: boolean;
   clearLastProd: boolean;
+  promotions: boolean;
 
   constructor( public dialogRef: MatDialogRef<AdminConfigComponent>,
                @Inject(MAT_DIALOG_DATA) public data: any, private dataStorage: DataStorageService,
@@ -47,6 +48,7 @@ export class AdminConfigComponent implements OnInit {
     this.closeChange = this.cashService.systemConfig.closeChange;
     this.giftCard = this.cashService.systemConfig.allowGiftCard;
     this.clearLastProd = this.cashService.systemConfig.allowLastProdClear;
+    this.promotions = this.cashService.systemConfig.allowPromotion;
 
     if(this.cashService.systemConfig.inactivityTime) this.timeLogout = this.cashService.systemConfig.inactivityTime+'';
   }
@@ -134,6 +136,12 @@ export class AdminConfigComponent implements OnInit {
     this.needLogout = false;
   }
 
+  setPromotions($event: any){
+    console.log('setPromotions', $event, this.promotions);
+    this.promotions = $event.checked;
+    this.needLogout = false;
+  }
+
   done(){
     let conf = Object.assign({}, this.cashService.systemConfig);
     this.cashService.systemConfig.allowAddProdGen = this.allowAddProdGen;
@@ -149,6 +157,8 @@ export class AdminConfigComponent implements OnInit {
     this.cashService.systemConfig.closeChange = this.closeChange;
     this.cashService.systemConfig.allowGiftCard = this.giftCard;
     this.cashService.systemConfig.allowLastProdClear = this.clearLastProd;
+    this.cashService.systemConfig.allowPromotion = this.promotions;
+
     this.dataStorage.setConfiguration(this.cashService.systemConfig).subscribe(value => {
       console.log('set configuration', value, conf);
       this.cashService.systemConfig = <Configuration> value;

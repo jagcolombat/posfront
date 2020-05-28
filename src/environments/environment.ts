@@ -9,7 +9,7 @@ export const environment = {
   WEBSOCKET: '/events',
   CLIENTVIEW: '/entity',
   serverURL: 'http://localhost:5000',
-  version: '2.42.2',
+  version: '2.42.3',
   screenH: 0
 };
 

@@ -103,6 +103,12 @@
           Allow Clear Last Product
         </mat-slide-toggle>
       </mat-list-item>
+      <mat-list-item>
+        <mat-slide-toggle [checked]='promotions' (change)="setPromotions($event)" labelPosition="before"
+                          ariaLabel="Allow Promotions">
+          Allow Promotions
+        </mat-slide-toggle>
+      </mat-list-item>
     </mat-list>
   </div>
   <mat-dialog-actions>
