@@ -305,7 +305,9 @@ export class InvoiceService {
 
   printLastInvoice() {
     this.dataStorage.printLastInvoice()
-      .subscribe(data => data);
+      .subscribe(data => data, error1 => {
+        this.cashService.openGenericInfo(InformationType.ERROR, error1);
+      });
   }
 
   applyDiscountInvoice (discount: number, type?: EApplyDiscount): Observable<Invoice> {
