@@ -417,4 +417,9 @@ export class InvoiceService {
     return this.dataStorage.paidByGift(this.receiptNumber, giftCardPayment);
 
   }
+
+  allowAddProductByStatus() {
+    const allowStatus = [InvoiceStatus.IN_PROGRESS, InvoiceStatus.CREATED, InvoiceStatus.IN_HOLD]
+    return (allowStatus.includes(this.invoice.status)) ? true : false;
+  }
 }

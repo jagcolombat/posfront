@@ -18,7 +18,7 @@ export class CustomHeaderComponent implements IHeaderAngularComp {
   public params: any;
   @ViewChild('headerButton', {read: ElementRef}) public headerButton;
 
-  constructor(public dialog: MatDialog ) { }
+  constructor(/*public dialog: MatDialog*/ ) { }
 
   agInit(params): void {
     this.params = params;

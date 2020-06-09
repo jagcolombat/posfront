@@ -191,7 +191,7 @@ export class CashService {
     return this.dataStorage.getOrder(inv);
   }
 
-private splitAllow(enabled?: boolean) {
+  private splitAllow(enabled?: boolean) {
     /*this.disabledCustomerOp = (this.systemConfig && this.systemConfig.allowCardSplit && !enabled) ?
       [true, false, false, true] : false;*/
     if(this.systemConfig && (this.systemConfig.allowCardSplit && this.systemConfig.paxConnType === PAXConnTypeEnum.ONLINE)){
@@ -201,5 +201,9 @@ private splitAllow(enabled?: boolean) {
     } else {
       console.log('splitAllow', this.systemConfig, this.disabledCustomerOp);
     }
+  }
+
+  openDialogs(){
+    return (this.dialog.openDialogs || this.dialog.openDialogs.length);
   }
 }

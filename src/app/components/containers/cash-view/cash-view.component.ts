@@ -49,8 +49,15 @@ export class CashViewComponent implements OnInit, OnDestroy {
     } else if((ev.keyCode > 48 && ev.keyCode < 57) || (ev.keyCode === 73  || ev.keyCode === 82 || ev.keyCode === 105 ||
         ev.keyCode === 114) || !isNaN(parseInt(ev.key)) ){
 
-      (this.passwordScan.startsWith(';') || this.passwordScan.startsWith('%')) ?
-        this.passwordScan += ev.key.toUpperCase() : this.invoiceService.evNumpadInput.emit(ev.key.toUpperCase());
+      if(this.passwordScan.startsWith(';') || this.passwordScan.startsWith('%')) {
+        this.passwordScan += ev.key.toUpperCase();
+      } else {
+        if(!this.operationService.cashService.openDialogs()) {
+          this.invoiceService.evNumpadInput.emit(ev.key.toUpperCase());
+        } else {
+          console.log('No set digits because some dialog is showing');
+        }
+      }
 
     } else if ((ev.keyCode === 59  || ev.keyCode === 63 || ev.keyCode === 37 || ev.code === 'Comma' || ev.code === 'Minus' || ev.code === 'Digit5')){
       this.passwordScan += ev.key.toUpperCase();
@@ -69,7 +76,12 @@ export class CashViewComponent implements OnInit, OnDestroy {
 
   selectInputData(){
     if(this.invoiceService.digits.startsWith('I') || this.invoiceService.digits.startsWith('R')){
-      this.operationService.scanInvoice();
+      //this.operationService.scanInvoice();
+      if(!this.operationService.cashService.openDialogs()) {
+        this.operationService.scanInvoice();
+      } else {
+        this.invoiceService.resetDigits();
+      }
     } else {
       //console.log('selectInputData', this.operationService.currentOperation, this.adminOpService.currentOperation);
       if(this.operationService.currentOperation === InvioceOpEnum.PRICE) {
@@ -77,7 +89,11 @@ export class CashViewComponent implements OnInit, OnDestroy {
       } else if (this.adminOpService.currentOperation === AdminOpEnum.CHANGE_PRICES) {
         this.adminOpService.changePrice();
       } else {
-        this.operationService.scanProduct();
+        if(this.invoiceService.allowAddProductByStatus() && !this.operationService.cashService.openDialogs()) {
+          this.operationService.scanProduct();
+        } else {
+          this.invoiceService.resetDigits();
+        }
       }
     }
   }
@@ -91,6 +107,10 @@ export class CashViewComponent implements OnInit, OnDestroy {
       this.selectInputData();
     } else {
       console.error("Object scanned haven´t UPC property");
+      if(this.invoiceService.allowAddProductByStatus()) {
+        this.operationService.cashService.openGenericInfo(InformationType.ERROR,
+          "Object scanned have not UPC property");
+      }
     }
   }
 

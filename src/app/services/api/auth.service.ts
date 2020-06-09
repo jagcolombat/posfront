@@ -5,8 +5,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Credentials, Token } from '../../models/index';
 import jwt_decode from 'jwt-decode';
 import { baseURL } from '../../utils/url.path.enum';
-import { Router } from "@angular/router";
-import {MatDialog} from "@angular/material";
 import {UserrolEnum} from "../../utils/userrol.enum";
 import {ProcessHTTPMSgService} from "./ProcessHTTPMSg.service";
 

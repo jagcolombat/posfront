@@ -5,6 +5,6 @@ export const environment = {
   WEBSOCKET: '/events',
   CLIENTVIEW: '/entity',
   serverURL: ENV_CONFIG.API_URL,
-  version: '2.42.6',
+  version: '2.42.7',
   screenH: 0
 };

@@ -27,27 +27,29 @@ export class ProductOrderService implements OnDestroy {
   quantityByProduct = 1;
   subscription: Subscription [] = [];
 
-  constructor(public dialog: MatDialog, private invoiceService: InvoiceService, private cashService: CashService,
+  constructor(/*public dialog: MatDialog, */private invoiceService: InvoiceService, private cashService: CashService,
               private operationService: OperationsService) {
     this.subscription.push(this.invoiceService.evAddProdByUPC.subscribe(prod => this.addProduct(prod)));
     this.subscription.push(this.operationService.evAddProdGen.subscribe(prod => this.productGeneric(prod)));
   }
 
   addProduct(product: Product): void {
-    if(!this.isAddByPluOrScan())
-      this.operationService.currentOperation = StockOpEnum.ADD_PROD;
-    if ( product.followDepartment ) {
-      const dpto = this.departments.find(dpto => dpto.id === product.departmentId);
-      // const isAgeVerification = this.departments.find(dpto => dpto.id === product.departmentId).ageVerification;
-      if (dpto && dpto.ageVerification && !this.invoiceService.invoice.clientAge) {
+    if(this.invoiceService.allowAddProductByStatus()){
+      if (!this.isAddByPluOrScan())
+        this.operationService.currentOperation = StockOpEnum.ADD_PROD;
+      if (product.followDepartment) {
+        const dpto = this.departments.find(dpto => dpto.id === product.departmentId);
+        // const isAgeVerification = this.departments.find(dpto => dpto.id === product.departmentId).ageVerification;
+        if (dpto && dpto.ageVerification && !this.invoiceService.invoice.clientAge) {
+          this.ageVerification(product);
+        } else {
+          this.onCreateProductOrder(product);
+        }
+      } else if (product.ageVerification && !this.invoiceService.invoice.clientAge) {
         this.ageVerification(product);
       } else {
         this.onCreateProductOrder(product);
       }
-    } else if (product.ageVerification && !this.invoiceService.invoice.clientAge) {
-      this.ageVerification(product);
-    } else {
-      this.onCreateProductOrder(product);
     }
   }
 
@@ -57,11 +59,11 @@ export class ProductOrderService implements OnDestroy {
   }
 
   onAgeVerification() {
-    return this.dialog.open(AgeValidationComponent, { width: '480px', height: '650px', disableClose: true });
+    return this.cashService.dialog.open(AgeValidationComponent, { width: '480px', height: '650px', disableClose: true });
   }
 
   private invalidAge() {
-    this.dialog.open(GenericInfoModalComponent,
+    this.cashService.dialog.open(GenericInfoModalComponent,
       { width:'300px', height:'220px', data: {title:'Error', content: 'Invalid age.'}, disableClose: true});
   }
 
@@ -86,9 +88,11 @@ export class ProductOrderService implements OnDestroy {
 
   productGeneric(product: Product){
     console.log('Product generic', this.operationService.currentOperation);
-    (product.prefixIsPrice && !this.isAddByPluOrScan())?
-      this.prefixIsPrice(product):
-      this.openDialogGenericProd(product);
+    if(this.invoiceService.allowAddProductByStatus()){
+      (product.prefixIsPrice && !this.isAddByPluOrScan())?
+        this.prefixIsPrice(product):
+        this.openDialogGenericProd(product);
+    }
   }
 
   productWeightFormat(product: Product){
@@ -114,7 +118,7 @@ export class ProductOrderService implements OnDestroy {
   }
 
   private openDialogGenericProd(product: Product): void {
-    const dialogRef = this.dialog.open(ProductGenericComponent,
+    const dialogRef = this.cashService.dialog.open(ProductGenericComponent,
       {
         width: '480px', height: '650px', data: {name: product.name, label: 'Price', unitCost: product.unitCost},
         disableClose: true
@@ -132,7 +136,7 @@ export class ProductOrderService implements OnDestroy {
     if(this.invoiceService.qty > 0 && this.invoiceService.qty !== 1){
       this.addProdScalable(product, this.invoiceService.qty);
     } else {
-      const dialogRef = this.dialog.open(ProductGenericComponent,
+      const dialogRef = this.cashService.dialog.open(ProductGenericComponent,
         {
           width: '480px', height: '650px', data: {name: product.name, label: 'Weight (Lbs)', unitCost: 0}, disableClose: true
         });
