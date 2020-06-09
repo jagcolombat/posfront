@@ -62,6 +62,11 @@ button.mat-raised-button {
   text-decoration: line-through !important;
 }
 
+.foodstamp-prod {
+  background: rgba(231, 237, 75, 0.41) !important;
+  text-decoration: line-through !important;
+}
+
 mat-toolbar /deep/ button[mat-dialog-close] {
   height: 80% !important;
   cursor: none !important;

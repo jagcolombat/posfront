@@ -123,6 +123,7 @@ export class AgGridComponent implements OnInit, /*OnChanges,*/ OnDestroy {
       total: Number(data.subTotal).toFixed(2),
       tax: Number(data.tax).toFixed(2),
       isRefund: data.isRefund,
+      isFoodStamp: data.foodStamp,
       discount: formatNumber(data.discount),
       productId: data.productId
     };
@@ -186,7 +187,10 @@ export class AgGridComponent implements OnInit, /*OnChanges,*/ OnDestroy {
     this.gridOptions = <GridOptions>{
       rowData: [],
       rowSelection: 'multiple',
-      rowClassRules: { 'refund-prod': 'data.isRefund === true' },
+      rowClassRules: {
+        'refund-prod': 'data.isRefund === true',
+        'foodstamp-prod': 'data.isFoodStamp === true'
+      },
       onGridReady: () => {
         this.gridOptions.api.sizeColumnsToFit();
         //this.showDiscount(false);

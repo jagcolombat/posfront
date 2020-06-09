@@ -204,6 +204,6 @@ export class CashService {
   }
 
   openDialogs(){
-    return (this.dialog.openDialogs || this.dialog.openDialogs.length);
+    return (this.dialog.openDialogs && this.dialog.openDialogs.length);
   }
 }
