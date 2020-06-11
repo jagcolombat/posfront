@@ -109,6 +109,12 @@
           Allow Promotions
         </mat-slide-toggle>
       </mat-list-item>
+      <mat-list-item>
+        <mat-slide-toggle [checked]='foodStampMark' (change)="setFoodStampMark($event)" labelPosition="before"
+                          ariaLabel="Allow Mark for FoodStamp Product">
+          Allow Mark for FoodStamp Product
+        </mat-slide-toggle>
+      </mat-list-item>
     </mat-list>
   </div>
   <mat-dialog-actions>

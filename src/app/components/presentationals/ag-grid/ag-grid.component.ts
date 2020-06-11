@@ -123,7 +123,7 @@ export class AgGridComponent implements OnInit, /*OnChanges,*/ OnDestroy {
       total: Number(data.subTotal).toFixed(2),
       tax: Number(data.tax).toFixed(2),
       isRefund: data.isRefund,
-      isFoodStamp: data.foodStamp,
+      isFoodStamp: data.foodStamp && this.cashService.systemConfig.allowFoodStampMark,
       discount: formatNumber(data.discount),
       productId: data.productId
     };
