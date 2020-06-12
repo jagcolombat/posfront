@@ -18,7 +18,7 @@ import {PAXConnTypeEnum} from "../../../utils/pax-conn-type.enum";
 })
 export class OperationsComponent implements OnInit {
 
-  @Input() financeOperations = [FinancialOpEnum.MANAGER, OtherOpEnum.PRINT_LAST, FinancialOpEnum.LOGOUT];
+  @Input() financeOperations = [FinancialOpEnum.MANAGER, OtherOpEnum.PRINT_LAST, AdminOpEnum.EBT_INQUIRY, FinancialOpEnum.LOGOUT];
   @Input() financeColor = 'green';
   @Input() financeDisabled: boolean | boolean []= this.operationService.cashService.disabledFinOp;
 
@@ -90,12 +90,14 @@ export class OperationsComponent implements OnInit {
         this.customerColor.unshift('yellow');
       }
       if(config.companyType === CompanyType.RESTAURANT || !config.allowEBT){
-        // Remove EBT options and colors
+        // Remove EBT options and colors in payment
         this.paymentOperations.splice(0,1);
         this.paymentColor.splice(0,1);
-        // Remove EBT total and color
+        // Remove EBT total and color in totals
         this.totalsOperations.splice(0,1);
         this.totalColor.splice(0,1);
+        // Remove EBT total and color in finance
+        this.financeOperations.splice(this.financeOperations.indexOf(AdminOpEnum.EBT_INQUIRY),1);
         // Push in money operations other payment option
         this.paymentOperations.splice(-1).map(op => this.moneyOperations.push(op));
         this.paymentColor.splice(-1).map(op => this.moneyColor.push(op));
@@ -162,6 +164,9 @@ export class OperationsComponent implements OnInit {
           break;
         case OtherOpEnum.PRINT_LAST:
           this.operationService.printLast();
+          break;
+        case AdminOpEnum.EBT_INQUIRY:
+          this.adminOpService.ebtInquiry();
           break;
       }
     }

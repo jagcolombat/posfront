@@ -55,6 +55,10 @@ export class AdminOptionsService {
     this.operationService.evCleanAdminOperation.subscribe(next => {
       this.currentOperation='';
     });
+
+    this.operationService.evBackUserOperation.subscribe(next => {
+      this.backToUser();
+    });
   }
 
   setApplyDiscountType() {

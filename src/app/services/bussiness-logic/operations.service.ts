@@ -55,6 +55,7 @@ export class OperationsService {
   @Output() evRemoveHold = new EventEmitter<any>();
   @Output() evCleanAdminOperation = new EventEmitter<any>();
   @Output() evAddProdGen = new EventEmitter<Product>();
+  @Output() evBackUserOperation = new EventEmitter<any>();
 
   constructor(private invoiceService: InvoiceService, public cashService: CashService,
               private authService: AuthService, private clientService: ClientService, private initService: InitViewService,
@@ -609,6 +610,7 @@ export class OperationsService {
     this.invoiceService.refund().subscribe(i => {
         console.log('refund', i);
         this.invoiceService.setInvoice(i);
+        this.evBackUserOperation.emit();
       },
       err => {
         console.error(err);
@@ -727,8 +729,7 @@ export class OperationsService {
       console.log('paid refund, open cash!!!');
       this.invoiceService.cash(totalToPaid, totalToPaid, opType)
         .subscribe(
-          data =>
-          {
+          data => {
             console.log(data);
             this.paymentReturn(totalToPaid).subscribe((result: any) => {
               (result.closeAutomatic) ?

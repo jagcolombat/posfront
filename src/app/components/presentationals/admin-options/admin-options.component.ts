@@ -34,7 +34,7 @@ export class AdminOptionsComponent implements OnInit {
         console.log('paxConnType', PAXConnTypeEnum.ONLINE);
         this.removeOption(this.options.indexOf(AdminOpEnum.CLOSE_BATCH));
       }
-      if(!config.allowEBT){
+      if(config.companyType === CompanyType.RESTAURANT || !config.allowEBT){
         // Remove EBT options and colors
         console.log('allowEBT');
         this.removeOption(this.options.indexOf(AdminOpEnum.EBT_INQUIRY));
