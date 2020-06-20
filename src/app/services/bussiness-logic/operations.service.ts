@@ -1083,8 +1083,8 @@ export class OperationsService {
             this.getNumField(title, 'Auth Code', EFieldType.CVV).subscribe(authCode => {
               if (authCode.number) {
                 op === PaymentOpEnum.EBT_CARD ?
-                  this.externalCardPaymentOp(amount.unitCost, cardNumber.number, authCode.number, op, client) :
-                  this.getCreditCardType(amount.unitCost, cardNumber.number, authCode.number, client)
+                  this.externalCardPaymentOp(amount.unitCost, cardNumber.number, authCode.number, op, client, op) :
+                  this.getCreditCardType(amount.unitCost, cardNumber.number, authCode.number, client, op);
               } else {
                 /*this.cashService.openGenericInfo('Error', 'Can\'t complete external card payment operation '
                   + 'because authorization number not was specified');*/
@@ -1106,9 +1106,11 @@ export class OperationsService {
 
   }
 
-  externalCardPaymentOp(amount, cardNumber, authCode, cardType, client){
+  externalCardPaymentOp(amount, cardNumber, authCode, cardType, client, op?: any){
+    let dialogInfoEvents = this.openInfoEventDialog('Paying by ' + op);
     this.invoiceService.externalCard(amount, cardNumber, authCode, cardType, client).subscribe(
       next => {
+        dialogInfoEvents.close();
         console.log('External Card', next);
         if(!client){
           (next && next.balance > 0) ? this.invoiceService.setInvoice(next) : this.invoiceService.createInvoice();
@@ -1119,6 +1121,7 @@ export class OperationsService {
         }
       },
       error1 => {
+        dialogInfoEvents.close();
         console.error('External Card', error1);
         this.cashService.openGenericInfo('Error', error1);
         this.cashService.resetEnableState();
@@ -1127,7 +1130,7 @@ export class OperationsService {
     );
   }
 
-  getCreditCardType(amount, cardNumber, authCode, client?: any) {
+  getCreditCardType(amount, cardNumber, authCode, client?: any, op?: any) {
     this.invoiceService.getExternalCadTypes().subscribe(
       next => {
         let ccTypes= [];
@@ -1153,7 +1156,7 @@ export class OperationsService {
               },
               () => this.cashService.resetEnableState()
             );*/
-            this.externalCardPaymentOp(amount, cardNumber, authCode, next.value, client);
+            this.externalCardPaymentOp(amount, cardNumber, authCode, next.value, client, op);
           }, 'Can\'t complete external card payment operation because the card type not was selected',
             'Card Payment Types', 'Select a card type:');
         } else {
