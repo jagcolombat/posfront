@@ -13,12 +13,11 @@ import {Observable, of} from "rxjs";
   styleUrls: ['./admin-options.component.scss']
 })
 export class AdminOptionsComponent implements OnInit {
-  @Input() options = [/*AdminOpEnum.CLOSE_BROWSER,*/
-    AdminOpEnum.APPLY_DISCOUNT, AdminOpEnum.CANCEL_CHECK, AdminOpEnum.REMOVE_HOLD
-    /*AdminOpEnum.DEPARMENTS, AdminOpEnum.BACK_USER*/, AdminOpEnum.SET_USER, AdminOpEnum.REFUND_SALE,
-    AdminOpEnum.AUTH_PENDING, AdminOpEnum.CLOSE_BATCH, AdminOpEnum.EBT_INQUIRY, AdminOpEnum.CLIENT, AdminOpEnum.GIFT_CARD,
-    AdminOpEnum.CONFIG, AdminOpEnum.SYSTEM_VERSION,
-    /*AdminOpEnum.CHARGE_ACCT_SETUP,*/ AdminOpEnum.EMPLOYEE_SETUP, AdminOpEnum.CHANGE_PRICES, AdminOpEnum.CREDIT_LIMIT];
+  @Input() options = [
+    AdminOpEnum.APPLY_DISCOUNT, AdminOpEnum.CANCEL_CHECK, AdminOpEnum.REMOVE_HOLD, AdminOpEnum.SET_USER,
+    AdminOpEnum.REFUND_SALE, AdminOpEnum.AUTH_PENDING, AdminOpEnum.CLOSE_BATCH, /*AdminOpEnum.EBT_INQUIRY,*/
+    AdminOpEnum.UPDATE_BROWSER, AdminOpEnum.CLIENT, AdminOpEnum.GIFT_CARD, AdminOpEnum.CONFIG, AdminOpEnum.SYSTEM_VERSION,
+    AdminOpEnum.EMPLOYEE_SETUP, AdminOpEnum.CHANGE_PRICES, AdminOpEnum.CREDIT_LIMIT];
   $options: Observable<AdminOpEnum[]>;
   page = 1;
   sizePage = 16;
@@ -34,11 +33,11 @@ export class AdminOptionsComponent implements OnInit {
         console.log('paxConnType', PAXConnTypeEnum.ONLINE);
         this.removeOption(this.options.indexOf(AdminOpEnum.CLOSE_BATCH));
       }
-      if(config.companyType === CompanyType.RESTAURANT || !config.allowEBT){
+      /*if(config.companyType === CompanyType.RESTAURANT || !config.allowEBT){
         // Remove EBT options and colors
         console.log('allowEBT');
         this.removeOption(this.options.indexOf(AdminOpEnum.EBT_INQUIRY));
-      }
+      }*/
       if(config.companyType !== CompanyType.RESTAURANT){
         // Remove Restaurant options and colors
         console.log('companyType', config.companyType);
@@ -113,9 +112,9 @@ export class AdminOptionsComponent implements OnInit {
         case AdminOpEnum.CHANGE_PRICES.toUpperCase():
           this.adminOpService.changePrice();
           break;
-        case AdminOpEnum.EBT_INQUIRY.toUpperCase():
+        /*case AdminOpEnum.EBT_INQUIRY.toUpperCase():
           this.adminOpService.ebtInquiry();
-          break;
+          break;*/
         case AdminOpEnum.CHARGE_ACCT_SETUP.toUpperCase():
           this.adminOpService.chargeAccountSetup();
           break;
@@ -130,6 +129,9 @@ export class AdminOptionsComponent implements OnInit {
           break;
         case AdminOpEnum.GIFT_CARD.toUpperCase():
           this.adminOpService.giftCard();
+          break;
+        case AdminOpEnum.UPDATE_BROWSER.toUpperCase():
+          this.adminOpService.updateBrowser();
           break;
       }
     }

@@ -7,6 +7,7 @@ export enum AdminOpEnum {
   CCSZ = 'Cashier Close Shift',
   CHANGE_PRINTER = 'Change Printer',
   CLOSE_BROWSER = 'Close Browser',
+  UPDATE_BROWSER = 'Update Browser',
   CANCEL_CHECK = 'Cancel Check',
   REMOVE_HOLD = 'Remove a hold',
   AUTH_PENDING = 'Pending Auth',

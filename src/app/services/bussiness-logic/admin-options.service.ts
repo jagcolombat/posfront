@@ -423,6 +423,7 @@ export class AdminOptionsService {
   authPendingOp(i:Invoice){
     console.log('authPendentOp', i);
     this.invoiceService.setInvoice(i);
+    this.operationService.evBackUserOperation.emit();
   }
 
   setUserToOrder() {
@@ -894,5 +895,32 @@ export class AdminOptionsService {
         this.cashService.resetEnableState();
       }
     );
+  }
+
+  updateBrowser() {
+    //let e = new KeyboardEvent("keydown", { key: 'F11', bubbles: true });
+    /*let e = this.createKeyboradEvent('keydown', 'F11')
+    console.log('update browser', e);
+    document.addEventListener('keydown', (e) => { console.log('keydown', e); })
+    document.addEventListener('keypress', (e) => { console.log('keypress', e); })
+    document.body.dispatchEvent(e);*/
+    location.reload(true);
+  }
+
+  createKeyboradEvent(name, key, altKey = false, ctrlKey = false, shitKey = false, metaKey = false, bubbles = true){
+    const keyCode = key === 'F11' ? 122 : key.charCodeAt(0);
+    let ev = new KeyboardEvent(name, {
+      key: key,
+      code: key,
+      bubbles: bubbles,
+      altKey: altKey,
+      ctrlKey: ctrlKey,
+      shiftKey: shitKey,
+      metaKey: metaKey,
+      cancelable: true,
+      keyCode: keyCode,
+      view: window
+    } as KeyboardEventInit);
+    return ev;
   }
 }

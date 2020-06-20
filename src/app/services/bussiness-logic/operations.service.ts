@@ -12,7 +12,6 @@ import {EOperationType} from "../../utils/operation.type.enum";
 import {CashService} from "./cash.service";
 import {Product, Token} from "../../models";
 import {FinancialOpEnum, InvioceOpEnum, PaymentOpEnum, TotalsOpEnum} from "../../utils/operations";
-import {HttpErrorResponse} from '@angular/common/http';
 import {PaidOutComponent} from "../../components/presentationals/paid-out/paid-out.component";
 import {DialogPaidoutComponent} from "../../components/containers/dialog-paidout/dialog-paidout.component";
 import {DialogFilterComponent} from "../../components/containers/dialog-filter/dialog-filter.component";
@@ -37,7 +36,6 @@ import {ClientService} from "./client.service";
 import {InformationType} from "../../utils/information-type.enum";
 import {SwipeCredentialCardComponent} from "../../components/presentationals/swipe-credential-card/swipe-credential-card.component";
 import {PAXConnTypeEnum} from "../../utils/pax-conn-type.enum";
-import {StockOpEnum} from "../../utils/operations/stock-op.enum";
 import {UserrolEnum} from "../../utils/userrol.enum";
 import {PaymentMethodEnum} from "../../utils/operations/payment-method.enum";
 import {InitViewService} from "./init-view.service";
@@ -739,7 +737,7 @@ export class OperationsService {
           },
           err => this.cashService.openGenericInfo('Error', 'Error in refund paid'),
           () => this.cashService.resetEnableState());
-    } else if (totalToPaid > 0) {
+    } else if (totalToPaid > 0 || this.payZeroByDiscount(totalToPaid)) {
       this.getTotalField(totalToPaid).subscribe(data => {
         console.log('The dialog was closed', data);
         // this.paymentData = data;
@@ -761,7 +759,7 @@ export class OperationsService {
 
   cashPaid(paid, totalToPaid?:number){
     let total2Paid = (totalToPaid) ? totalToPaid : this.getTotalToPaid();
-    if (paid > 0) {
+    if (paid > 0 || this.payZeroByDiscount(paid)) {
       let valueToReturn = paid - total2Paid;
       if(valueToReturn < 0)
         this.invoiceService.invoice.balance = valueToReturn * -1;
@@ -948,6 +946,10 @@ export class OperationsService {
     this.resetInactivity(true);
   }
 
+  payZeroByDiscount(total?: number){
+    return this.invoiceService.invoice.isDiscount && (total ? total === 0 : this.invoiceService.invoice.total === 0);
+  }
+
   debit() {
     this.currentOperation = 'debit';
     if(this.invoiceService.invoice.isRefund) {
@@ -1069,9 +1071,10 @@ export class OperationsService {
     });
   }
 
-  externalCardPayment(title='External Card', client?: any){
+  externalCardPayment(title='External Card', client?: any, op?: PaymentOpEnum, ebtType?: EBTTypes){
     console.log('External Card');
-    this.getPriceField(title+ '. Total: ' +  this.getTotalToPaid().toFixed(2), 'Amount')
+    let total = ebtType === EBTTypes.EBT ? this.invoiceService.invoice.fsTotal : this.getTotalToPaid().toFixed(2);
+    this.getPriceField(title+ '. Total: ' +  total, 'Amount')
       .subscribe((amount) => {
       console.log('Amount', amount.unitCost);
       if (amount.unitCost) {
@@ -1079,7 +1082,9 @@ export class OperationsService {
           if (cardNumber.number) {
             this.getNumField(title, 'Auth Code', EFieldType.CVV).subscribe(authCode => {
               if (authCode.number) {
-                this.getCreditCardType(amount.unitCost, cardNumber.number, authCode.number, client)
+                op === PaymentOpEnum.EBT_CARD ?
+                  this.externalCardPaymentOp(amount.unitCost, cardNumber.number, authCode.number, op, client) :
+                  this.getCreditCardType(amount.unitCost, cardNumber.number, authCode.number, client)
               } else {
                 /*this.cashService.openGenericInfo('Error', 'Can\'t complete external card payment operation '
                   + 'because authorization number not was specified');*/
@@ -1101,6 +1106,27 @@ export class OperationsService {
 
   }
 
+  externalCardPaymentOp(amount, cardNumber, authCode, cardType, client){
+    this.invoiceService.externalCard(amount, cardNumber, authCode, cardType, client).subscribe(
+      next => {
+        console.log('External Card', next);
+        if(!client){
+          (next && next.balance > 0) ? this.invoiceService.setInvoice(next) : this.invoiceService.createInvoice();
+        } else {
+          console.log('External Card for Account Payment', next);
+          this.cashService.openGenericInfo(InformationType.INFO, ' The account client ('+ next['name']
+            + ') was charged with ' + amount.toFixed(2));
+        }
+      },
+      error1 => {
+        console.error('External Card', error1);
+        this.cashService.openGenericInfo('Error', error1);
+        this.cashService.resetEnableState();
+      },
+      () => this.cashService.resetEnableState()
+    );
+  }
+
   getCreditCardType(amount, cardNumber, authCode, client?: any) {
     this.invoiceService.getExternalCadTypes().subscribe(
       next => {
@@ -1109,7 +1135,7 @@ export class OperationsService {
         if(next.length > 0) {
           next.map(val => ccTypes.push({value: val, receiptNumber: val}));
           this.openDialogInvoices(ccTypes, next => {
-            this.invoiceService.externalCard(amount, cardNumber, authCode, next.value, client).subscribe(
+            /*this.invoiceService.externalCard(amount, cardNumber, authCode, next.value, client).subscribe(
               next => {
                 console.log('External Card', next);
                 if(!client){
@@ -1126,7 +1152,8 @@ export class OperationsService {
                 this.cashService.resetEnableState();
               },
               () => this.cashService.resetEnableState()
-            );
+            );*/
+            this.externalCardPaymentOp(amount, cardNumber, authCode, next.value, client);
           }, 'Can\'t complete external card payment operation because the card type not was selected',
             'Card Payment Types', 'Select a card type:');
         } else {
@@ -1313,13 +1340,17 @@ export class OperationsService {
 
   setEBTCardType() {
     let ccTypes= new Array<any>({value: EBTTypes.EBT, text: 'EBT'}, {value: EBTTypes.EBT_CASH, text: 'EBT Cash'});
-    if(this.invoiceService.invoice.fsTotal === 0) ccTypes.splice(0, 1);
+    if(this.invoiceService.invoice.fsTotal <= 0) ccTypes.splice(0, 1);
     this.cashService.dialog.open(DialogDeliveryComponent,
       { width: '600px', height: '340px', data: {name: 'EBT Card Types', label: 'Select a type', arr: ccTypes},
         disableClose: true })
       .afterClosed().subscribe(next => {
       console.log(next);
-      if(next !== "") this.ebt(next);
+      if(next !== "") {
+        this.cashService.systemConfig.paxConnType === PAXConnTypeEnum.OFFLINE ?
+          this.externalCardPayment(undefined, undefined, PaymentOpEnum.EBT_CARD, next):
+          this.ebt(next);
+      }
       this.cashService.resetEnableState();
       this.resetTotalFromFS();
     });
@@ -1830,7 +1861,8 @@ export class OperationsService {
       console.log(next);
       switch (next) {
         case 1:
-          op === PaymentOpEnum.CREDIT_CARD ? this.credit() : this.debit();
+          //op === PaymentOpEnum.CREDIT_CARD ? this.credit() : this.debit();
+          this.selectPaymentByOp(op);
           break;
         case 2:
           this.externalCardPayment();
@@ -1848,10 +1880,25 @@ export class OperationsService {
         this.choosePAXConnType(op);
         break;
       case PAXConnTypeEnum.OFFLINE:
-        this.externalCardPayment();
+        op === PaymentOpEnum.EBT_CARD ? this.setEBTCardType() : this.externalCardPayment(undefined, undefined, op);
         break;
       case PAXConnTypeEnum.ONLINE:
-        op === PaymentOpEnum.CREDIT_CARD ? this.credit() : this.debit();
+        this.selectPaymentByOp(op);
+        //op === PaymentOpEnum.CREDIT_CARD ? this.credit() : this.debit();
+        break;
+    }
+  }
+
+  selectPaymentByOp(op: PaymentOpEnum) {
+    switch (op) {
+      case PaymentOpEnum.CREDIT_CARD:
+        this.credit();
+        break;
+      case PaymentOpEnum.DEBIT_CARD:
+        this.debit();
+        break;
+      case PaymentOpEnum.EBT_CARD:
+        this.setEBTCardType();
         break;
     }
   }
