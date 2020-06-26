@@ -32,8 +32,8 @@ export class CashService {
   disabledCustomerOp: boolean | boolean[] = false;
   systemConfig: Configuration;
   noLet4Supervisor =  [AdminOpEnum.APPLY_DISCOUNT, AdminOpEnum.REMOVE_HOLD, AdminOpEnum.CHARGE_ACCT_SETUP,
-    AdminOpEnum.EMPLOYEE_SETUP, AdminOpEnum.CHANGE_PRICES, AdminOpEnum.CREDIT_LIMIT, AdminOpEnum.WTDZ,
-    FinancialOpEnum.HOLD].map(a => a.toUpperCase());
+    AdminOpEnum.EMPLOYEE_SETUP, AdminOpEnum.CHANGE_PRICES, AdminOpEnum.CREDIT_LIMIT, AdminOpEnum.WTDZ]
+    .map(a => a.toUpperCase());
   @Output() evReviewEnableState = new EventEmitter<boolean>();
   @Output() evResetEnableState = new EventEmitter<boolean>();
   @Output() evLogout = new EventEmitter<boolean>();
@@ -45,6 +45,8 @@ export class CashService {
 
   opDenyByUser(op: AdminOpEnum | FinancialOpEnum, userRol?: UserrolEnum ){
     let opDeny = false;
+    if(this.systemConfig.companyType === CompanyType.ISLANDS)
+      this.noLet4Supervisor.push(FinancialOpEnum.HOLD.toUpperCase());
     if(this.authServ.token.rol === userRol && this.noLet4Supervisor.includes(op)){
       this.openGenericInfo(InformationType.INFO, userRol + ' hasn\'t access to ' + op + ' operation.');
       opDeny = true;
