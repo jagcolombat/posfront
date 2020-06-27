@@ -113,6 +113,8 @@ export class AgGridComponent implements OnInit, /*OnChanges,*/ OnDestroy {
   }
 
   onAddRow(data: ProductOrder) {
+    let allowFoodStampMark = this.cashService.systemConfig ? this.cashService.systemConfig.allowFoodStampMark : true;
+
     let formatNumber = (number)=> Number.isInteger(number)? number : Number(number).toFixed(2);
     const newData = {
       id: data.id,
@@ -123,7 +125,7 @@ export class AgGridComponent implements OnInit, /*OnChanges,*/ OnDestroy {
       total: Number(data.subTotal).toFixed(2),
       tax: Number(data.tax).toFixed(2),
       isRefund: data.isRefund,
-      isFoodStamp: data.foodStamp && this.cashService.systemConfig.allowFoodStampMark,
+      isFoodStamp: data.foodStamp && allowFoodStampMark,
       discount: formatNumber(data.discount),
       productId: data.productId
     };

@@ -7,6 +7,7 @@ import {CashPaymentComponent} from "../../presentationals/cash-payment/cash-paym
 import {Invoice} from "../../../models/invoice.model";
 import {InvoiceStatus} from "../../../utils/invoice-status.enum";
 import {EOperationType} from "../../../utils/operation.type.enum";
+import {CashService} from "../../../services/bussiness-logic/cash.service";
 
 @Component({
   selector: 'client-view',
@@ -20,7 +21,8 @@ export class ClientViewComponent implements OnInit, OnDestroy {
   logged = false;
   //addProduct = true;
 
-  constructor(private invoiceService: InvoiceService, private ws: WebsocketService) {
+  constructor(private invoiceService: InvoiceService, private ws: WebsocketService/*, private cashService: CashService*/) {
+    //this.cashService.setSystemConfig();
   }
 
   ngOnInit() {

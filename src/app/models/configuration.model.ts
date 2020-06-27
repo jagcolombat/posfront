@@ -20,5 +20,5 @@ export interface Configuration {
   allowGiftCard?: boolean;
   allowLastProdClear?: boolean;
   allowPromotion?: boolean;
-  allowFoodStampMark: boolean;
+  allowFoodStampMark?: boolean;
 }
