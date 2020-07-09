@@ -37,7 +37,7 @@ export class ProductOrderService implements OnDestroy {
     if(this.invoiceService.allowAddProductByStatus()){
       if (!this.isAddByPluOrScan())
         this.operationService.currentOperation = StockOpEnum.ADD_PROD;
-      if (product.followDepartment) {
+      if (product.followDepartment && this.departments) {
         const dpto = this.departments.find(dpto => dpto.id === product.departmentId);
         // const isAgeVerification = this.departments.find(dpto => dpto.id === product.departmentId).ageVerification;
         if (dpto && dpto.ageVerification && !this.invoiceService.invoice.clientAge) {

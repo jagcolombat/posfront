@@ -9,6 +9,9 @@ import {AdminOpEnum} from "../../../utils/operations/admin-op.enum";
 import {AdminOptionsService} from "../../../services/bussiness-logic/admin-options.service";
 import {InitViewService} from "../../../services/bussiness-logic/init-view.service";
 import {InformationType} from "../../../utils/information-type.enum";
+import {EOperationType} from "../../../utils/operation.type.enum";
+import {DataStorageService} from "../../../services/api/data-storage.service";
+import {ProductOrderService} from "../../../services/bussiness-logic/product-order.service";
 
 @Component({
   selector: 'app-cash-view',
@@ -25,7 +28,8 @@ export class CashViewComponent implements OnInit, OnDestroy {
   dialogWSCloseConn: any;
 
   constructor(private invoiceService: InvoiceService, private operationService: OperationsService,
-              private adminOpService: AdminOptionsService, private ws: WebsocketService, private initService: InitViewService) {
+              private adminOpService: AdminOptionsService, private ws: WebsocketService,
+              private initService: InitViewService, public productOrderService: ProductOrderService) {
     this.sub.push(this.ws.evScanner.subscribe(data => this.inputScanner(data)));
     this.sub.push(this.ws.evScannerPaidClose.subscribe(data => this.wsCloseConn(data)));
     this.sub.push(this.ws.evClientClose.subscribe(data => this.wsCloseClientConn(data)));
@@ -65,6 +69,7 @@ export class CashViewComponent implements OnInit, OnDestroy {
   }
 
   passwordCard() {
+    this.initService.setOperation(EOperationType.Scanner, 'Password', this.passwordScan);
     if ((this.passwordScan.startsWith(';'))) {
       console.log('selectInputData passwordScan', this.passwordScan);
       this.initService.evUserScanned.emit(this.passwordScan);
@@ -75,6 +80,7 @@ export class CashViewComponent implements OnInit, OnDestroy {
   }
 
   selectInputData(){
+    this.initService.setOperation(EOperationType.Scanner, 'InvoiceOrProduct', this.invoiceService.digits);
     if(this.invoiceService.digits.startsWith('I') || this.invoiceService.digits.startsWith('R')){
       //this.operationService.scanInvoice();
       if(!this.operationService.cashService.openDialogs()) {
