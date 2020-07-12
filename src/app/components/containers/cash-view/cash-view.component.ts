@@ -10,8 +10,8 @@ import {AdminOptionsService} from "../../../services/bussiness-logic/admin-optio
 import {InitViewService} from "../../../services/bussiness-logic/init-view.service";
 import {InformationType} from "../../../utils/information-type.enum";
 import {EOperationType} from "../../../utils/operation.type.enum";
-import {DataStorageService} from "../../../services/api/data-storage.service";
 import {ProductOrderService} from "../../../services/bussiness-logic/product-order.service";
+import {InvoiceStatus} from "../../../utils/invoice-status.enum";
 
 @Component({
   selector: 'app-cash-view',
@@ -106,18 +106,25 @@ export class CashViewComponent implements OnInit, OnDestroy {
 
   inputScanner(data: ScannerData){
     console.log('inputScanner', data);
-    if(data.upc){
-      this.invoiceService.numbers = this.invoiceService.digits = data.upc;
-      //this.invoiceService.digits = data.upc;
-      //this.operationService.scanProduct();
-      this.selectInputData();
-    } else {
-      console.error("Object scanned haven´t UPC property");
-      if(this.invoiceService.allowAddProductByStatus()) {
-        this.operationService.cashService.openGenericInfo(InformationType.ERROR,
-          "Object scanned have not UPC property");
+    //if([TotalsOpEnum.SUBTOTAL+'', TotalsOpEnum.FS_SUBTOTAL+''].includes(this.operationService.currentOperation)){
+    if(this.invoiceService.invoice.status !== InvoiceStatus.PENDENT_FOR_PAYMENT) {
+      if(data.upc){
+        this.invoiceService.numbers = this.invoiceService.digits = data.upc;
+        //this.invoiceService.digits = data.upc;
+        //this.operationService.scanProduct();
+        this.selectInputData();
+      } else {
+        console.error("Object scanned haven´t UPC property");
+        if(this.invoiceService.allowAddProductByStatus()) {
+          this.operationService.cashService.openGenericInfo(InformationType.ERROR,
+            "Object scanned have not UPC property");
+        }
       }
+    } else {
+      this.operationService.cashService.openGenericInfo(InformationType.INFO,
+        'You cannot add products in Subtotal state please select Clear option first.');
     }
+
   }
 
   ngOnDestroy(): void {

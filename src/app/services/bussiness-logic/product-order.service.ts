@@ -15,6 +15,7 @@ import {OperationsService} from "./operations.service";
 import {InvioceOpEnum} from "../../utils/operations";
 import {StockOpEnum} from "../../utils/operations/stock-op.enum";
 import {ScanOpEnum} from "../../utils/operations/scanner-op.enum";
+import {InformationType} from "../../utils/information-type.enum";
 
 export const AGE = 18;
 
@@ -50,6 +51,8 @@ export class ProductOrderService implements OnDestroy {
       } else {
         this.onCreateProductOrder(product);
       }
+    } else {
+      this.cashService.openGenericInfo(InformationType.INFO, 'Invoice status no let add products');
     }
   }
 
