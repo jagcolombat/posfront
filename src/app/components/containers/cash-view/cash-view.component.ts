@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {InvoiceService} from "../../../services/bussiness-logic/invoice.service";
 import {OperationsService} from "../../../services/bussiness-logic/operations.service";
-import {InvioceOpEnum} from "../../../utils/operations";
+import {FinancialOpEnum, InvioceOpEnum} from "../../../utils/operations";
 import {WebsocketService} from "../../../services/api/websocket.service";
 import {Subscription} from "rxjs";
 import {ScannerData} from "../../../models/scanner.model";
@@ -107,7 +107,8 @@ export class CashViewComponent implements OnInit, OnDestroy {
   inputScanner(data: ScannerData){
     console.log('inputScanner', data);
     //if([TotalsOpEnum.SUBTOTAL+'', TotalsOpEnum.FS_SUBTOTAL+''].includes(this.operationService.currentOperation)){
-    if(this.invoiceService.invoice.status !== InvoiceStatus.PENDENT_FOR_PAYMENT) {
+    if(this.invoiceService.invoice.status !== InvoiceStatus.PENDENT_FOR_PAYMENT ||
+      this.operationService.currentOperation !== FinancialOpEnum.REVIEW) {
       if(data.upc){
         this.invoiceService.numbers = this.invoiceService.digits = data.upc;
         //this.invoiceService.digits = data.upc;
@@ -122,7 +123,7 @@ export class CashViewComponent implements OnInit, OnDestroy {
       }
     } else {
       this.operationService.cashService.openGenericInfo(InformationType.INFO,
-        'You cannot add products in Subtotal state please select Clear option first.');
+        'You cannot add products in Subtotal or Review state please select Clear option first.');
     }
 
   }

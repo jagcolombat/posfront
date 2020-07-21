@@ -873,7 +873,7 @@ export class AdminOptionsService {
       .afterClosed().subscribe(next => {
       console.log('afterCloseSetDate', next);
       //if(next.lastClose) this.dayCloseType('', AdminOpEnum.WTDZ);
-      if(next.date) this.weeklyCloseOp( AdminOpEnum.WEEKLY_CLOSE, next.date.to);
+      (next.date)? this.weeklyCloseOp( AdminOpEnum.WEEKLY_CLOSE, next.date.to): this.cashService.resetEnableState();
     });
 
   }

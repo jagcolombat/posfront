@@ -140,13 +140,13 @@ export class OperationsService {
         }
       if(this.currentOperation === TotalsOpEnum.SUBTOTAL) {
         console.log('Clear of Subtotal');
-        if(this.invoiceService.invoice.isRefund || this.invoiceService.invoice.isPromotion){
+        //if(this.invoiceService.invoice.isRefund || this.invoiceService.invoice.isPromotion){
           console.log('Call clear API for update invoice');
           this.invoiceService.clear().subscribe(
             next => this.invoiceService.setInvoice(next),
             error1 => this.cashService.openGenericInfo(InformationType.ERROR, error1)
           );
-        }
+        //}
       }
       this.currentOperation = '';
       this.cashService.resetEnableState();
