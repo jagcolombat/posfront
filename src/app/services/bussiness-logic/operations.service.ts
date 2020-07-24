@@ -238,6 +238,7 @@ export class OperationsService {
     this.invoiceService.addProductByUpc(EOperationType.Plu).subscribe(prods => {
       this.selectProd(prods).subscribe(prod => {
         console.log('Plu', prod, this.invoiceService.qty);
+        this.initService.setOperation(EOperationType.Plu, prod.id, 'Received product id');
         prod ? this.invoiceService.evAddProdByUPC.emit(prod): this.invoiceService.resetDigits();
       });
     }, err => {
