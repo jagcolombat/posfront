@@ -2,6 +2,7 @@ import { EventEmitter, Injectable, Output } from '@angular/core';
 import { HubConnection, HubConnectionBuilder, LogLevel } from '@aspnet/signalr';
 import { ScannerData } from "../../models/scanner.model";
 import { serverURL, EVENTS, CLIENTVIEW } from 'src/app/utils/url.path.enum';
+import { Subscription, timer} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,10 @@ export class WebsocketService {
   connection: HubConnection;
   connectionClientView: HubConnection;
   connected: boolean;
+  duration = 3000;
+  retry_max_count = 5;
+  retry_current = 0;
+
   // Events
   @Output() evScanner = new EventEmitter<any>();
   @Output() evInvoiceUpdated = new EventEmitter<any>();
@@ -61,13 +66,14 @@ export class WebsocketService {
     });
   }
 
-  setConnectionClient(context?: any){
+  setConnectionClient(context = this){
     this.connectionClientView.start().then(function (e) {
       console.log('Connected View!', e);
       context.connected = true;
     }).catch(function (err) {
       context.connected = false;
-      context.evClientClose.emit();
+      context.evClientClose.emit(context.duration);
+      context.retryConnection();
       return console.error(err.toString());
     });
   }
@@ -111,8 +117,24 @@ export class WebsocketService {
     this.connectionClientView.onclose((e)=> {
       console.log('close connection client view ws', e);
       this.connected = false;
-      this.evClientClose.emit(e);
+      //this.evClientClose.emit(e);
+      this.retryConnection();
     });
+  }
+
+  retryConnection(){
+    const time = timer(this.duration);
+    const sub = time.subscribe((n)=> {
+      this.retry_current++;
+      (this.retry_current < this.retry_max_count) ? this.setConnectionClient(): this.finishRetry(sub);
+    });
+  }
+
+  finishRetry(sub: Subscription){
+    console.log('finishRetry');
+    sub.unsubscribe();
+    this.retry_current = 0;
+    this.evClientClose.emit(0);
   }
 
   isConnected(): boolean{

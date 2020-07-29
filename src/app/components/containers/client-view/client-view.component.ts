@@ -8,6 +8,7 @@ import {Invoice} from "../../../models/invoice.model";
 import {InvoiceStatus} from "../../../utils/invoice-status.enum";
 import {EOperationType} from "../../../utils/operation.type.enum";
 import {InitViewService} from "../../../services/bussiness-logic/init-view.service";
+import {MatSnackBar} from "@angular/material";
 
 @Component({
   selector: 'client-view',
@@ -21,8 +22,9 @@ export class ClientViewComponent implements OnInit, OnDestroy {
   logged = false;
   //addProduct = true;
 
-  constructor(private invoiceService: InvoiceService, private ws: WebsocketService, private initService: InitViewService) {
-    //this.cashService.setSystemConfig();
+  constructor(private invoiceService: InvoiceService, private ws: WebsocketService,
+              private initService: InitViewService, public snackBar: MatSnackBar) {
+    this.sub.push(this.ws.evClientClose.subscribe(data => this.wsCloseClientConn(data)));
   }
 
   ngOnInit() {
@@ -78,5 +80,12 @@ export class ClientViewComponent implements OnInit, OnDestroy {
     if(!this.ws.isConnected()){
       this.ws.start();
     }
+  }
+
+  private wsCloseClientConn(data: any) {
+    const ref = data ? this.snackBar.open(` Trying reconnect in ${data/1000} sec`, '', {duration: data}):
+      this.snackBar.open(` Please restart app`, 'Restart');
+    ref.onAction().subscribe(()=> location.reload(true));
+
   }
 }
