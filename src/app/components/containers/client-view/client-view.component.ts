@@ -7,7 +7,7 @@ import {CashPaymentComponent} from "../../presentationals/cash-payment/cash-paym
 import {Invoice} from "../../../models/invoice.model";
 import {InvoiceStatus} from "../../../utils/invoice-status.enum";
 import {EOperationType} from "../../../utils/operation.type.enum";
-import {CashService} from "../../../services/bussiness-logic/cash.service";
+import {InitViewService} from "../../../services/bussiness-logic/init-view.service";
 
 @Component({
   selector: 'client-view',
@@ -21,11 +21,12 @@ export class ClientViewComponent implements OnInit, OnDestroy {
   logged = false;
   //addProduct = true;
 
-  constructor(private invoiceService: InvoiceService, private ws: WebsocketService/*, private cashService: CashService*/) {
+  constructor(private invoiceService: InvoiceService, private ws: WebsocketService, private initService: InitViewService) {
     //this.cashService.setSystemConfig();
   }
 
   ngOnInit() {
+    this.initService.setOperation(EOperationType.InitCustomerScreen, 'Client View', 'Initialization');
     this.sub.push(this.ws.evInvoiceUpdated.subscribe(data => this.invoiceUpdated(data)));
     this.sub.push(this.ws.evOperation.subscribe(data => this.getOperation(data)));
     this.sub.push(this.ws.evReconnect.subscribe(data => this.wsReconnet(data)));
@@ -37,6 +38,7 @@ export class ClientViewComponent implements OnInit, OnDestroy {
 
   private invoiceUpdated(data: any) {
     console.log('invoiceUpdated', data);
+    this.initService.setOperation(EOperationType.UpdateInvoiceCustomerScreen, data.entity.id, 'Update invoice on customer screen');
     this.logged = true;
     this.invoiceService.cashier = data.entity.applicationUserName;
     //data.entity.addProduct = this.addProduct = !this.addProduct;
@@ -71,7 +73,8 @@ export class ClientViewComponent implements OnInit, OnDestroy {
   }
 
   private wsReconnet(data?: boolean) {
-    console.log('wsReconnet', this.ws.isConnected())
+    console.log('wsReconnet', this.ws.isConnected());
+    this.initService.setOperation(EOperationType.ReconnectCustomerScreen, this.ws.isConnected()+'', 'Reconnect');
     if(!this.ws.isConnected()){
       this.ws.start();
     }
