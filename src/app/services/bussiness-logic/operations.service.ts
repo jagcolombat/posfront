@@ -79,8 +79,7 @@ export class OperationsService {
 
   counterInactivity(){
     this.timer = setTimeout(()=> {
-      if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS &&
-        this.currentOperation !== AdminOpEnum.CLOSE_BATCH)
+      if(this.letLogout(this.invoiceService.invoice.status) && this.currentOperation !== AdminOpEnum.CLOSE_BATCH)
         this.logout(true);
       else
         this.resetInactivity(true);
@@ -620,11 +619,15 @@ export class OperationsService {
     )
   }
 
+  letLogout(status: InvoiceStatus){
+    let noLogoutStates = [InvoiceStatus.IN_PROGRESS, InvoiceStatus.PENDENT_FOR_PAYMENT];
+    return !noLogoutStates.includes(status);
+  }
+
   logout(direct?: boolean) {
     console.log('logout');
-    let noLogoutStates = [InvoiceStatus.IN_PROGRESS, InvoiceStatus.PENDENT_FOR_PAYMENT];
     this.currentOperation = 'logout';
-    if(noLogoutStates.includes(this.invoiceService.invoice.status)){
+    if(this.letLogout(this.invoiceService.invoice.status)){
       this.cashService.openGenericInfo('Error', 'Can\'t complete logout operation because check is in progress')
     } else {
       direct ? this.logoutOp() :
