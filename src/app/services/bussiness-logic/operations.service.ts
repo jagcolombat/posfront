@@ -622,8 +622,9 @@ export class OperationsService {
 
   logout(direct?: boolean) {
     console.log('logout');
+    let noLogoutStates = [InvoiceStatus.IN_PROGRESS, InvoiceStatus.PENDENT_FOR_PAYMENT];
     this.currentOperation = 'logout';
-    if(this.invoiceService.invoice.status === InvoiceStatus.IN_PROGRESS){
+    if(noLogoutStates.includes(this.invoiceService.invoice.status)){
       this.cashService.openGenericInfo('Error', 'Can\'t complete logout operation because check is in progress')
     } else {
       direct ? this.logoutOp() :
