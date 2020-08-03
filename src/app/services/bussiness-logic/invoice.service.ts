@@ -255,10 +255,12 @@ export class InvoiceService {
     return this.dataStorage.inquiryEBTCard();
   }
 
-  externalCard(payment: number, accountNumber?: string, authCode?: string, cardType?: string | CardTypes, client?: any): Observable<Invoice> {
+  externalCard(payment: number, accountNumber?: string, authCode?: string, cardType?: string | CardTypes, client?: any,
+               paymentMethod?: PaymentMethodEnum): Observable<Invoice> {
     const cardPayment = new CardManualPayment(payment, PaymentStatus.SAlE, this.invoice.receiptNumber, accountNumber,
       authCode, cardType);
-    return (client)? this.dataStorage.acctPayment(client, cardPayment,PaymentMethodEnum.CREDIT_CARD) : this.dataStorage.paidByExternalCard(cardPayment);
+    return (client)? this.dataStorage.acctPayment(client, cardPayment,PaymentMethodEnum.CREDIT_CARD) :
+      this.dataStorage.paidByExternalCard(cardPayment, paymentMethod);
   }
 
   getExternalCadTypes(): Observable<any>{

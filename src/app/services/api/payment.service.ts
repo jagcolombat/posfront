@@ -9,6 +9,7 @@ import {Invoice} from "../../models/invoice.model";
 import {ETransferType} from "../../utils/transfer-type.enum";
 import {CheckPayment} from "../../models/check.model";
 import {IGiftCardPaymentModel} from "../../models/gift-card.model";
+import {PaymentMethodEnum} from "../../utils/operations/payment-method.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -50,10 +51,10 @@ export class PaymentService {
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
-  paymentExternalCardReader(url: string, cardManualPayment: CardManualPayment ): Observable<Invoice> {
-    console.log('paymentExternalCardReader', cardManualPayment);
+  paymentExternalCardReader(url: string, cardManualPayment: CardManualPayment, paymentMethod?: PaymentMethodEnum): Observable<Invoice> {
+    console.log('paymentExternalCardReader', cardManualPayment, paymentMethod);
     let params = new HttpParams();
-    params = params.append('paymentMethod', 2 + '');
+    params = params.append('paymentMethod', (paymentMethod ? paymentMethod : 2) + '');
     params = params.append('transferType', cardManualPayment.transferType + '');
     params = params.append('receiptNumber', cardManualPayment.receiptNumber);
     return this._http.post<Invoice>(url + this.path + '/payment/external', cardManualPayment, {params})

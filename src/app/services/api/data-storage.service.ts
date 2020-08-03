@@ -196,8 +196,8 @@ export class DataStorageService {
     return this.paymentService.paidByCheck(this.url, check);
   }
 
-  paidByExternalCard(externalPayment: CardManualPayment): Observable<any> {
-    return this.paymentService.paymentExternalCardReader(this.url, externalPayment);
+  paidByExternalCard(externalPayment: CardManualPayment, paymentMethod?: PaymentMethodEnum): Observable<any> {
+    return this.paymentService.paymentExternalCardReader(this.url, externalPayment, paymentMethod);
   }
 
   getPaymentMedia(): Observable<any> {

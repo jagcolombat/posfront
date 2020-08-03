@@ -66,7 +66,7 @@ export class OperationsService {
     this.invoiceService.evUpdateProds.subscribe(ev => this.resetInactivity(true));
     //
     this.cashService.evLogout.subscribe(ev => this.logout(ev));
-    this.cashService.evResetEnableState.subscribe(ev => this.currentOperation = '');
+    this.cashService.evResetEnableState.subscribe(ev => this.resetCurrentOperation());
     this.counterInactivity();
   }
 
@@ -136,15 +136,12 @@ export class OperationsService {
         }
         if(this.currentOperation === TotalsOpEnum.FS_SUBTOTAL) {
           this.resetTotalFromFS();
+          this.resetSubTotalState();
         }
       if(this.currentOperation === TotalsOpEnum.SUBTOTAL) {
         console.log('Clear of Subtotal');
         //if(this.invoiceService.invoice.isRefund || this.invoiceService.invoice.isPromotion){
-          console.log('Call clear API for update invoice');
-          this.invoiceService.clear().subscribe(
-            next => this.invoiceService.setInvoice(next),
-            error1 => this.cashService.openGenericInfo(InformationType.ERROR, error1)
-          );
+          this.resetSubTotalState();
         //}
       }
       this.currentOperation = '';
@@ -182,6 +179,14 @@ export class OperationsService {
 
     }
     this.evCleanAdminOperation.emit();
+  }
+
+  resetSubTotalState(){
+    console.log('Call clear API for update invoice');
+    this.invoiceService.clear().subscribe(
+      next => this.invoiceService.setInvoice(next),
+      error1 => this.cashService.openGenericInfo(InformationType.ERROR, error1)
+    );
   }
 
   delSelProdByAdmin(){
@@ -448,12 +453,13 @@ export class OperationsService {
       this.invoiceService.fsSubTotal().subscribe(
         next => {
           // Calculate total discount by promotion
-          if(next.isPromotion && !next.isRefund) next.totalPromo = this.invoiceService.invoice.total - next.total;
+          if(next.isPromotion && !next.isRefund)
+            next.totalPromo = this.invoiceService.invoice.total - next.total;
           this.invoiceService.setInvoice(next);
           if(this.invoiceService.invoice.status === InvoiceStatus.PAID){
             this.invoiceService.warnInvoicePaid();
           } else {
-            (this.invoiceService.invoice.productOrders.length > 0) ?
+            this.invoiceService.invoice.productOrders.length > 0 ?
               this.cashService.totalsEnableState(this.invoiceService.invoice.fsTotal > 0, refund || next.isRefund):
               this.cashService.resetEnableState();
           }
@@ -568,7 +574,7 @@ export class OperationsService {
         if (order) { action(order); }
         else {
           if(noSelectionMsg) this.cashService.openGenericInfo('Error', noSelectionMsg);
-          this.cashService.resetEnableState();
+          //this.cashService.resetEnableState();
         }
       });
     } else {
@@ -956,7 +962,6 @@ export class OperationsService {
   }
 
   debit() {
-    this.currentOperation = 'debit';
     if(this.invoiceService.invoice.isRefund) {
       this.cash();
     } else if (this.invoiceService.invoice.total !== 0) {
@@ -986,6 +991,7 @@ export class OperationsService {
 
   debitOp(context?: any){
     if(!context) context = this;
+    this.currentOperation = PaymentOpEnum.DEBIT_CARD;
     let opMsg = 'debit card payment';
     let dialogInfoEvents = context.openInfoEventDialog('Paying by debit card');
     let $debit = context.invoiceService.debit(context.invoiceService.invoice.balance, context.invoiceService.invoice.tip)
@@ -1009,7 +1015,7 @@ export class OperationsService {
 
   credit() {
     console.log('Credit Card');
-    this.currentOperation = 'Credit Card';
+    //this.currentOperation = 'Credit Card';
     if (this.invoiceService.invoice.total !== 0) {
       this.setTip(this.creditOp, PaymentOpEnum.CREDIT_CARD, this);
     }
@@ -1018,6 +1024,7 @@ export class OperationsService {
 
   private creditOp(splitAmount?: number, context?: any){
     if(!context) context = this;
+    this.currentOperation = PaymentOpEnum.CREDIT_CARD;
     let opMsg = 'credit card payment';
     let dialogInfoEvents = context.openInfoEventDialog('Paying by credit card');
     let $credit = context.invoiceService.credit(splitAmount ? splitAmount : context.invoiceService.invoice.balance,
@@ -1045,34 +1052,36 @@ export class OperationsService {
               if(date.number){
                 this.getNumField(title, 'Zip Code', EFieldType.ZIPCODE).subscribe(zipcode => {
                   if (zipcode.number) {
+                    this.currentOperation = PaymentOpEnum.CREDIT_CARD_MANUAL;
                     this.invoiceService.creditManual(splitAmount ? splitAmount :this.invoiceService.invoice.balance,
                       this.invoiceService.invoice.tip, number.number, cvv.number, date.number, zipcode.number)
                       .subscribe(data => {
                           console.log(data);
                           this.setOrCreateInvoice(data);
+                          this.cashService.resetEnableState();
                         },
                         err => {
                           console.log(err);
-                          this.cashService.openGenericInfo('Error', err);
+                          this.cashService.openGenericInfo(InformationType.ERROR, err);
                           this.cashService.resetEnableState();
-                        },
-                        () => this.cashService.resetEnableState());
+                        }/*,
+                        () => this.cashService.resetEnableState()*/);
                   }
                 });
               } else {
-                this.cashService.resetEnableState();
+                /*this.cashService.resetEnableState();
                 this.cashService.openGenericInfo('Error', 'Can\'t complete credit card manual operation because no set CC Date')
-              }
+              */}
             });
           } else {
-            this.cashService.resetEnableState();
+            /*this.cashService.resetEnableState();
             this.cashService.openGenericInfo('Error', 'Can\'t complete credit card manual operation because no set CVV')
-          }
+          */}
         });
       } else {
-        this.cashService.resetEnableState();
+       /* this.cashService.resetEnableState();
         this.cashService.openGenericInfo('Error', 'Can\'t complete credit card manual operation because no set CC Number')
-      }
+      */}
     });
   }
 
@@ -1088,35 +1097,38 @@ export class OperationsService {
             this.getNumField(title, 'Auth Code', EFieldType.CVV).subscribe(authCode => {
               if (authCode.number) {
                 op === PaymentOpEnum.EBT_CARD ?
-                  this.externalCardPaymentOp(amount.unitCost, cardNumber.number, authCode.number, op, client, op) :
-                  this.getCreditCardType(amount.unitCost, cardNumber.number, authCode.number, client, op);
+                  this.externalCardPaymentOp(amount.unitCost, cardNumber.number, authCode.number, op, client,
+                    (ebtType === EBTTypes.EBT ? PaymentMethodEnum.EBT_CARD : PaymentMethodEnum.EBT_CASH)) :
+                  this.getCreditCardType(amount.unitCost, cardNumber.number, authCode.number, client,
+                    (op === PaymentOpEnum.CREDIT_CARD) ? PaymentMethodEnum.CREDIT_CARD : PaymentMethodEnum.DEBIT_CARD);
               } else {
                 /*this.cashService.openGenericInfo('Error', 'Can\'t complete external card payment operation '
                   + 'because authorization number not was specified');*/
-                this.cashService.resetEnableState();
+                //this.cashService.resetEnableState();
               }
             });
           } else {
             /*this.cashService.openGenericInfo('Error', 'Can\'t complete external card payment operation '
               + 'because account number not was specified');*/
-            this.cashService.resetEnableState();
+            //this.cashService.resetEnableState();
           }
         });
       } else {
         /*this.cashService.openGenericInfo('Error', 'Can\'t complete external card payment operation '
           + 'because amount not was specified');*/
-        this.cashService.resetEnableState();
+        //this.cashService.resetEnableState();
       }
     });
 
   }
 
   externalCardPaymentOp(amount, cardNumber, authCode, cardType, client, op?: any){
-    let dialogInfoEvents = this.openInfoEventDialog('Paying by ' + op);
-    this.invoiceService.externalCard(amount, cardNumber, authCode, cardType, client).subscribe(
+    let dialogInfoEvents = this.openInfoEventDialog('Paying by ' + PaymentMethodEnum[op]);
+    this.invoiceService.externalCard(amount, cardNumber, authCode, cardType, client, op).subscribe(
       next => {
         dialogInfoEvents.close();
         console.log('External Card', next);
+        this.currentOperation = PaymentMethodEnum[op];
         if(!client){
           (next && next.balance > 0) ? this.invoiceService.setInvoice(next) : this.invoiceService.createInvoice();
         } else {
@@ -1124,14 +1136,15 @@ export class OperationsService {
           this.cashService.openGenericInfo(InformationType.INFO, ' The account client ('+ next['name']
             + ') was charged with ' + amount.toFixed(2));
         }
+        this.cashService.resetEnableState();
       },
       error1 => {
         dialogInfoEvents.close();
         console.error('External Card', error1);
         this.cashService.openGenericInfo('Error', error1);
         this.cashService.resetEnableState();
-      },
-      () => this.cashService.resetEnableState()
+      }/*,
+      () => this.cashService.resetEnableState()*/
     );
   }
 
@@ -1353,14 +1366,14 @@ export class OperationsService {
       { width: '600px', height: '340px', data: {name: 'EBT Card Types', label: 'Select a type', arr: ccTypes},
         disableClose: true })
       .afterClosed().subscribe(next => {
-      console.log(next);
-      if(next !== "") {
-        this.cashService.systemConfig.paxConnType === PAXConnTypeEnum.OFFLINE ?
-          this.externalCardPayment(undefined, undefined, PaymentOpEnum.EBT_CARD, next):
-          this.ebt(next);
-      }
-      this.cashService.resetEnableState();
-      this.resetTotalFromFS();
+        console.log(next);
+        if(next !== "") {
+          this.cashService.systemConfig.paxConnType === PAXConnTypeEnum.OFFLINE ?
+            this.externalCardPayment(undefined, undefined, PaymentOpEnum.EBT_CARD, next):
+            this.ebt(next);
+        }
+        //this.cashService.resetEnableState();
+        //this.resetTotalFromFS();
     });
   }
 
@@ -1691,7 +1704,6 @@ export class OperationsService {
 
   acctCharge() {
     console.log(CustomerOpEnum.ACCT_CHARGE);
-    this.currentOperation = CustomerOpEnum.ACCT_CHARGE;
     this.clientService.getClients().subscribe(
       clients=> {
         this.openDialogWithPag(clients, (c)=> this.setAmount(CustomerOpEnum.ACCT_CHARGE, c.id,
@@ -1702,7 +1714,7 @@ export class OperationsService {
         this.cashService.openGenericInfo(InformationType.INFO, 'Can\'t get the clients');
         this.cashService.resetEnableState();
 
-      }, () => this.currentOperation = '');
+      }/*, () => this.currentOperation = ''*/);
 
   }
 
@@ -1730,18 +1742,21 @@ export class OperationsService {
 
   private acctChargeOp(client, amount){
     if(amount){
+      this.currentOperation = CustomerOpEnum.ACCT_CHARGE;
       this.invoiceService.acctCharge(client, amount).subscribe(
         next => {
           console.log('setAmount', next);
           (next && next.balance > 0) ? this.invoiceService.setInvoice(next) : this.invoiceService.createInvoice();
+          this.cashService.resetEnableState();
         }, error1 => {
           console.error('setAmount', error1);
           this.cashService.openGenericInfo(InformationType.ERROR, error1);
-        }, () => this.cashService.resetEnableState()
+          this.cashService.resetEnableState();
+        }/*, () => this.cashService.resetEnableState()*/
       )
     } else {
       //this.cashService.openGenericInfo(InformationType.INFO, 'Can\'t charge account because the amount not was specified');
-      this.cashService.resetEnableState();
+      //this.cashService.resetEnableState();
     }
   }
 
@@ -1806,11 +1821,11 @@ export class OperationsService {
                 this.paidByCheck(amount.unitCost, checkNumber.number, descrip.text, client);
               });
             } else {
-              this.cashService.resetEnableState();
+              //this.cashService.resetEnableState();
             }
           });
         } else {
-          this.cashService.resetEnableState();
+          //this.cashService.resetEnableState();
         }
       });
     this.resetInactivity(true);
@@ -1820,6 +1835,7 @@ export class OperationsService {
     this.invoiceService.paidByCheck(amount, checkNumber, descrip, client).subscribe(
       next => {
         console.log('paidByCheck', next);
+        this.currentOperation = PaymentOpEnum.CHECK;
         if(!client){
           if(next && next.balance > 0) this.invoiceService.setInvoice(next);
           else if(next.change && next.change > 0) {
@@ -1836,13 +1852,14 @@ export class OperationsService {
           this.cashService.openGenericInfo(InformationType.INFO, ' The account client ('+ next['name']
             + ') was charged with ' + amount.toFixed(2));
         }
+        this.cashService.resetEnableState();
       },
       error1 => {
         console.error('paidByCheck', error1);
         this.cashService.openGenericInfo('Error', error1);
         this.cashService.resetEnableState();
-      },
-      () => this.cashService.resetEnableState()
+      }/*,
+      () => this.cashService.resetEnableState()*/
     );
   }
 
@@ -1850,12 +1867,15 @@ export class OperationsService {
     this.invoiceService.acctPaymentTransfer(client, amount, descrip).subscribe(
       next => {
         console.log('acctPaymentTransferOp', next);
+        this.currentOperation = PaymentOpEnum.TRANSFER;
         this.cashService.openGenericInfo(InformationType.INFO, ' The account client ('+ next['name']
           + ') was charged with ' + amount.toFixed(2));
+        this.cashService.resetEnableState();
       },
       error1 => {
         console.error(error1);
         this.cashService.openGenericInfo(InformationType.ERROR, error1);
+        this.cashService.resetEnableState();
       }
     )
   }
@@ -1888,7 +1908,8 @@ export class OperationsService {
         this.choosePAXConnType(op);
         break;
       case PAXConnTypeEnum.OFFLINE:
-        op === PaymentOpEnum.EBT_CARD ? this.setEBTCardType() : this.externalCardPayment(undefined, undefined, op);
+        op === PaymentOpEnum.EBT_CARD ? this.setEBTCardType() :
+          this.externalCardPayment(undefined, undefined, op);
         break;
       case PAXConnTypeEnum.ONLINE:
         this.selectPaymentByOp(op);
@@ -1935,7 +1956,6 @@ export class OperationsService {
   }
 
   giftCardPayment(){
-    this.currentOperation = PaymentOpEnum.GIFT_CARD;
     this.getTotalField(this.getTotalToPaid()).subscribe(
       amount => {
         console.log('giftCardPayment Amount', amount);
@@ -1950,17 +1970,18 @@ export class OperationsService {
                   if(this.initService.userScanned) this.initService.cleanUserScanned();
                   if(passwordByCard) this.giftCardPaymentOp(amount, passwordByCard);
                 } else {
-                  this.cashService.resetEnableState();
+                  //this.cashService.resetEnableState();
                 }
               }
             );
         } else {
-          this.cashService.resetEnableState();
+          //this.cashService.resetEnableState();
         }
     });
   }
 
   giftCardPaymentOp(amount, cardPin){
+    this.currentOperation = PaymentOpEnum.GIFT_CARD;
     let opMsg = 'gift card payment';
     let dialogInfoEvents = this.cashService.openGenericInfo('Gift Card','Paying by gift card...',
       undefined, undefined, true);
@@ -1983,5 +2004,14 @@ export class OperationsService {
         });
 
     let timeOut = this.paxTimeOut($gift, dialogInfoEvents, opMsg);
+  }
+
+  private resetCurrentOperation() {
+    if(this.currentOperation === TotalsOpEnum.SUBTOTAL &&
+      this.invoiceService.invoice.status === InvoiceStatus.PENDENT_FOR_PAYMENT){
+      console.log('resetSubTotal');
+      this.resetSubTotalState();
+    }
+    this.currentOperation = '';
   }
 }
