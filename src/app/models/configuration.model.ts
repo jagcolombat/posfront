@@ -21,4 +21,5 @@ export interface Configuration {
   allowLastProdClear?: boolean;
   allowPromotion?: boolean;
   allowFoodStampMark?: boolean;
+  allowApplyDiscount?: boolean;
 }

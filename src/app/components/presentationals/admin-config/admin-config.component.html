@@ -115,6 +115,12 @@
           Allow Mark for FoodStamp Product
         </mat-slide-toggle>
       </mat-list-item>
+      <mat-list-item>
+        <mat-slide-toggle [checked]='applyDiscount' (change)="setApplyDiscount($event)" labelPosition="before"
+                          ariaLabel="Allow Supervisor Apply Discount">
+          Allow Supervisor Apply Discount
+        </mat-slide-toggle>
+      </mat-list-item>
     </mat-list>
   </div>
   <mat-dialog-actions>

@@ -47,6 +47,8 @@ export class CashService {
     let opDeny = false;
     if(this.systemConfig.companyType === CompanyType.ISLANDS)
       this.noLet4Supervisor.push(FinancialOpEnum.HOLD.toUpperCase());
+    if(this.systemConfig.allowApplyDiscount)
+      this.noLet4Supervisor.splice(this.noLet4Supervisor.findIndex(v => v === AdminOpEnum.APPLY_DISCOUNT),1);
     if(this.authServ.token.rol === userRol && this.noLet4Supervisor.includes(op)){
       this.openGenericInfo(InformationType.INFO, userRol + ' hasn\'t access to ' + op + ' operation.');
       opDeny = true;

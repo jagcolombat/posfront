@@ -32,6 +32,7 @@ export class AdminConfigComponent implements OnInit {
   clearLastProd: boolean;
   promotions: boolean;
   foodStampMark: boolean;
+  applyDiscount: boolean;
 
   constructor( public dialogRef: MatDialogRef<AdminConfigComponent>,
                @Inject(MAT_DIALOG_DATA) public data: any, private dataStorage: DataStorageService,
@@ -51,6 +52,7 @@ export class AdminConfigComponent implements OnInit {
     this.clearLastProd = this.cashService.systemConfig.allowLastProdClear;
     this.promotions = this.cashService.systemConfig.allowPromotion;
     this.foodStampMark = this.cashService.systemConfig.allowFoodStampMark;
+    this.applyDiscount = this.cashService.systemConfig.allowApplyDiscount;
 
     if(this.cashService.systemConfig.inactivityTime) this.timeLogout = this.cashService.systemConfig.inactivityTime+'';
   }
@@ -150,6 +152,12 @@ export class AdminConfigComponent implements OnInit {
     this.needLogout = false;
   }
 
+  setApplyDiscount($event: any) {
+    console.log('setApplyDiscount', $event, this.applyDiscount);
+    this.applyDiscount = $event.checked;
+    this.needLogout = true;
+  }
+
   done(){
     let conf = Object.assign({}, this.cashService.systemConfig);
     this.cashService.systemConfig.allowAddProdGen = this.allowAddProdGen;
@@ -167,6 +175,7 @@ export class AdminConfigComponent implements OnInit {
     this.cashService.systemConfig.allowLastProdClear = this.clearLastProd;
     this.cashService.systemConfig.allowPromotion = this.promotions;
     this.cashService.systemConfig.allowFoodStampMark = this.foodStampMark;
+    this.cashService.systemConfig.allowApplyDiscount = this.applyDiscount;
 
     this.dataStorage.setConfiguration(this.cashService.systemConfig).subscribe(value => {
       console.log('set configuration', value, conf);
