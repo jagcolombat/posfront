@@ -234,21 +234,42 @@ export class OperationsService {
   plu() {
     console.log('plu');
     this.currentOperation = InvioceOpEnum.PLU;
+    this.addProduct(EOperationType.Plu);
+  }
+
+  addProduct(op: EOperationType){
     // If is a weight format product
-    if(this.isWeightFormatProduct()){
+    let origUPC = this.invoiceService.numbers;
+    let isWFormat = this.isWeightFormatProduct();
+    if(isWFormat){
       this.getPriceAndUPCOfWFP();
     }
-    // Consume servicio de PLU con this.digits eso devuelve ProductOrder
+    // Consume servicio addProduct con this.digits esto devuelve ProductOrder
     this.invoiceService.addProductByUpc(EOperationType.Plu).subscribe(prods => {
       this.selectProd(prods).subscribe(prod => {
-        console.log('Plu', prod, this.invoiceService.qty);
-        this.initService.setOperation(EOperationType.Plu, prod.id, 'Received product id');
+        console.log(EOperationType[op], prod, this.invoiceService.qty);
+        this.initService.setOperation(op, prod.id, 'Received product id');
         prod ? this.invoiceService.evAddProdByUPC.emit(prod): this.invoiceService.resetDigits();
       });
     }, err => {
       console.error('addProductByUpc', err);
-      this.invoiceService.resetDigits();
-      this.cashService.openGenericInfo('Error', 'Can\'t complete get product by plu');
+      if(isWFormat) {
+        this.invoiceService.numbers = origUPC;
+        this.invoiceService.addProductByUpc(op).subscribe(prods => {
+          this.selectProd(prods).subscribe(prod => {
+            console.log(EOperationType[op], prod, this.invoiceService.qty);
+            this.initService.setOperation(op, prod.id, 'Received product id');
+            prod ? this.invoiceService.evAddProdByUPC.emit(prod): this.invoiceService.resetDigits();
+          });
+        }, err => {
+          console.error('addProductByUpc', err);
+          this.invoiceService.resetDigits();
+          this.cashService.openGenericInfo('Error', 'Can\'t complete get product by plu');
+        });
+      } else {
+        this.invoiceService.resetDigits();
+        this.cashService.openGenericInfo('Error', 'Can\'t complete get product by plu');
+      }
     });
     this.resetInactivity(false);
   }
@@ -899,21 +920,7 @@ export class OperationsService {
 
   scanProduct(){
     this.currentOperation = ScanOpEnum.SCAN_PROD;
-    // If is a weight format product
-    if(this.isWeightFormatProduct()){
-      this.getPriceAndUPCOfWFP();
-    }
-    this.invoiceService.addProductByUpc(EOperationType.Scanner).subscribe(prods => {
-      this.selectProd(prods).subscribe( prod => {
-        console.log('scanProduct', prod);
-        prod ? this.invoiceService.evAddProdByUPC.emit(prod): this.invoiceService.resetDigits();
-      });
-    }, err => {
-      console.error('addProductByUpc', err);
-      this.invoiceService.resetDigits();
-      this.cashService.openGenericInfo('Error', err);
-    });
-    this.resetInactivity(false);
+    this.addProduct(EOperationType.Scanner);
   }
 
   isWeightFormatProduct(): boolean{
