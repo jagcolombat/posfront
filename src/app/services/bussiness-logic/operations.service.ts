@@ -998,7 +998,7 @@ export class OperationsService {
 
   debitOp(context?: any){
     if(!context) context = this;
-    this.currentOperation = PaymentOpEnum.DEBIT_CARD;
+    context.currentOperation = PaymentOpEnum.DEBIT_CARD;
     let opMsg = 'debit card payment';
     let dialogInfoEvents = context.openInfoEventDialog('Paying by debit card');
     let $debit = context.invoiceService.debit(context.invoiceService.invoice.balance, context.invoiceService.invoice.tip)
@@ -1031,7 +1031,7 @@ export class OperationsService {
 
   private creditOp(splitAmount?: number, context?: any){
     if(!context) context = this;
-    this.currentOperation = PaymentOpEnum.CREDIT_CARD;
+    context.currentOperation = PaymentOpEnum.CREDIT_CARD;
     let opMsg = 'credit card payment';
     let dialogInfoEvents = context.openInfoEventDialog('Paying by credit card');
     let $credit = context.invoiceService.credit(splitAmount ? splitAmount : context.invoiceService.invoice.balance,
