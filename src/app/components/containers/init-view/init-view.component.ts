@@ -15,6 +15,8 @@ export class InitViewComponent implements OnInit, AfterViewInit, OnDestroy {
   public env = env;
   @ViewChild('init') init: ElementRef;
   loginScan = '';
+  pathPromotions = 'promotions/';
+  pathAnnounces = 'anuncios/';
 
   constructor(private initService: InitViewService) {
   }

@@ -20,11 +20,11 @@ export class PromotionsComponent implements OnInit {
 
   ngOnInit() {
     this.imagesUrl = [
-      { url: this.path + '/assets/promotions/promotions1.png', caption: 'The first slide'},
-      { url: this.path + '/assets/promotions/promotions2.png', caption: 'The second slide'},
-      { url: this.path + '/assets/promotions/promotions3.png', caption: 'The third slide'},
-      { url: this.path + '/assets/promotions/promotions4.png', caption: 'The four slide'},
-      { url: this.path + '/assets/promotions/promotions5.png', caption: 'The five slide'}
+      { url: this.path + 'promotions1.png', caption: 'The first slide'},
+      { url: this.path + 'promotions2.png', caption: 'The second slide'},
+      { url: this.path + 'promotions3.png', caption: 'The third slide'},
+      { url: this.path + 'promotions4.png', caption: 'The four slide'},
+      { url: this.path + 'promotions5.png', caption: 'The five slide'}
     ];
   }
 

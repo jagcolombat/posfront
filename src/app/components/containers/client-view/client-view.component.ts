@@ -20,7 +20,8 @@ export class ClientViewComponent implements OnInit, OnDestroy {
   modalPaymentReturn: any;
   sub: Subscription[] = new Array<Subscription>();
   logged = false;
-  //addProduct = true;
+  pathPromotions = 'promotions/';
+  pathAnnounces = 'anuncios/';
 
   constructor(private invoiceService: InvoiceService, private ws: WebsocketService,
               private initService: InitViewService, public snackBar: MatSnackBar) {

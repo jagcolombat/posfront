@@ -2,16 +2,17 @@
   <div id="right" fxFlex.lt-lg="54" fxFlex.md="60" fxFlex.lg="64" fxFlex.xl="70" fxLayout="column" fxLayoutAlign="space-between">
     <invoice *ngIf="logged" fxFlex="100" class="border container" fxLayout="column" style="padding: 5px;"></invoice>
     <div *ngIf="!logged" fxLayoutAlign="center center" fxFlex="100" class="border" >
-      <img id="logo" src="{{env.myVarForImageURLS}}/assets/supermarket.jpg" fxFlex="100" alt="Logo"/>
+      <img id="logo" src="{{env.myVarForImageURLS + 'supermarket.jpg'}}" fxFlex="100" alt="Logo"/>
     </div>
   </div>
 
   <div id="left" fxFlex.lt-lg="46" fxFlex.md="40" fxFlex.lg="35" fxFlex.xl="30" fxLayout="column" fxLayoutAlign="space-between" class="border">
     <div fxLayoutAlign="center center" class="border">
-      <slide-promotions [path]="env.myVarForImageURLS" [height]="'350px'"></slide-promotions>
+      <slide-promotions [path]="env.myVarForImageURLS + pathPromotions" [height]="'350px'"></slide-promotions>
     </div>
-    <div fxLayoutAlign="center" fxLayout="column" >
-      <slide-announce [path]="env.myVarForImageURLS" [height]="'400px'"></slide-announce>
+    <div fxLayoutAlign="center" fxLayout="column" id="logoAnnounce">
+      <!--<slide-announce [path]="env.myVarForImageURLS + pathAnnounces" [height]="'400px'"></slide-announce>-->
+      <img *ngIf="logged" src="{{env.myVarForImageURLS + 'logo-announce.png'}}" fxFlex="100" />
     </div>
   </div>
 </div>
