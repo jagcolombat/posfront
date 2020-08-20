@@ -121,6 +121,12 @@
           Allow Supervisor Apply Discount
         </mat-slide-toggle>
       </mat-list-item>
+      <mat-list-item>
+        <mat-slide-toggle [checked]='changePriceBySelection' (change)="setChangePriceBySelection($event)" labelPosition="before"
+                          ariaLabel="Allow Change Price By Selection">
+          Allow Change Price By Selection
+        </mat-slide-toggle>
+      </mat-list-item>
     </mat-list>
   </div>
   <mat-dialog-actions>

@@ -18,6 +18,7 @@ import {PAXConnTypeEnum} from "../../utils/pax-conn-type.enum";
 export class CashService {
   disabledInput: boolean;
   disabledInputKey: boolean;
+  disableStock: boolean;
   disabledFinOp: boolean | boolean[];
   disabledInvOp: boolean | boolean[];
   disabledTotalOp: boolean | boolean[];
@@ -69,6 +70,7 @@ export class CashService {
     this.disabledInvoiceAdminOp = false;
     this.disabledOtherAdminOp = false;
     this.disabledAdminOp = false;
+    this.disableStock = false;
     //this.disabledCustomerOp = [true, false, false, true];
     this.splitAllow(false);
     this.evReviewEnableState.emit(false);
@@ -76,7 +78,7 @@ export class CashService {
   }
 
   reviewEnableState() {
-    this.disabledInput = this.disabledTotalOp = this.disabledPayment = this.disabledPaymentMoney = true;
+    this.disabledInput = this.disabledTotalOp = this.disabledPayment = this.disabledPaymentMoney = this.disableStock = true;
     this.disabledFinOp = [true, false, true, true, true, true, true, true];
     this.disabledInvOp = [false, true, true, true];
     this.disabledOtherOp = [true, true, true, true, true, false];
@@ -88,6 +90,19 @@ export class CashService {
     this.evReviewEnableState.emit(true);
   }
 
+  changePriceEnableState() {
+    this.disabledInput = this.disabledTotalOp = this.disabledPayment = this.disabledPaymentMoney = true;
+    this.disabledFinOp = [true, true, true, true, true, true, true, true];
+    this.disabledInvOp = [false, true, true, true];
+    this.disabledOtherOp = [true, true, true, true, true, false];
+    this.disabledReportsAdminOp = true;
+    this.disabledFinanceAdminOp = [false, true, true, true, true, true];
+    this.disabledInvoiceAdminOp = [true, false];
+    this.disabledOtherAdminOp = true;
+    this.disabledAdminOp = true;
+    this.disabledCustomerOp = true;
+  }
+
   reviewPaidEnableState() {
     this.disabledInput = this.disabledTotalOp = this.disabledPayment = true;
     this.disabledFinOp = [true, false, true, true, true, false, false];
@@ -96,7 +111,7 @@ export class CashService {
 
   totalsEnableState(fs = false, refund=false) {
     console.log(fs);
-    this.disabledInput = this.disabledFinOp = this.disabledTotalOp = true;
+    this.disabledInput = this.disabledFinOp = this.disabledTotalOp = this.disableStock = true;
     this.disabledInvOp = [false, true, true, true];
     //if(this.systemConfig && this.systemConfig.allowCardSplit) this.disabledOtherOp = false;
     if(fs){
@@ -116,7 +131,7 @@ export class CashService {
 
   totalsDisabled(){
     console.log('totalsDisabled');
-    this.disabledInput = this.disabledFinOp = this.disabledTotalOp = true;
+    this.disabledInput = this.disabledFinOp = this.disabledTotalOp = this.disableStock = true;
     //this.disabledInvOp = [false, true, true, true];
     //if(this.systemConfig && this.systemConfig.allowCardSplit) this.disabledOtherOp = false;
     //this.splitAllow(true);
@@ -137,7 +152,8 @@ export class CashService {
   }
 
   cancelCheckEnableState() {
-    this.disabledInput = this.disabledTotalOp = this.disabledPayment = this.disabledPaymentMoney = this.disabledFinOp = true;
+    this.disabledInput = this.disabledTotalOp = this.disabledPayment = this.disabledPaymentMoney = this.disabledFinOp =
+      this.disableStock = true;
     //this.disabledInvOp =[false, true, true, true];
     this.disabledInvoiceAdminOp = [true, false];
     this.disabledReportsAdminOp = true;
@@ -146,7 +162,8 @@ export class CashService {
   }
 
   removeHoldEnableState() {
-    this.disabledInput = this.disabledTotalOp = this.disabledPayment = this.disabledPaymentMoney = this.disabledFinOp = true;
+    this.disabledInput = this.disabledTotalOp = this.disabledPayment = this.disabledPaymentMoney = this.disabledFinOp =
+      this.disableStock = true;
     //this.disabledInvOp =[false, true, true, true];
     this.disabledInvoiceAdminOp = [true, false];
     this.disabledReportsAdminOp = true;
@@ -156,7 +173,7 @@ export class CashService {
 
   dayCloseEnableState() {
     this.disabledInput = this.disabledTotalOp = this.disabledPayment = this.disabledPaymentMoney = this.disabledFinOp =
-      this.disabledAdminOp = true;
+      this.disabledAdminOp = this.disableStock = true;
     this.disabledInvOp =[false, true, true, true];
   }
 

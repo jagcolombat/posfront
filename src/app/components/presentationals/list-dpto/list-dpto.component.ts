@@ -45,7 +45,7 @@ export class ListDptoComponent implements OnInit {
       prods => {
         let prodsFiltered = prods.filter(p => p.name === dpto.name);
         prodsFiltered.length > 0 ?
-          prodsFiltered.map(pg => this.stockService.addProduct(pg)):
+          prodsFiltered.map(pg => this.stockService.changePriceOrAddProduct(pg)):
           this.stockService.cashService.openGenericInfo(InformationType.INFO, 'Generic product not found');
       });
   }

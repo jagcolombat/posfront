@@ -9,6 +9,7 @@ import {CashService} from "./cash.service";
 import {environment as env} from "../../../environments/environment";
 import {OperationsService} from "./operations.service";
 import {StockOpEnum} from "../../utils/operations/stock-op.enum";
+import {AdminOpEnum} from "../../utils/operations/admin-op.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -50,5 +51,12 @@ export class StockService {
     this.operationService.currentOperation = StockOpEnum.ADD_PROD;
     this.productOrderService.addProduct(p);
   }
+
+  changePriceOrAddProduct(prod: Product){
+    (this.cashService.systemConfig.changePriceBySelection &&
+      this.operationService.currentOperation === AdminOpEnum.CHANGE_PRICES) ?
+      this.operationService.changePriceOp(prod) : this.addProduct(prod);
+  }
+
 
 }

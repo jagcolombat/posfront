@@ -1,12 +1,12 @@
 <div #grid class="page">
   <button mat-button fxFlex="125px" *ngFor="let i of dptos | paginate: { itemsPerPage: sizePage, currentPage: page }"
           (click)="doAction($event, i)"
-          [ngClass]="i.generic ? 'generic' : 'normal'" [disabled]="stockService.cashService.disabledInput">
+          [ngClass]="i.generic ? 'generic' : 'normal'" [disabled]="stockService.cashService.disableStock">
     {{ i.name | uppercase }}
   </button>
 </div>
 <div class="paginator">
-  <pos-paginator [hidden]="stockService.cashService.disabledInput" [countElements]="dptos.length" [sizePage]="sizePage"
+  <pos-paginator [hidden]="stockService.cashService.disableStock" [countElements]="dptos.length" [sizePage]="sizePage"
                  (evSetPage)="setPage($event)">
     <button class="filter" mat-button (click)="filter()">
       <span class="fa fa-search fa-lg"></span> FILTER

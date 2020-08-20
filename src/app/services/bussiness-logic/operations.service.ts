@@ -2021,4 +2021,30 @@ export class OperationsService {
     }
     this.currentOperation = '';
   }
+
+  changePriceOp(prod: Product){
+    this.cashService.dialog.open(ProductGenericComponent,
+      {
+        width: '480px', height: '650px', data: {name: 'Change Price', label: 'Price', unitCost: prod.unitCost.toFixed(2)},
+        disableClose: true
+      }).afterClosed().subscribe(
+      next => {
+        if(next){
+          this.invoiceService.updateProductsPrice(prod.upc, next.unitCost, prod.id).subscribe(next => {
+              console.log(next);
+              this.cashService.openGenericInfo('Information', 'The price of product '+
+                next['upc'] + ' was updated to '+ next['price'].toFixed(2))
+                .afterClosed().subscribe(next => this.router.navigateByUrl('/cash/dptos'));
+            },
+            err => {
+              this.cashService.openGenericInfo('Error', 'Can\'t change price of this product '+prod.upc);
+            },
+            () => {
+              this.currentOperation = "";
+              this.cashService.resetEnableState();
+            });
+        }
+      });
+  }
+
 }

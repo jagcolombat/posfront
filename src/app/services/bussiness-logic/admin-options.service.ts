@@ -31,6 +31,7 @@ import {CloseBatchComponent} from "../../components/presentationals/close-batch/
 import {SetDateComponent} from "../../components/presentationals/set-date/set-date.component";
 import {GiftCardModel, GiftModel} from "../../models/gift-card.model";
 import {thousandFormatter} from "../../utils/functions/transformers";
+import {Product} from "../../models";
 
 @Injectable({
   providedIn: 'root'
@@ -458,9 +459,13 @@ export class AdminOptionsService {
     /*(this.currentOperation !== AdminOpEnum.CHANGE_PRICES) ? this.currentOperation = AdminOpEnum.CHANGE_PRICES:
       this.currentOperation = "";*/
     this.currentOperation = AdminOpEnum.CHANGE_PRICES;
-    if(this.invoiceService.digits){
+    if(this.invoiceService.digits && !this.cashService.systemConfig.changePriceBySelection){
       this.doChangePrice();
-    } /*else if (this.currentOperation !== AdminOpEnum.CHANGE_PRICES) {
+    } else {
+      this.router.navigateByUrl('/cash/dptos');
+      this.operationService.currentOperation = AdminOpEnum.CHANGE_PRICES;
+      this.cashService.changePriceEnableState();
+    }/*else if (this.currentOperation !== AdminOpEnum.CHANGE_PRICES) {
       this.cashService.disabledInputKey = true;
       this.operationService.getField('Enter UPC Number', 'Change Prices').subscribe(
         next => {
@@ -483,23 +488,7 @@ export class AdminOptionsService {
             .afterClosed().subscribe(next => {
             console.log(next);
             if(next !== undefined && next.confirm ) {
-              this.cashService.dialog.open(ProductGenericComponent,
-                {
-                  width: '480px', height: '650px', data: {name: 'Change Price', label: 'Price', unitCost: prod.unitCost.toFixed(2)},
-                  disableClose: true
-                }).afterClosed().subscribe(
-                next => {
-                  if(next){
-                    this.invoiceService.updateProductsPrice(prod.upc, next.unitCost, prod.id).subscribe(next => {
-                        console.log(next);
-                        this.cashService.openGenericInfo('Information', 'The price of product '+
-                          next['upc'] + ' was updated to '+ next['price'].toFixed(2));
-                      },
-                      err => {
-                        this.cashService.openGenericInfo('Error', 'Can\'t change price of this product '+prod.upc);
-                      });
-                  }
-                });
+              this.operationService.changePriceOp(prod);
             }
           });
         } else {
@@ -513,6 +502,26 @@ export class AdminOptionsService {
       this.currentOperation = "";
     });
   }
+
+  /*changePriceOp(prod: Product){
+    this.cashService.dialog.open(ProductGenericComponent,
+      {
+        width: '480px', height: '650px', data: {name: 'Change Price', label: 'Price', unitCost: prod.unitCost.toFixed(2)},
+        disableClose: true
+      }).afterClosed().subscribe(
+      next => {
+        if(next){
+          this.invoiceService.updateProductsPrice(prod.upc, next.unitCost, prod.id).subscribe(next => {
+              console.log(next);
+              this.cashService.openGenericInfo('Information', 'The price of product '+
+                next['upc'] + ' was updated to '+ next['price'].toFixed(2));
+            },
+            err => {
+              this.cashService.openGenericInfo('Error', 'Can\'t change price of this product '+prod.upc);
+            });
+        }
+      });
+  }*/
 
   splitName(fullname: string, employee: EmployeedModel){
     let splitFN = fullname.trim().split(" ");
