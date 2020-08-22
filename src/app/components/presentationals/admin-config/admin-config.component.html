@@ -127,6 +127,12 @@
           Allow Change Price By Selection
         </mat-slide-toggle>
       </mat-list-item>
+      <mat-list-item>
+        <mat-slide-toggle [checked]='allowClock' (change)="setAllowClock($event)" labelPosition="before"
+                          ariaLabel="Allow ClockIn / ClockOut">
+          Allow ClockIn / ClockOut
+        </mat-slide-toggle>
+      </mat-list-item>
     </mat-list>
   </div>
   <mat-dialog-actions>

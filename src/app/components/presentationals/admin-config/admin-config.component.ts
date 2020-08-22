@@ -7,6 +7,7 @@ import {InformationType} from "../../../utils/information-type.enum";
 import {CompanyType} from "../../../utils/company-type.enum";
 import {Configuration} from "../../../models/configuration.model";
 import {BreakTextEnum} from "../../../utils/breaktext.enum";
+import {ConfigurationService} from "../../../services/bussiness-logic/configuration.service";
 
 @Component({
   selector: 'admin-config',
@@ -34,10 +35,11 @@ export class AdminConfigComponent implements OnInit {
   foodStampMark: boolean;
   applyDiscount: boolean;
   changePriceBySelection: boolean;
+  allowClock: boolean;
 
   constructor( public dialogRef: MatDialogRef<AdminConfigComponent>,
                @Inject(MAT_DIALOG_DATA) public data: any, private dataStorage: DataStorageService,
-               private cashService: CashService) {
+               private cashService: CashService, private configService: ConfigurationService) {
     console.log('adminConfig', this.cashService.systemConfig);
     this.allowAddProdGen = this.cashService.systemConfig.allowAddProdGen;
     this.allowDeleteProd = this.cashService.systemConfig.allowClear;
@@ -55,6 +57,7 @@ export class AdminConfigComponent implements OnInit {
     this.foodStampMark = this.cashService.systemConfig.allowFoodStampMark;
     this.applyDiscount = this.cashService.systemConfig.allowApplyDiscount;
     this.changePriceBySelection = this.cashService.systemConfig.changePriceBySelection;
+    this.allowClock = this.cashService.systemConfig.allowClock;
 
     if(this.cashService.systemConfig.inactivityTime) this.timeLogout = this.cashService.systemConfig.inactivityTime+'';
   }
@@ -166,6 +169,12 @@ export class AdminConfigComponent implements OnInit {
     this.needLogout = false;
   }
 
+  setAllowClock($event: any) {
+    console.log('setClock', $event, this.allowClock);
+    this.allowClock = $event.checked;
+    this.needLogout = true;
+  }
+
   done(){
     let conf = Object.assign({}, this.cashService.systemConfig);
     this.cashService.systemConfig.allowAddProdGen = this.allowAddProdGen;
@@ -185,6 +194,7 @@ export class AdminConfigComponent implements OnInit {
     this.cashService.systemConfig.allowFoodStampMark = this.foodStampMark;
     this.cashService.systemConfig.allowApplyDiscount = this.applyDiscount;
     this.cashService.systemConfig.changePriceBySelection = this.changePriceBySelection;
+    this.configService.systemConfig.allowClock = this.allowClock;
 
     this.dataStorage.setConfiguration(this.cashService.systemConfig).subscribe(value => {
       console.log('set configuration', value, conf);
@@ -212,4 +222,5 @@ export class AdminConfigComponent implements OnInit {
     });
 
   }
+
 }

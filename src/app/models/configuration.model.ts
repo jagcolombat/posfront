@@ -22,5 +22,6 @@ export interface Configuration {
   allowPromotion?: boolean;
   allowFoodStampMark?: boolean;
   allowApplyDiscount?: boolean;
+  allowClock?: boolean;
   changePriceBySelection?: boolean;
 }
