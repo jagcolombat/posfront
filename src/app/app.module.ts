@@ -8,14 +8,15 @@ import { SharedModule } from "./modules/shared/shared.module";
 import { MaterialModule } from "./modules/material/material.module";
 import { HomeModule } from "./modules/home/home.module";
 import { baseURL } from './utils/url.path.enum';
+import {AppConfigModule} from "./modules/app-config/app-config.module";
 
 @NgModule({
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    AppConfigModule,
+    //MaterialModule,
     SharedModule,
-    MaterialModule,
-    HttpClientModule,
     HomeModule
   ],
   declarations: [
