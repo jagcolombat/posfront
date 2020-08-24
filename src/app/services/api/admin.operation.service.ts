@@ -1,15 +1,14 @@
 import { Injectable } from '@angular/core';
 import { ProcessHTTPMSgService } from './ProcessHTTPMSg.service';
-import { User, Payment } from 'src/app/models';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import {User, Payment, Credentials} from 'src/app/models';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { PaidOut } from 'src/app/models/paid-out.model';
-import { catchError } from 'rxjs/operators';
+import {catchError, map} from 'rxjs/operators';
 import { Invoice } from 'src/app/models/invoice.model';
 import { CloseBatch } from 'src/app/utils/close.batch.enum';
 import { Report } from 'src/app/models/report.model';
 import {EmployeedModel, IPositionModel} from "../../models/employeed.model";
-import {AdminOpEnum} from "../../utils/operations/admin-op.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -103,6 +102,11 @@ export class AdminOperationService {
 
   employSetup(url: string, employee: EmployeedModel) {
     return this._http.post<any>(url + '/account/pos', employee)
+      .pipe(catchError(this.processHttpMsgService.handleError));
+  }
+
+  employClock(url: string, credentials: Credentials, clockType = 1) {
+    return this._http.post<any>(url + '/account/clock/' + clockType, credentials)
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 }

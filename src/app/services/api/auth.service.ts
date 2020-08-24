@@ -40,22 +40,26 @@ export class AuthService {
       { headers: this.headers, observe: 'response' }).pipe(
       map(response => {
         console.log(response);
-        const decoded = jwt_decode(response.body);
-        const token: Token = {};
-        token.fullToken = response.body;
-        token.company = decoded.company;
-        token.fullname = decoded.fullname;
-        token.rol = decoded.rol;
-        token.company_type = decoded.company_type;
-        token.user_id = decoded.user_id;
-        token.username = decoded.username;
-        const expiredAt = new Date();
-        token.exp = expiredAt.getTime();
-        this.token = token;
-        //this.saveUser(token, true);
-        return token;
+        return this.decodeToken(response.body);
       })
     ).pipe(catchError(this.processHttpMsgService.handleError));
+  }
+
+  decodeToken(jwt: any): Token {
+    const decoded = jwt_decode(jwt);
+    const token: Token = {};
+    token.fullToken = jwt;
+    token.company = decoded.company;
+    token.fullname = decoded.fullname;
+    token.rol = decoded.rol;
+    token.company_type = decoded.company_type;
+    token.user_id = decoded.user_id;
+    token.username = decoded.username;
+    const expiredAt = new Date();
+    token.exp = expiredAt.getTime();
+    this.token = token;
+    //this.saveUser(token, true);
+    return token;
   }
 
   logout(): Observable<any> {

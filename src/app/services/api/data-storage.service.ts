@@ -6,7 +6,6 @@ import {Product} from '../../models/product.model';
 import {ProductService} from './product.service';
 import {InvoiceService} from './invoice.service';
 import {Invoice} from '../../models/invoice.model';
-import {map, catchError} from 'rxjs/operators';
 import { baseURL } from '../../utils/url.path.enum';
 import { PaymentService } from './payment.service';
 import { ProductOrder } from 'src/app/models/product-order.model';
@@ -14,7 +13,7 @@ import { EOperationType } from 'src/app/utils/operation.type.enum';
 import { ICashPayment } from 'src/app/models/cash-payment.model';
 import { Journey } from 'src/app/models/journey.model';
 import { JourneyService } from './journey.service';
-import {CreditCard, User, Payment, CardManualPayment} from 'src/app/models';
+import {CreditCard, User, Payment, CardManualPayment, Credentials} from 'src/app/models';
 import { ConfigurationService } from './configuration.service';
 import { Configuration } from 'src/app/models/configuration.model';
 import { AdminOperationService } from './admin.operation.service';
@@ -33,8 +32,9 @@ import {ClientModel} from "../../models/client.model";
 import {PaymentMethodEnum} from "../../utils/operations/payment-method.enum";
 import {CheckPayment} from "../../models/check.model";
 import {TransferPayment} from "../../models/transfer.model";
-import {AdminOpEnum} from "../../utils/operations/admin-op.enum";
 import {GiftCardModel, IGiftCardPaymentModel, IGiftModel} from "../../models/gift-card.model";
+import {EClockType} from "../../utils/clock-type.enum";
+import {UserClock} from "../../models/user-clock.model";
 
 @Injectable({
   providedIn: 'root'
@@ -315,6 +315,10 @@ export class DataStorageService {
 
   employSetup(employee: EmployeedModel) {
     return this.adminOperationService.employSetup(this.url, employee);
+  }
+
+  employClock(credentials: Credentials, clockType?: EClockType): Observable<UserClock>{
+    return this.adminOperationService.employClock(this.url, credentials, clockType);
   }
 
   // Clients

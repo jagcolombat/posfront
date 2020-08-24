@@ -20,7 +20,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   errorMsg: string;
   subscription: Subscription [] = [];
 
-  constructor(private router: Router, private authService: AuthService, private initService: InitViewService) {
+  constructor(private router: Router, public authService: AuthService, private initService: InitViewService) {
     this.subscription.push(this.initService.evUserScanned.subscribe(next => this.userScan(next)));
   }
 
@@ -98,6 +98,12 @@ export class LoginComponent implements OnInit, OnDestroy {
     if(this.input.length > 0 ) {
       this.input = this.input.slice(0, this.input.length - 1);
     }
+  }
+
+  resetLogin(){
+    this.input = '';
+    this.tryValidation = false;
+    this.valid = false;
   }
 
   ngOnDestroy() {

@@ -1,5 +1,10 @@
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {LoginComponent} from "../../presentationals/login/login.component";
+import {DataStorageService} from "../../../services/api/data-storage.service";
+import {UtilsService} from "../../../services/bussiness-logic/utils.service";
+import {InformationType} from "../../../utils/information-type.enum";
+import {UserrolEnum} from "../../../utils/userrol.enum";
+import {EClockType} from "../../../utils/clock-type.enum";
 
 @Component({
   selector: 'login-clock',
@@ -11,13 +16,30 @@ export class LoginClockComponent implements OnInit {
   @Input() showClock: boolean;
   @ViewChild('login') login: LoginComponent;
 
-  constructor() { }
+  constructor(public dataStore: DataStorageService, private utils: UtilsService) { }
 
   ngOnInit() {
   }
 
-  clockInOut(ev) {
-    console.log('clockInOut', ev, this.login.input)
+  clockInOut(ev: EClockType) {
+    console.log('clockInOut', ev, this.login.input);
+    this.dataStore.employClock({ username: 'user', password: this.login.input }, ev).subscribe(
+      next => {
+        let token = this.login.authService.decodeToken(next.token);
+        console.log(next, token);
+        (token.rol === UserrolEnum.WORKER || ev === EClockType.OUT)?
+          this.showClockMsg(next.message):
+          this.login.selectRoute();
+      }, error1 => {
+        console.error(error1);
+        this.utils.openGenericInfo(InformationType.ERROR, error1);
+      }
+    )
+  }
+
+  showClockMsg(msg: string){
+    this.utils.openGenericInfo(InformationType.INFO, msg);
+    this.login.resetLogin();
   }
 
 }
