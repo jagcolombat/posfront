@@ -2,6 +2,8 @@ import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from
 import { environment as env } from '../../../../environments/environment';
 import {InvioceOpEnum} from "../../../utils/operations";
 import {InitViewService} from "../../../services/bussiness-logic/init-view.service";
+import {ClockInOutComponent} from "../../presentationals/clock-in-out/clock-in-out.component";
+import {LoginComponent} from "../../presentationals/login/login.component";
 
 @Component({
   selector: 'init-view',
@@ -17,11 +19,15 @@ export class InitViewComponent implements OnInit, AfterViewInit, OnDestroy {
   loginScan = '';
   pathPromotions = 'promotions/';
   pathAnnounces = 'anuncios/';
+  showClock: boolean;
+  showLogin: boolean;
 
   constructor(private initService: InitViewService) {
   }
 
   ngOnInit() {
+    this.showLogin = this.initService.config.sysConfig ? true : false;
+    this.showClock = this.initService.config.sysConfig.allowClock;
   }
 
   handleKeyboardEvent(ev: KeyboardEvent) {

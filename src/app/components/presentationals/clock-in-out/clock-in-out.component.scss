@@ -1,0 +1,17 @@
+@import "~src/variable";
+
+button[mat-button].left {
+  height: 170px;
+  width: 100px;
+  margin-bottom: 5px;
+  @include orange;
+}
+
+.options-container {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  height: fit-content;
+}

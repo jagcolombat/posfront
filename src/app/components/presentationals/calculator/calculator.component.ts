@@ -14,7 +14,7 @@ export class CalculatorComponent implements OnInit {
   @Input() numbers = [1,2,3,4,5,6,7,8,9,0,"00","@/FOR"];
   @Input() leftOperations=["F/S Subtotal", "Subtotal"];
   @Input() valid: boolean;
-  space = "10px";
+  space = "5px";
 
   constructor(private op: OperationsService) { }
 

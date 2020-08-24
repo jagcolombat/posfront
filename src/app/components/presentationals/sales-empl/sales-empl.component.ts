@@ -100,7 +100,7 @@ export class SalesEmplComponent implements OnInit {
     this.gridOptions = <GridOptions>{
       rowData: [],
       onGridReady: () => {
-        if(this.cashService.systemConfig.companyType !== CompanyType.RESTAURANT) {
+        if(this.cashService.config.sysConfig.companyType !== CompanyType.RESTAURANT) {
           this.showTip(false);
         }
         this.gridOptions.api.sizeColumnsToFit();

@@ -27,31 +27,32 @@ export class AdminOptionsComponent implements OnInit {
 
   constructor(private router: Router, public adminOpService: AdminOptionsService ) {
 
-    this.adminOpService.cashService.getSystemConfig().subscribe(config => {
-      if(config.paxConnType !== PAXConnTypeEnum.ONLINE){
-        // Remove PAX options and colors
-        console.log('paxConnType', PAXConnTypeEnum.ONLINE);
-        this.removeOption(this.options.indexOf(AdminOpEnum.CLOSE_BATCH));
-      }
-      /*if(config.companyType === CompanyType.RESTAURANT || !config.allowEBT){
-        // Remove EBT options and colors
-        console.log('allowEBT');
-        this.removeOption(this.options.indexOf(AdminOpEnum.EBT_INQUIRY));
-      }*/
-      if(config.companyType !== CompanyType.RESTAURANT){
-        // Remove Restaurant options and colors
-        console.log('companyType', config.companyType);
-        this.removeOption(this.options.indexOf(AdminOpEnum.AUTH_PENDING));
-      }
-      if(!config.allowGiftCard){
-        // Remove EBT options and colors
-        console.log('allowGiftCard', config.allowGiftCard);
-        this.removeOption(this.options.indexOf(AdminOpEnum.GIFT_CARD));
-      }
+    //this.adminOpService.cashService.getSystemConfig().subscribe(config => {
+    let config = this.adminOpService.cashService.config.sysConfig;
+    if(config.paxConnType !== PAXConnTypeEnum.ONLINE){
+      // Remove PAX options and colors
+      console.log('paxConnType', PAXConnTypeEnum.ONLINE);
+      this.removeOption(this.options.indexOf(AdminOpEnum.CLOSE_BATCH));
+    }
+    /*if(config.companyType === CompanyType.RESTAURANT || !config.allowEBT){
+      // Remove EBT options and colors
+      console.log('allowEBT');
+      this.removeOption(this.options.indexOf(AdminOpEnum.EBT_INQUIRY));
+    }*/
+    if(config.companyType !== CompanyType.RESTAURANT){
+      // Remove Restaurant options and colors
+      console.log('companyType', config.companyType);
+      this.removeOption(this.options.indexOf(AdminOpEnum.AUTH_PENDING));
+    }
+    if(!config.allowGiftCard){
+      // Remove EBT options and colors
+      console.log('allowGiftCard', config.allowGiftCard);
+      this.removeOption(this.options.indexOf(AdminOpEnum.GIFT_CARD));
+    }
       this.$options = of(this.options.map(o=> <AdminOpEnum> o.toUpperCase()));
-    }, err => {
+    /*}, err => {
       this.adminOpService.cashService.openGenericInfo('Error', 'Can\'t get configuration');
-    });
+    });*/
   }
 
   ngOnInit() {

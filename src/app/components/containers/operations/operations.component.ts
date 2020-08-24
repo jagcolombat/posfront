@@ -84,52 +84,53 @@ export class OperationsComponent implements OnInit {
 
   ngOnInit() {
     // this.operationService.cashService.systemConfig.companyType = CompanyType.RESTAURANT;
-    this.operationService.cashService.getSystemConfig().subscribe(config => {
-      if(config.allowCardSplit && config.paxConnType === PAXConnTypeEnum.ONLINE ){
-        this.customerOperations.unshift(OtherOpEnum.SPLIT_CARD);
-        this.customerColor.unshift('yellow');
-      }
-      if(config.companyType === CompanyType.RESTAURANT || !config.allowEBT){
-        // Remove EBT options and colors in payment
-        this.paymentOperations.splice(0,1);
-        this.paymentColor.splice(0,1);
-        // Remove EBT total and color in totals
-        this.totalsOperations.splice(0,1);
-        this.totalColor.splice(0,1);
-        // Remove EBT total and color in finance
-        this.financeOperations.splice(this.financeOperations.indexOf(AdminOpEnum.EBT_INQUIRY),1);
-        // Push in money operations other payment option
-        this.paymentOperations.splice(-1).map(op => this.moneyOperations.push(op));
-        this.paymentColor.splice(-1).map(op => this.moneyColor.push(op));
-      } else {
-        // Remove TXType operation
-        //this.financeOperations.splice(1, 1);
-        // Remove Table operation and relative color
-        //this.otherOperations.splice(-1);
-        //this.otherColor.splice(-1);
-        // Push in money operations check and other payment options
-        this.paymentOperations.splice(-2).map(op => this.moneyOperations.push(op));
-        this.paymentColor.splice(-2).map(op => this.moneyColor.push(op));
-        //this.operationService.cashService.disabledPayment=[true, false, true, true, true, true];
-      }
-      if(config.companyType !== CompanyType.RESTAURANT){
-        // Remove restaurant operations
-        this.restaurantOperations.splice(0);
-        this.restaurantColor = '';
-      }
-      if(config.companyType !== CompanyType.ISLANDS){
-        // Push in finance operations reprint, hold order, review and recall check options before logout
-        let logoutOp = this.financeOperations.splice(-1);
-        console.log('logoutOp', logoutOp);
-        this.financeAdminOperations.splice(0, 4).map( op => {
-          this.financeOperations.push(op);
-          if(op === FinancialOpEnum.REPRINT) this.financeAdminOperations.unshift(op);
-        });
-        this.financeOperations.push(logoutOp[0]);
-      }
-    }, err => {
+    //this.operationService.cashService.getSystemConfig().subscribe(config => {
+    let config = this.operationService.cashService.config.sysConfig;
+    if(config.allowCardSplit && config.paxConnType === PAXConnTypeEnum.ONLINE ){
+      this.customerOperations.unshift(OtherOpEnum.SPLIT_CARD);
+      this.customerColor.unshift('yellow');
+    }
+    if(config.companyType === CompanyType.RESTAURANT || !config.allowEBT){
+      // Remove EBT options and colors in payment
+      this.paymentOperations.splice(0,1);
+      this.paymentColor.splice(0,1);
+      // Remove EBT total and color in totals
+      this.totalsOperations.splice(0,1);
+      this.totalColor.splice(0,1);
+      // Remove EBT total and color in finance
+      this.financeOperations.splice(this.financeOperations.indexOf(AdminOpEnum.EBT_INQUIRY),1);
+      // Push in money operations other payment option
+      this.paymentOperations.splice(-1).map(op => this.moneyOperations.push(op));
+      this.paymentColor.splice(-1).map(op => this.moneyColor.push(op));
+    } else {
+      // Remove TXType operation
+      //this.financeOperations.splice(1, 1);
+      // Remove Table operation and relative color
+      //this.otherOperations.splice(-1);
+      //this.otherColor.splice(-1);
+      // Push in money operations check and other payment options
+      this.paymentOperations.splice(-2).map(op => this.moneyOperations.push(op));
+      this.paymentColor.splice(-2).map(op => this.moneyColor.push(op));
+      //this.operationService.cashService.disabledPayment=[true, false, true, true, true, true];
+    }
+    if(config.companyType !== CompanyType.RESTAURANT){
+      // Remove restaurant operations
+      this.restaurantOperations.splice(0);
+      this.restaurantColor = '';
+    }
+    if(config.companyType !== CompanyType.ISLANDS){
+      // Push in finance operations reprint, hold order, review and recall check options before logout
+      let logoutOp = this.financeOperations.splice(-1);
+      console.log('logoutOp', logoutOp);
+      this.financeAdminOperations.splice(0, 4).map( op => {
+        this.financeOperations.push(op);
+        if(op === FinancialOpEnum.REPRINT) this.financeAdminOperations.unshift(op);
+      });
+      this.financeOperations.push(logoutOp[0]);
+    }
+   /* }, err => {
       this.operationService.cashService.openGenericInfo('Error', 'Can\'t get configuration');
-    });
+    });*/
   }
 
   financeKey(ev) {

@@ -78,7 +78,7 @@ export class ProductOrderService implements OnDestroy {
         this.productScalable(product);
       } else if (product.generic) {
         console.log('adminLogged', this.invoiceService.authService.adminLogged());
-        this.cashService.systemConfig.allowAddProdGen ?
+        this.cashService.config.sysConfig.allowAddProdGen ?
           this.productGeneric(product):
           this.invoiceService.authService.adminLogged() ?
             this.productGeneric(product) :
@@ -115,7 +115,7 @@ export class ProductOrderService implements OnDestroy {
   }
 
   productScalable(product: Product){
-    this.cashService.systemConfig.externalScale ?
+    this.cashService.config.sysConfig.externalScale ?
       product.generic ? this.openDialogGenericProd(product): this.invoiceService.addProductOrder(this.createProductOrder(product)) :
       this.openDialogScalableProd(product);
   }

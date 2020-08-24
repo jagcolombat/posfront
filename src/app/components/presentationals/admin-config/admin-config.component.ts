@@ -1,13 +1,11 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
-import {DataStorageService} from "../../../services/api/data-storage.service";
 import {CashService} from "../../../services/bussiness-logic/cash.service";
 import {PAXConnTypeEnum} from "../../../utils/pax-conn-type.enum";
 import {InformationType} from "../../../utils/information-type.enum";
 import {CompanyType} from "../../../utils/company-type.enum";
 import {Configuration} from "../../../models/configuration.model";
 import {BreakTextEnum} from "../../../utils/breaktext.enum";
-import {ConfigurationService} from "../../../services/bussiness-logic/configuration.service";
 
 @Component({
   selector: 'admin-config',
@@ -37,29 +35,28 @@ export class AdminConfigComponent implements OnInit {
   changePriceBySelection: boolean;
   allowClock: boolean;
 
-  constructor( public dialogRef: MatDialogRef<AdminConfigComponent>,
-               @Inject(MAT_DIALOG_DATA) public data: any, private dataStorage: DataStorageService,
-               private cashService: CashService, private configService: ConfigurationService) {
-    console.log('adminConfig', this.cashService.systemConfig);
-    this.allowAddProdGen = this.cashService.systemConfig.allowAddProdGen;
-    this.allowDeleteProd = this.cashService.systemConfig.allowClear;
-    this.allowEBT = this.cashService.systemConfig.allowEBT;
-    this.allowSplitPayment = this.cashService.systemConfig.allowCardSplit;
-    this.externalScale = this.cashService.systemConfig.externalScale;
-    this.paxConnType = this.cashService.systemConfig.paxConnType === PAXConnTypeEnum.ONLINE;
-    this.fullRefund = this.cashService.systemConfig.fullRefund;
-    this.companyType = this.cashService.systemConfig.companyType+'';
-    this.breakWord = this.cashService.systemConfig.breakText === BreakTextEnum.WORD;
-    this.closeChange = this.cashService.systemConfig.closeChange;
-    this.giftCard = this.cashService.systemConfig.allowGiftCard;
-    this.clearLastProd = this.cashService.systemConfig.allowLastProdClear;
-    this.promotions = this.cashService.systemConfig.allowPromotion;
-    this.foodStampMark = this.cashService.systemConfig.allowFoodStampMark;
-    this.applyDiscount = this.cashService.systemConfig.allowApplyDiscount;
-    this.changePriceBySelection = this.cashService.systemConfig.changePriceBySelection;
-    this.allowClock = this.cashService.systemConfig.allowClock;
+  constructor( public dialogRef: MatDialogRef<AdminConfigComponent>, @Inject(MAT_DIALOG_DATA) public data: any, 
+               private cashService: CashService) {
+    console.log('adminConfig', this.cashService.config.sysConfig);
+    this.allowAddProdGen = this.cashService.config.sysConfig.allowAddProdGen;
+    this.allowDeleteProd = this.cashService.config.sysConfig.allowClear;
+    this.allowEBT = this.cashService.config.sysConfig.allowEBT;
+    this.allowSplitPayment = this.cashService.config.sysConfig.allowCardSplit;
+    this.externalScale = this.cashService.config.sysConfig.externalScale;
+    this.paxConnType = this.cashService.config.sysConfig.paxConnType === PAXConnTypeEnum.ONLINE;
+    this.fullRefund = this.cashService.config.sysConfig.fullRefund;
+    this.companyType = this.cashService.config.sysConfig.companyType+'';
+    this.breakWord = this.cashService.config.sysConfig.breakText === BreakTextEnum.WORD;
+    this.closeChange = this.cashService.config.sysConfig.closeChange;
+    this.giftCard = this.cashService.config.sysConfig.allowGiftCard;
+    this.clearLastProd = this.cashService.config.sysConfig.allowLastProdClear;
+    this.promotions = this.cashService.config.sysConfig.allowPromotion;
+    this.foodStampMark = this.cashService.config.sysConfig.allowFoodStampMark;
+    this.applyDiscount = this.cashService.config.sysConfig.allowApplyDiscount;
+    this.changePriceBySelection = this.cashService.config.sysConfig.changePriceBySelection;
+    this.allowClock = this.cashService.config.sysConfig.allowClock;
 
-    if(this.cashService.systemConfig.inactivityTime) this.timeLogout = this.cashService.systemConfig.inactivityTime+'';
+    if(this.cashService.config.sysConfig.inactivityTime) this.timeLogout = this.cashService.config.sysConfig.inactivityTime+'';
   }
 
   ngOnInit() {
@@ -176,29 +173,29 @@ export class AdminConfigComponent implements OnInit {
   }
 
   done(){
-    let conf = Object.assign({}, this.cashService.systemConfig);
-    this.cashService.systemConfig.allowAddProdGen = this.allowAddProdGen;
-    this.cashService.systemConfig.allowClear = this.allowDeleteProd;
-    this.cashService.systemConfig.allowEBT = this.allowEBT;
-    this.cashService.systemConfig.allowCardSplit = this.allowSplitPayment;
-    this.cashService.systemConfig.paxConnType = this.paxConnType ? PAXConnTypeEnum.ONLINE : PAXConnTypeEnum.OFFLINE;
-    this.cashService.systemConfig.externalScale = this.externalScale;
-    this.cashService.systemConfig.companyType = <CompanyType>this.companyType;
-    this.cashService.systemConfig.fullRefund = this.fullRefund;
-    this.cashService.systemConfig.inactivityTime = +this.timeLogout;
-    this.cashService.systemConfig.breakText = this.breakWord ? BreakTextEnum.WORD : BreakTextEnum.ALL;
-    this.cashService.systemConfig.closeChange = this.closeChange;
-    this.cashService.systemConfig.allowGiftCard = this.giftCard;
-    this.cashService.systemConfig.allowLastProdClear = this.clearLastProd;
-    this.cashService.systemConfig.allowPromotion = this.promotions;
-    this.cashService.systemConfig.allowFoodStampMark = this.foodStampMark;
-    this.cashService.systemConfig.allowApplyDiscount = this.applyDiscount;
-    this.cashService.systemConfig.changePriceBySelection = this.changePriceBySelection;
-    this.configService.systemConfig.allowClock = this.allowClock;
+    let conf = Object.assign({}, this.cashService.config.sysConfig);
+    this.cashService.config.sysConfig.allowAddProdGen = this.allowAddProdGen;
+    this.cashService.config.sysConfig.allowClear = this.allowDeleteProd;
+    this.cashService.config.sysConfig.allowEBT = this.allowEBT;
+    this.cashService.config.sysConfig.allowCardSplit = this.allowSplitPayment;
+    this.cashService.config.sysConfig.paxConnType = this.paxConnType ? PAXConnTypeEnum.ONLINE : PAXConnTypeEnum.OFFLINE;
+    this.cashService.config.sysConfig.externalScale = this.externalScale;
+    this.cashService.config.sysConfig.companyType = <CompanyType>this.companyType;
+    this.cashService.config.sysConfig.fullRefund = this.fullRefund;
+    this.cashService.config.sysConfig.inactivityTime = +this.timeLogout;
+    this.cashService.config.sysConfig.breakText = this.breakWord ? BreakTextEnum.WORD : BreakTextEnum.ALL;
+    this.cashService.config.sysConfig.closeChange = this.closeChange;
+    this.cashService.config.sysConfig.allowGiftCard = this.giftCard;
+    this.cashService.config.sysConfig.allowLastProdClear = this.clearLastProd;
+    this.cashService.config.sysConfig.allowPromotion = this.promotions;
+    this.cashService.config.sysConfig.allowFoodStampMark = this.foodStampMark;
+    this.cashService.config.sysConfig.allowApplyDiscount = this.applyDiscount;
+    this.cashService.config.sysConfig.changePriceBySelection = this.changePriceBySelection;
+    this.cashService.config.sysConfig.allowClock = this.allowClock;
 
-    this.dataStorage.setConfiguration(this.cashService.systemConfig).subscribe(value => {
+    this.cashService.config.setConfig(this.cashService.config.sysConfig).subscribe(value => {
       console.log('set configuration', value, conf);
-      this.cashService.systemConfig = <Configuration> value;
+      this.cashService.config.sysConfig = <Configuration> value;
       if(this.needLogout){
         this.cashService.openGenericInfo(InformationType.INFO,
           'Please logout and login for apply the new configuration successfully. Do you want logout?',
@@ -217,7 +214,7 @@ export class AdminConfigComponent implements OnInit {
       }
     }, error1 => {
       console.error(error1);
-      this.cashService.systemConfig = Object.assign({}, conf);
+      this.cashService.config.sysConfig = Object.assign({}, conf);
       this.dialogRef.close();
     });
 

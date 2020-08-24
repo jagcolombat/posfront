@@ -22,8 +22,8 @@ export class AnnounceComponent implements OnInit {
   ngOnInit() {
     this.imagesUrl = [
       { url: this.path + 'anuncio1.jpg', caption: 'The first slide'},
-      { url: this.path + '/assets/anuncios/anuncio2.jpg', caption: 'The second slide'},
-      { url: this.path + '/assets/anuncios/anuncio3.jpg', caption: 'The third slide'},
+      { url: this.path + 'anuncio2.jpg', caption: 'The second slide'},
+      { url: this.path + 'anuncio3.jpg', caption: 'The third slide'},
     ];
   }
 

@@ -113,7 +113,7 @@ export class AgGridComponent implements OnInit, /*OnChanges,*/ OnDestroy {
   }
 
   onAddRow(data: ProductOrder) {
-    let allowFoodStampMark = this.cashService.systemConfig ? this.cashService.systemConfig.allowFoodStampMark : true;
+    let allowFoodStampMark = this.cashService.config.sysConfig ? this.cashService.config.sysConfig.allowFoodStampMark : true;
 
     let formatNumber = (number)=> Number.isInteger(number)? number : Number(number).toFixed(2);
     const newData = {

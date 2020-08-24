@@ -11,6 +11,7 @@ import {UserrolEnum} from "../../utils/userrol.enum";
 import {InformationType} from "../../utils/information-type.enum";
 import {FinancialOpEnum} from "../../utils/operations";
 import {PAXConnTypeEnum} from "../../utils/pax-conn-type.enum";
+import {ConfigurationService} from "./configuration.service";
 
 @Injectable({
   providedIn: 'root'
@@ -31,7 +32,7 @@ export class CashService {
   disabledInvoiceAdminOp: boolean | boolean[] = false;
   disabledOtherAdminOp: boolean | boolean[] = false;
   disabledCustomerOp: boolean | boolean[] = false;
-  systemConfig: Configuration;
+  //systemConfig: Configuration;
   noLet4Supervisor =  [AdminOpEnum.APPLY_DISCOUNT, AdminOpEnum.REMOVE_HOLD, AdminOpEnum.CHARGE_ACCT_SETUP,
     AdminOpEnum.EMPLOYEE_SETUP, AdminOpEnum.CHANGE_PRICES, AdminOpEnum.CREDIT_LIMIT, AdminOpEnum.WTDZ]
     .map(a => a.toUpperCase());
@@ -39,16 +40,17 @@ export class CashService {
   @Output() evResetEnableState = new EventEmitter<boolean>();
   @Output() evLogout = new EventEmitter<boolean>();
 
-  constructor(public dialog: MatDialog, private dataStorage: DataStorageService, private authServ: AuthService) {
+  constructor(public dialog: MatDialog, private dataStorage: DataStorageService, private authServ: AuthService,
+              public config: ConfigurationService) {
     //this.resetEnableState();
-    //if(this.authServ.token) this.setSystemConfig();
+    //this.systemConfig = this.config.sysConfig;
   }
 
   opDenyByUser(op: AdminOpEnum | FinancialOpEnum, userRol?: UserrolEnum ){
     let opDeny = false;
-    if(this.systemConfig.companyType === CompanyType.ISLANDS)
+    if(this.config.sysConfig.companyType === CompanyType.ISLANDS)
       this.noLet4Supervisor.push(FinancialOpEnum.HOLD.toUpperCase());
-    if(this.systemConfig.allowApplyDiscount){
+    if(this.config.sysConfig.allowApplyDiscount){
       this.noLet4Supervisor.splice(this.noLet4Supervisor.
       findIndex(v => v === AdminOpEnum.APPLY_DISCOUNT.toUpperCase()),1);
     } else {
@@ -113,7 +115,7 @@ export class CashService {
     console.log(fs);
     this.disabledInput = this.disabledFinOp = this.disabledTotalOp = this.disableStock = true;
     this.disabledInvOp = [false, true, true, true];
-    //if(this.systemConfig && this.systemConfig.allowCardSplit) this.disabledOtherOp = false;
+    //if(this.config.sysConfig && this.config.sysConfig.allowCardSplit) this.disabledOtherOp = false;
     if(fs){
       this.disabledPayment = [false, true, true, true, true, true]
     } else if (refund) {
@@ -133,17 +135,17 @@ export class CashService {
     console.log('totalsDisabled');
     this.disabledInput = this.disabledFinOp = this.disabledTotalOp = this.disableStock = true;
     //this.disabledInvOp = [false, true, true, true];
-    //if(this.systemConfig && this.systemConfig.allowCardSplit) this.disabledOtherOp = false;
+    //if(this.config.sysConfig && this.config.sysConfig.allowCardSplit) this.disabledOtherOp = false;
     //this.splitAllow(true);
   }
 
   disabledPaymentByCompany(){
-    return (this.systemConfig.companyType === CompanyType.MARKET && this.systemConfig.allowEBT) ?
+    return (this.config.sysConfig.companyType === CompanyType.MARKET && this.config.sysConfig.allowEBT) ?
       [true, false, false, false, false, false] : false;
   }
 
   disabledPaymentMoneyByCompany(){
-    return (this.systemConfig.companyType === CompanyType.MARKET) ? [true, true, true, true, true, true, false, false] : true;
+    return (this.config.sysConfig.companyType === CompanyType.MARKET) ? [true, true, true, true, true, true, false, false] : true;
   }
 
   ebtEnableState() {
@@ -194,7 +196,7 @@ export class CashService {
     return this.dataStorage.getConfiguration();
   }
 
-  setSystemConfig(prop?: string) {
+  /*setSystemConfig(prop?: string) {
     // this.setUserToInvoice();
     this.getSystemConfig().subscribe(next => {
       console.info('getConfig successfull', next);
@@ -202,8 +204,8 @@ export class CashService {
       //if(!next.allowAddProdGen) next.allowAddProdGen = true;
       if(!next.paxConnType) next.paxConnType = PAXConnTypeEnum.OFFLINE;
       if(!next.inactivityTime) next.inactivityTime = 60;
-      this.systemConfig = next;
-      if(!this.systemConfig.breakText) this.systemConfig.breakText = BreakTextEnum.ALL;
+      this.config.sysConfig = next;
+      if(!this.config.sysConfig.breakText) this.config.sysConfig.breakText = BreakTextEnum.ALL;
       this.resetEnableState();
       //this.splitAllow();
       // return prop ? next[prop]: next;
@@ -211,21 +213,23 @@ export class CashService {
       console.error('getConfig failed');
       this.openGenericInfo('Error', 'Can\'t get configuration');
     });
-  }
+  }*/
 
   getOrder(inv: string){
     return this.dataStorage.getOrder(inv);
   }
 
   private splitAllow(enabled?: boolean) {
-    /*this.disabledCustomerOp = (this.systemConfig && this.systemConfig.allowCardSplit && !enabled) ?
+    /*this.disabledCustomerOp = (this.config.sysConfig && this.config.sysConfig.allowCardSplit && !enabled) ?
       [true, false, false, true] : false;*/
-    if(this.systemConfig && (this.systemConfig.allowCardSplit && this.systemConfig.paxConnType === PAXConnTypeEnum.ONLINE)){
+    if(this.config.sysConfig && (this.config.sysConfig.allowCardSplit &&
+      this.config.sysConfig.paxConnType === PAXConnTypeEnum.ONLINE)){
       this.disabledCustomerOp = !enabled ? [true, false, false, true] : false;
-    } else if(this.systemConfig && (!this.systemConfig.allowCardSplit || this.systemConfig.paxConnType !== PAXConnTypeEnum.ONLINE)){
+    } else if(this.config.sysConfig && (!this.config.sysConfig.allowCardSplit ||
+      this.config.sysConfig.paxConnType !== PAXConnTypeEnum.ONLINE)){
       this.disabledCustomerOp = !enabled ? [false, false, true] : false;
     } else {
-      console.log('splitAllow', this.systemConfig, this.disabledCustomerOp);
+      console.log('splitAllow', this.config.sysConfig, this.disabledCustomerOp);
     }
   }
 

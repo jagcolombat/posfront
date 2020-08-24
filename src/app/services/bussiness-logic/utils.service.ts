@@ -27,4 +27,8 @@ export class UtilsService {
   openDialogs(){
     return (this.dialog.openDialogs && this.dialog.openDialogs.length);
   }
+
+  updateBrowser() {
+    location.reload(true);
+  }
 }

@@ -32,6 +32,7 @@ import {SetDateComponent} from "../../components/presentationals/set-date/set-da
 import {GiftCardModel, GiftModel} from "../../models/gift-card.model";
 import {thousandFormatter} from "../../utils/functions/transformers";
 import {Product} from "../../models";
+import {UtilsService} from "./utils.service";
 
 @Injectable({
   providedIn: 'root'
@@ -42,7 +43,7 @@ export class AdminOptionsService {
   currentOperation: AdminOpEnum | string;
 
   constructor(private invoiceService: InvoiceService, public cashService: CashService, public auth: AuthService,
-              public operationService: OperationsService, private dataStorage: DataStorageService,
+              public operationService: OperationsService, private dataStorage: DataStorageService, private utils: UtilsService,
               private initService: InitViewService, private clientService: ClientService, private router: Router) {
 
     this.operationService.evCancelCheck.subscribe(next => {
@@ -459,7 +460,7 @@ export class AdminOptionsService {
     /*(this.currentOperation !== AdminOpEnum.CHANGE_PRICES) ? this.currentOperation = AdminOpEnum.CHANGE_PRICES:
       this.currentOperation = "";*/
     this.currentOperation = AdminOpEnum.CHANGE_PRICES;
-    if(this.invoiceService.digits && !this.cashService.systemConfig.changePriceBySelection){
+    if(this.invoiceService.digits && !this.cashService.config.sysConfig.changePriceBySelection){
       this.doChangePrice();
     } else {
       this.router.navigateByUrl('/cash/dptos');
@@ -913,7 +914,7 @@ export class AdminOptionsService {
     document.addEventListener('keydown', (e) => { console.log('keydown', e); })
     document.addEventListener('keypress', (e) => { console.log('keypress', e); })
     document.body.dispatchEvent(e);*/
-    location.reload(true);
+    this.utils.updateBrowser();
   }
 
   createKeyboradEvent(name, key, altKey = false, ctrlKey = false, shitKey = false, metaKey = false, bubbles = true){

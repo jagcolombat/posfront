@@ -29,7 +29,7 @@ export class ListProdComponent implements OnInit {
 
   constructor( private router: Router, private route: ActivatedRoute, public stockService: StockService) {
     this.sizePage = this.stockService.getStockCountItems();
-    console.log(this.sizePage, this.stockService.cashService.systemConfig.breakText);
+    console.log(this.sizePage, this.stockService.cashService.config.sysConfig.breakText);
     //this.breakWordOrAll = this.stockService.cashService.systemConfig.breakText;
   }
 
@@ -138,6 +138,6 @@ export class ListProdComponent implements OnInit {
   }
 
   getBreakTextType(){
-    return this.stockService.cashService.systemConfig.breakText;
+    return this.stockService.cashService.config.sysConfig.breakText;
   }
 }

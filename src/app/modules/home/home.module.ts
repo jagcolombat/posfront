@@ -3,9 +3,6 @@ import { CommonModule } from '@angular/common';
 
 import { HomeRoutingModule } from './home-routing.module';
 import { LoginComponent } from "../../components/presentationals/login/login.component";
-import { AnnounceComponent } from "../../components/presentationals/announce/announce.component";
-import { PromotionsComponent } from "../../components/presentationals/promotions/promotions.component";
-import { SlideshowModule } from "ng-simple-slideshow";
 import {InitViewComponent} from "../../components/containers/init-view/init-view.component";
 import {AgeValidationComponent} from "../../components/presentationals/age-validation/age-validation.component";
 import {GenericInfoModalComponent} from "../../components/presentationals/generic-info-modal/generic-info-modal.component";
@@ -34,13 +31,13 @@ import {ListTablesComponent} from "../../components/presentationals/list-tables/
 import {InputCcComponent} from "../../components/presentationals/input-cc/input-cc.component";
 import {OrderInfoComponent} from "../../components/presentationals/order-info/order-info.component";
 import {OrderInfoDetailsComponent} from "../../components/presentationals/order-info-details/order-info-details.component";
-import {ClientModule} from "../client/client.module";
-import {ClientViewComponent} from "../../components/containers/client-view/client-view.component";
 import {EbtInquiryInfoComponent} from "../../components/presentationals/ebt-inquiry-info/ebt-inquiry-info.component";
 import {SwipeCredentialCardComponent} from "../../components/presentationals/swipe-credential-card/swipe-credential-card.component";
-import {AppComponent} from "../../app.component";
 import {DailyCloseComponent} from "../../components/presentationals/daily-close/daily-close.component";
 import {SetDateComponent} from "../../components/presentationals/set-date/set-date.component";
+import {ClockInOutComponent} from "../../components/presentationals/clock-in-out/clock-in-out.component";
+import {AppComponent} from "../../app.component";
+import {LoginClockComponent} from "../../components/containers/login-clock/login-clock.component";
 
 @NgModule({
   imports: [
@@ -54,7 +51,9 @@ import {SetDateComponent} from "../../components/presentationals/set-date/set-da
   ],
   declarations: [
     InitViewComponent,
+    LoginClockComponent,
     LoginComponent,
+    ClockInOutComponent,
     AgeValidationComponent,
     GenericInfoModalComponent,
     ProductGenericComponent,

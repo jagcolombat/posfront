@@ -53,7 +53,7 @@ export class StockService {
   }
 
   changePriceOrAddProduct(prod: Product){
-    (this.cashService.systemConfig.changePriceBySelection &&
+    (this.cashService.config.sysConfig.changePriceBySelection &&
       this.operationService.currentOperation === AdminOpEnum.CHANGE_PRICES) ?
       this.operationService.changePriceOp(prod) : this.addProduct(prod);
   }

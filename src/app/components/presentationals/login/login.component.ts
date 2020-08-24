@@ -108,6 +108,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     let userTmp = user.substr(1, user.length-2);
     console.log('userScan', user, userTmp);
     this.input = userTmp;
-    this.login();
+    if(!this.initService.config.sysConfig.allowClock)
+      this.login();
   }
 }

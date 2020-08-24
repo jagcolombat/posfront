@@ -4,6 +4,18 @@
   flex-wrap: wrap;
 }
 
+.row {
+  justify-content: center;
+}
+
+.column.left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+}
+
 button[mat-button] {
   background-color: rgba(19, 34, 87, 0.71);
   border-color: rgba(13, 20, 40, 0.71);
@@ -24,7 +36,7 @@ button[mat-button].left:last-of-type{
   /*background-color: #ed5f5f;
   border-color: #913939;*/
   @include red;
-  height: 170px;
+  //height: 170px;
 }
 
 button[mat-button].right{

@@ -38,7 +38,7 @@ export class CashViewComponent implements OnInit, OnDestroy {
   ngOnInit() {
     //this.ws.start();
     //this.invoiceService.cashService.resetEnableState();
-    if(this.invoiceService.authService.token) this.invoiceService.cashService.setSystemConfig();
+    //if(this.invoiceService.authService.token) this.invoiceService.cashService.setSystemConfig();
   }
 
   handleKeyboardEvent(ev: KeyboardEvent) {

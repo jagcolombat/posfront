@@ -87,7 +87,7 @@ export class OperationsService {
   }
 
   getInactivityTime(): number{
-    return (this.cashService.systemConfig) ? this.cashService.systemConfig.inactivityTime : 60;
+    return (this.cashService.config.sysConfig) ? this.cashService.config.sysConfig.inactivityTime : 60;
   }
 
   resetInactivity(cont: boolean, msg?: string) {
@@ -155,22 +155,18 @@ export class OperationsService {
           .afterClosed().subscribe(next => {
           if (next !== undefined && next.confirm) {
             // If clear need manager auth
-            this.cashService.getSystemConfig().subscribe(config => {
-              // config.allowClear = false;
-              console.log('clear config', config);
-              if(config.allowLastProdClear === undefined) config.allowLastProdClear = false;
-              if(config.allowClear){
-                this.deleteSelectedProducts();
-              }
-              //If desire delete only the last products
-              else if (config.allowLastProdClear && this.invoiceService.lastProdAdd){
-                this.deleteLastProduct();
-              } else {
-                this.delSelProdByAdmin();
-              }
-            }, err => {
-              this.cashService.openGenericInfo('Error', 'Can\'t get configuration');
-            });
+            //console.log('clear config', config);
+            if(this.cashService.config.sysConfig.allowLastProdClear === undefined)
+              this.cashService.config.sysConfig.allowLastProdClear = false;
+            if(this.cashService.config.sysConfig.allowClear){
+              this.deleteSelectedProducts();
+            }
+            //If desire delete only the last products
+            else if (this.cashService.config.sysConfig.allowLastProdClear && this.invoiceService.lastProdAdd){
+              this.deleteLastProduct();
+            } else {
+              this.delSelProdByAdmin();
+            }
           }
         })
       } else {
@@ -438,7 +434,7 @@ export class OperationsService {
   subTotal(){
     console.log('subTotal', this.currentOperation);
     let refund = this.currentOperation === FinancialOpEnum.REFUND;
-    if (this.invoiceService.invoice.productOrders.length > 0 || ( this.cashService.systemConfig.fullRefund && refund )) {
+    if (this.invoiceService.invoice.productOrders.length > 0 || ( this.cashService.config.sysConfig.fullRefund && refund )) {
       this.currentOperation = TotalsOpEnum.SUBTOTAL;
       this.cashService.totalsDisabled();
       this.invoiceService.subTotal().subscribe(
@@ -468,7 +464,7 @@ export class OperationsService {
   ebtSubTotal(){
     console.log('ebtSubTotal', this.currentOperation);
     let refund = this.currentOperation === FinancialOpEnum.REFUND;
-    if (this.invoiceService.invoice.productOrders.length > 0 || ( this.cashService.systemConfig.fullRefund && refund )) {
+    if (this.invoiceService.invoice.productOrders.length > 0 || ( this.cashService.config.sysConfig.fullRefund && refund )) {
       this.currentOperation = TotalsOpEnum.FS_SUBTOTAL;
       this.cashService.totalsDisabled();
       this.invoiceService.fsSubTotal().subscribe(
@@ -755,7 +751,8 @@ export class OperationsService {
   cash(opType?: PaymentOpEnum) {
     console.log('cash');
     const totalToPaid = this.getTotalToPaid();
-    if ((totalToPaid !== 0 || (totalToPaid === 0 && this.cashService.systemConfig.fullRefund) ) && this.invoiceService.invoice.isRefund) {
+    if ((totalToPaid !== 0 || (totalToPaid === 0 && this.cashService.config.sysConfig.fullRefund) )
+      && this.invoiceService.invoice.isRefund) {
       console.log('paid refund, open cash!!!');
       this.invoiceService.cash(totalToPaid, totalToPaid, opType)
         .subscribe(
@@ -851,11 +848,11 @@ export class OperationsService {
       $op.unsubscribe();
       this.cashService.openGenericInfo('Error', 'Can\'t complete '+ opMsg +' operation because timeout. Try again');
       this.cashService.resetEnableState();
-    }, this.cashService.systemConfig.paxTimeout*1000);
+    }, this.cashService.config.sysConfig.paxTimeout*1000);
   }
 
   paymentReturn(valueToReturn, close?: boolean){
-    close = this.cashService.systemConfig.closeChange;
+    close = this.cashService.config.sysConfig.closeChange;
     return this.cashService.dialog.open(CashPaymentComponent,
       {
         width: '350px', height: '260px', data: {value: valueToReturn, close: close, closeAutomatic: false}, disableClose: true
@@ -978,7 +975,7 @@ export class OperationsService {
   }
 
   setTip(action?: (i?: any, j?: any) => void, op?: PaymentOpEnum, context?: any){
-    if (this.cashService.systemConfig.companyType === CompanyType.RESTAURANT &&
+    if (this.cashService.config.sysConfig.companyType === CompanyType.RESTAURANT &&
       this.invoiceService.invoice.paymentStatus === PaymentStatus.AUTH) {
       this.cashService.dialog.open(ProductGenericComponent,
         {
@@ -1339,7 +1336,7 @@ export class OperationsService {
 
   setCreditCardType(splitAmount?: number) {
     let ccTypes= new Array<any>({value: 1, text: 'Automatic'}, {value: 2, text: 'Manual'});
-    if(this.cashService.systemConfig.allowEBT)
+    if(this.cashService.config.sysConfig.allowEBT)
       [{value: 3, text: 'EBT'}, {value: 4, text: 'EBT Cash'}].map(op => ccTypes.push(op));
     this.cashService.dialog.open(DialogDeliveryComponent,
       { width: '600px', height: '340px', data: {name: 'Credit Card Types', label: 'Select a type', arr: ccTypes},
@@ -1375,7 +1372,7 @@ export class OperationsService {
       .afterClosed().subscribe(next => {
         console.log(next);
         if(next !== "") {
-          this.cashService.systemConfig.paxConnType === PAXConnTypeEnum.OFFLINE ?
+          this.cashService.config.sysConfig.paxConnType === PAXConnTypeEnum.OFFLINE ?
             this.externalCardPayment(undefined, undefined, PaymentOpEnum.EBT_CARD, next):
             this.ebt(next);
         }
@@ -1621,7 +1618,7 @@ export class OperationsService {
     } else {
       // Send misc product to invoice
       //this.cashService.openGenericInfo('Information', 'Send misc product to invoice');
-      if(!this.cashService.systemConfig.externalScale){
+      if(!this.cashService.config.sysConfig.externalScale){
         this.cashService.dialog.open(ProductGenericComponent,
           {
             width: '480px', height: '650px', data: {name: 'Weight', label: 'Weight (Lbs)', unitCost: 0}, disableClose: true
@@ -1910,7 +1907,7 @@ export class OperationsService {
   }
 
   detectPAXConn(op?: PaymentOpEnum){
-    switch (this.cashService.systemConfig.paxConnType) {
+    switch (this.cashService.config.sysConfig.paxConnType) {
       case PAXConnTypeEnum.BOTH:
         this.choosePAXConnType(op);
         break;
@@ -1944,7 +1941,7 @@ export class OperationsService {
       {value: PaymentMethodEnum.OTHER, text: 'Others'},
             {value: PaymentMethodEnum.GIFT_CARD, text: 'Gift Card'}
       );
-    if(!this.cashService.systemConfig.allowGiftCard) ccTypes.splice(-1);
+    if(!this.cashService.config.sysConfig.allowGiftCard) ccTypes.splice(-1);
     this.cashService.dialog.open(DialogDeliveryComponent,{ width: '600px', height: '340px',
       data: {name: 'Other Payment Types', label: 'Select a type', arr: ccTypes},
       disableClose: true }).afterClosed().subscribe(next => {

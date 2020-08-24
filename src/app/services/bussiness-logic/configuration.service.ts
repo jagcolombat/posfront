@@ -9,7 +9,7 @@ import {UtilsService} from "./utils.service";
   providedIn: 'root'
 })
 export class ConfigurationService {
-  systemConfig: Configuration;
+  sysConfig: Configuration;
 
   constructor(private dataStore: DataStorageService, private utils: UtilsService) { }
 
@@ -19,7 +19,15 @@ export class ConfigurationService {
       this.setSystemConfig(next);
     }, err => {
       console.error('getConfig failed');
-      this.utils.openGenericInfo('Error', 'Can\'t get configuration');
+      this.utils.openGenericInfo('Error', 'Can\'t get configuration. Do you want reload configration?',
+        null, true, true).afterClosed().subscribe(
+          next => {
+            console.log(next);
+            if(next.confirm){
+              this.utils.updateBrowser();
+            }
+          }
+      );
     });
   }
 
@@ -28,7 +36,7 @@ export class ConfigurationService {
     if(!conf.paxConnType) conf.paxConnType = PAXConnTypeEnum.OFFLINE;
     if(!conf.inactivityTime) conf.inactivityTime = 60;
     if(!conf.breakText) conf.breakText = BreakTextEnum.ALL;
-    this.systemConfig = conf;
+    this.sysConfig = conf;
     //this.resetEnableState();
   }
 
