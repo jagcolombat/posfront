@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {EClockType} from "../../../utils/clock-type.enum";
+import {leaveFocusOnButton} from "../../../utils/functions/functions";
 
 @Component({
   selector: 'clock-in-out',
@@ -19,8 +20,9 @@ export class ClockInOutComponent implements OnInit {
     this.clockLabel = [EClockType[EClockType.IN], EClockType[EClockType.OUT]];
   }
 
-  clockAction(ev){
-    this.evClock.emit(ev);
+  clockAction(ev, val){
+    leaveFocusOnButton(ev);
+    this.evClock.emit(val);
   }
 
 }
