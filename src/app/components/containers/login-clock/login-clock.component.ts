@@ -23,6 +23,10 @@ export class LoginClockComponent implements OnInit {
 
   clockInOut(ev: EClockType) {
     console.log('clockInOut', ev, this.login.input);
+    if(this.login.input.trim()==='' || this.login.input.length < 4 ){
+      this.utils.openGenericInfo(InformationType.ERROR, 'Password must have at least 4 characters for clock in/out');
+      return;
+    }
     this.dataStore.employClock({ username: 'user', password: this.login.input }, ev).subscribe(
       next => {
         let token = this.login.authService.decodeToken(next.token);

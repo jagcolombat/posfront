@@ -18,8 +18,8 @@ export class ConfigurationService {
       console.info('getConfig successfull', next);
       this.setSystemConfig(next);
     }, err => {
-      console.error('getConfig failed');
-      this.utils.openGenericInfo('Error', 'Can\'t get configuration. Do you want reload configration?',
+      console.error('getConfig failed', err);
+      this.utils.openGenericInfo('Error', 'Can\'t get configuration. Do you want reload configuration?',
         null, true, true).afterClosed().subscribe(
           next => {
             console.log(next);
