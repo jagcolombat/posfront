@@ -1,10 +1,15 @@
 @import "~src/variable";
 
-button[mat-button].left {
+button[mat-button].left{
   height: 170px;
   width: 100px;
   margin-bottom: 5px;
-  @include orange;
+  &:first-of-type {
+    @include green;
+  }
+  &:last-of-type{
+    @include orange;
+  }
 }
 
 .options-container {
