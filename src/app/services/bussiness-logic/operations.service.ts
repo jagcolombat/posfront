@@ -1096,7 +1096,8 @@ export class OperationsService {
       .subscribe((amount) => {
       console.log('Amount', amount.unitCost);
       if (amount.unitCost) {
-        this.getNumField(title, 'Account', EFieldType.NUMBER).subscribe(cardNumber => {
+        // Get card number, authorization code and card type
+        /*this.getNumField(title, 'Account', EFieldType.NUMBER).subscribe(cardNumber => {
           if (cardNumber.number) {
             this.getNumField(title, 'Auth Code', EFieldType.CVV).subscribe(authCode => {
               if (authCode.number) {
@@ -1106,17 +1107,20 @@ export class OperationsService {
                   this.getCreditCardType(amount.unitCost, cardNumber.number, authCode.number, client,
                     (op === PaymentOpEnum.CREDIT_CARD) ? PaymentMethodEnum.CREDIT_CARD : PaymentMethodEnum.DEBIT_CARD);
               } else {
-                /*this.cashService.openGenericInfo('Error', 'Can\'t complete external card payment operation '
-                  + 'because authorization number not was specified');*/
+                /!*this.cashService.openGenericInfo('Error', 'Can\'t complete external card payment operation '
+                  + 'because authorization number not was specified');*!/
                 //this.cashService.resetEnableState();
               }
             });
-          } else {
-            /*this.cashService.openGenericInfo('Error', 'Can\'t complete external card payment operation '
-              + 'because account number not was specified');*/
-            //this.cashService.resetEnableState();
           }
-        });
+        });*/
+        // No get card number nor authorization code
+        let card = { number: '1111', authCode: '2222'};
+        op === PaymentOpEnum.EBT_CARD ?
+          this.externalCardPaymentOp(amount.unitCost, card.number, card.authCode, op, client,
+            (ebtType === EBTTypes.EBT ? PaymentMethodEnum.EBT_CARD : PaymentMethodEnum.EBT_CASH)) :
+          this.externalCardPaymentOp(amount.unitCost, card.number, card.authCode, 'VISA', client,
+            (op === PaymentOpEnum.CREDIT_CARD) ? PaymentMethodEnum.CREDIT_CARD : PaymentMethodEnum.DEBIT_CARD);
       } else {
         /*this.cashService.openGenericInfo('Error', 'Can\'t complete external card payment operation '
           + 'because amount not was specified');*/
