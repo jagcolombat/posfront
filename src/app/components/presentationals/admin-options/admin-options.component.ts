@@ -17,13 +17,13 @@ export class AdminOptionsComponent implements OnInit {
     AdminOpEnum.APPLY_DISCOUNT, AdminOpEnum.CANCEL_CHECK, AdminOpEnum.REMOVE_HOLD, AdminOpEnum.SET_USER,
     AdminOpEnum.REFUND_SALE, AdminOpEnum.AUTH_PENDING, AdminOpEnum.CLOSE_BATCH, /*AdminOpEnum.EBT_INQUIRY,*/
     AdminOpEnum.UPDATE_BROWSER, AdminOpEnum.CLIENT, AdminOpEnum.GIFT_CARD, AdminOpEnum.CONFIG, AdminOpEnum.SYSTEM_VERSION,
-    AdminOpEnum.EMPLOYEE_SETUP, AdminOpEnum.CHANGE_PRICES, AdminOpEnum.CREDIT_LIMIT];
+    AdminOpEnum.EMPLOYEE_SETUP, AdminOpEnum.CHANGE_PRICES, AdminOpEnum.CREDIT_LIMIT, AdminOpEnum.TIME_WORKED];
   $options: Observable<AdminOpEnum[]>;
   page = 1;
   sizePage = 16;
   @Input() disable: boolean | boolean[] = this.adminOpService.cashService.disabledAdminOp;
   @Input() adminOpColor = ['red','red','red','red','red','red','red','red','red','red','red','red','violet','violet',
-    'violet'];
+    'violet', 'violet'];
 
   constructor(private router: Router, public adminOpService: AdminOptionsService ) {
 
@@ -133,6 +133,9 @@ export class AdminOptionsComponent implements OnInit {
           break;
         case AdminOpEnum.UPDATE_BROWSER.toUpperCase():
           this.adminOpService.updateBrowser();
+          break;
+        case AdminOpEnum.TIME_WORKED.toUpperCase():
+          this.adminOpService.timeWorked();
           break;
       }
     }

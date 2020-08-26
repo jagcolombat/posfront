@@ -42,8 +42,16 @@ export class SetDateComponent implements OnInit {
     this.dialogRef.close(this.response);
   }
 
+  dateTimeWorked(){
+    this.dialogRef.close(this.getFormatOnlyDate(new Date(this.date)));
+  }
+
   getFormatDate(date: Date, start?: boolean){
     return date.toISOString().split('T')[0] + ((start)? ' 00:00:00': ' 23:59:59');
+  }
+
+  getFormatOnlyDate(date: Date){
+    return date.toISOString().split('T')[0];
   }
 
 }

@@ -933,4 +933,35 @@ export class AdminOptionsService {
     } as KeyboardEventInit);
     return ev;
   }
+
+  timeWorked() {
+    this.dataStorage.getApplicationUsers().subscribe(next =>  {
+      console.log(AdminOpEnum.TIME_WORKED, next);
+      next.unshift({id: "-1", userName: "ALL"});
+      this.operationService.openDialogWithPag(next, (e)=> this.showTimeWorkedByEmployee(e), 'Employees',
+        'Select a employee:','', 'userName' );
+    }, error1 => {
+      this.cashService.openGenericInfo('Error', error1);
+    });
+    this.operationService.resetInactivity(true, 'empZ');
+  }
+
+  showTimeWorkedByEmployee(emp: any){
+    console.log('showSalesByEmployee', emp);
+    this.cashService.dialog.open(SetDateComponent,
+      { width: '400px', height: '340px', data: {title: 'Time Worked', subtitle: 'Set date', timeWorked: true},
+        disableClose: true })
+      .afterClosed()
+      .subscribe(next => {
+        console.log('afterCloseSetDate', next);
+        if(next){
+          this.cashService.dialog.open(GenericSalesComponent,
+            {
+              width: '700px', height: '680px', disableClose: true,
+              data: {title: AdminOpEnum.TIME_WORKED, empl: emp, date: next }
+            })
+        }
+      });
+
+  }
 }

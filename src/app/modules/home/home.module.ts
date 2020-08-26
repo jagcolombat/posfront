@@ -36,8 +36,8 @@ import {SwipeCredentialCardComponent} from "../../components/presentationals/swi
 import {DailyCloseComponent} from "../../components/presentationals/daily-close/daily-close.component";
 import {SetDateComponent} from "../../components/presentationals/set-date/set-date.component";
 import {ClockInOutComponent} from "../../components/presentationals/clock-in-out/clock-in-out.component";
-import {AppComponent} from "../../app.component";
 import {LoginClockComponent} from "../../components/containers/login-clock/login-clock.component";
+import {TimeWorkedComponent} from "../../components/presentationals/time-worked/time-worked.component";
 
 @NgModule({
   imports: [
@@ -82,7 +82,8 @@ import {LoginClockComponent} from "../../components/containers/login-clock/login
     OrderInfoDetailsComponent,
     SwipeCredentialCardComponent,
     DailyCloseComponent,
-    SetDateComponent
+    SetDateComponent,
+    TimeWorkedComponent
   ],
   entryComponents: [
     AgeValidationComponent,

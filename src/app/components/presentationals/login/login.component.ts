@@ -1,10 +1,11 @@
-import {Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { AuthService } from "../../../services/api/auth.service";
 import { Router } from "@angular/router";
 import {InitViewService} from "../../../services/bussiness-logic/init-view.service";
 import {Subscription} from "rxjs";
 import {UserrolEnum} from "../../../utils/userrol.enum";
+import {NgForm} from "@angular/forms";
 
 @Component({
   selector: 'login',
@@ -14,6 +15,8 @@ import {UserrolEnum} from "../../../utils/userrol.enum";
 export class LoginComponent implements OnInit, OnDestroy {
   @Output() evRol = new EventEmitter<boolean>();
   @Input() rol: UserrolEnum[];
+  @ViewChild('loginForm') loginForm: NgForm;
+  
   input = "";
   tryValidation:boolean;
   valid: boolean;

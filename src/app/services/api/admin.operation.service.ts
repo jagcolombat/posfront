@@ -9,6 +9,7 @@ import { Invoice } from 'src/app/models/invoice.model';
 import { CloseBatch } from 'src/app/utils/close.batch.enum';
 import { Report } from 'src/app/models/report.model';
 import {EmployeedModel, IPositionModel} from "../../models/employeed.model";
+import { WorkerRecords } from 'src/app/models/worker-records';
 
 @Injectable({
   providedIn: 'root'
@@ -107,6 +108,20 @@ export class AdminOperationService {
 
   employClock(url: string, credentials: Credentials, clockType = 1) {
     return this._http.post<any>(url + '/account/clock/' + clockType, credentials)
+      .pipe(catchError(this.processHttpMsgService.handleError));
+  }
+
+  getTimeWorkedByUser(url: string, id: string, date: string) : Observable<string> {
+    let params = new HttpParams();
+    params = params.append('date', date + '');
+    return this._http.get<string>(url + '/account/' + id + '/clock/hoursworked', {params})
+      .pipe(catchError(this.processHttpMsgService.handleError));
+  }
+
+  getWorkerRecordsByUser(url: string, id: string, date: string) : Observable<WorkerRecords[]> {
+    let params = new HttpParams();
+    params = params.append('date', date + '');
+    return this._http.get<WorkerRecords[]>(url + '/account/' + id + '/clock', {params})
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 }

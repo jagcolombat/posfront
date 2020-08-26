@@ -35,6 +35,7 @@ import {TransferPayment} from "../../models/transfer.model";
 import {GiftCardModel, IGiftCardPaymentModel, IGiftModel} from "../../models/gift-card.model";
 import {EClockType} from "../../utils/clock-type.enum";
 import {UserClock} from "../../models/user-clock.model";
+import {WorkerRecords} from "../../models/worker-records";
 
 @Injectable({
   providedIn: 'root'
@@ -364,5 +365,13 @@ export class DataStorageService {
 
   refundSale(receiptNumber: string) {
     return this.invoiceService.refundSale(this.url, receiptNumber);
+  }
+
+  getWorkerRecordsByUser(id: string, date: string): Observable<WorkerRecords[]> {
+    return this.adminOperationService.getWorkerRecordsByUser(this.url, id, date);
+  }
+
+  getTimeWorkedByUser(id: string, date: string): Observable<string> {
+    return this.adminOperationService.getTimeWorkedByUser(this.url, id, date);
   }
 }

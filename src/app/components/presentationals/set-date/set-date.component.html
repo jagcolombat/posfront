@@ -19,7 +19,8 @@
     </div>-->
   </div>
   <div mat-dialog-actions>
-    <button mat-raised-button (click)="dateClose()">Date</button>
-    <button mat-raised-button *ngIf="!data.onlyDate" (click)="lastClose()">Close Current Day</button>
+    <button mat-raised-button *ngIf="data.timeWorked" (click)="dateTimeWorked()">Time Worked</button>
+    <button mat-raised-button *ngIf="data.onlyDate" (click)="dateClose()">Date</button>
+    <button mat-raised-button *ngIf="!data.onlyDate && !data.timeWorked" (click)="lastClose()">Close Current Day</button>
   </div>
 </div>

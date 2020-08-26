@@ -1,0 +1,44 @@
+:host {
+  font-size: 18px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 10px;
+}
+
+ag-grid-angular {
+  width: 650px;
+  height: 470px;
+  margin-bottom: 2px;
+  font: 400 18px "Roboto", sans-serif;
+  & /deep/ .ag-paging-row-summary-panel {
+    margin-left: 10px !important;
+  }
+  & /deep/ .ag-paging-page-summary-panel {
+    height: 100%;
+    display: flex;
+    align-items: center;
+  }
+  & /deep/ button.ag-paging-button {
+    background-size: 32px !important;
+    margin: 0 8px !important;
+    cursor: none !important;
+    height: 100%;
+  }
+  & /deep/ .ag-header {
+    font-size: 15px !important;
+  }
+  & /deep/ .ag-font-style {
+    cursor: none !important;
+  }
+}
+
+.show {
+  display: initial;
+}
+
+.hide {
+  display: none;
+}

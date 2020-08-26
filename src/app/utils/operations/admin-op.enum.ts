@@ -25,5 +25,6 @@ export enum AdminOpEnum {
   REFUND_SALE = 'Refund Sale',
   WEEKLY_CLOSE = 'Weekly Close',
   CLIENT = 'Client Setup',
-  GIFT_CARD = 'Gift Card'
+  GIFT_CARD = 'Gift Card',
+  TIME_WORKED = 'Time Worked'
 }

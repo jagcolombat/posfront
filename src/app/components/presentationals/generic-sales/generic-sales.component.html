@@ -9,6 +9,9 @@
     <sales-empl *ngIf="data.empl" [emplSel]="data.empl" [sales]="salesByUser" (selectEmployed)="getSales($event)"
                 (selectInvoice)="reviewCheck($event)">
     </sales-empl>
+    <time-worked *ngIf="data.empl && data.date" [emplSel]="data.empl" [records]="recordsByUser" [time]="timeWorkedByUser">
+
+    </time-worked>
     <app-loading *ngIf="!data.content && !data.empl" message="Loading data"></app-loading>
   </div>
   <div mat-dialog-actions *ngIf="data.empl">
