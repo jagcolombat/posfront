@@ -1,6 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
 import { GridOptions, GridApi } from 'ag-grid-community';
 import {dateFormatter} from "../../../utils/functions/transformers";
+import {WorkerRecords} from "../../../models/worker-records";
+import {EClockType} from "../../../utils/clock-type.enum";
 
 @Component({
   selector: 'time-worked',
@@ -9,7 +11,7 @@ import {dateFormatter} from "../../../utils/functions/transformers";
 })
 export class TimeWorkedComponent implements OnInit {
   // Worker records
-  private _records: Array<any>;
+  private _records: Array<WorkerRecords>;
   @Input()
   set records(data) {
     this._records = data;
@@ -36,8 +38,8 @@ export class TimeWorkedComponent implements OnInit {
   columnDefs: any;
 
   bottomData = [{
-    recordType: 'Time worked',
-    date: ''
+    clockType: 'Time worked',
+    clockTime: ''
   }]
 
   constructor() {
@@ -52,21 +54,15 @@ export class TimeWorkedComponent implements OnInit {
     this.columnDefs = [
       {
         headerName: 'Record Type',
-        field: 'recordType',
-        width: 210
+        field: 'clockType',
+        width: 100
       },
       {
         headerName: 'Datetime',
-        field: 'date',
-        width: 220,
-        valueFormatter: this.dateFormatter
+        field: 'clockTime',
+        width: 120
       }
     ];
-  }
-
-  dateFormatter(params){
-    return dateFormatter(params.value)
-    //params.value !== '' ? new Date(params.value).toLocaleString('en-US', {hour12: false}) : '';
   }
 
   updateGridOptions(){
@@ -86,13 +82,16 @@ export class TimeWorkedComponent implements OnInit {
 
   private setData() {
     console.log('setData', this.records);
-    this.gridOptions.api.setRowData(this.records);
+    let records = this.records.map(data => {
+      return { 'clockType': 'Clock ' + EClockType[data.clockType], 'clockTime': dateFormatter(data.clockTime) }
+    });
+    this.gridOptions.api.setRowData(records);
     this.gridOptions.api.sizeColumnsToFit();
   }
 
   private setTotal() {
     console.log('setData', this.time);
-    this.bottomData[0].date = this.time;
+    this.bottomData[0].clockTime = this.time.split('.')[0];
   }
 
   /*onPrint() {

@@ -957,7 +957,7 @@ export class AdminOptionsService {
         if(next){
           this.cashService.dialog.open(GenericSalesComponent,
             {
-              width: '700px', height: '680px', disableClose: true,
+              width: '550px', height: '680px', disableClose: true,
               data: {title: AdminOpEnum.TIME_WORKED, empl: emp, date: next }
             })
         }
