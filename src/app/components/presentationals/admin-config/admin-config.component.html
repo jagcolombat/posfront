@@ -128,6 +128,12 @@
         </mat-slide-toggle>
       </mat-list-item>
       <mat-list-item>
+        <mat-slide-toggle [checked]='allowChangePrice' (change)="setAllowChangePrice($event)" labelPosition="before"
+                          ariaLabel="Allow Supervisor Change Price">
+          Allow Supervisor Change Price
+        </mat-slide-toggle>
+      </mat-list-item>
+      <mat-list-item>
         <mat-slide-toggle [checked]='allowClock' (change)="setAllowClock($event)" labelPosition="before"
                           ariaLabel="Allow ClockIn / ClockOut">
           Allow ClockIn / ClockOut

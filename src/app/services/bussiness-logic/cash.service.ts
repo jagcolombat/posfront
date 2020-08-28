@@ -50,18 +50,26 @@ export class CashService {
     let opDeny = false;
     if(this.config.sysConfig.companyType === CompanyType.ISLANDS)
       this.noLet4Supervisor.push(FinancialOpEnum.HOLD.toUpperCase());
-    if(this.config.sysConfig.allowApplyDiscount){
-      this.noLet4Supervisor.splice(this.noLet4Supervisor.
-      findIndex(v => v === AdminOpEnum.APPLY_DISCOUNT.toUpperCase()),1);
-    } else {
-      if(!this.noLet4Supervisor.includes(AdminOpEnum.APPLY_DISCOUNT.toUpperCase()))
-        this.noLet4Supervisor.push(AdminOpEnum.APPLY_DISCOUNT.toUpperCase())
-    }
+    // Apply Discount for Supervisor by Configuration
+    this.opDenyAllowByConfig(AdminOpEnum.APPLY_DISCOUNT, this.config.sysConfig.allowApplyDiscount);
+    // Change Prices for Supervisor by Configuration
+    this.opDenyAllowByConfig(AdminOpEnum.CHANGE_PRICES, this.config.sysConfig.allowChangePrice);
+
     if(this.authServ.token.rol === userRol && this.noLet4Supervisor.includes(op)){
       this.openGenericInfo(InformationType.INFO, userRol + ' hasn\'t access to ' + op + ' operation.');
       opDeny = true;
     }
     return opDeny;
+  }
+
+  opDenyAllowByConfig(op: AdminOpEnum | FinancialOpEnum, allow: boolean){
+    if(allow){
+      this.noLet4Supervisor.splice(this.noLet4Supervisor.
+      findIndex(v => v === op.toUpperCase()),1);
+    } else {
+      if(!this.noLet4Supervisor.includes(op.toUpperCase()))
+        this.noLet4Supervisor.push(op.toUpperCase())
+    }
   }
 
   resetEnableState() {

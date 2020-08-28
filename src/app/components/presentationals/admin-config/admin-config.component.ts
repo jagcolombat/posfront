@@ -34,6 +34,7 @@ export class AdminConfigComponent implements OnInit {
   applyDiscount: boolean;
   changePriceBySelection: boolean;
   allowClock: boolean;
+  allowChangePrice: boolean;
 
   constructor( public dialogRef: MatDialogRef<AdminConfigComponent>, @Inject(MAT_DIALOG_DATA) public data: any, 
                private cashService: CashService) {
@@ -55,6 +56,7 @@ export class AdminConfigComponent implements OnInit {
     this.applyDiscount = this.cashService.config.sysConfig.allowApplyDiscount;
     this.changePriceBySelection = this.cashService.config.sysConfig.changePriceBySelection;
     this.allowClock = this.cashService.config.sysConfig.allowClock;
+    this.allowChangePrice = this.cashService.config.sysConfig.allowChangePrice;
 
     if(this.cashService.config.sysConfig.inactivityTime) this.timeLogout = this.cashService.config.sysConfig.inactivityTime+'';
   }
@@ -172,6 +174,12 @@ export class AdminConfigComponent implements OnInit {
     this.needLogout = true;
   }
 
+  setAllowChangePrice($event: any) {
+    console.log('setAllowChangePrice', $event, this.allowChangePrice);
+    this.allowClock = $event.checked;
+    this.needLogout = true;
+  }
+
   done(){
     let conf = Object.assign({}, this.cashService.config.sysConfig);
     this.cashService.config.sysConfig.allowAddProdGen = this.allowAddProdGen;
@@ -191,6 +199,7 @@ export class AdminConfigComponent implements OnInit {
     this.cashService.config.sysConfig.allowFoodStampMark = this.foodStampMark;
     this.cashService.config.sysConfig.allowApplyDiscount = this.applyDiscount;
     this.cashService.config.sysConfig.changePriceBySelection = this.changePriceBySelection;
+    this.cashService.config.sysConfig.allowChangePrice = this.allowChangePrice;
     this.cashService.config.sysConfig.allowClock = this.allowClock;
 
     this.cashService.config.setConfig(this.cashService.config.sysConfig).subscribe(value => {
@@ -219,5 +228,4 @@ export class AdminConfigComponent implements OnInit {
     });
 
   }
-
 }
