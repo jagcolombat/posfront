@@ -69,7 +69,7 @@ export class ListProdComponent implements OnInit {
 
   setPage(ev){
     if(ev > this.page){
-      this.stockService.setOperation(EOperationType.PageNext, ev, 'products');
+      this.stockService.setOperation(EOperationType.PageNext, 'Stock Products', 'Products: ' + ev);
       this.lastPage += 1;
       if(!this.allProductsLoaded){
         (!this.filtered) ? this.addProds(this.stockService.getProductsByDepartment(this.dpto, this.lastPage, this.sizePage)):
@@ -77,7 +77,7 @@ export class ListProdComponent implements OnInit {
       }
 
     } else {
-      this.stockService.setOperation(EOperationType.PagePrevious, ev, 'products');
+      this.stockService.setOperation(EOperationType.PagePrevious, 'Stock Products', 'Products: ' + ev);
     }
     this.page = ev;
   }

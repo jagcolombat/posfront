@@ -52,9 +52,9 @@ export class ListDptoComponent implements OnInit {
 
   setPage(ev){
     if(ev > this.page){
-      this.stockService.setOperation(EOperationType.PageNext, ev, 'departments');
+      this.stockService.setOperation(EOperationType.PageNext, 'Stock Departments', 'Departments: ' + ev);
     } else {
-      this.stockService.setOperation(EOperationType.PagePrevious, ev, 'departments');
+      this.stockService.setOperation(EOperationType.PagePrevious, 'Stock Departments', 'Departments: ' + ev);
     }
     this.page = this.stockService.actualPage = ev;
   }

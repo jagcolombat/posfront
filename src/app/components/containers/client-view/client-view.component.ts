@@ -41,7 +41,8 @@ export class ClientViewComponent implements OnInit, OnDestroy {
 
   private invoiceUpdated(data: any) {
     console.log('invoiceUpdated', data);
-    this.initService.setOperation(EOperationType.UpdateInvoiceCustomerScreen, data.entity.id, 'Update invoice on customer screen');
+    this.initService.setOperation(EOperationType.UpdateInvoiceCustomerScreen, 'Client View', 'Update invoice '
+      + data.entity.id);
     this.logged = true;
     this.invoiceService.cashier = data.entity.applicationUserName;
     //data.entity.addProduct = this.addProduct = !this.addProduct;
@@ -77,7 +78,7 @@ export class ClientViewComponent implements OnInit, OnDestroy {
 
   private wsReconnet(data?: boolean) {
     console.log('wsReconnet', this.ws.isConnected());
-    this.initService.setOperation(EOperationType.ReconnectCustomerScreen, this.ws.isConnected()+'', 'Reconnect');
+    this.initService.setOperation(EOperationType.ReconnectCustomerScreen, 'Client View', 'Reconnect: ' + this.ws.isConnected()+'');
     if(!this.ws.isConnected()){
       this.ws.start();
     }

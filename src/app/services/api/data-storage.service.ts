@@ -210,7 +210,7 @@ export class DataStorageService {
   }
 
   // Journey
-  registryOperation(journey: Journey): Observable<Invoice> {
+  registryOperation(journey: Journey): Observable<any> {
     return this.journeyService.registryOperation(this.url, journey);
   }
 

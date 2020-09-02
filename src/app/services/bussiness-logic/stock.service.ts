@@ -22,6 +22,7 @@ export class StockService {
 
   constructor(private dataStore: DataStorageService, public productOrderService: ProductOrderService,
               public cashService: CashService, public operationService: OperationsService) {
+    this.cashService.evResetStock.subscribe(ev => this.resetStock(ev));
   }
 
   getDepartments(): Observable<Department[]> {
@@ -38,7 +39,10 @@ export class StockService {
   }
 
   setOperation(typeOp: EOperationType, entity: string, desc: string){
-    this.dataStore.registryOperation({operationType: typeOp, entityName: entity, description: desc});
+    this.dataStore.registryOperation({operationType: typeOp, entityName: entity, description: desc}).subscribe(
+      next => console.log('OperationService.setOperation', next),
+      error1 => console.error('OperationService.setOperation', error1)
+    );
     this.operationService.resetInactivity(true, entity);
   }
 
@@ -59,4 +63,7 @@ export class StockService {
   }
 
 
+  private resetStock(ev: any) {
+    this.actualPage = 1;
+  }
 }

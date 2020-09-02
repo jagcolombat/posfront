@@ -69,7 +69,7 @@ export class CashViewComponent implements OnInit, OnDestroy {
   }
 
   passwordCard() {
-    this.initService.setOperation(EOperationType.Scanner, 'Password', this.passwordScan);
+    this.initService.setOperation(EOperationType.Scanner, 'Password', 'Password: ' + this.passwordScan);
     if ((this.passwordScan.startsWith(';'))) {
       console.log('selectInputData passwordScan', this.passwordScan);
       this.initService.evUserScanned.emit(this.passwordScan);
@@ -80,7 +80,8 @@ export class CashViewComponent implements OnInit, OnDestroy {
   }
 
   selectInputData(){
-    this.initService.setOperation(EOperationType.Scanner, 'InvoiceOrProduct', this.invoiceService.digits);
+    this.initService.setOperation(EOperationType.Scanner, 'InvoiceOrProduct', 'InvoiceOrProduct:' +
+      this.invoiceService.digits);
     if(this.invoiceService.digits.startsWith('I') || this.invoiceService.digits.startsWith('R')){
       //this.operationService.scanInvoice();
       if(!this.operationService.cashService.openDialogs()) {

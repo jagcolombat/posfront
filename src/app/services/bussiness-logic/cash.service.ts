@@ -39,6 +39,7 @@ export class CashService {
   @Output() evReviewEnableState = new EventEmitter<boolean>();
   @Output() evResetEnableState = new EventEmitter<boolean>();
   @Output() evLogout = new EventEmitter<boolean>();
+  @Output() evResetStock = new EventEmitter<boolean>();
 
   constructor(public dialog: MatDialog, private dataStorage: DataStorageService, private authServ: AuthService,
               public config: ConfigurationService) {

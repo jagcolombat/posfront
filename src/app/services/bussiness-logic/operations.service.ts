@@ -244,7 +244,7 @@ export class OperationsService {
     this.invoiceService.addProductByUpc(EOperationType.Plu).subscribe(prods => {
       this.selectProd(prods).subscribe(prod => {
         console.log(EOperationType[op], prod, this.invoiceService.qty);
-        this.initService.setOperation(op, prod.id, 'Received product id');
+        this.initService.setOperation(op, 'Product', 'Get product id: ' + prod.id);
         prod ? this.invoiceService.evAddProdByUPC.emit(prod): this.invoiceService.resetDigits();
       });
     }, err => {
@@ -254,7 +254,7 @@ export class OperationsService {
         this.invoiceService.addProductByUpc(op).subscribe(prods => {
           this.selectProd(prods).subscribe(prod => {
             console.log(EOperationType[op], prod, this.invoiceService.qty);
-            this.initService.setOperation(op, prod.id, 'Received product id');
+            this.initService.setOperation(op, 'Product', 'Get product id: ' + prod.id);
             prod ? this.invoiceService.evAddProdByUPC.emit(prod): this.invoiceService.resetDigits();
           });
         }, err => {
@@ -682,6 +682,7 @@ export class OperationsService {
     this.cashService.dialog.closeAll();
     this.invoiceService.resetDigits();
     this.cashService.resetEnableState();
+    this.cashService.evResetStock.emit();
     this.router.navigateByUrl('/init');
     this.resetInactivity(false);
   }

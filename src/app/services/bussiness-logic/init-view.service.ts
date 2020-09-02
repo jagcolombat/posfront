@@ -18,6 +18,10 @@ export class InitViewService {
 
   setOperation(typeOp: EOperationType, entity: string, desc: string){
     console.log(typeOp, entity, desc);
-    this.dataStore.registryOperation({operationType: typeOp, entityName: entity, description: desc});
+    let descrip = 'Operation: ' + EOperationType[typeOp] + ' | ' + desc;
+    this.dataStore.registryOperation({operationType: typeOp, entityName: entity, description: descrip}).subscribe(
+      next => console.log('InitViewService.setOperation', next),
+      error1 => console.error('InitViewService.setOperation', error1)
+    );
   }
 }

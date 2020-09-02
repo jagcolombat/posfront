@@ -15,9 +15,9 @@ export class JourneyService {
 
   path = '/journeys';
 
-  registryOperation(url: string, journey: Journey): Observable<Invoice> {
+  registryOperation(url: string, journey: Journey): Observable<any> {
       console.log('Put', journey);
-      return this._http.put<Invoice>(url + this.path + '/operation', journey)
+      return this._http.post<any>(url + this.path + '/operation', journey)
         .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
