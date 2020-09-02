@@ -102,7 +102,17 @@ export class CashService {
   }
 
   changePriceEnableState() {
-    this.disabledInput = this.disabledTotalOp = this.disabledPayment = this.disabledPaymentMoney = true;
+    this.disabledInput = true;
+    this.changePriceEnableStateGeneric();
+  }
+
+  changePriceScanEnableState() {
+    this.disableStock = true;
+    this.changePriceEnableStateGeneric();
+  }
+
+  changePriceEnableStateGeneric(){
+    this.disabledTotalOp = this.disabledPayment = this.disabledPaymentMoney = true;
     this.disabledFinOp = [true, true, true, true, true, true, true, true];
     this.disabledInvOp = [false, true, true, true];
     this.disabledOtherOp = [true, true, true, true, true, false];

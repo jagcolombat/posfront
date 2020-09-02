@@ -39,7 +39,7 @@ export enum EOperationType {
     RemoveHold,
     AuthPending,
     Departments,
-
+    ChangePrice,
     AgeVerification,
     List,
     Tables,

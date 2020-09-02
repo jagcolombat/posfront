@@ -31,7 +31,6 @@ import {CloseBatchComponent} from "../../components/presentationals/close-batch/
 import {SetDateComponent} from "../../components/presentationals/set-date/set-date.component";
 import {GiftCardModel, GiftModel} from "../../models/gift-card.model";
 import {thousandFormatter} from "../../utils/functions/transformers";
-import {Product} from "../../models";
 import {UtilsService} from "./utils.service";
 
 @Injectable({
@@ -460,28 +459,44 @@ export class AdminOptionsService {
     /*(this.currentOperation !== AdminOpEnum.CHANGE_PRICES) ? this.currentOperation = AdminOpEnum.CHANGE_PRICES:
       this.currentOperation = "";*/
     this.currentOperation = AdminOpEnum.CHANGE_PRICES;
-    if(this.invoiceService.digits && !this.cashService.config.sysConfig.changePriceBySelection){
+    if(this.invoiceService.digits){
       this.doChangePrice();
+    } else if(!this.invoiceService.digits && this.cashService.config.sysConfig.changePriceBySelection){
+      this.selectOrScanForChangePrice();
     } else {
-      this.router.navigateByUrl('/cash/dptos');
-      this.operationService.currentOperation = AdminOpEnum.CHANGE_PRICES;
-      this.cashService.changePriceEnableState();
-    }/*else if (this.currentOperation !== AdminOpEnum.CHANGE_PRICES) {
-      this.cashService.disabledInputKey = true;
-      this.operationService.getField('Enter UPC Number', 'Change Prices').subscribe(
-        next => {
-          console.log('change price by upc', next);
-          if(next.text){
-            this.invoiceService.numbers = next.text;
-            this.doChangePrice();
-          }
-        }, error1 => {}, () => this.cashService.disabledInputKey = false
-      )
-    }*/
+      this.scanForChangePrice();
+    }
+  }
+
+  selectOrScanForChangePrice(){
+    let ccTypes= new Array<any>({value: 1, text: 'Select'}, {value: 2, text: 'Scan'});
+    this.cashService.dialog.open(DialogDeliveryComponent,
+      { width: '600px', height: '340px', data: {name: 'Change Price Types',
+          label: 'Do you want select or scan product to change price', arr: ccTypes},
+        disableClose: true })
+      .afterClosed().subscribe(next => {
+      console.log(next);
+      if(next === 1) {
+         this.selectForChangePrice();
+      } else if (next === 2){
+        this.scanForChangePrice();
+      }
+    });
+  }
+
+  selectForChangePrice(){
+    this.router.navigateByUrl('/cash/dptos');
+    this.operationService.currentOperation = AdminOpEnum.CHANGE_PRICES;
+    this.cashService.changePriceEnableState();
+  }
+
+  scanForChangePrice(){
+    this.operationService.currentOperation = AdminOpEnum.CHANGE_PRICES;
+    this.cashService.changePriceScanEnableState();
   }
 
   doChangePrice(){
-    this.invoiceService.getProductByUpc(EOperationType.PriceCheck).subscribe(prods => {
+    this.invoiceService.getProductByUpc(EOperationType.ChangePrice).subscribe(prods => {
       this.operationService.selectProd(prods).subscribe( prod => {
         if(prod) {
           this.cashService.openGenericInfo('Change Price', 'Do you want change the price of the '+prod.name,

@@ -2043,6 +2043,7 @@ export class OperationsService {
             },
             () => {
               this.currentOperation = "";
+              this.evCleanAdminOperation.emit();
               this.cashService.resetEnableState();
             });
         }
