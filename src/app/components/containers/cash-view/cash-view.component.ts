@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {InvoiceService} from "../../../services/bussiness-logic/invoice.service";
 import {OperationsService} from "../../../services/bussiness-logic/operations.service";
-import {FinancialOpEnum, InvioceOpEnum} from "../../../utils/operations";
+import {FinancialOpEnum, InvioceOpEnum, TotalsOpEnum} from "../../../utils/operations";
 import {WebsocketService} from "../../../services/api/websocket.service";
 import {Subscription} from "rxjs";
 import {ScannerData} from "../../../models/scanner.model";
@@ -48,6 +48,11 @@ export class CashViewComponent implements OnInit, OnDestroy {
       if(ev.key==='Enter' || ev.keyCode === 13) {
         tmpMdl = this.operationService.cashService
         .openGenericInfo('Error', 'Not possible input keyboard');}*/
+      if([TotalsOpEnum.SUBTOTAL+'', TotalsOpEnum.FS_SUBTOTAL+''].includes(this.operationService.currentOperation) &&
+        (ev.keyCode >= 48 && ev.keyCode < 57)){
+        console.log('Subtotal', this.invoiceService.digits, ev.key);
+        this.invoiceService.evNumpadInput.emit(ev.key);
+      }
     } else if((ev.key==='Enter' || ev.keyCode === 13)){
       (this.invoiceService.digits) ? this.selectInputData() : this.passwordCard();
     } else if((ev.keyCode > 48 && ev.keyCode < 57) || (ev.keyCode === 73  || ev.keyCode === 82 || ev.keyCode === 105 ||

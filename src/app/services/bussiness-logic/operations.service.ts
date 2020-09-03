@@ -768,18 +768,22 @@ export class OperationsService {
           err => this.cashService.openGenericInfo('Error', 'Error in refund paid'),
           () => this.cashService.resetEnableState());
     } else if (totalToPaid > 0 || this.payZeroByDiscount(totalToPaid)) {
-      this.getTotalField(totalToPaid).subscribe(data => {
-        console.log('The dialog was closed', data);
-        // this.paymentData = data;
-        this.cashPaid(data, totalToPaid)
-      });
-    } /*else if (totalToPaid === 0){
-      console.log('this invoice is paid', this.invoiceService.invoice);
-      this.invoiceService.createInvoice();
-      this.cashService.openGenericInfo(InformationType.INFO, 'The invoice was paid');
-    }*/
+      this.invoiceService.digits ?
+        this.totalFromDigits(this.invoiceService.digits, totalToPaid) : this.totalFromField(totalToPaid);
+    }
     this.currentOperation = opType;
     this.resetInactivity(true);
+  }
+
+  totalFromDigits(paid, total) {
+    const cost = parseFloat(paid) * 0.01;
+    this.cashPaid(cost, total);
+  }
+
+  totalFromField(total){
+    this.getTotalField(total).subscribe(data => {
+      this.cashPaid(data, total)
+    });
   }
 
   cashMoney(paid){
@@ -788,6 +792,7 @@ export class OperationsService {
   }
 
   cashPaid(paid, totalToPaid?:number){
+    this.invoiceService.resetDigits();
     let total2Paid = (totalToPaid) ? totalToPaid : this.getTotalToPaid();
     if (paid > 0 || this.payZeroByDiscount(paid)) {
       let valueToReturn = paid - total2Paid;
@@ -1819,6 +1824,7 @@ export class OperationsService {
 
   check(client?: string) {
     let title = 'Check Payment';
+    this.invoiceService.resetDigits();
     console.log(title);
     this.getPriceField(title + '. Total: ' +  this.getTotalToPaid().toFixed(2), 'Amount')
       .subscribe((amount) => {
@@ -1912,6 +1918,7 @@ export class OperationsService {
   }
 
   detectPAXConn(op?: PaymentOpEnum){
+    this.invoiceService.resetDigits();
     switch (this.cashService.config.sysConfig.paxConnType) {
       case PAXConnTypeEnum.BOTH:
         this.choosePAXConnType(op);

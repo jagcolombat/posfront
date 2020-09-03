@@ -67,6 +67,7 @@ export class InvoiceService {
   }
 
   createInvoice(){
+      this.resetDigits();
       this.dataStorage.createInvoice().subscribe(next => {
         console.info('createCheck successfull', next);
         this.receiptNumber = next.receiptNumber;
