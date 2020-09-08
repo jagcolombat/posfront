@@ -43,7 +43,8 @@ export class ListDptoComponent implements OnInit {
 
   getDepartments(action?: any){
     this.stockService.getDepartments().subscribe(dptos => {
-      this.stockService.productOrderService.departments = this.dptos = dptos;
+      this.stockService.productOrderService.departments = this.dptos = dptos.
+      filter(dpto => dpto.departmentType !== EDepartmentType.CHILD);
       action();
     }, error1 => {
       this.stockService.utils.openGenericInfo(InformationType.ERROR, error1);
