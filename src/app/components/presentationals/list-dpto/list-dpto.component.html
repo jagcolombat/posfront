@@ -6,10 +6,12 @@
   </button>
 </div>
 <div class="paginator">
-  <pos-paginator [hidden]="stockService.cashService.disableStock" [countElements]="dptos.length" [sizePage]="sizePage"
+  <pos-paginator [disabled]="stockService.cashService.disableStock" [countElements]="dptos.length" [sizePage]="sizePage"
                  (evSetPage)="setPage($event)">
-    <button class="filter" mat-button (click)="filter()">
+    <button class="filter" mat-button (click)="filter()" [disabled]="stockService.cashService.disableStock">
       <span class="fa fa-search fa-lg"></span> FILTER
     </button>
+    <button class="dpto" *ngIf="subDept" mat-button (click)="backParentDepts()"
+            [disabled]="stockService.cashService.disableStock"> << DPTOS </button>
   </pos-paginator>
 </div>

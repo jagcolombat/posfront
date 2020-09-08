@@ -132,7 +132,7 @@ export class CashService {
 
   totalsEnableState(fs = false, refund=false) {
     console.log(fs);
-    this.disabledInput = this.disabledFinOp = this.disabledTotalOp = this.disableStock = true;
+    /*this.disabledInput = */this.disabledFinOp = this.disabledTotalOp = this.disableStock = true;
     this.disabledInvOp = [false, true, true, true];
     //if(this.config.sysConfig && this.config.sysConfig.allowCardSplit) this.disabledOtherOp = false;
     if(fs){
@@ -152,7 +152,7 @@ export class CashService {
 
   totalsDisabled(){
     console.log('totalsDisabled');
-    this.disabledInput = this.disabledFinOp = this.disabledTotalOp = this.disableStock = true;
+    /*this.disabledInput =*/ this.disabledFinOp = this.disabledTotalOp = this.disableStock = true;
     //this.disabledInvOp = [false, true, true, true];
     //if(this.config.sysConfig && this.config.sysConfig.allowCardSplit) this.disabledOtherOp = false;
     //this.splitAllow(true);

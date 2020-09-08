@@ -26,4 +26,10 @@ export class DepartmentService {
     return this._http.get<Product[]>(url + '/departments/' + department + '/products', { params })
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
+
+  getSubDepartments(url: string, id: string) {
+    return this._http.get<Department[]>(url + '/departments/'+id+'/child')
+      .pipe(map(data => data))
+      .pipe(catchError(this.processHttpMsgService.handleError));
+  }
 }

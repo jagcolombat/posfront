@@ -11,12 +11,13 @@
 <app-loading *ngIf="!loading && !prods.length" message="There are not products."></app-loading>
 
 <div class="paginator" *ngIf="!loading">
-  <pos-paginator [hidden]="stockService.cashService.disableStock" [countElements]="prods.length" [sizePage]="sizePage"
+  <pos-paginator [disabled]="stockService.cashService.disableStock" [countElements]="prods.length" [sizePage]="sizePage"
                  (evSetPage)="setPage($event)">
-    <button class="filter" mat-button (click)="filter()">
+    <button class="filter" mat-button (click)="filter()" [disabled]="stockService.cashService.disableStock">
       <span class="fa fa-search fa-lg"></span> FILTER
     </button>
-    <button class="dpto" mat-button [routerLink]="['/cash/dptos']"> << DPTOS </button>
+    <button class="dpto" mat-button [routerLink]="['/cash/dptos']"
+            [disabled]="stockService.cashService.disableStock"> << DPTOS </button>
   </pos-paginator>
 </div>
 

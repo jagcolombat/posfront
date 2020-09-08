@@ -835,6 +835,7 @@ export class OperationsService {
             this.invoiceService.createInvoice();
           } else {
             console.log('Invoice not is paid', data, valueToReturn);
+            this.invoiceService.setInvoice(data);
           }
         },
         err => {

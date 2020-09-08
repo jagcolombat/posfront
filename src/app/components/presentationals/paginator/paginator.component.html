@@ -1,5 +1,17 @@
 <ng-content select=".filter"></ng-content>
-<pagination-controls *ngIf="countElements > sizePage" class="my-pagination" maxSize="0" autoHide="false"
+<!--<pagination-controls *ngIf="countElements > sizePage" class="my-pagination" maxSize="0" autoHide="false"
                      (pageChange)="setPage($event)">
-</pagination-controls>
+</pagination-controls>-->
+
+<pagination-template #p="paginationApi" *ngIf="countElements > sizePage" class="my-pagination" maxSize="0" autoHide="false"
+                     (pageChange)="setPage($event)">
+  <div class="custom-pagination">
+    <div class="pagination-previous" [class.disabled]="p.isFirstPage() || disabled">
+      <a (click)="previous(p)"> << Previous </a>
+    </div>
+    <div class="pagination-next" [class.disabled]="p.isLastPage() || disabled">
+      <a (click)="next(p)"> Next >> </a>
+    </div>
+  </div>
+</pagination-template>
 <ng-content id="left"></ng-content>

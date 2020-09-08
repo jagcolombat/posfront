@@ -10,6 +10,7 @@ import {environment as env} from "../../../environments/environment";
 import {OperationsService} from "./operations.service";
 import {StockOpEnum} from "../../utils/operations/stock-op.enum";
 import {AdminOpEnum} from "../../utils/operations/admin-op.enum";
+import {UtilsService} from "./utils.service";
 
 @Injectable({
   providedIn: 'root'
@@ -21,12 +22,16 @@ export class StockService {
   productsFiltered = new Array<any>();
 
   constructor(private dataStore: DataStorageService, public productOrderService: ProductOrderService,
-              public cashService: CashService, public operationService: OperationsService) {
+              public cashService: CashService, public operationService: OperationsService, public utils: UtilsService) {
     this.cashService.evResetStock.subscribe(ev => this.resetStock(ev));
   }
 
   getDepartments(): Observable<Department[]> {
     return this.dataStore.getDepartments();
+  }
+
+  getSubDeptByDepartment(id: string): Observable<Department[]> {
+    return this.dataStore.getSubDepartments(id);
   }
 
   getProductsByDepartment(id: string, pageNumber?: number, pageSize?: number): Observable<Product[]> {

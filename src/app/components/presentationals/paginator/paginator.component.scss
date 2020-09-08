@@ -25,12 +25,19 @@
 .my-pagination /deep/.disabled {
   padding: initial;
   cursor: default;
-  background-color: rgba(0,0,0,0.25);
+  background-color: #B8B8B8;
 }
 
-.my-pagination /deep/ .disabled:hover {
-  background-color: rgba(0,0,0,0.25);
+.my-pagination /deep/ .disabled:hover,
+.my-pagination /deep/ .pagination-previous.disabled a:hover,
+.my-pagination /deep/ .pagination-next.disabled a:hover{
+  background-color: #B8B8B8 !important;
 }
+
+.custom-pagination{
+  display: flex;
+}
+
 .my-pagination /deep/ .pagination-previous a:hover, .my-pagination /deep/ .pagination-next a:hover {
   background-color: #5b4cab;
 }

@@ -65,6 +65,10 @@ export class DataStorageService {
     return this.departmentService.getProductByDepartment(this.url, department, pageNumber, pageSize).pipe();
   }
 
+  getSubDepartments(id): Observable<Department[]> {
+    return this.departmentService.getSubDepartments(this.url, id);
+  }
+
   // Products
   getProductByUpc(upc: string, typeOp: EOperationType): Observable<Product[]> {
     //return this.productService.getProductByUpc(this.url, upc, typeOp).pipe(map(p => p[0]));

@@ -6,6 +6,7 @@ import {EOperationType} from "../../../utils/operation.type.enum";
 import {leaveFocusOnButton} from "../../../utils/functions/functions";
 import {DialogFilterComponent} from "../../containers/dialog-filter/dialog-filter.component";
 import {InformationType} from "../../../utils/information-type.enum";
+import {EDepartmentType} from "../../../utils/department-type.enum";
 
 @Component({
   selector: 'list-dpto',
@@ -14,6 +15,7 @@ import {InformationType} from "../../../utils/information-type.enum";
 })
 export class ListDptoComponent implements OnInit {
   dptos: Department[] = [];
+  subDept: boolean;
   page = 1;
   sizePage = 20;
 
@@ -23,10 +25,7 @@ export class ListDptoComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.stockService.getDepartments().subscribe(dptos => {
-      this.stockService.productOrderService.departments = this.dptos = dptos;
-    });
-    this.page = this.stockService.actualPage;
+    this.getDepartments(() => this.setDeptPage());
   }
 
   doAction(ev, dpto: Department) {
@@ -34,10 +33,25 @@ export class ListDptoComponent implements OnInit {
     leaveFocusOnButton(ev);
     if (dpto.generic) {
       this.getGenericProdByDpto(dpto);
+    } else if (dpto.departmentType === EDepartmentType.PARENT){
+      this.getChildrenDept(dpto.id);
     } else {
       this.router.navigateByUrl('/cash/products/' + dpto.id + '/' + dpto.tax);
     }
     this.stockService.operationService.resetInactivity(true, 'select dept');
+  }
+
+  getDepartments(action?: any){
+    this.stockService.getDepartments().subscribe(dptos => {
+      this.stockService.productOrderService.departments = this.dptos = dptos;
+      action();
+    }, error1 => {
+      this.stockService.utils.openGenericInfo(InformationType.ERROR, error1);
+    });
+  }
+
+  setDeptPage(page?: number){
+    this.page = page ? this.stockService.actualPage = page : this.stockService.actualPage;
   }
 
   getGenericProdByDpto(dpto: Department) {
@@ -48,6 +62,24 @@ export class ListDptoComponent implements OnInit {
           prodsFiltered.map(pg => this.stockService.changePriceOrAddProduct(pg)):
           this.stockService.cashService.openGenericInfo(InformationType.INFO, 'Generic product not found');
       });
+  }
+
+  private getChildrenDept(id: string) {
+    console.log('getChildrenDept', id);
+    this.stockService.getSubDeptByDepartment(id).subscribe(
+      subDepts => {
+        console.log('getSubDeptByDepartment', subDepts);
+        this.dptos = [...subDepts];
+        this.stockService.productOrderService.departments = [...subDepts];
+        this.subDept = true;
+      });
+  }
+
+  backParentDepts(){
+    this.getDepartments(()=> {
+      this.setDeptPage(1);
+      this.subDept = false;
+    });
   }
 
   setPage(ev){
@@ -77,5 +109,4 @@ export class ListDptoComponent implements OnInit {
       });
     this.stockService.operationService.resetInactivity(true, 'Filter Dept');
   }
-
 }
