@@ -16,6 +16,7 @@ const routes: Routes = [
       { path: '', redirectTo: 'dptos', pathMatch: 'full' },
       { path: 'options', component: AdminOptionsComponent },
       { path: 'dptos', component: ListDptoComponent },
+      { path: 'dptos/:dept', component: ListDptoComponent },
       { path: 'products', component: ListProdComponent },
       { path: 'products/:dpto/:tax', component: ListProdComponent },
       { path: 'filteredproducts/:filter', component: ListProdComponent },

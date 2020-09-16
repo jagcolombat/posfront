@@ -1,11 +1,11 @@
 {
   "name": "posfront",
-  "version": "2.50.3",
+  "version": "2.50.4",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --proxy-config proxy.conf.json",
     "build": "ng build --base-href=/posfront/ --deploy-url=/posfront/ --prod",
-    "compact": "tar -cf \"./dist/%npm_package_name%-%npm_package_version%.zip\" \"./dist/%npm_package_name%/*.js\" \"./dist/posfront/*.css\" \"./dist/posfront/*.html\"",
+    "compact": "powershell Compress-Archive \"./dist/%npm_package_name%/*.js\", \"./dist/posfront/*.css\", \"./dist/posfront/*.html\" ./dist/%npm_package_name%-%npm_package_version%.zip",
     "serve:prod": "ng serve --base-href=/posfront/ --deploy-url=/posfront/ --prod",
     "build:prod": "npm run generate:patch && npm run build && npm run compact",
     "generate:patch": "git format-patch -1 -o ./dist",

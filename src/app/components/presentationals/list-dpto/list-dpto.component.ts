@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Department} from '../../../models/department.model';
 import {StockService} from "../../../services/bussiness-logic/stock.service";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {EOperationType} from "../../../utils/operation.type.enum";
 import {leaveFocusOnButton} from "../../../utils/functions/functions";
 import {DialogFilterComponent} from "../../containers/dialog-filter/dialog-filter.component";
@@ -19,13 +19,16 @@ export class ListDptoComponent implements OnInit {
   page = 1;
   sizePage = 20;
 
-  constructor(private router: Router, public stockService: StockService) {
+  constructor(private router: Router, private route: ActivatedRoute, public stockService: StockService) {
     this.sizePage = this.stockService.getStockCountItems();
     console.log(this.sizePage);
   }
 
   ngOnInit() {
-    this.getDepartments(() => this.setDeptPage());
+    this.route.params.subscribe(p => {
+      console.log('init list-dpto', p);
+      p['dept'] ? this.getChildrenDept(p['dept']) : this.getDepartments(() => this.setDeptPage());
+    });
   }
 
   doAction(ev, dpto: Department) {

@@ -16,7 +16,7 @@
     <button class="filter" mat-button (click)="filter()" [disabled]="stockService.cashService.disableStock">
       <span class="fa fa-search fa-lg"></span> FILTER
     </button>
-    <button class="dpto" mat-button [routerLink]="['/cash/dptos']"
+    <button class="dpto" mat-button (click)="backDepts()"
             [disabled]="stockService.cashService.disableStock"> << DPTOS </button>
   </pos-paginator>
 </div>

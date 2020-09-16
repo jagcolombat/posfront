@@ -6,7 +6,8 @@ import {EOperationType} from "../../../utils/operation.type.enum";
 import {leaveFocusOnButton} from "../../../utils/functions/functions";
 import {DialogFilterComponent} from "../../containers/dialog-filter/dialog-filter.component";
 import {Observable} from "rxjs";
-import {BreakTextEnum} from "../../../utils/breaktext.enum";
+import {Department} from "../../../models/department.model";
+import {EDepartmentType} from "../../../utils/department-type.enum";
 
 @Component({
   selector: 'app-list-prod',
@@ -46,7 +47,7 @@ export class ListProdComponent implements OnInit {
         this.loading = true;
         this.dptTax = p['tax'];
         this.dpto = p['dpto'];
-        this.stockService.getProductsByDepartment(p['dpto'], 1, this.sizePage * this.lastPage)
+        this.stockService.getProductsByDepartment(p['dpto'],1,this.sizePage * this.lastPage)
           .subscribe(prods => {
             this.loading = false;
             Object.assign(this.prods, prods);
@@ -139,5 +140,14 @@ export class ListProdComponent implements OnInit {
 
   getBreakTextType(){
     return this.stockService.cashService.config.sysConfig.breakText;
+  }
+
+  backDepts(){
+    let dept: Department[] = this.stockService.productOrderService.departments
+      .filter(dept => dept.id === this.dpto);
+
+    (dept.length === 1 && dept[0].departmentType === EDepartmentType.CHILD) ?
+      this.router.navigateByUrl('cash/dptos/' + dept[0].parentId) :
+      this.router.navigateByUrl('cash/dptos/');
   }
 }
