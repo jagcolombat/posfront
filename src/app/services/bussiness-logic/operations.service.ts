@@ -776,7 +776,7 @@ export class OperationsService {
   }
 
   totalFromDigits(paid, total) {
-    const cost = parseFloat(paid) * 0.01;
+    const cost = +(parseFloat(paid) * 0.01).toFixed(2);
     this.cashPaid(cost, total);
   }
 
