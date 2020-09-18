@@ -5,7 +5,10 @@
              name="password" #password="ngModel" required [minlength]="4" (input)="tryValidation = false"/>
       <mat-error *ngIf="password.errors?.required">Password is required</mat-error>
     </mat-form-field>
-    <mat-error *ngIf="!valid && tryValidation "><span class="fa fa-warning fa-lg"></span> {{errorMsg}}</mat-error>
+    <mat-error *ngIf="!valid && tryValidation ">
+      <span class="fa fa-warning fa-lg"></span>
+      <span class="err-msg">{{errorMsg}}</span>
+    </mat-error>
   </div>
   <generic-keyboard (evKeys)="getKeys($event)" [valid]="loginForm.form.invalid"></generic-keyboard>
 </form>

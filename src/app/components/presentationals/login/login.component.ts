@@ -1,5 +1,4 @@
 import {Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { AuthService } from "../../../services/api/auth.service";
 import { Router } from "@angular/router";
 import {InitViewService} from "../../../services/bussiness-logic/init-view.service";
@@ -49,7 +48,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   loginFail(e) {
     console.error(e);
-    this.invalidAuth('Invalid authentication')
+    this.invalidAuth(/*'Invalid authentication'*/e);
   }
 
   verifyRol(data, rol) {
@@ -68,7 +67,8 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   selectRoute(){
-    (this.authService.adminLogged()) ? this.router.navigateByUrl('/cash/options') : this.router.navigateByUrl('/cash');
+    (this.authService.adminLogged()) ? this.router.navigateByUrl('/cash/options') :
+      this.router.navigateByUrl('/cash');
   }
 
   invalidAuth(msg?: string) {
