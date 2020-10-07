@@ -1,7 +1,6 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {AgeValidationComponent} from "../../components/presentationals/age-validation/age-validation.component";
 import {GenericInfoModalComponent} from "../../components/presentationals/generic-info-modal/generic-info-modal.component";
-import {MatDialog} from "@angular/material";
 import {Product} from "../../models";
 import {ProductOrder} from "../../models/product-order.model";
 import {Department} from "../../models/department.model";
@@ -16,6 +15,7 @@ import {InvioceOpEnum} from "../../utils/operations";
 import {StockOpEnum} from "../../utils/operations/stock-op.enum";
 import {ScanOpEnum} from "../../utils/operations/scanner-op.enum";
 import {InformationType} from "../../utils/information-type.enum";
+import {InitViewService} from "./init-view.service";
 
 export const AGE = 18;
 
@@ -28,13 +28,14 @@ export class ProductOrderService implements OnDestroy {
   quantityByProduct = 1;
   subscription: Subscription [] = [];
 
-  constructor(/*public dialog: MatDialog, */private invoiceService: InvoiceService, private cashService: CashService,
-              private operationService: OperationsService) {
+  constructor(private invoiceService: InvoiceService, private cashService: CashService,
+              private operationService: OperationsService, private initService: InitViewService) {
     this.subscription.push(this.invoiceService.evAddProdByUPC.subscribe(prod => this.addProduct(prod)));
     this.subscription.push(this.operationService.evAddProdGen.subscribe(prod => this.productGeneric(prod)));
   }
 
   addProduct(product: Product): void {
+    this.initService.setOperation(EOperationType.Add, 'Product', 'Before add product id: ' + product.id);
     if(this.invoiceService.allowAddProductByStatus()){
       if (!this.isAddByPluOrScan())
         this.operationService.currentOperation = StockOpEnum.ADD_PROD;

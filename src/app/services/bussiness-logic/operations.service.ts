@@ -56,7 +56,8 @@ export class OperationsService {
   @Output() evBackUserOperation = new EventEmitter<any>();
 
   constructor(private invoiceService: InvoiceService, public cashService: CashService,
-              private authService: AuthService, private clientService: ClientService, private initService: InitViewService,
+              private authService: AuthService, private clientService: ClientService,
+              private initService: InitViewService,
               private router: Router, private route: ActivatedRoute) {
     //console.log('OperationService', this.inactivityTime);
     this.invoiceService.evAddProd.subscribe(() => this.onAddProduct());
@@ -853,7 +854,8 @@ export class OperationsService {
     return setTimeout(()=> {
       dialogInfoEvents.close();
       $op.unsubscribe();
-      this.cashService.openGenericInfo('Error', 'Can\'t complete '+ opMsg +' operation because timeout. Try again');
+      this.cashService.openGenericInfo('Error', 'Can\'t complete '+ opMsg +' operation because timeout. ' +
+        'Please press SUBTOTAL operation again.');
       this.cashService.resetEnableState();
     }, this.cashService.config.sysConfig.paxTimeout*1000);
   }

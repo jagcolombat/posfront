@@ -288,7 +288,7 @@ export class AdminOptionsService {
 
   closeDay(){
     this.cashService.dialog.open(SetDateComponent,
-      { width: '400px', height: '340px', data: {title: 'Close Day', subtitle: 'Set date'},
+      { width: '400px', height: '340px', data: {title: 'Close Day', subtitle: 'Set date', closeDay: true},
         disableClose: true })
       .afterClosed().subscribe(next => {
         console.log('afterCloseSetDate', next);
@@ -893,7 +893,7 @@ export class AdminOptionsService {
   weeklyClose(op) {
     this.cashService.dayCloseEnableState();
     this.cashService.dialog.open(SetDateComponent,
-      { width: '400px', height: '340px', data: {title: 'Weekly Close', subtitle: 'Set date', onlyDate: true},
+      { width: '400px', height: '340px', data: {title: 'Weekly Close', subtitle: 'Set date', closeWeek: true},
         disableClose: true })
       .afterClosed().subscribe(next => {
       console.log('afterCloseSetDate', next);
