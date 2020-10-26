@@ -24,3 +24,11 @@ button {
 .green {
   @include green;
 }
+
+.break-all {
+  word-break: break-all;
+}
+
+.break-word {
+  word-wrap: break-word;
+}

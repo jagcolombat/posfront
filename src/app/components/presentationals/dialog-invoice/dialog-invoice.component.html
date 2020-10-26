@@ -12,7 +12,7 @@
           {{i.receiptNumber }}<p>{{i.total | currency }}</p>
         </button>-->
       <list-invoices [data]="data" [sizePage]="sizePage" [page]="page" [label]="data.label" [detail]="data.detail"
-                     [subdetail]="data.subdetail"></list-invoices>
+                     [subdetail]="data.subdetail" [breakText]="breakText"></list-invoices>
       <div class="paginator">
         <pos-paginator [countElements]="data.invoice.length" [sizePage]="sizePage" (evSetPage)="setPage($event)">
         <!--<button class="filter" mat-button *ngIf="data.invoice.length > sizePage && title !== 'Tables'" (click)="filter()">-->

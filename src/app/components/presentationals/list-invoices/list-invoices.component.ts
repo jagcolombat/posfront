@@ -14,6 +14,7 @@ export class ListInvoicesComponent implements OnInit {
   @Input() label: string = 'receiptNumber';
   @Input() detail: string;
   @Input() subdetail: string;
+  @Input() breakText: string;
   currencyProps = ['total', 'unitCost', 'balance', 'creditLimit', 'giftAmount'];
 
   constructor() { }
