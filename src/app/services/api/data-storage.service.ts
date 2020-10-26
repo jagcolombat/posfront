@@ -279,17 +279,17 @@ export class DataStorageService {
   }
 
   // Report
-  dayClose(empl?: any, date?: any) {
+  dayClose(close: boolean, date?: any) {
     let result = (date !== null && date !== undefined) ?
-      this.adminOperationService.getWeeklyClosePrint(this.url, true, date.from, date.to) :
-      this.adminOperationService.getDayClose(this.url, empl);
+      this.adminOperationService.getDayClose(this.url, close, date.from) :
+      this.adminOperationService.getDayClose(this.url, close);
     return result;
   }
 
-  dayClosePrint(empl?: string, date?: any) {
+  cashierClose(close: boolean, emp: string, date?: any) {
     let result = (date !== null && date !== undefined) ?
-      this.adminOperationService.getWeeklyClosePrint(this.url, false, date.from, date.to) :
-      this.adminOperationService.getDayClosePrint(this.url, empl);
+      this.adminOperationService.cashierCloseShift(this.url, close, emp, date.from) :
+      this.adminOperationService.cashierCloseShift(this.url, close, emp);
     return result;
   }
 

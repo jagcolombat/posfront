@@ -286,14 +286,14 @@ export class AdminOptionsService {
         });
   }
 
-  closeDay(){
+  closeDay(op: AdminOpEnum, emp?: string){
     this.cashService.dialog.open(SetDateComponent,
       { width: '400px', height: '340px', data: {title: 'Close Day', subtitle: 'Set date', closeDay: true},
         disableClose: true })
       .afterClosed().subscribe(next => {
         console.log('afterCloseSetDate', next);
-        if(next.lastClose) this.dayCloseType('', AdminOpEnum.WTDZ);
-        if(next.date) this.dayCloseType('', AdminOpEnum.WTDZ, next.date);
+        if(next.lastClose) this.dayCloseType(emp, op);
+        if(next.date) this.dayCloseType(emp, op, next.date);
       });
     //this.dayCloseType('', AdminOpEnum.WTDZ);
   }
@@ -329,8 +329,8 @@ export class AdminOptionsService {
     this.cashService.dayCloseEnableState();
     let dialogEv = this.cashService.openGenericInfo('Information', 'Closing '+ (emp ? 'cashier' : 'day')
       +'...', undefined, undefined, true);
-
-    this.dataStorage.dayClose(emp, date).subscribe(
+    let action = emp ? this.dataStorage.cashierClose(true, emp, date) : this.dataStorage.dayClose(true, date);
+    action.subscribe(
       next => {
         console.log(op);
         dialogEv.close();
@@ -353,7 +353,8 @@ export class AdminOptionsService {
     this.cashService.dayCloseEnableState();
     let dialogEv = this.cashService.openGenericInfo('Information', 'Printing close '+ (emp ? 'cashier' : 'day')
       +'...', undefined, undefined, true);
-    this.dataStorage.dayClosePrint(emp, date).subscribe(
+    let action = emp ? this.dataStorage.cashierClose(false, emp, date) : this.dataStorage.dayClose(false, date);
+    action.subscribe(
       next => {
         console.log(op);
         dialogEv.close();
@@ -389,7 +390,7 @@ export class AdminOptionsService {
   cashierCloseShift(){
     this.getEmployees( false,i => {
       console.log('getEmployees', i);
-      this.operationService.openDialogWithPag(i, (e)=> this.dayCloseType(e.id, AdminOpEnum.CCSZ), 'Employees',
+      this.operationService.openDialogWithPag(i, (e)=> this.closeDay(AdminOpEnum.CCSZ, e.id), 'Employees',
         'Select a employee:','', 'userName' );
     });
   }
@@ -905,7 +906,7 @@ export class AdminOptionsService {
 
   weeklyCloseOp(op: any, date?: any){
     let dialogEv = this.cashService.openGenericInfo('Information', 'Closing week...');
-    this.dataStorage.weeklyClosePrint(true, null, date).subscribe(
+    this.dataStorage.weeklyClosePrint(false, null, date).subscribe(
       next => {
         dialogEv.close();
         this.cashService.openGenericInfo('Weekly Close Print', 'Completed '+op.toLowerCase()+' operation');

@@ -286,7 +286,7 @@ export class OperationsComponent implements OnInit {
           this.adminOpService.sysZ();
           break;
         case AdminOpEnum.WTDZ:
-          this.adminOpService.closeDay();
+          this.adminOpService.closeDay(AdminOpEnum.WTDZ);
           break;
         case AdminOpEnum.CCSZ:
           this.adminOpService.cashierCloseShift();
