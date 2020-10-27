@@ -66,14 +66,6 @@ export class AdminOperationService {
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
-  getDayClosePrint(url: string, emp: string = ''): Observable<Report> {
-    let params = new HttpParams();
-    params = params.append('applicationUserId', emp + '');
-    params = params.append('closeDay', false + '');
-    return this._http.post<any>(url + this.path + '/op/report', {}, {params})
-        .pipe(catchError(this.processHttpMsgService.handleError));
-  }
-
   getWeeklyClosePrint(url: string, close, from, to): Observable<Report> {
     let params = new HttpParams();
     params = params.append('closeWeek', close + '');
@@ -85,7 +77,7 @@ export class AdminOperationService {
 
   getDayClose(url: string, close: boolean, date?: string): Observable<Report> {
     let params = new HttpParams();
-    params = params.append('date', date + '');
+    if(date) params = params.append('date', date + '');
     params = params.append('closeDay', close + '');
     return this._http.post<any>(url + this.path + '/op/report', {}, {params})
       .pipe(catchError(this.processHttpMsgService.handleError));
@@ -93,7 +85,7 @@ export class AdminOperationService {
 
   cashierCloseShift(url: string, close: boolean, emp: string, date?: string): Observable<Report> {
     let params = new HttpParams();
-    params = params.append('date', date + '');
+    if(date) params = params.append('date', date + '');
     params = params.append('closeDay', close + '');
     return this._http.post<any>(url + this.path + '/op/report/user/' + emp, {}, {params})
       .pipe(catchError(this.processHttpMsgService.handleError));
