@@ -78,7 +78,7 @@ export class CloseBatchComponent implements OnInit {
     console.log('setTypeCloseBatch', $event, this.typeCloseBatch);
     this.loading = true;
     if(this.typeCloseBatch !== undefined){
-      if(!this.cbReport){
+      //if(!this.cbReport){
         this.dataStorage.getCloseBatchReport(this.typeCloseBatch).subscribe(
           next => {
             console.log(next);
@@ -90,9 +90,9 @@ export class CloseBatchComponent implements OnInit {
             console.error(err);
             this.cashService.openGenericInfo('Error','Can\'t complete close batch report operation');
           });
-      } else {
+      /*} else {
         this.setDataByType();
-      }
+      }*/
     }
   }
 
