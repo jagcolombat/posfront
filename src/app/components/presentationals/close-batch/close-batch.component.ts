@@ -88,7 +88,7 @@ export class CloseBatchComponent implements OnInit {
           },
           err => {
             console.error(err);
-            this.cashService.openGenericInfo('Error','Can\'t complete close batch report operation');
+            this.cashService.openGenericInfo('Error', err);
           });
       /*} else {
         this.setDataByType();

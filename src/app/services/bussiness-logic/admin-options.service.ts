@@ -277,7 +277,7 @@ export class AdminOptionsService {
             this.dataStorage.closeBatch(next).subscribe(
             next => console.log('closeBatch', next),
             err => {
-              this.cashService.openGenericInfo('Error','Can\'t complete close batch operation');
+              this.cashService.openGenericInfo('Error',err);
               this.operationService.currentOperation = '';
             }, () => this.operationService.currentOperation = '')
           } else {
