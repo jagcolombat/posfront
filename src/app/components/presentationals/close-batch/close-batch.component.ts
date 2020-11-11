@@ -88,6 +88,7 @@ export class CloseBatchComponent implements OnInit {
           },
           err => {
             console.error(err);
+            this.loading = false;
             this.cashService.openGenericInfo('Error', err);
           });
       /*} else {

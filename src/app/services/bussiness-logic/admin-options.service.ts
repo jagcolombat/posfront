@@ -274,12 +274,18 @@ export class AdminOptionsService {
         next => {
           if(next){
             console.log('closeBatch', next);
+            let infoEventDialog = this.cashService.openGenericInfo(InformationType.INFO, 'Closing batch...',null,false,
+              true);
             this.dataStorage.closeBatch(next).subscribe(
-            next => console.log('closeBatch', next),
-            err => {
-              this.cashService.openGenericInfo('Error',err);
-              this.operationService.currentOperation = '';
-            }, () => this.operationService.currentOperation = '')
+            next => {
+                console.log('closeBatch', next);
+                infoEventDialog.close();
+              }, err => {
+                infoEventDialog.close();
+                this.cashService.openGenericInfo('Error',err);
+                this.operationService.currentOperation = '';
+              }, () => this.operationService.currentOperation = ''
+            );
           } else {
             this.operationService.currentOperation = '';
           }

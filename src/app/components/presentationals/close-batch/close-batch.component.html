@@ -13,18 +13,19 @@
         <mat-option value="{{cb.DETAILS}}">{{cb[cb.DETAILS]}}</mat-option>
       </mat-select>
     </mat-form-field>
-    <ag-grid-angular [ngClass]="(cbReport && this.typeCloseBatch == 0) ? 'show': 'hide'"
+    <ag-grid-angular [ngClass]="(cbReport && this.typeCloseBatch == 0 && !loading) ? 'show': 'hide'"
                      class="ag-theme-material"
                      [gridOptions]="gridOptionsSummary"
                      [columnDefs]="colDefsSummary"
     >
     </ag-grid-angular>
-    <ag-grid-angular [ngClass]="(cbReport && typeCloseBatch == 1) ? 'show': 'hide'"
+    <ag-grid-angular [ngClass]="(cbReport && typeCloseBatch == 1 && !loading) ? 'show': 'hide'"
                      class="ag-theme-material"
                      [gridOptions]="gridOptionsDetails"
                      [columnDefs]="colDefsDetails"
     >
     </ag-grid-angular>
+    <p *ngIf="loading && typeCloseBatch !== undefined">Calculating {{cb[typeCloseBatch]}} close batch ...</p>
   </div>
   <mat-dialog-actions>
     <button mat-raised-button mat-dialog-close [disabled]="loading">Cancel</button>

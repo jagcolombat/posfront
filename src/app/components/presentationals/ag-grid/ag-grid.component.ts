@@ -5,6 +5,7 @@ import { ProductOrder } from "../../../models/product-order.model";
 import { Subscription } from "rxjs";
 import { CustomHeaderComponent } from "./custom-header.component";
 import { CashService } from "../../../services/bussiness-logic/cash.service";
+import {InvoiceStatus} from "../../../utils/invoice-status.enum";
 
 @Component({
   selector: 'ag-grid',
@@ -152,10 +153,15 @@ export class AgGridComponent implements OnInit, /*OnChanges,*/ OnDestroy {
       this.invoiceService.delPOFromInvoice(selectedData)
         .subscribe(data => {
             console.log('delPOFromInvoice', data);
-            this.invoiceService.setInvoice(data);
-            this.invoiceService.invoiceProductSelected.splice(0);
-            this.invoiceService.setTotal();
-            const res = this.gridOptions.api.updateRowData({ remove: selectedData });
+            if(data.status === InvoiceStatus.PAID){
+              this.invoiceService.warnInvoicePaid();
+            } else {
+              this.invoiceService.setInvoice(data);
+              this.invoiceService.invoiceProductSelected.splice(0);
+              this.invoiceService.setTotal();
+              const res = this.gridOptions.api.updateRowData({ remove: selectedData });
+            }
+
           },
           err => {
             console.log(err);
