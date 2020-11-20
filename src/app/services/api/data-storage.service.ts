@@ -293,7 +293,7 @@ export class DataStorageService {
     return result;
   }
 
-  weeklyClosePrint(close: boolean, from?: any, to?: any) {
+  weeklyClosePrint(close?: boolean, from?: any, to?: any) {
     return this.adminOperationService.getWeeklyClosePrint(this.url, close, from, to);
   }
 

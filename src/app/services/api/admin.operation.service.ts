@@ -67,11 +67,11 @@ export class AdminOperationService {
   }
 
   getWeeklyClosePrint(url: string, close, from, to): Observable<Report> {
-    let params = new HttpParams();
-    params = params.append('closeWeek', close + '');
-    if(from) params = params.append('fromDate', from + '');
-    if(to) params = params.append('toDate', to + '');
-    return this._http.post<any>(url + this.path + '/op/report/week', {}, {params})
+    /*let params = new HttpParams();
+    if (close) { params = params.append('closeWeek', close + ''); }
+    if (from) { params = params.append('fromDate', from + ''); }
+    if (to) { params = params.append('toDate', to + ''); }*/
+    return this._http.post<any>(url + this.path + '/op/report/week', {}/*, {params}*/)
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 

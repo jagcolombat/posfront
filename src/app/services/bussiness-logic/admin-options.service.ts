@@ -899,28 +899,27 @@ export class AdminOptionsService {
 
   weeklyClose(op) {
     this.cashService.dayCloseEnableState();
-    this.cashService.dialog.open(SetDateComponent,
+    /*this.cashService.dialog.open(SetDateComponent,
       { width: '400px', height: '340px', data: {title: 'Weekly Close', subtitle: 'Set date', closeWeek: true},
         disableClose: true })
       .afterClosed().subscribe(next => {
       console.log('afterCloseSetDate', next);
-      //if(next.lastClose) this.dayCloseType('', AdminOpEnum.WTDZ);
-      (next.date)? this.weeklyCloseOp( AdminOpEnum.WEEKLY_CLOSE, next.date.to): this.cashService.resetEnableState();
-    });
-
+      (next.date) ? this.weeklyCloseOp( AdminOpEnum.WEEKLY_CLOSE, next.date.to) : this.cashService.resetEnableState();
+    });*/
+    this.weeklyCloseOp(AdminOpEnum.WEEKLY_CLOSE);
   }
 
-  weeklyCloseOp(op: any, date?: any){
-    let dialogEv = this.cashService.openGenericInfo('Information', 'Closing week...');
-    this.dataStorage.weeklyClosePrint(false, null, date).subscribe(
+  weeklyCloseOp(op: any, date?: any) {
+    const dialogEv = this.cashService.openGenericInfo('Information', 'Closing week...');
+    this.dataStorage.weeklyClosePrint(null, null, date).subscribe(
       next => {
         dialogEv.close();
-        this.cashService.openGenericInfo('Weekly Close Print', 'Completed '+op.toLowerCase()+' operation');
+        this.cashService.openGenericInfo(op, 'Completed ' + op.toLowerCase() + ' operation');
       },
       err => {
         dialogEv.close();
-        this.cashService.openGenericInfo('Error', 'Can\'t complete '+
-          op.toLowerCase()+' print operation');
+        this.cashService.openGenericInfo('Error', 'Can\'t complete ' +
+          op.toLowerCase() + ' print operation');
         this.cashService.resetEnableState();
       },
       () => {
@@ -930,7 +929,7 @@ export class AdminOptionsService {
   }
 
   updateBrowser() {
-    //let e = new KeyboardEvent("keydown", { key: 'F11', bubbles: true });
+    // let e = new KeyboardEvent("keydown", { key: 'F11', bubbles: true });
     /*let e = this.createKeyboradEvent('keydown', 'F11')
     console.log('update browser', e);
     document.addEventListener('keydown', (e) => { console.log('keydown', e); })
