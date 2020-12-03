@@ -214,7 +214,7 @@ export class OperationsComponent implements OnInit {
         this.operationService.setOtherPaymentType();
         break;
       case PaymentOpEnum.EBT_CARD:
-        //this.operationService.setEBTCardType();
+        // this.operationService.setEBTCardType();
         this.operationService.detectPAXConn(PaymentOpEnum.EBT_CARD);
         break;
       case PaymentOpEnum.DEBIT_CARD:
@@ -252,7 +252,8 @@ export class OperationsComponent implements OnInit {
         break;
       case OtherOpEnum.WEIGHT_ITEM:
         this.operationService.weightItem();
-        break;/*
+        break;
+      /*
       case OtherOpEnum.SPLIT_CARD:
         this.operationService.splitCard();
         break;*/

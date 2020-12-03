@@ -31,7 +31,7 @@ import {ClientService} from "./client.service";
 import {ClientModel} from "../../models/client.model";
 import {PaymentMethodEnum} from "../../utils/operations/payment-method.enum";
 import {CheckPayment} from "../../models/check.model";
-import {TransferPayment} from "../../models/transfer.model";
+import {ITransferPayment, TransferPayment} from '../../models/transfer.model';
 import {GiftCardModel, IGiftCardPaymentModel, IGiftModel} from "../../models/gift-card.model";
 import {EClockType} from "../../utils/clock-type.enum";
 import {UserClock} from "../../models/user-clock.model";
@@ -211,6 +211,10 @@ export class DataStorageService {
 
   paidByGift(receiptNumber: string, gift: IGiftCardPaymentModel): Observable<any> {
     return this.paymentService.paidByGift(this.url, receiptNumber, gift);
+  }
+
+  paidByTransfer(transfer: ITransferPayment): Observable<any> {
+    return this.paymentService.paidByTransfer(this.url, transfer);
   }
 
   // Journey

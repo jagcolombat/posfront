@@ -400,14 +400,14 @@ export class InvoiceService {
   }
 
   paidByCheck(amount: number, checkNumber: string, descrip?: string, client?: string): Observable<Invoice> {
-    let checkPayment = new CheckPayment(this.invoice.receiptNumber, amount, checkNumber, descrip);
+    const checkPayment = new CheckPayment(this.invoice.receiptNumber, amount, checkNumber, descrip);
     return (client)? this.dataStorage.acctPayment(client, checkPayment, PaymentMethodEnum.CHECK) :
       this.dataStorage.paidByCheck(checkPayment);
 
   }
 
   acctPaymentTransfer(client: string, amount: any, descrip: any) {
-    let transferPayment = new TransferPayment(amount, descrip);
+    const transferPayment = new TransferPayment(amount, descrip);
     return this.dataStorage.acctPayment(client, transferPayment, PaymentMethodEnum.TRANSFER);
   }
 
@@ -416,9 +416,13 @@ export class InvoiceService {
   }
 
   paidByGift(amount: number, card: string): Observable<Invoice> {
-    let giftCardPayment = new GiftCardPayment(amount, card);
+    const giftCardPayment = new GiftCardPayment(amount, card);
     return this.dataStorage.paidByGift(this.receiptNumber, giftCardPayment);
+  }
 
+  paidByTransfer(amount: number, descrip: string): Observable<Invoice> {
+    const transferPayment = new TransferPayment(amount, descrip, this.receiptNumber);
+    return this.dataStorage.paidByTransfer(transferPayment);
   }
 
   allowAddProductByStatus() {

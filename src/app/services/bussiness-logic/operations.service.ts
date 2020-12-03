@@ -1,51 +1,51 @@
 import {EventEmitter, Injectable, Output} from '@angular/core';
-import {InvoiceService} from "./invoice.service";
-import {ActivatedRoute, Router} from "@angular/router";
-import {AuthService} from "../api/auth.service";
-import {DialogLoginComponent} from "../../components/containers/dialog-login/dialog-login.component";
-import {Invoice} from "../../models/invoice.model";
-import {DialogInvoiceComponent} from "../../components/presentationals/dialog-invoice/dialog-invoice.component";
-import {CashOpComponent} from "../../components/presentationals/cash-op/cash-op.component";
-import {CashPaymentComponent} from "../../components/presentationals/cash-payment/cash-payment.component";
-import {InvoiceStatus} from "../../utils/invoice-status.enum";
-import {EOperationType} from "../../utils/operation.type.enum";
-import {CashService} from "./cash.service";
-import {Product, Token} from "../../models";
-import {FinancialOpEnum, InvioceOpEnum, PaymentOpEnum, TotalsOpEnum} from "../../utils/operations";
-import {PaidOutComponent} from "../../components/presentationals/paid-out/paid-out.component";
-import {DialogPaidoutComponent} from "../../components/containers/dialog-paidout/dialog-paidout.component";
-import {DialogFilterComponent} from "../../components/containers/dialog-filter/dialog-filter.component";
-import {MatDialogRef} from "@angular/material";
-import {CompanyType} from "../../utils/company-type.enum";
-import {PaymentStatus} from "../../utils/payment-status.enum";
-import {ProductGenericComponent} from "../../components/presentationals/product-generic/product-generic.component";
-import {AdminOpEnum} from "../../utils/operations/admin-op.enum";
-import {ETXType} from "../../utils/delivery.enum";
-import {DialogDeliveryComponent} from "../../components/presentationals/dialog-delivery/dialog-delivery.component";
-import {Table} from "../../models/table.model";
-import {Observable, of, Subscription} from "rxjs";
-import {InputCcComponent} from "../../components/presentationals/input-cc/input-cc.component";
-import {dataValidation, operationsWithClear} from "../../utils/functions/functions";
-import {Order} from "../../models/order.model";
-import {OtherOpEnum} from "../../utils/operations/other.enum";
-import {EFieldType} from "../../utils/field-type.enum";
-import {OrderInfoComponent} from "../../components/presentationals/order-info/order-info.component";
-import {EBTTypes} from "../../utils/card-payment-types.enum";
-import {CustomerOpEnum} from "../../utils/operations/customer.enum";
-import {ClientService} from "./client.service";
-import {InformationType} from "../../utils/information-type.enum";
-import {SwipeCredentialCardComponent} from "../../components/presentationals/swipe-credential-card/swipe-credential-card.component";
-import {PAXConnTypeEnum} from "../../utils/pax-conn-type.enum";
-import {UserrolEnum} from "../../utils/userrol.enum";
-import {PaymentMethodEnum} from "../../utils/operations/payment-method.enum";
-import {InitViewService} from "./init-view.service";
-import {ScanOpEnum} from "../../utils/operations/scanner-op.enum";
+import {InvoiceService} from './invoice.service';
+import {ActivatedRoute, Router} from '@angular/router';
+import {AuthService} from '../api/auth.service';
+import {DialogLoginComponent} from '../../components/containers/dialog-login/dialog-login.component';
+import {Invoice} from '../../models/invoice.model';
+import {DialogInvoiceComponent} from '../../components/presentationals/dialog-invoice/dialog-invoice.component';
+import {CashOpComponent} from '../../components/presentationals/cash-op/cash-op.component';
+import {CashPaymentComponent} from '../../components/presentationals/cash-payment/cash-payment.component';
+import {InvoiceStatus} from '../../utils/invoice-status.enum';
+import {EOperationType} from '../../utils/operation.type.enum';
+import {CashService} from './cash.service';
+import {Product, Token} from '../../models';
+import {FinancialOpEnum, InvioceOpEnum, PaymentOpEnum, TotalsOpEnum} from '../../utils/operations';
+import {PaidOutComponent} from '../../components/presentationals/paid-out/paid-out.component';
+import {DialogPaidoutComponent} from '../../components/containers/dialog-paidout/dialog-paidout.component';
+import {DialogFilterComponent} from '../../components/containers/dialog-filter/dialog-filter.component';
+import {MatDialogRef} from '@angular/material';
+import {CompanyType} from '../../utils/company-type.enum';
+import {PaymentStatus} from '../../utils/payment-status.enum';
+import {ProductGenericComponent} from '../../components/presentationals/product-generic/product-generic.component';
+import {AdminOpEnum} from '../../utils/operations/admin-op.enum';
+import {ETXType} from '../../utils/delivery.enum';
+import {DialogDeliveryComponent} from '../../components/presentationals/dialog-delivery/dialog-delivery.component';
+import {Table} from '../../models/table.model';
+import {Observable, of, Subscription} from 'rxjs';
+import {InputCcComponent} from '../../components/presentationals/input-cc/input-cc.component';
+import {dataValidation, operationsWithClear} from '../../utils/functions/functions';
+import {Order} from '../../models/order.model';
+import {OtherOpEnum} from '../../utils/operations/other.enum';
+import {EFieldType} from '../../utils/field-type.enum';
+import {OrderInfoComponent} from '../../components/presentationals/order-info/order-info.component';
+import {EBTTypes} from '../../utils/card-payment-types.enum';
+import {CustomerOpEnum} from '../../utils/operations/customer.enum';
+import {ClientService} from './client.service';
+import {InformationType} from '../../utils/information-type.enum';
+import {SwipeCredentialCardComponent} from '../../components/presentationals/swipe-credential-card/swipe-credential-card.component';
+import {PAXConnTypeEnum} from '../../utils/pax-conn-type.enum';
+import {UserrolEnum} from '../../utils/userrol.enum';
+import {PaymentMethodEnum} from '../../utils/operations/payment-method.enum';
+import {InitViewService} from './init-view.service';
+import {ScanOpEnum} from '../../utils/operations/scanner-op.enum';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OperationsService {
-  inactivityTime: number = 60;
+  inactivityTime = 60;
   timer: any;
   currentOperation: string;
   invTotalsBeforeFSSubTotal = {total: 0, tax: 0, subtotal: 0};
@@ -59,9 +59,9 @@ export class OperationsService {
               private authService: AuthService, private clientService: ClientService,
               private initService: InitViewService,
               private router: Router, private route: ActivatedRoute) {
-    //console.log('OperationService', this.inactivityTime);
+    // console.log('OperationService', this.inactivityTime);
     this.invoiceService.evAddProd.subscribe(() => this.onAddProduct());
-    //If section products is showing
+    // If section products is showing
     this.invoiceService.evCreateInvoice.subscribe(next => this.navigateToDept());
     // If was added a product update inactivity time
     this.invoiceService.evUpdateProds.subscribe(ev => this.resetInactivity(true));
@@ -71,30 +71,31 @@ export class OperationsService {
     this.counterInactivity();
   }
 
-  navigateToDept(){
+  navigateToDept() {
     this.resetInactivity(true);
-    if(this.router.url.includes('products')){
+    if (this.router.url.includes('products')) {
       this.router.navigateByUrl('/cash/dptos');
     }
   }
 
-  counterInactivity(){
-    this.timer = setTimeout(()=> {
-      if(this.letLogout(this.invoiceService.invoice.status) && this.currentOperation !== AdminOpEnum.CLOSE_BATCH)
+  counterInactivity() {
+    this.timer = setTimeout(() => {
+      if (this.letLogout(this.invoiceService.invoice.status) && this.currentOperation !== AdminOpEnum.CLOSE_BATCH) {
         this.logout(true);
-      else
+      } else {
         this.resetInactivity(true);
-    },this.getInactivityTime() * 60000);
+      }
+    }, this.getInactivityTime() * 60000);
   }
 
-  getInactivityTime(): number{
+  getInactivityTime(): number {
     return (this.cashService.config.sysConfig) ? this.cashService.config.sysConfig.inactivityTime : 60;
   }
 
   resetInactivity(cont: boolean, msg?: string) {
     console.log('resetInactivity', cont, msg);
     clearTimeout(this.timer);
-    if(cont) this.counterInactivity();
+    if (cont) { this.counterInactivity(); }
   }
 
   clear() {
@@ -116,60 +117,59 @@ export class OperationsService {
           this.clearOp();
         }
       /*}
-    })*/;
+    })*/
     this.resetInactivity(true);
   }
 
-  clearOp(total:boolean = true){
-    if(operationsWithClear.filter(i => i === this.currentOperation).length > 0){
+  clearOp(total: boolean = true) {
+    if (operationsWithClear.filter(i => i === this.currentOperation).length > 0) {
         this.invoiceService.isReviewed = false;
-        if(this.currentOperation === FinancialOpEnum.REVIEW ||
+        if (this.currentOperation === FinancialOpEnum.REVIEW ||
           this.currentOperation === FinancialOpEnum.REPRINT ||
           this.currentOperation === AdminOpEnum.CANCEL_CHECK ||
           this.currentOperation === AdminOpEnum.REMOVE_HOLD) {
           this.invoiceService.createInvoice();
-          if(this.currentOperation === AdminOpEnum.CANCEL_CHECK){
+          if (this.currentOperation === AdminOpEnum.CANCEL_CHECK) {
             this.evCancelCheck.emit(false);
           }
-          if(this.currentOperation === AdminOpEnum.REMOVE_HOLD){
+          if (this.currentOperation === AdminOpEnum.REMOVE_HOLD) {
             this.evRemoveHold.emit(false);
           }
         }
-        if(this.currentOperation === TotalsOpEnum.FS_SUBTOTAL) {
+        if (this.currentOperation === TotalsOpEnum.FS_SUBTOTAL) {
           this.resetTotalFromFS();
           this.resetSubTotalState();
         }
-      if(this.currentOperation === TotalsOpEnum.SUBTOTAL) {
+      if (this.currentOperation === TotalsOpEnum.SUBTOTAL) {
         console.log('Clear of Subtotal');
-        //if(this.invoiceService.invoice.isRefund || this.invoiceService.invoice.isPromotion){
+        // if(this.invoiceService.invoice.isRefund || this.invoiceService.invoice.isPromotion){
           this.resetSubTotalState();
-        //}
+        // }
       }
       this.currentOperation = '';
       this.cashService.resetEnableState();
-    } else if(this.invoiceService.invoiceProductSelected.length <= 0 && !this.invoiceService.digits &&
-      this.currentOperation === FinancialOpEnum.RECALL){
+    } else if (this.invoiceService.invoiceProductSelected.length <= 0 && !this.invoiceService.digits &&
+      this.currentOperation === FinancialOpEnum.RECALL) {
       this.invoiceService.createInvoice();
-    } else if(this.invoiceService.invoiceProductSelected.length > 0 || this.invoiceService.digits){
-      if(this.invoiceService.invoiceProductSelected.length > 0) {
-        this.cashService.openGenericInfo('Confirm', 'Do you want clear?', null,true)
+    } else if (this.invoiceService.invoiceProductSelected.length > 0 || this.invoiceService.digits) {
+      if (this.invoiceService.invoiceProductSelected.length > 0) {
+        this.cashService.openGenericInfo('Confirm', 'Do you want clear?', null, true)
           .afterClosed().subscribe(next => {
           if (next !== undefined && next.confirm) {
             // If clear need manager auth
-            //console.log('clear config', config);
-            if(this.cashService.config.sysConfig.allowLastProdClear === undefined)
+            // console.log('clear config', config);
+            if (this.cashService.config.sysConfig.allowLastProdClear === undefined) {
               this.cashService.config.sysConfig.allowLastProdClear = false;
-            if(this.cashService.config.sysConfig.allowClear){
-              this.deleteSelectedProducts();
             }
-            //If desire delete only the last products
-            else if (this.cashService.config.sysConfig.allowLastProdClear && this.invoiceService.lastProdAdd){
+            if (this.cashService.config.sysConfig.allowClear) {
+              this.deleteSelectedProducts();
+            } else if (this.cashService.config.sysConfig.allowLastProdClear && this.invoiceService.lastProdAdd) {
               this.deleteLastProduct();
             } else {
               this.delSelProdByAdmin();
             }
           }
-        })
+        });
       } else {
         this.invoiceService.evDelProd.emit(true);
       }
@@ -178,7 +178,7 @@ export class OperationsService {
     this.evCleanAdminOperation.emit();
   }
 
-  resetSubTotalState(){
+  resetSubTotalState() {
     console.log('Call clear API for update invoice');
     this.invoiceService.clear().subscribe(
       next => this.invoiceService.setInvoice(next),
@@ -186,20 +186,20 @@ export class OperationsService {
     );
   }
 
-  delSelProdByAdmin(){
+  delSelProdByAdmin() {
     this.authService.adminLogged() ? this.deleteSelectedProducts() : this.manager('clear');
   }
 
-  deleteSelectedProducts(){
-    this.invoiceService.evDelProd.emit(true);/*
+  deleteSelectedProducts() {
+    this.invoiceService.evDelProd.emit(true); /*
     this.invoiceService.invoiceProductSelected.splice(0);
     this.invoiceService.setTotal();*/
   }
 
   private deleteLastProduct() {
-    if(this.invoiceService.invoiceProductSelected.length === 1){
-      let prodSel = this.invoiceService.invoiceProductSelected[0];
-      if(prodSel.id === this.invoiceService.lastProdAdd.id){
+    if (this.invoiceService.invoiceProductSelected.length === 1) {
+      const prodSel = this.invoiceService.invoiceProductSelected[0];
+      if (prodSel.id === this.invoiceService.lastProdAdd.id) {
         this.deleteSelectedProducts();
       } else {
         this.delSelProdByAdmin();
@@ -211,11 +211,11 @@ export class OperationsService {
 
   void() {
     console.log('void', this.invoiceService.invoice.productOrders);
-    if((this.invoiceService.invoice.status === InvoiceStatus.IN_PROGRESS &&
+    if ((this.invoiceService.invoice.status === InvoiceStatus.IN_PROGRESS &&
       this.invoiceService.invoice.productOrders.length > 0 ) ||
       this.invoiceService.invoice.status === InvoiceStatus.IN_HOLD ||
-      this.invoiceService.invoice.isRefund ){
-      this.cashService.openGenericInfo('Confirm', 'Do you want void?', null,true)
+      this.invoiceService.invoice.isRefund ) {
+      this.cashService.openGenericInfo('Confirm', 'Do you want void?', null, true)
         .afterClosed().subscribe(next => {
         if (next !== undefined && next.confirm) {
           this.currentOperation = 'void';
@@ -234,11 +234,11 @@ export class OperationsService {
     this.addProduct(EOperationType.Plu);
   }
 
-  addProduct(op: EOperationType){
+  addProduct(op: EOperationType) {
     // If is a weight format product
-    let origUPC = this.invoiceService.numbers;
-    let isWFormat = this.isWeightFormatProduct();
-    if(isWFormat){
+    const origUPC = this.invoiceService.numbers;
+    const isWFormat = this.isWeightFormatProduct();
+    if (isWFormat) {
       this.getPriceAndUPCOfWFP();
     }
     // Consume servicio addProduct con this.digits esto devuelve ProductOrder
@@ -246,17 +246,17 @@ export class OperationsService {
       this.selectProd(prods).subscribe(prod => {
         console.log(EOperationType[op], prod, this.invoiceService.qty);
         this.initService.setOperation(op, 'Product', 'Get product id: ' + prod.id);
-        prod ? this.invoiceService.evAddProdByUPC.emit(prod): this.invoiceService.resetDigits();
+        prod ? this.invoiceService.evAddProdByUPC.emit(prod) : this.invoiceService.resetDigits();
       });
     }, err => {
       console.error('addProductByUpc', err);
-      if(isWFormat) {
+      if (isWFormat) {
         this.invoiceService.numbers = origUPC;
         this.invoiceService.addProductByUpc(op).subscribe(prods => {
           this.selectProd(prods).subscribe(prod => {
             console.log(EOperationType[op], prod, this.invoiceService.qty);
             this.initService.setOperation(op, 'Product', 'Get product id: ' + prod.id);
-            prod ? this.invoiceService.evAddProdByUPC.emit(prod): this.invoiceService.resetDigits();
+            prod ? this.invoiceService.evAddProdByUPC.emit(prod) : this.invoiceService.resetDigits();
           });
         }, err => {
           console.error('addProductByUpc', err);
@@ -271,12 +271,12 @@ export class OperationsService {
     this.resetInactivity(false);
   }
 
-  selectProd(prods: Product[]): Observable<Product>{
-    let $prod : Observable<Product>;
-    if(prods.length > 1){
+  selectProd(prods: Product[]): Observable<Product> {
+    let $prod: Observable<Product>;
+    if (prods.length > 1) {
       $prod = this.cashService.dialog.open(DialogInvoiceComponent,
         { width: '780px', height: '660px',
-          data: {invoice: prods, label: 'name', detail:'unitCost', title: 'Products', subtitle: 'Select a product', filter: false},
+          data: {invoice: prods, label: 'name', detail: 'unitCost', title: 'Products', subtitle: 'Select a product', filter: false},
           disableClose: true }).afterClosed();
     } else {
       $prod = of(prods[0]);
@@ -286,16 +286,16 @@ export class OperationsService {
 
   priceCheck() {
     console.log('priceCheck');
-    (this.currentOperation !== InvioceOpEnum.PRICE)? this.currentOperation = InvioceOpEnum.PRICE: this.currentOperation = "";
-    if(this.invoiceService.digits){
+    (this.currentOperation !== InvioceOpEnum.PRICE) ? this.currentOperation = InvioceOpEnum.PRICE : this.currentOperation = '';
+    if (this.invoiceService.digits) {
       this.invoiceService.getProductByUpc(EOperationType.PriceCheck).subscribe(prods => {
         this.selectProd(prods).subscribe( prod => {
-          if(prod){
-            this.cashService.openGenericInfo('Price check', 'Do you want add '+prod.name+' to the invoice',
+          if (prod) {
+            this.cashService.openGenericInfo('Price check', 'Do you want add ' + prod.name + ' to the invoice',
               prod.unitCost, true)
               .afterClosed().subscribe(next => {
               console.log(next);
-              if(next !== undefined && next.confirm ) {
+              if (next !== undefined && next.confirm ) {
                 // Logout
                 this.invoiceService.evAddProdByUPC.emit(prod);
               }
@@ -305,7 +305,7 @@ export class OperationsService {
           }
         });
       }, err => {
-        this.cashService.openGenericInfo('Error', 'Can\'t found this product '+
+        this.cashService.openGenericInfo('Error', 'Can\'t found this product ' +
           this.invoiceService.digits); });
       this.invoiceService.resetDigits();
     }
@@ -313,10 +313,10 @@ export class OperationsService {
   }
 
   numpadInput(ev) {
-    this.invoiceService.evNumpadInput.emit(ev)
+    this.invoiceService.evNumpadInput.emit(ev);
   }
 
-  actionByManager(action: string, token: any, data?: any){
+  actionByManager(action: string, token: any, data?: any) {
     switch (action) {
       case 'void':
         this.cancelCheckByAdmin(token);
@@ -337,28 +337,28 @@ export class OperationsService {
     console.log('manager', action, data);
     // this.currentOperation = 'manager';
     this.authService.initialLogin = this.authService.token;
-    if(this.authService.adminLogged()){
-      if(action){
+    if (this.authService.adminLogged()) {
+      if (action) {
         this.actionByManager(action, this.authService.token, data);
       } else {
         this.authService.token.rol === UserrolEnum.ADMIN ?
-          this.router.navigateByUrl('/cash/options'):
+          this.router.navigateByUrl('/cash/options') :
           this.adminLogin().subscribe( res => this.adminLoginOp(res));
       }
     } else {
-      //this.authService.initialLogin = this.authService.token;
+      // this.authService.initialLogin = this.authService.token;
       this.adminLogin().subscribe(loginValid => this.adminLoginOp(loginValid, action, data));
     }
     this.resetInactivity(true);
   }
 
-  adminLogin(){
+  adminLogin() {
     return this.cashService.dialog.open(DialogLoginComponent, { width: '530px', height: '580px', disableClose: true,
       autoFocus: false})
-      .afterClosed()
+      .afterClosed();
   }
 
-  adminLoginOp(response, action?: any, data?: any){
+  adminLoginOp(response, action?: any, data?: any) {
     console.log('The dialog was closed', response);
     if (response.valid) {
       if (action) {
@@ -388,7 +388,7 @@ export class OperationsService {
     this.currentOperation = FinancialOpEnum.RECALL;
     this.invoiceService.isReviewed = true;
     this.resetInactivity(true);
-    if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS) {
+    if (this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS) {
       this.invoiceService.digits ?
         /*this.getCheckById(EOperationType.RecallCheck,i => {
           i.status === InvoiceStatus.IN_HOLD ? this.invoiceService.setInvoice(i) :
@@ -401,7 +401,7 @@ export class OperationsService {
         :
         this.invoiceService.getInvoiceByStatus(EOperationType.RecallCheck, InvoiceStatus.IN_HOLD)
           .subscribe(next => this.openDialogInvoices(next, i => {
-              this.invoiceService.setInvoice(i);}),
+              this.invoiceService.setInvoice(i); }),
             err => this.cashService.openGenericInfo('Error', 'Can\'t complete recall check operation'));
     } else {
       console.error('Can\'t complete recall check operation');
@@ -415,8 +415,8 @@ export class OperationsService {
     this.invoiceService.isReviewed = true;
     this.resetInactivity(true);
 
-    if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS) {
-      if(this.invoiceService.digits) {
+    if (this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS) {
+      if (this.invoiceService.digits) {
         this.getCheckById(EOperationType.ReviewCheck, i => {
           this.invoiceService.setInvoice(i);
           this.cashService.reviewEnableState();
@@ -432,9 +432,9 @@ export class OperationsService {
     }
   }
 
-  subTotal(){
+  subTotal() {
     console.log('subTotal', this.currentOperation);
-    let refund = this.currentOperation === FinancialOpEnum.REFUND;
+    const refund = this.currentOperation === FinancialOpEnum.REFUND;
     if (this.invoiceService.invoice.productOrders.length > 0 || ( this.cashService.config.sysConfig.fullRefund && refund )) {
       this.currentOperation = TotalsOpEnum.SUBTOTAL;
       this.cashService.totalsDisabled();
@@ -444,13 +444,13 @@ export class OperationsService {
           next.total = this.invoiceService.invoice.total - 0.50;*/
           // console.log('promoTotal', next.total, this.invoiceService.invoice.total);
           // Calculate total discount by promotion
-          if(next.isPromotion && !next.isRefund) next.totalPromo = this.invoiceService.invoice.total - next.total;
+          if (next.isPromotion && !next.isRefund) { next.totalPromo = this.invoiceService.invoice.total - next.total; }
           this.invoiceService.setInvoice(next);
-          if(this.invoiceService.invoice.status === InvoiceStatus.PAID){
+          if (this.invoiceService.invoice.status === InvoiceStatus.PAID) {
             this.invoiceService.warnInvoicePaid();
           } else {
             (this.invoiceService.invoice.productOrders.length > 0) ?
-              this.cashService.totalsEnableState(false, refund || next.isRefund):
+              this.cashService.totalsEnableState(false, refund || next.isRefund) :
               this.cashService.resetEnableState();
           }
         },
@@ -458,27 +458,28 @@ export class OperationsService {
           this.cashService.openGenericInfo(InformationType.ERROR, err);
           this.cashService.resetEnableState();
         }
-      )
+      );
     }
   }
 
-  ebtSubTotal(){
+  ebtSubTotal() {
     console.log('ebtSubTotal', this.currentOperation);
-    let refund = this.currentOperation === FinancialOpEnum.REFUND;
+    const refund = this.currentOperation === FinancialOpEnum.REFUND;
     if (this.invoiceService.invoice.productOrders.length > 0 || ( this.cashService.config.sysConfig.fullRefund && refund )) {
       this.currentOperation = TotalsOpEnum.FS_SUBTOTAL;
       this.cashService.totalsDisabled();
       this.invoiceService.fsSubTotal().subscribe(
         next => {
           // Calculate total discount by promotion
-          if(next.isPromotion && !next.isRefund)
+          if (next.isPromotion && !next.isRefund) {
             next.totalPromo = this.invoiceService.invoice.total - next.total;
+          }
           this.invoiceService.setInvoice(next);
-          if(this.invoiceService.invoice.status === InvoiceStatus.PAID){
+          if (this.invoiceService.invoice.status === InvoiceStatus.PAID) {
             this.invoiceService.warnInvoicePaid();
           } else {
             this.invoiceService.invoice.productOrders.length > 0 ?
-              this.cashService.totalsEnableState(this.invoiceService.invoice.fsTotal > 0, refund || next.isRefund):
+              this.cashService.totalsEnableState(this.invoiceService.invoice.fsTotal > 0, refund || next.isRefund) :
               this.cashService.resetEnableState();
           }
         },
@@ -486,11 +487,11 @@ export class OperationsService {
           this.cashService.openGenericInfo(InformationType.ERROR, err);
           this.cashService.resetEnableState();
         }
-      )
+      );
     }
   }
 
-  fsSubTotal(){
+  fsSubTotal() {
     console.log('fsSubTotal');
     if (this.invoiceService.invoice.productOrders.length > 0) {
       this.currentOperation = TotalsOpEnum.FS_SUBTOTAL;
@@ -498,21 +499,21 @@ export class OperationsService {
       // Receive updated invoice and execute this.invoiceService.setInvoice
       this.saveStateTotals();
       this.invoiceService.invoice.productOrders.filter(po => {
-        if(po.foodStamp){
-          //this.invoiceService.invoice.subTotal = this.invoiceService.invoice.subTotal - po.subTotal;
-          //this.invoiceService.invoice.tax -= po.tax;
+        if (po.foodStamp) {
+          // this.invoiceService.invoice.subTotal = this.invoiceService.invoice.subTotal - po.subTotal;
+          // this.invoiceService.invoice.tax -= po.tax;
           this.invoiceService.invoice.fsTotal = this.invoiceService.invoice.fsTotal ?
             this.invoiceService.invoice.fsTotal + po.subTotal : 0 + po.subTotal;
-          //this.invoiceService.invoice.total -= po.total;
+          // this.invoiceService.invoice.total -= po.total;
           this.invoiceService.evUpdateTotals.emit();
         }
         console.log('fsTotal', this.invoiceService.invoice.fsTotal);
-        if(!this.invoiceService.invoice.fsTotal){
+        if (!this.invoiceService.invoice.fsTotal) {
           this.cashService.totalsEnableState();
         } else {
           this.cashService.totalsEnableState(true);
         }
-      })
+      });
     }
     this.resetInactivity(true);
   }
@@ -527,7 +528,7 @@ export class OperationsService {
         });
   }
 
-  openDialogInvoices(inv: Invoice[], action: (i: any) => void, noSelectionMsg?: string, title?:string, subTitle?: string) {
+  openDialogInvoices(inv: Invoice[], action: (i: any) => void, noSelectionMsg?: string, title?: string, subTitle?: string) {
     this.openDialogWithPag(inv, action, title, subTitle, 'receiptNumber', 'total', 'orderInfo');
   }
 
@@ -554,45 +555,44 @@ export class OperationsService {
       } else {
         this.cashService.openGenericInfo('Information', 'There are not tables');
       }*/
-      this.openDialogWithPag(tables, t => this.setDineIn(t), 'Tables', 'Select a table',null,
+      this.openDialogWithPag(tables, t => this.setDineIn(t), 'Tables', 'Select a table', null,
         'label');
     }, err => {
       console.error('Error getting tables', err);
       this.cashService.openGenericInfo('Error', 'Can\'t complete get tables operation');
     });
-    //let tables = tabs? tabs : [{id:"0", number: 1, label: 'Table 1'}];
+    // let tables = tabs? tabs : [{id:"0", number: 1, label: 'Table 1'}];
 
   }
 
-  setDineIn(table: any){
-    if(table){
+  setDineIn(table: any) {
+    if (table) {
       this.invoiceService.setDineIn(<Table> table).subscribe(next => {
-        if(next) {
+        if (next) {
           this.invoiceService.order = next;
-          this.cashService.openGenericInfo('Information', 'The "' +table['label'] + '" was assigned to this order');
+          this.cashService.openGenericInfo('Information', 'The "' + table['label'] + '" was assigned to this order');
         } else {
-          this.cashService.openGenericInfo('Error', 'Can\'t complete dine in operation')
+          this.cashService.openGenericInfo('Error', 'Can\'t complete dine in operation');
         }}, err => {
-        this.cashService.openGenericInfo('Error', 'Can\'t complete dine in operation')
-      })
+        this.cashService.openGenericInfo('Error', 'Can\'t complete dine in operation');
+      });
     }
   }
 
-  openDialogWithPag(dataArr: Array<any>, action: (i: any) => void, title:string, subTitle: string, label: string,
-                       detail?: string, subdetail?: string, noSelectionMsg?: string){
+  openDialogWithPag(dataArr: Array<any>, action: (i: any) => void, title: string, subTitle: string, label: string,
+                       detail?: string, subdetail?: string, noSelectionMsg?: string) {
     if (dataArr.length > 0) {
       const dialogRef = this.cashService.dialog.open(DialogInvoiceComponent,
         {
           width: '780px', height: '680px',
-          data: {invoice: dataArr, title: title, subtitle: subTitle, label:label, detail: detail, subdetail: subdetail},
+          data: {invoice: dataArr, title: title, subtitle: subTitle, label: label, detail: detail, subdetail: subdetail},
           disableClose: true
         });
       dialogRef.afterClosed().subscribe(order => {
         console.log('The dialog with pagination was closed', order);
-        if (order) { action(order); }
-        else {
-          if(noSelectionMsg) this.cashService.openGenericInfo('Error', noSelectionMsg);
-          //this.cashService.resetEnableState();
+        if (order) { action(order); } else {
+          if (noSelectionMsg) { this.cashService.openGenericInfo('Error', noSelectionMsg); }
+          // this.cashService.resetEnableState();
         }
       });
     } else {
@@ -604,7 +604,7 @@ export class OperationsService {
   refund() {
     console.log('refund');
     this.currentOperation = FinancialOpEnum.REFUND;
-    if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS) {
+    if (this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS) {
       this.invoiceService.digits ?
         this.authService.adminLogged() ? this.refundOp() : this.manager('refund')
         /*this.invoiceService.refund().subscribe(i => {
@@ -637,28 +637,28 @@ export class OperationsService {
       err => {
         console.error(err);
         this.invoiceService.resetDigits();
-        //this.cashService.openGenericInfo('Error', 'Can\'t complete refund operation');
+        // this.cashService.openGenericInfo('Error', 'Can\'t complete refund operation');
         this.cashService.openGenericInfo('Error', err);
       }
-    )
+    );
   }
 
-  letLogout(status: InvoiceStatus){
-    let noLogoutStates = [InvoiceStatus.IN_PROGRESS, InvoiceStatus.PENDENT_FOR_PAYMENT];
+  letLogout(status: InvoiceStatus) {
+    const noLogoutStates = [InvoiceStatus.IN_PROGRESS, InvoiceStatus.PENDENT_FOR_PAYMENT];
     return !noLogoutStates.includes(status);
   }
 
   logout(direct?: boolean) {
     console.log('logout');
     this.currentOperation = 'logout';
-    if(!this.letLogout(this.invoiceService.invoice.status)){
-      this.cashService.openGenericInfo('Error', 'Can\'t complete logout operation because check is in progress')
+    if (!this.letLogout(this.invoiceService.invoice.status)) {
+      this.cashService.openGenericInfo('Error', 'Can\'t complete logout operation because check is in progress');
     } else {
       direct ? this.logoutOp() :
-        this.cashService.openGenericInfo('Confirm', 'Do you want logout?', null,true)
+        this.cashService.openGenericInfo('Confirm', 'Do you want logout?', null, true)
           .afterClosed().subscribe(next => {
             console.log(next);
-            if(next !== undefined && next.confirm ) {
+            if (next !== undefined && next.confirm ) {
               // Logout
               this.logoutOp();
             }
@@ -671,14 +671,14 @@ export class OperationsService {
     this.authService.logout().subscribe(value => {
       console.log('logoutOp', value);
       this.logoutOpResponse();
-    },error1 => {
+    }, error1 => {
       console.error('LogoutOp', error1);
-      (error1.includes('Timeout trying connect with server'))? this.logoutOpResponse() :
+      (error1.includes('Timeout trying connect with server')) ? this.logoutOpResponse() :
         this.cashService.openGenericInfo(InformationType.ERROR, error1);
     });
   }
 
-  logoutOpResponse(){
+  logoutOpResponse() {
     this.authService.token = this.authService.initialLogin = undefined;
     this.cashService.dialog.closeAll();
     this.invoiceService.resetDigits();
@@ -690,29 +690,29 @@ export class OperationsService {
 
   cancelCheck() {
     console.log('cancelar factura');
-    let dialog = this.cashService.openGenericInfo(InformationType.INFO, 'Voiding transaction');
+    const dialog = this.cashService.openGenericInfo(InformationType.INFO, 'Voiding transaction');
     this.invoiceService.cancelInvoice().subscribe(next => {
       dialog.close();
       this.invoiceService.createInvoice();
-    },err => {
+    }, err => {
       console.error('cancelCheck failed');
       dialog.close();
-      this.cashService.openGenericInfo('Error', 'Can\'t complete void operation')
+      this.cashService.openGenericInfo('Error', 'Can\'t complete void operation');
     });
     this.resetInactivity(true);
   }
 
   cancelCheckByAdmin(t?: Token) {
     console.log('cancelCheckByAdmin', t);
-    let dialog = this.cashService.openGenericInfo(InformationType.INFO, 'Voiding transaction');
+    const dialog = this.cashService.openGenericInfo(InformationType.INFO, 'Voiding transaction');
     this.invoiceService.cancelInvoice().subscribe(next => {
       dialog.close();
       this.authService.token = t;
       this.invoiceService.createInvoice();
-    },err => {
+    }, err => {
       console.error('cancelCheck failed');
       dialog.close();
-      this.cashService.openGenericInfo('Error', 'Can\'t complete void operation')
+      this.cashService.openGenericInfo('Error', 'Can\'t complete void operation');
     });
     this.resetInactivity(true);
   }
@@ -739,15 +739,15 @@ export class OperationsService {
   }
 
   openInfoEventDialog(title: string): MatDialogRef<any, any> {
-    let infoEventDialog = this.cashService.openGenericInfo(InformationType.INFO, title,null,false,
+    const infoEventDialog = this.cashService.openGenericInfo(InformationType.INFO, title, null, false,
       true);
       infoEventDialog.afterClosed().subscribe(() => this.cashService.resetEnableState());
       return infoEventDialog;
   }
 
-  getTotalToPaid(){
+  getTotalToPaid() {
     return this.invoiceService.invoice.balance !== undefined ?
-      this.invoiceService.invoice.balance: this.invoiceService.invoice.total;
+      this.invoiceService.invoice.balance : this.invoiceService.invoice.total;
   }
 
   cash(opType?: PaymentOpEnum) {
@@ -781,58 +781,59 @@ export class OperationsService {
     this.cashPaid(cost, total);
   }
 
-  totalFromField(total){
+  totalFromField(total) {
     this.getTotalField(total).subscribe(data => {
-      this.cashPaid(data, total)
+      this.cashPaid(data, total);
     });
   }
 
-  cashMoney(paid){
+  cashMoney(paid) {
     this.currentOperation = PaymentOpEnum.CASH;
     this.cashPaid(paid);
   }
 
-  cashPaid(paid, totalToPaid?:number){
+  cashPaid(paid, totalToPaid?: number) {
     this.invoiceService.resetDigits();
-    let total2Paid = (totalToPaid) ? totalToPaid : this.getTotalToPaid();
+    const total2Paid = (totalToPaid) ? totalToPaid : this.getTotalToPaid();
     if (paid > 0 || this.payZeroByDiscount(paid)) {
-      let valueToReturn = paid - total2Paid;
-      if(valueToReturn < 0)
+      const valueToReturn = paid - total2Paid;
+      if (valueToReturn < 0) {
         this.invoiceService.invoice.balance = valueToReturn * -1;
-      else
+      } else {
         this.invoiceService.invoice.balance = undefined;
-      //this.cashReturn(valueToReturn, paid, total2Paid);
+      }
+      // this.cashReturn(valueToReturn, paid, total2Paid);
       this.cashOp(valueToReturn, paid, total2Paid);
     } else {
       this.currentOperation = TotalsOpEnum.SUBTOTAL;
     }
   }
 
-  cashOp(valueToReturn, payment, totalToPaid){
+  cashOp(valueToReturn, payment, totalToPaid) {
     console.log('cash', this.currentOperation);
-    let opMsg = 'cash payment';
-    let dialogInfoEvents = this.cashService.openGenericInfo('Cash','Paying by cash...', undefined,
+    const opMsg = 'cash payment';
+    const dialogInfoEvents = this.cashService.openGenericInfo('Cash', 'Paying by cash...', undefined,
       undefined, true);
 
-    let $cashing = this.invoiceService.cash(payment, totalToPaid, <PaymentOpEnum>this.currentOperation)
+    const $cashing = this.invoiceService.cash(payment, totalToPaid, <PaymentOpEnum>this.currentOperation)
       .subscribe(data => {
           console.log(data);
           dialogInfoEvents.close();
           clearTimeout(timeOut);
-          if(valueToReturn > 0){
+          if (valueToReturn > 0) {
             this.paymentReturn(valueToReturn).subscribe((result: any) => {
-              //if (result !== '') {
-              //this.paymentReturn(totalToPaid).subscribe((result: any) => {
-              if(result.closeAutomatic){
+              // if (result !== '') {
+              // this.paymentReturn(totalToPaid).subscribe((result: any) => {
+              if (result.closeAutomatic) {
                 this.logoutOp();
               } else if (+valueToReturn >= 0 || data.status === InvoiceStatus.PAID) {
                 this.invoiceService.createInvoice();
               } else {
                 console.log('Invoice not is paid', data, valueToReturn);
               }
-              //}
+              // }
             });
-          } else if(valueToReturn === 0 || data.status === InvoiceStatus.PAID){
+          } else if (valueToReturn === 0 || data.status === InvoiceStatus.PAID) {
             this.invoiceService.createInvoice();
           } else {
             console.log('Invoice not is paid', data, valueToReturn);
@@ -845,22 +846,22 @@ export class OperationsService {
           dialogInfoEvents.close();
           clearTimeout(timeOut);
         },
-        () => { this.cashService.resetEnableState(); clearTimeout(timeOut)});
+        () => { this.cashService.resetEnableState(); clearTimeout(timeOut); });
 
-    let timeOut = this.paxTimeOut($cashing, dialogInfoEvents, opMsg);
+    const timeOut = this.paxTimeOut($cashing, dialogInfoEvents, opMsg);
   }
 
   paxTimeOut($op: Subscription, dialogInfoEvents: MatDialogRef<any, any>, opMsg: string): number {
-    return setTimeout(()=> {
+    return setTimeout(() => {
       dialogInfoEvents.close();
       $op.unsubscribe();
-      this.cashService.openGenericInfo('Error', 'Can\'t complete '+ opMsg +' operation because timeout. ' +
+      this.cashService.openGenericInfo('Error', 'Can\'t complete ' + opMsg + ' operation because timeout. ' +
         'Please press SUBTOTAL operation again.');
       this.cashService.resetEnableState();
-    }, this.cashService.config.sysConfig.paxTimeout*1000);
+    }, this.cashService.config.sysConfig.paxTimeout * 1000);
   }
 
-  paymentReturn(valueToReturn, close?: boolean){
+  paymentReturn(valueToReturn, close?: boolean) {
     close = this.cashService.config.sysConfig.closeChange;
     return this.cashService.dialog.open(CashPaymentComponent,
       {
@@ -893,13 +894,13 @@ export class OperationsService {
     console.log('reprint');
     this.currentOperation = FinancialOpEnum.REPRINT;
 
-    if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS) {
-      if(this.invoiceService.digits) {
-        this.getCheckById(EOperationType.Reprint,i => {
+    if (this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS) {
+      if (this.invoiceService.digits) {
+        this.getCheckById(EOperationType.Reprint, i => {
           this.invoiceService.resetDigits();
           this.print(i);
-        })
-      } else if(this.invoiceService.isReviewed){
+        });
+      } else if (this.invoiceService.isReviewed) {
         this.print(this.invoiceService.invoice);
       } else {
         this.keyboard(FinancialOpEnum.REPRINT);
@@ -913,30 +914,30 @@ export class OperationsService {
 
   }
 
-  private print (i: Invoice){
+  private print (i: Invoice) {
     this.invoiceService.print(i).subscribe(
       data => this.cashService.openGenericInfo('Print', 'Print is finish'),
       err => this.cashService.openGenericInfo('Error', 'Can\'t complete print operation'));
   }
 
-  onAddProduct(){
+  onAddProduct() {
     this.resetInactivity(true);
     // this.invoiceService.invoice.status = InvoiceStatus.IN_PROGRESS;
   }
 
-  scanProduct(){
+  scanProduct() {
     this.currentOperation = ScanOpEnum.SCAN_PROD;
     this.addProduct(EOperationType.Scanner);
   }
 
-  isWeightFormatProduct(): boolean{
+  isWeightFormatProduct(): boolean {
     return this.invoiceService.numbers.length === 12 && this.invoiceService.numbers.startsWith('2') &&
       this.invoiceService.numbers.substring(7, 11) !== '0000';
   }
 
-  getPriceAndUPCOfWFP(){
+  getPriceAndUPCOfWFP() {
     this.invoiceService.priceWic = this.invoiceService.numbers.substring(7, 11);
-    let upc = this.invoiceService.numbers.substring(0, 6);
+    const upc = this.invoiceService.numbers.substring(0, 6);
     this.invoiceService.numbers = upc + '000000';
   }
 
@@ -945,21 +946,21 @@ export class OperationsService {
     this.currentOperation = 'EBT Card';
     let amount2Paid;
     if (this.invoiceService.invoice.total !== 0 || this.invoiceService.invoice.fsTotal !== 0) {
-      let dialogInfoEvents = this.openInfoEventDialog('Paying by EBT card');
+      const dialogInfoEvents = this.openInfoEventDialog('Paying by EBT card');
 
-      amount2Paid = (type === EBTTypes.EBT_CASH && this.invoiceService.invoice.fsTotal === 0)?
-        this.invoiceService.invoice.balance: this.invoiceService.invoice.fsTotal;
+      amount2Paid = (type === EBTTypes.EBT_CASH && this.invoiceService.invoice.fsTotal === 0) ?
+        this.invoiceService.invoice.balance : this.invoiceService.invoice.fsTotal;
       this.invoiceService.ebt(splitAmount ? splitAmount : amount2Paid, type)
         .subscribe(data => {
           console.log(data);
-          if(data.status === InvoiceStatus.PAID) {
+          if (data.status === InvoiceStatus.PAID) {
             this.invoiceService.createInvoice();
             this.cashService.resetEnableState();
           } else {
             this.invoiceService.setInvoice(data);
             this.cashService.ebtEnableState();
           }
-        },err => {
+        }, err => {
           console.log(err);
           this.resetTotalFromFS();
           dialogInfoEvents.close();
@@ -970,12 +971,12 @@ export class OperationsService {
     this.resetInactivity(true);
   }
 
-  payZeroByDiscount(total?: number){
+  payZeroByDiscount(total?: number) {
     return this.invoiceService.invoice.isDiscount && (total ? total === 0 : this.invoiceService.invoice.total === 0);
   }
 
   debit() {
-    if(this.invoiceService.invoice.isRefund) {
+    if (this.invoiceService.invoice.isRefund) {
       this.cash();
     } else if (this.invoiceService.invoice.total !== 0) {
       this.setTip(this.debitOp, null, this);
@@ -983,7 +984,7 @@ export class OperationsService {
     this.resetInactivity(true);
   }
 
-  setTip(action?: (i?: any, j?: any) => void, op?: PaymentOpEnum, context?: any){
+  setTip(action?: (i?: any, j?: any) => void, op?: PaymentOpEnum, context?: any) {
     if (this.cashService.config.sysConfig.companyType === CompanyType.RESTAURANT &&
       this.invoiceService.invoice.paymentStatus === PaymentStatus.AUTH) {
       this.cashService.dialog.open(ProductGenericComponent,
@@ -991,36 +992,36 @@ export class OperationsService {
           width: '480px', height: '650px', data: {unitCost: 0, name: 'Tip', label: 'Tip'},
           disableClose: true
         }).afterClosed().subscribe(
-        next=> {
+        next => {
           console.log(next);
           this.invoiceService.invoice.tip = next.unitCost;
           (op === PaymentOpEnum.CREDIT_CARD) ? action(null, context) : action(context);
         },
-        err=> {console.error(err)})
+        err => {console.error(err); });
     } else {
       (op === PaymentOpEnum.CREDIT_CARD) ? this.setCreditCardType() : action(context);
     }
   }
 
-  debitOp(context?: any){
-    if(!context) context = this;
+  debitOp(context?: any) {
+    if (!context) { context = this; }
     context.currentOperation = PaymentOpEnum.DEBIT_CARD;
-    let opMsg = 'debit card payment';
-    let dialogInfoEvents = context.openInfoEventDialog('Paying by debit card');
-    let $debit = context.invoiceService.debit(context.invoiceService.invoice.balance, context.invoiceService.invoice.tip)
+    const opMsg = 'debit card payment';
+    const dialogInfoEvents = context.openInfoEventDialog('Paying by debit card');
+    const $debit = context.invoiceService.debit(context.invoiceService.invoice.balance, context.invoiceService.invoice.tip)
       .subscribe(data => {
         context.closeTimeout(dialogInfoEvents, timeOut, data);
         context.setOrCreateInvoice(data);
-      },err => {
+      }, err => {
         context.closeTimeout(dialogInfoEvents, timeOut, err);
         context.cashService.openGenericInfo('Error', err);
         context.cashService.resetEnableState();
       });
 
-    let timeOut = context.paxTimeOut($debit, dialogInfoEvents, opMsg);
+    const timeOut = context.paxTimeOut($debit, dialogInfoEvents, opMsg);
   }
 
-  closeTimeout(dialog: MatDialogRef<any>, timeOut: number, data?: any){
+  closeTimeout(dialog: MatDialogRef<any>, timeOut: number, data?: any) {
     console.log(data);
     dialog.close();
     clearTimeout(timeOut);
@@ -1028,19 +1029,19 @@ export class OperationsService {
 
   credit() {
     console.log('Credit Card');
-    //this.currentOperation = 'Credit Card';
+    // this.currentOperation = 'Credit Card';
     if (this.invoiceService.invoice.total !== 0) {
       this.setTip(this.creditOp, PaymentOpEnum.CREDIT_CARD, this);
     }
     this.resetInactivity(true);
   }
 
-  private creditOp(splitAmount?: number, context?: any){
-    if(!context) context = this;
+  private creditOp(splitAmount?: number, context?: any) {
+    if (!context) { context = this; }
     context.currentOperation = PaymentOpEnum.CREDIT_CARD;
-    let opMsg = 'credit card payment';
-    let dialogInfoEvents = context.openInfoEventDialog('Paying by credit card');
-    let $credit = context.invoiceService.credit(splitAmount ? splitAmount : context.invoiceService.invoice.balance,
+    const opMsg = 'credit card payment';
+    const dialogInfoEvents = context.openInfoEventDialog('Paying by credit card');
+    const $credit = context.invoiceService.credit(splitAmount ? splitAmount : context.invoiceService.invoice.balance,
       context.invoiceService.invoice.tip)
       .subscribe(data => {
           context.closeTimeout(dialogInfoEvents, timeOut, data);
@@ -1052,21 +1053,21 @@ export class OperationsService {
           context.cashService.resetEnableState();
         });
 
-    let timeOut = context.paxTimeOut($credit, dialogInfoEvents, opMsg);
+    const timeOut = context.paxTimeOut($credit, dialogInfoEvents, opMsg);
   }
 
-  private creditManualOp(title, splitAmount?: number){
+  private creditManualOp(title, splitAmount?: number) {
     this.getNumField(title, 'Number', EFieldType.CARD_NUMBER).subscribe((number) => {
       console.log('cc manual modal', number);
-      if(number.number) {
+      if (number.number) {
         this.getNumField(title, 'CVV', EFieldType.CVV).subscribe(cvv => {
-          if(cvv.number){
+          if (cvv.number) {
             this.getNumField(title, 'Exp. Date', EFieldType.EXPDATE).subscribe(date => {
-              if(date.number){
+              if (date.number) {
                 this.getNumField(title, 'Zip Code', EFieldType.ZIPCODE).subscribe(zipcode => {
                   if (zipcode.number) {
                     this.currentOperation = PaymentOpEnum.CREDIT_CARD_MANUAL;
-                    this.invoiceService.creditManual(splitAmount ? splitAmount :this.invoiceService.invoice.balance,
+                    this.invoiceService.creditManual(splitAmount ? splitAmount : this.invoiceService.invoice.balance,
                       this.invoiceService.invoice.tip, number.number, cvv.number, date.number, zipcode.number)
                       .subscribe(data => {
                           console.log(data);
@@ -1098,10 +1099,10 @@ export class OperationsService {
     });
   }
 
-  externalCardPayment(title='External Card', client?: any, op?: PaymentOpEnum, ebtType?: EBTTypes){
+  externalCardPayment(title= 'External Card', client?: any, op?: PaymentOpEnum, ebtType?: EBTTypes) {
     console.log('External Card');
-    let total = ebtType === EBTTypes.EBT ? this.invoiceService.invoice.fsTotal : this.getTotalToPaid().toFixed(2);
-    this.getPriceField(title+ '. Total: ' +  total, 'Amount')
+    const total = ebtType === EBTTypes.EBT ? this.invoiceService.invoice.fsTotal : this.getTotalToPaid().toFixed(2);
+    this.getPriceField(title + '. Total: ' +  total, 'Amount')
       .subscribe((amount) => {
       console.log('Amount', amount.unitCost);
       if (amount.unitCost) {
@@ -1124,7 +1125,7 @@ export class OperationsService {
           }
         });*/
         // No get card number nor authorization code
-        let card = { number: '1111', authCode: '2222'};
+        const card = { number: '1111', authCode: '2222'};
         op === PaymentOpEnum.EBT_CARD ?
           this.externalCardPaymentOp(amount.unitCost, card.number, card.authCode, op, client,
             (ebtType === EBTTypes.EBT ? PaymentMethodEnum.EBT_CARD : PaymentMethodEnum.EBT_CASH)) :
@@ -1133,24 +1134,24 @@ export class OperationsService {
       } else {
         /*this.cashService.openGenericInfo('Error', 'Can\'t complete external card payment operation '
           + 'because amount not was specified');*/
-        //this.cashService.resetEnableState();
+        // this.cashService.resetEnableState();
       }
     });
 
   }
 
-  externalCardPaymentOp(amount, cardNumber, authCode, cardType, client, op?: any){
-    let dialogInfoEvents = this.openInfoEventDialog('Paying by ' + PaymentMethodEnum[op]);
+  externalCardPaymentOp(amount, cardNumber, authCode, cardType, client, op?: any) {
+    const dialogInfoEvents = this.openInfoEventDialog('Paying by ' + PaymentMethodEnum[op]);
     this.invoiceService.externalCard(amount, cardNumber, authCode, cardType, client, op).subscribe(
       next => {
         dialogInfoEvents.close();
         console.log('External Card', next);
         this.currentOperation = PaymentMethodEnum[op];
-        if(!client){
+        if (!client) {
           (next && next.balance > 0) ? this.invoiceService.setInvoice(next) : this.invoiceService.createInvoice();
         } else {
           console.log('External Card for Account Payment', next);
-          this.cashService.openGenericInfo(InformationType.INFO, ' The account client ('+ next['name']
+          this.cashService.openGenericInfo(InformationType.INFO, ' The account client (' + next['name']
             + ') was charged with ' + amount.toFixed(2));
         }
         this.cashService.resetEnableState();
@@ -1168,9 +1169,9 @@ export class OperationsService {
   getCreditCardType(amount, cardNumber, authCode, client?: any, op?: any) {
     this.invoiceService.getExternalCadTypes().subscribe(
       next => {
-        let ccTypes= [];
+        const ccTypes = [];
         console.log('getExternalCardTypes', next);
-        if(next.length > 0) {
+        if (next.length > 0) {
           next.map(val => ccTypes.push({value: val, receiptNumber: val}));
           this.openDialogInvoices(ccTypes, next => {
             /*this.invoiceService.externalCard(amount, cardNumber, authCode, next.value, client).subscribe(
@@ -1205,10 +1206,10 @@ export class OperationsService {
         this.cashService.openGenericInfo('Error', 'Can\'t complete external card payment '
           + 'operation because there aren\'t card types to select');
         this.cashService.resetEnableState();
-      })
+      });
   }
 
-  private setOrCreateInvoice(data: Invoice){
+  private setOrCreateInvoice(data: Invoice) {
     (data && data.balance > 0 && data.status !== InvoiceStatus.PAID) ?
       this.invoiceService.setInvoice(data) : this.invoiceService.createInvoice();
   }
@@ -1241,21 +1242,21 @@ export class OperationsService {
         } else this.cashService.reviewEnableState();
       });
     }*/
-    if(this.invoiceService.invoice.status === InvoiceStatus.IN_PROGRESS){
+    if (this.invoiceService.invoice.status === InvoiceStatus.IN_PROGRESS) {
       this.cashService.openGenericInfo('Error', 'Scan invoice operation is not allow if a invoice is in progress');
       this.invoiceService.resetDigits();
     }
   }
 
   paidOut() {
-    if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS){
+    if (this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS) {
       this.cashService.dialog.open(PaidOutComponent,
         {
           width: '480px', height: '600px', disableClose: true
         })
         .afterClosed().subscribe((data: string) => {
         console.log('paided out modal', data);
-        if(data) {
+        if (data) {
           this.cashService.dialog.open(DialogPaidoutComponent,
             {
               width: '1024px', height: '600px', disableClose: true
@@ -1265,10 +1266,10 @@ export class OperationsService {
               console.log('paided out service', data, next);
             }, error1 => {
               console.error('paid out', error1);
-              this.cashService.openGenericInfo('Error', 'Can\'t complete paid out operation')
+              this.cashService.openGenericInfo('Error', 'Can\'t complete paid out operation');
             });
           });
-        };
+        }
       });
     } else {
       this.cashService.openGenericInfo('Error', 'Paid out operation is not allow if a invoice is in progress');
@@ -1276,17 +1277,17 @@ export class OperationsService {
     this.resetInactivity(true);
   }
 
-  keyboard(action?: FinancialOpEnum | AdminOpEnum){
+  keyboard(action?: FinancialOpEnum | AdminOpEnum) {
     this.cashService.disabledInputKey = true;
     this.cashService.dialog.open(DialogFilterComponent,
-      { width: '1024px', height: '600px', data: {title: "Enter Receipt Number"} , disableClose: true})
+      { width: '1024px', height: '600px', data: {title: 'Enter Receipt Number'} , disableClose: true})
       .afterClosed()
       .subscribe(next => {
         console.log('keyboard', next);
         this.cashService.disabledInputKey = false;
         if (next) {
           this.invoiceService.digits = next.text;
-          if(action !== undefined){
+          if (action !== undefined) {
             switch (action) {
               case FinancialOpEnum.REFUND:
                 this.refundOp();
@@ -1310,12 +1311,12 @@ export class OperationsService {
       });
   }
 
-  cleanCurrentOp(){
-    this.currentOperation = "";
+  cleanCurrentOp() {
+    this.currentOperation = '';
   }
 
   txType() {
-    let txTypes= new Array<any>(
+    const txTypes = new Array<any>(
       { value: 1, text: 'Dine In', color: 'red' },
             { value: 2, text: 'Pick Up', color: 'yellow' },
             { value: 3, text: 'Delivery', color: 'green' },
@@ -1325,7 +1326,7 @@ export class OperationsService {
       { width: '420px', height: '340px', data: { arr: txTypes}, disableClose: true })
       .afterClosed().subscribe(next => {
         console.log('dialog delivery', next);
-        if(next){
+        if (next) {
           this.invoiceService.invoice.type = next;
           switch (this.invoiceService.invoice.type) {
             case ETXType.DINEIN:
@@ -1342,15 +1343,16 @@ export class OperationsService {
               break;
           }
         } else {
-          //this.invoiceService.invoice.type = ETXType.DINEIN;
+          // this.invoiceService.invoice.type = ETXType.DINEIN;
         }
     });
   }
 
   setCreditCardType(splitAmount?: number) {
-    let ccTypes= new Array<any>({value: 1, text: 'Automatic'}, {value: 2, text: 'Manual'});
-    if(this.cashService.config.sysConfig.allowEBT)
+    const ccTypes = new Array<any>({value: 1, text: 'Automatic'}, {value: 2, text: 'Manual'});
+    if (this.cashService.config.sysConfig.allowEBT) {
       [{value: 3, text: 'EBT'}, {value: 4, text: 'EBT Cash'}].map(op => ccTypes.push(op));
+    }
     this.cashService.dialog.open(DialogDeliveryComponent,
       { width: '600px', height: '340px', data: {name: 'Credit Card Types', label: 'Select a type', arr: ccTypes},
         disableClose: true })
@@ -1377,37 +1379,37 @@ export class OperationsService {
   }
 
   setEBTCardType() {
-    let ccTypes= new Array<any>({value: EBTTypes.EBT, text: 'EBT'}, {value: EBTTypes.EBT_CASH, text: 'EBT Cash'});
-    if(this.invoiceService.invoice.fsTotal <= 0) ccTypes.splice(0, 1);
+    const ccTypes = new Array<any>({value: EBTTypes.EBT, text: 'EBT'}, {value: EBTTypes.EBT_CASH, text: 'EBT Cash'});
+    if (this.invoiceService.invoice.fsTotal <= 0) { ccTypes.splice(0, 1); }
     this.cashService.dialog.open(DialogDeliveryComponent,
       { width: '600px', height: '340px', data: {name: 'EBT Card Types', label: 'Select a type', arr: ccTypes},
         disableClose: true })
       .afterClosed().subscribe(next => {
         console.log(next);
-        if(next !== "") {
+        if (next !== '') {
           this.cashService.config.sysConfig.paxConnType === PAXConnTypeEnum.OFFLINE ?
-            this.externalCardPayment(undefined, undefined, PaymentOpEnum.EBT_CARD, next):
+            this.externalCardPayment(undefined, undefined, PaymentOpEnum.EBT_CARD, next) :
             this.ebt(next);
         }
-        //this.cashService.resetEnableState();
-        //this.resetTotalFromFS();
+        // this.cashService.resetEnableState();
+        // this.resetTotalFromFS();
     });
   }
 
   retail() {
     console.log('set order to retail');
     this.invoiceService.setRetail().subscribe(next => {
-      if(next) {
+      if (next) {
         this.invoiceService.order = next;
         this.cashService.openGenericInfo('Information', 'This order was set to "Retail"');
       }
-    },err => {
+    }, err => {
       this.cashService.openGenericInfo('Error', 'Can\'t complete set retail operation');
     });
   }
 
-  dineIn(){
-    //if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS){
+  dineIn() {
+    // if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS){
       this.openDialogTables();
     /*} else {
       this.cashService.openGenericInfo('Error', 'Dine in operation is not allow if a invoice is in progress');
@@ -1415,13 +1417,13 @@ export class OperationsService {
   }
 
   pickUp() {
-    let title = 'Pick up';
-    //if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS){
+    const title = 'Pick up';
+    // if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS){
       this.getField(title, 'Client Name', EFieldType.NAME).subscribe((name) => {
         console.log('pick up modal', name);
-        if(name.text) {
+        if (name.text) {
           this.getNumField(title, 'Client Phone', EFieldType.PHONE).subscribe(phone => {
-            if(phone.number){
+            if (phone.number) {
               this.getField(title, 'Description', EFieldType.DESC).subscribe(descrip => {
                 if (!descrip.text) {
                   console.log('pick up no set description');
@@ -1429,18 +1431,18 @@ export class OperationsService {
                 this.invoiceService.setPickUp(name.text, phone.number, descrip.text).subscribe(order => {
                   console.log('pick up this order', order);
                   this.invoiceService.order = order;
-                  this.cashService.openGenericInfo('Information', 'This order was set to "Pick up"')
+                  this.cashService.openGenericInfo('Information', 'This order was set to "Pick up"');
                 }, error1 => {
                   console.error('pick upt', error1);
-                  this.cashService.openGenericInfo('Error', 'Can\'t complete pick up operation')
+                  this.cashService.openGenericInfo('Error', 'Can\'t complete pick up operation');
                 });
               });
             } else {
-              this.cashService.openGenericInfo('Error', 'Can\'t complete pick up operation because no set Client Phone')
+              this.cashService.openGenericInfo('Error', 'Can\'t complete pick up operation because no set Client Phone');
             }
           });
         } else {
-          this.cashService.openGenericInfo('Error', 'Can\'t complete pick up operation because no set Client Name')
+          this.cashService.openGenericInfo('Error', 'Can\'t complete pick up operation because no set Client Name');
         }
       });
     /*} else {
@@ -1448,17 +1450,17 @@ export class OperationsService {
     }*/
   }
 
-  delivery(){
-    let title = 'Delivery';
+  delivery() {
+    const title = 'Delivery';
     this.getField(title, 'Client Name', EFieldType.NAME).subscribe(name => {
       if (name) {
-        //order.type.client.name = name.text;
+        // order.type.client.name = name.text;
         this.getField(title, 'Client Address', EFieldType.ADDRESS).subscribe(address => {
-          if(address){
-            //order.type.client.address = address.text;
+          if (address) {
+            // order.type.client.address = address.text;
             this.getNumField(title, 'Client Phone', EFieldType.PHONE).subscribe(phone => {
-              if(phone) {
-                //order.type.client.telephone = phone.text;
+              if (phone) {
+                // order.type.client.telephone = phone.text;
                 this.getField(title, 'Description', EFieldType.DESC).subscribe(descrip => {
                   if (!descrip.text) {
                     console.log('delivery no set description');
@@ -1469,35 +1471,35 @@ export class OperationsService {
                     this.cashService.openGenericInfo('Information', 'This order was set to "Delivery"');
                   }, err => {
                     console.error('delivery', err);
-                    this.cashService.openGenericInfo('Error', 'Can\'t complete delivery operation')
+                    this.cashService.openGenericInfo('Error', 'Can\'t complete delivery operation');
                   });
-                })
+                });
               } else {
-                this.cashService.openGenericInfo('Error', 'Can\'t complete delivery operation because no set Client Phone')
+                this.cashService.openGenericInfo('Error', 'Can\'t complete delivery operation because no set Client Phone');
               }
-            })
+            });
           } else {
-            this.cashService.openGenericInfo('Error', 'Can\'t complete delivery operation because no set Client Address')
+            this.cashService.openGenericInfo('Error', 'Can\'t complete delivery operation because no set Client Address');
           }
-        })
+        });
       } else {
-        this.cashService.openGenericInfo('Error', 'Can\'t complete delivery operation because no set Client Name')
+        this.cashService.openGenericInfo('Error', 'Can\'t complete delivery operation because no set Client Name');
       }
     }, err => {
-      this.cashService.openGenericInfo('Error', 'Can\'t complete delivery operation')
+      this.cashService.openGenericInfo('Error', 'Can\'t complete delivery operation');
     });
   }
 
   getField(title, field, fieldType?: EFieldType): Observable<any> {
     return this.cashService.dialog.open(DialogFilterComponent,
-    { width: '1024px', height: '600px', disableClose: true, data: {title: title +' - '+ field,
+    { width: '1024px', height: '600px', disableClose: true, data: {title: title + ' - ' + field,
         type: dataValidation(fieldType)}}).afterClosed();
   }
 
   getNumField(name, label, fieldType?: EFieldType, height = '650'): Observable<any> {
     return this.cashService.dialog.open(InputCcComponent,
-      { width:'480px', height: height + 'px', data:{number:'', name: name, label:label,
-          type:dataValidation(fieldType)}, disableClose: true }).afterClosed();
+      { width: '480px', height: height + 'px', data: {number: '', name: name, label: label,
+          type: dataValidation(fieldType)}, disableClose: true }).afterClosed();
   }
 
   getPriceField(name, label) {
@@ -1508,7 +1510,7 @@ export class OperationsService {
       }).afterClosed();
   }
 
-  getTotalField(totalToPaid: number){
+  getTotalField(totalToPaid: number) {
     return this.cashService.dialog.open(CashOpComponent,
       {
         width: '480px', height: '660px', data: totalToPaid, disableClose: true
@@ -1516,7 +1518,7 @@ export class OperationsService {
   }
 
   openSwipeCredentialCard(title: string, content?: string) {
-    return this.cashService.dialog.open(SwipeCredentialCardComponent,{
+    return this.cashService.dialog.open(SwipeCredentialCardComponent, {
       width: '400px', height: '350px', data: {
         title: title ? title : 'Swipe card',
         content: content,
@@ -1528,9 +1530,9 @@ export class OperationsService {
   }
 
   getOrderInfo()/*: Observable<Order>*/ {
-    console.log('getOrderInfo', this.invoiceService.invoice.orderInfo);/*
+    console.log('getOrderInfo', this.invoiceService.invoice.orderInfo); /*
     this.invoiceService.invoice.subscribe(next => console.log('Invoice', next));*/
-    if(this.invoiceService.order && this.invoiceService.order.invoiceId === this.invoiceService.invoice.id){
+    if (this.invoiceService.order && this.invoiceService.order.invoiceId === this.invoiceService.invoice.id) {
       this.showOrderInfo(this.invoiceService.order);
     } else {
       return this.cashService.getOrder(this.invoiceService.invoice.receiptNumber).subscribe(
@@ -1548,16 +1550,16 @@ export class OperationsService {
     this.resetInactivity(true);
   }
 
-  showOrderInfo(order: Order){
-    //this.cashService.openGenericInfo(OtherOpEnum.ORDER_INFO, ETXType[order.type.type]);
+  showOrderInfo(order: Order) {
+    // this.cashService.openGenericInfo(OtherOpEnum.ORDER_INFO, ETXType[order.type.type]);
     this.cashService.dialog.open(OrderInfoComponent,
-      { width:'480px', height:'350px', data:{title: OtherOpEnum.ORDER_INFO, subtitle:ETXType[order.type.type],
-          type:order.type}, disableClose: true });
+      { width: '480px', height: '350px', data: {title: OtherOpEnum.ORDER_INFO, subtitle: ETXType[order.type.type],
+          type: order.type}, disableClose: true });
   }
 
   notSale() {
     this.invoiceService.notSale().subscribe(d => {
-        console.log("Open cash drawer.", d);
+        console.log('Open cash drawer.', d);
     });
     this.resetInactivity(true);
   }
@@ -1595,7 +1597,7 @@ export class OperationsService {
       }).afterClosed().subscribe(
       next => {
         console.log('weightItem', next);
-        if(next) {
+        if (next) {
           this.setWeightedProduct(next['unitCost']);
         }
         /*if(next && !this.cashService.systemConfig.externalScale) {
@@ -1616,8 +1618,8 @@ export class OperationsService {
     this.resetInactivity(true);
   }
 
-  setWeightedProduct(price: number){
-    if(this.invoiceService.digits){
+  setWeightedProduct(price: number) {
+    if (this.invoiceService.digits) {
       // Send scanned product to invoice
       this.invoiceService.getProductByUpc(EOperationType.WeightItem).subscribe(
         next => {
@@ -1630,13 +1632,13 @@ export class OperationsService {
       );
     } else {
       // Send misc product to invoice
-      //this.cashService.openGenericInfo('Information', 'Send misc product to invoice');
-      if(!this.cashService.config.sysConfig.externalScale){
+      // this.cashService.openGenericInfo('Information', 'Send misc product to invoice');
+      if (!this.cashService.config.sysConfig.externalScale) {
         this.cashService.dialog.open(ProductGenericComponent,
           {
             width: '480px', height: '650px', data: {name: 'Weight', label: 'Weight (Lbs)', unitCost: 0}, disableClose: true
           }).afterClosed().subscribe( (data: any) => {
-          if(data) {
+          if (data) {
             this.invoiceService.weightItem(price, data.unitCost).subscribe(
               i => {
                 this.invoiceService.setInvoice(i);
@@ -1664,24 +1666,24 @@ export class OperationsService {
   }
 
   splitCard() {
-    if(this.invoiceService.invoice.balance){
+    if (this.invoiceService.invoice.balance) {
       this.cashService.dialog.open(ProductGenericComponent,
         {
           width: '480px', height: '650px', data: {unitCost: 0, name: OtherOpEnum.SPLIT_CARD, label: 'Amount',
             max: this.invoiceService.invoice.balance},
           disableClose: true
         }).afterClosed().subscribe(
-        next=> {
+        next => {
           console.log(next);
-          if(next['unitCost'].toFixed(2) > this.invoiceService.invoice.balance){
-            this.cashService.openGenericInfo('Error', 'The spècified amount is superior to amount to pay')
+          if (next['unitCost'].toFixed(2) > this.invoiceService.invoice.balance) {
+            this.cashService.openGenericInfo('Error', 'The spècified amount is superior to amount to pay');
           } else {
             this.setCreditCardType(next['unitCost'].toFixed(2));
           }
         },
-        err=> {console.error(err)});
+        err => {console.error(err); });
     } else {
-      this.cashService.openGenericInfo('Error', 'There is not amount to pay')
+      this.cashService.openGenericInfo('Error', 'There is not amount to pay');
     }
     this.resetInactivity(true);
   }
@@ -1690,10 +1692,10 @@ export class OperationsService {
     console.log(CustomerOpEnum.ACCT_BALANCE);
     this.currentOperation = CustomerOpEnum.ACCT_BALANCE;
     this.clientService.getClients().subscribe(
-      clients=> {
+      clients => {
         console.log(CustomerOpEnum.ACCT_BALANCE, clients);
-        this.openDialogWithPag(clients, (c)=> this.printBalance(c.id), 'Clients', 'Select a client:',
-          '', 'name','balance' );
+        this.openDialogWithPag(clients, (c) => this.printBalance(c.id), 'Clients', 'Select a client:',
+          '', 'name', 'balance' );
       },
       error1 => {
         this.cashService.openGenericInfo(InformationType.INFO, 'Can\'t get the clients');
@@ -1702,17 +1704,17 @@ export class OperationsService {
   }
 
   private showBalance(c: any) {
-    this.cashService.openGenericInfo('Balance', 'The balance of client '+ c.name +' is: $'
+    this.cashService.openGenericInfo('Balance', 'The balance of client ' + c.name + ' is: $'
       + c.balance.toFixed(2));
   }
 
   private printBalance(clientId: string) {
-    let dialog = this.cashService.openGenericInfo( InformationType.INFO, 'Printing balance');
+    const dialog = this.cashService.openGenericInfo( InformationType.INFO, 'Printing balance');
     this.invoiceService.printAcctBalance(clientId).subscribe(
       next => {
         dialog.close();
         console.log('printBalance', next);
-      },err => {
+      }, err => {
           dialog.close();
           this.cashService.openGenericInfo(InformationType.ERROR, err);
       }
@@ -1722,9 +1724,9 @@ export class OperationsService {
   acctCharge() {
     console.log(CustomerOpEnum.ACCT_CHARGE);
     this.clientService.getClients().subscribe(
-      clients=> {
-        this.openDialogWithPag(clients, (c)=> this.setAmount(CustomerOpEnum.ACCT_CHARGE, c.id,
-            a => this.acctChargeOp(c.id, a)),'Clients', 'Select a client:', null, 'name',
+      clients => {
+        this.openDialogWithPag(clients, (c) => this.setAmount(CustomerOpEnum.ACCT_CHARGE,
+            a => this.acctChargeOp(c.id, a)), 'Clients', 'Select a client:', null, 'name',
           'balance');
       },
       error1 => {
@@ -1735,30 +1737,29 @@ export class OperationsService {
 
   }
 
-  private setAmount(titleOp: string, c: any,  action: (i: any) => void){
-    console.log('setAmount', c);
+  private setAmount(titleOp: string, action: (i: any) => void) {
     this.getPriceField(titleOp + '. Total: ' +  this.getTotalToPaid().toFixed(2), 'Amount')
       .subscribe(
-      amount=> {
+      amount => {
         console.log('setAmount', amount);
         action(amount.unitCost);
       }
-    )
+    );
   }
 
-  private setDescription(titleOp: string, action: (i: any) => void){
+  private setDescription(titleOp: string, action: (i: any) => void) {
     console.log('setDescription');
     this.getField(titleOp, 'Description', EFieldType.DESC)
       .subscribe(
-        descrip=> {
+        descrip => {
           console.log('setDescription', descrip);
           action(descrip.text);
         }
-      )
+      );
   }
 
-  private acctChargeOp(client, amount){
-    if(amount){
+  private acctChargeOp(client, amount) {
+    if (amount) {
       this.currentOperation = CustomerOpEnum.ACCT_CHARGE;
       this.invoiceService.acctCharge(client, amount).subscribe(
         next => {
@@ -1770,10 +1771,10 @@ export class OperationsService {
           this.cashService.openGenericInfo(InformationType.ERROR, error1);
           this.cashService.resetEnableState();
         }/*, () => this.cashService.resetEnableState()*/
-      )
+      );
     } else {
-      //this.cashService.openGenericInfo(InformationType.INFO, 'Can\'t charge account because the amount not was specified');
-      //this.cashService.resetEnableState();
+      // this.cashService.openGenericInfo(InformationType.INFO, 'Can\'t charge account because the amount not was specified');
+      // this.cashService.resetEnableState();
     }
   }
 
@@ -1781,8 +1782,8 @@ export class OperationsService {
     console.log(CustomerOpEnum.ACCT_PAYMENT);
     this.currentOperation = CustomerOpEnum.ACCT_PAYMENT;
     this.clientService.getClients().subscribe(
-      clients=> {
-        this.openDialogWithPag(clients, (c)=> this.selectPaymentType(c.id), 'Clients', 'Select a client:', 'name');
+      clients => {
+        this.openDialogWithPag(clients, (c) => this.selectPaymentType(c.id), 'Clients', 'Select a client:', 'name');
       },
       error1 => {
         this.cashService.openGenericInfo(InformationType.INFO, 'Can\'t get the clients');
@@ -1790,12 +1791,31 @@ export class OperationsService {
 
   }
 
-  private selectPaymentType(c: string) {
+  transferPayment() {
+    this.setAmount('TRANSFER', (a) => {
+      this.setDescription('TRANSFER', (d) => this.paidByTransfer(a, d));
+    });
+  }
+
+  paidByTransfer( amount: number, descrip: string) {
+    this.invoiceService.paidByTransfer(amount, descrip).subscribe(data => {
+        console.log('paidByTransfer', data);
+        this.setOrCreateInvoice(data);
+        this.cashService.resetEnableState();
+      },
+      err => {
+        console.log(err);
+        this.cashService.openGenericInfo(InformationType.ERROR, err);
+        this.cashService.resetEnableState();
+      });
+  }
+
+  private selectPaymentType(c?: string) {
     this.openDialogWithPag([{label: 'CARD'}, {label: 'CASH'}, {label: 'CHECK'}, {label: 'TRANSFER'}], i => {
       console.log(i);
         switch (i.label) {
           case 'CASH':
-            this.setAmount(i.label, c, (a) => this.acctPaymentCashOp(c, a));
+            this.setAmount(i.label, (a) => this.acctPaymentCashOp(c, a));
             break;
           case 'CARD':
             this.externalCardPayment(CustomerOpEnum.ACCT_PAYMENT, c);
@@ -1804,29 +1824,29 @@ export class OperationsService {
             this.check(c);
             break;
           case 'TRANSFER':
-            this.setAmount(i.label, c,(a) => this.setDescription(i.label, (d) => this.acctPaymentTransferOp(c, a, d)));
+            this.setAmount(i.label, (a) => this.setDescription(i.label, (d) => this.acctPaymentTransferOp(c, a, d)));
             break;
         }
       }, CustomerOpEnum.ACCT_PAYMENT,
-      'Select a payment type', 'label')
+      'Select a payment type', 'label');
   }
 
   acctPaymentCashOp(client: string, amount: number) {
     this.invoiceService.acctPaymentCash(client, amount).subscribe(
       next => {
         console.log('acctPaymentOp', next);
-        this.cashService.openGenericInfo(InformationType.INFO, ' The account client ('+ next['name']
+        this.cashService.openGenericInfo(InformationType.INFO, ' The account client (' + next['name']
           + ') was charged with ' + amount.toFixed(2));
       },
       error1 => {
         console.error(error1);
         this.cashService.openGenericInfo(InformationType.ERROR, error1);
       }
-    )
+    );
   }
 
   check(client?: string) {
-    let title = 'Check Payment';
+    const title = 'Check Payment';
     this.invoiceService.resetDigits();
     console.log(title);
     this.getPriceField(title + '. Total: ' +  this.getTotalToPaid().toFixed(2), 'Amount')
@@ -1839,11 +1859,11 @@ export class OperationsService {
                 this.paidByCheck(amount.unitCost, checkNumber.number, descrip.text, client);
               });
             } else {
-              //this.cashService.resetEnableState();
+              // this.cashService.resetEnableState();
             }
           });
         } else {
-          //this.cashService.resetEnableState();
+          // this.cashService.resetEnableState();
         }
       });
     this.resetInactivity(true);
@@ -1854,20 +1874,19 @@ export class OperationsService {
       next => {
         console.log('paidByCheck', next);
         this.currentOperation = PaymentOpEnum.CHECK;
-        if(!client){
-          if(next && next.balance > 0) this.invoiceService.setInvoice(next);
-          else if(next.change && next.change > 0) {
+        if (!client) {
+          if (next && next.balance > 0) { this.invoiceService.setInvoice(next); } else if (next.change && next.change > 0) {
             this.paymentReturn(next.change).subscribe((result: any) => {
               (result.closeAutomatic) ?
                 this.logoutOp() :
                 this.invoiceService.createInvoice();
             });
-          } else if(next.balance <= 0){
+          } else if (next.balance <= 0) {
             this.invoiceService.createInvoice();
           }
         } else {
           console.log('Check for Account Payment', next);
-          this.cashService.openGenericInfo(InformationType.INFO, ' The account client ('+ next['name']
+          this.cashService.openGenericInfo(InformationType.INFO, ' The account client (' + next['name']
             + ') was charged with ' + amount.toFixed(2));
         }
         this.cashService.resetEnableState();
@@ -1886,7 +1905,7 @@ export class OperationsService {
       next => {
         console.log('acctPaymentTransferOp', next);
         this.currentOperation = PaymentOpEnum.TRANSFER;
-        this.cashService.openGenericInfo(InformationType.INFO, ' The account client ('+ next['name']
+        this.cashService.openGenericInfo(InformationType.INFO, ' The account client (' + next['name']
           + ') was charged with ' + amount.toFixed(2));
         this.cashService.resetEnableState();
       },
@@ -1895,11 +1914,11 @@ export class OperationsService {
         this.cashService.openGenericInfo(InformationType.ERROR, error1);
         this.cashService.resetEnableState();
       }
-    )
+    );
   }
 
   choosePAXConnType(op?: PaymentOpEnum) {
-    let ccTypes= new Array<any>({value: 1, text: 'Online'}, {value: 2, text: 'Offline'});
+    const ccTypes = new Array<any>({value: 1, text: 'Online'}, {value: 2, text: 'Offline'});
     this.cashService.dialog.open(DialogDeliveryComponent,
       { width: '600px', height: '340px', data: {name: 'PAX Connection Types', label: 'Select a type', arr: ccTypes},
         disableClose: true })
@@ -1907,7 +1926,7 @@ export class OperationsService {
       console.log(next);
       switch (next) {
         case 1:
-          //op === PaymentOpEnum.CREDIT_CARD ? this.credit() : this.debit();
+          // op === PaymentOpEnum.CREDIT_CARD ? this.credit() : this.debit();
           this.selectPaymentByOp(op);
           break;
         case 2:
@@ -1920,7 +1939,7 @@ export class OperationsService {
     });
   }
 
-  detectPAXConn(op?: PaymentOpEnum){
+  detectPAXConn(op?: PaymentOpEnum) {
     this.invoiceService.resetDigits();
     switch (this.cashService.config.sysConfig.paxConnType) {
       case PAXConnTypeEnum.BOTH:
@@ -1932,7 +1951,7 @@ export class OperationsService {
         break;
       case PAXConnTypeEnum.ONLINE:
         this.selectPaymentByOp(op);
-        //op === PaymentOpEnum.CREDIT_CARD ? this.credit() : this.debit();
+        // op === PaymentOpEnum.CREDIT_CARD ? this.credit() : this.debit();
         break;
     }
   }
@@ -1952,19 +1971,23 @@ export class OperationsService {
   }
 
   setOtherPaymentType() {
-    let ccTypes= new Array<any>(
+    const ccTypes = new Array<any>(
       {value: PaymentMethodEnum.OTHER, text: 'Others'},
+            {value: PaymentMethodEnum.TRANSFER, text: 'Transfer'},
             {value: PaymentMethodEnum.GIFT_CARD, text: 'Gift Card'}
       );
-    if(!this.cashService.config.sysConfig.allowGiftCard) ccTypes.splice(-1);
-    this.cashService.dialog.open(DialogDeliveryComponent,{ width: '600px', height: '340px',
+    if (!this.cashService.config.sysConfig.allowGiftCard) { ccTypes.splice(-1); }
+    this.cashService.dialog.open(DialogDeliveryComponent, { width: '600px', height: '340px',
       data: {name: 'Other Payment Types', label: 'Select a type', arr: ccTypes},
       disableClose: true }).afterClosed().subscribe(next => {
       console.log(next);
-        if(next !== "") {
+        if (next !== '') {
           switch (next) {
             case PaymentMethodEnum.OTHER:
               this.cash(PaymentOpEnum.OTHER);
+              break;
+            case PaymentMethodEnum.TRANSFER:
+              this.transferPayment();
               break;
             case PaymentMethodEnum.GIFT_CARD:
               this.giftCardPayment();
@@ -1974,7 +1997,7 @@ export class OperationsService {
     });
   }
 
-  giftCardPayment(){
+  giftCardPayment() {
     this.getTotalField(this.getTotalToPaid()).subscribe(
       amount => {
         console.log('giftCardPayment Amount', amount);
@@ -1984,27 +2007,27 @@ export class OperationsService {
             .subscribe(
               next => {
                 console.log('Swipe card', next);
-                if(next){
-                  let passwordByCard = (next) ? next.pass : this.initService.userScanned;
-                  if(this.initService.userScanned) this.initService.cleanUserScanned();
-                  if(passwordByCard) this.giftCardPaymentOp(amount, passwordByCard);
+                if (next) {
+                  const passwordByCard = (next) ? next.pass : this.initService.userScanned;
+                  if (this.initService.userScanned) { this.initService.cleanUserScanned(); }
+                  if (passwordByCard) { this.giftCardPaymentOp(amount, passwordByCard); }
                 } else {
-                  //this.cashService.resetEnableState();
+                  // this.cashService.resetEnableState();
                 }
               }
             );
         } else {
-          //this.cashService.resetEnableState();
+          // this.cashService.resetEnableState();
         }
     });
   }
 
-  giftCardPaymentOp(amount, cardPin){
+  giftCardPaymentOp(amount, cardPin) {
     this.currentOperation = PaymentOpEnum.GIFT_CARD;
-    let opMsg = 'gift card payment';
-    let dialogInfoEvents = this.cashService.openGenericInfo('Gift Card','Paying by gift card...',
+    const opMsg = 'gift card payment';
+    const dialogInfoEvents = this.cashService.openGenericInfo('Gift Card', 'Paying by gift card...',
       undefined, undefined, true);
-    let $gift = this.invoiceService.paidByGift(amount, cardPin)
+    const $gift = this.invoiceService.paidByGift(amount, cardPin)
       .subscribe(data => {
           console.log(data);
           dialogInfoEvents.close();
@@ -2022,37 +2045,37 @@ export class OperationsService {
           this.cashService.resetEnableState();
         });
 
-    let timeOut = this.paxTimeOut($gift, dialogInfoEvents, opMsg);
+    const timeOut = this.paxTimeOut($gift, dialogInfoEvents, opMsg);
   }
 
   private resetCurrentOperation() {
-    if(this.currentOperation === TotalsOpEnum.SUBTOTAL &&
-      this.invoiceService.invoice.status === InvoiceStatus.PENDENT_FOR_PAYMENT){
+    if (this.currentOperation === TotalsOpEnum.SUBTOTAL &&
+      this.invoiceService.invoice.status === InvoiceStatus.PENDENT_FOR_PAYMENT) {
       console.log('resetSubTotal');
       this.resetSubTotalState();
     }
     this.currentOperation = '';
   }
 
-  changePriceOp(prod: Product){
+  changePriceOp(prod: Product) {
     this.cashService.dialog.open(ProductGenericComponent,
       {
         width: '480px', height: '650px', data: {name: 'Change Price', label: 'Price', unitCost: prod.unitCost.toFixed(2)},
         disableClose: true
       }).afterClosed().subscribe(
       next => {
-        if(next){
+        if (next) {
           this.invoiceService.updateProductsPrice(prod.upc, next.unitCost, prod.id).subscribe(next => {
               console.log(next);
-              this.cashService.openGenericInfo('Information', 'The price of product '+
-                next['upc'] + ' was updated to '+ next['price'].toFixed(2))
+              this.cashService.openGenericInfo('Information', 'The price of product ' +
+                next['upc'] + ' was updated to ' + next['price'].toFixed(2))
                 .afterClosed().subscribe(next => this.router.navigateByUrl('/cash/dptos'));
             },
             err => {
-              this.cashService.openGenericInfo('Error', 'Can\'t change price of this product '+prod.upc);
+              this.cashService.openGenericInfo('Error', 'Can\'t change price of this product ' + prod.upc);
             },
             () => {
-              this.currentOperation = "";
+              this.currentOperation = '';
               this.evCleanAdminOperation.emit();
               this.cashService.resetEnableState();
             });

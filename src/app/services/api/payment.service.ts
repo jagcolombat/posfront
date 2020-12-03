@@ -10,6 +10,7 @@ import {ETransferType} from "../../utils/transfer-type.enum";
 import {CheckPayment} from "../../models/check.model";
 import {IGiftCardPaymentModel} from "../../models/gift-card.model";
 import {PaymentMethodEnum} from "../../utils/operations/payment-method.enum";
+import {ITransferPayment} from '../../models/transfer.model';
 
 @Injectable({
   providedIn: 'root'
@@ -75,6 +76,11 @@ export class PaymentService {
     let params = new HttpParams();
     params = params.append('receiptNumber', receiptNumber);
     return this._http.post<Invoice>(url + this.path + '/payment/giftcard', gift, {params})
+      .pipe(catchError(this.processHttpMsgService.handleError));
+  }
+
+  paidByTransfer(url: string, transfer: ITransferPayment) {
+    return this._http.post<Invoice>(url + this.path + '/payment/transfer', transfer)
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 }

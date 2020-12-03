@@ -22,14 +22,14 @@ export class AdminOptionsComponent implements OnInit {
   page = 1;
   sizePage = 16;
   @Input() disable: boolean | boolean[] = this.adminOpService.cashService.disabledAdminOp;
-  @Input() adminOpColor = ['red','red','red','red','red','red','red','red','red','red','red','red','violet','violet',
+  @Input() adminOpColor = ['red', 'red', 'red', 'red', 'red', 'red', 'red', 'red', 'red', 'red', 'red', 'red', 'violet', 'violet',
     'violet', 'violet'];
 
   constructor(private router: Router, public adminOpService: AdminOptionsService ) {
 
-    //this.adminOpService.cashService.getSystemConfig().subscribe(config => {
-    let config = this.adminOpService.cashService.config.sysConfig;
-    if(config.paxConnType !== PAXConnTypeEnum.ONLINE){
+    // this.adminOpService.cashService.getSystemConfig().subscribe(config => {
+    const config = this.adminOpService.cashService.config.sysConfig;
+    if (config.paxConnType !== PAXConnTypeEnum.ONLINE) {
       // Remove PAX options and colors
       console.log('paxConnType', PAXConnTypeEnum.ONLINE);
       this.removeOption(this.options.indexOf(AdminOpEnum.CLOSE_BATCH));

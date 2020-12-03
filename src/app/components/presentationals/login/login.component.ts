@@ -1,10 +1,10 @@
 import {Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
-import { AuthService } from "../../../services/api/auth.service";
-import { Router } from "@angular/router";
-import {InitViewService} from "../../../services/bussiness-logic/init-view.service";
-import {Subscription} from "rxjs";
-import {UserrolEnum} from "../../../utils/userrol.enum";
-import {NgForm} from "@angular/forms";
+import { AuthService } from '../../../services/api/auth.service';
+import { Router } from '@angular/router';
+import {InitViewService} from '../../../services/bussiness-logic/init-view.service';
+import {Subscription} from 'rxjs';
+import {UserrolEnum} from '../../../utils/userrol.enum';
+import {NgForm} from '@angular/forms';
 
 @Component({
   selector: 'login',
@@ -15,9 +15,9 @@ export class LoginComponent implements OnInit, OnDestroy {
   @Output() evRol = new EventEmitter<boolean>();
   @Input() rol: UserrolEnum[];
   @ViewChild('loginForm') loginForm: NgForm;
-  
-  input = "";
-  tryValidation:boolean;
+
+  input = '';
+  tryValidation: boolean;
   valid: boolean;
   errorMsg: string;
   subscription: Subscription [] = [];
@@ -29,7 +29,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   ngOnInit() {
   }
 
-  login(){
+  login() {
     this.authService.login({ username: 'user', password: this.input }).subscribe(t => {
       this.loginOK(t);
     }, error1 => {
@@ -53,7 +53,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   verifyRol(data, rol) {
     console.log('verifyRol', data, rol);
-    if(this.rol.includes(data.rol)) {
+    if (this.rol.includes(data.rol)) {
       this.validAuth();
     } else {
       this.invalidAuth('User not authorized');
@@ -66,7 +66,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     (this.rol) ? this.evRol.emit(true) : this.selectRoute();
   }
 
-  selectRoute(){
+  selectRoute() {
     (this.authService.adminLogged()) ? this.router.navigateByUrl('/cash/options') :
       this.router.navigateByUrl('/cash');
   }
@@ -75,35 +75,32 @@ export class LoginComponent implements OnInit, OnDestroy {
     console.log('verifyRol', msg);
     this.valid = false;
     this.tryValidation = true;
-    this.input = "";
-    this.errorMsg = msg ? msg : ''
+    this.input = '';
+    this.errorMsg = msg ? msg : '';
   }
 
   getKeys(ev) {
     // console.log(ev);
-    if(ev.type === 1) {
+    if (ev.type === 1) {
       this.input += ev.value;
       this.tryValidation = false;
-    }
-    else if(ev.value === 'Clear') {
-      this.input = "";
-    }
-    else if(ev.value === 'Enter') {
+    } else if (ev.value === 'Clear') {
+      this.input = '';
+    } else if (ev.value === 'Enter') {
       console.log(this.input);
-      this.login()
-    }
-    else if(ev.value === 'Back') {
+      this.login();
+    } else if (ev.value === 'Back') {
       this.back();
     }
   }
 
   back() {
-    if(this.input.length > 0 ) {
+    if (this.input.length > 0 ) {
       this.input = this.input.slice(0, this.input.length - 1);
     }
   }
 
-  resetLogin(){
+  resetLogin() {
     this.input = '';
     this.tryValidation = false;
     this.valid = false;
@@ -114,10 +111,11 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   private userScan(user: string) {
-    let userTmp = user.substr(1, user.length-2);
+    const userTmp = user.substr(1, user.length - 2);
     console.log('userScan', user, userTmp);
     this.input = userTmp;
-    if(!this.initService.config.sysConfig.allowClock)
+    if (!this.initService.config.sysConfig.allowClock) {
       this.login();
+    }
   }
 }
