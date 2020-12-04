@@ -1798,6 +1798,7 @@ export class OperationsService {
   }
 
   paidByTransfer( amount: number, descrip: string) {
+    this.currentOperation = PaymentOpEnum.TRANSFER;
     this.invoiceService.paidByTransfer(amount, descrip).subscribe(data => {
         console.log('paidByTransfer', data);
         this.setOrCreateInvoice(data);
