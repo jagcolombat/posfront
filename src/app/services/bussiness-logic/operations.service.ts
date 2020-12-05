@@ -766,7 +766,7 @@ export class OperationsService {
                 this.invoiceService.createInvoice();
             });
           },
-          err => this.cashService.openGenericInfo('Error', 'Error in refund paid'),
+          err => this.cashService.openGenericInfo('Error', err),
           () => this.cashService.resetEnableState());
     } else if (totalToPaid > 0 || this.payZeroByDiscount(totalToPaid)) {
       this.invoiceService.digits ?
@@ -842,7 +842,7 @@ export class OperationsService {
         },
         err => {
           console.error(err);
-          this.cashService.openGenericInfo('Error', 'Can\'t complete cash operation');
+          this.cashService.openGenericInfo('Error', err);
           dialogInfoEvents.close();
           clearTimeout(timeOut);
         },
@@ -1799,13 +1799,16 @@ export class OperationsService {
 
   paidByTransfer( amount: number, descrip: string) {
     this.currentOperation = PaymentOpEnum.TRANSFER;
+    const dialogInfoEvents = this.openInfoEventDialog('Paying by ' + PaymentOpEnum.TRANSFER);
     this.invoiceService.paidByTransfer(amount, descrip).subscribe(data => {
         console.log('paidByTransfer', data);
+        dialogInfoEvents.close();
         this.setOrCreateInvoice(data);
         this.cashService.resetEnableState();
       },
       err => {
         console.log(err);
+        dialogInfoEvents.close();
         this.cashService.openGenericInfo(InformationType.ERROR, err);
         this.cashService.resetEnableState();
       });
@@ -1871,9 +1874,11 @@ export class OperationsService {
   }
 
   private paidByCheck(amount: number, checkNumber: string, descrip?: string, client?: string) {
+    const dialogInfoEvents = this.openInfoEventDialog('Paying by ' + PaymentOpEnum.CHECK);
     this.invoiceService.paidByCheck(amount, checkNumber, descrip, client).subscribe(
       next => {
         console.log('paidByCheck', next);
+        dialogInfoEvents.close();
         this.currentOperation = PaymentOpEnum.CHECK;
         if (!client) {
           if (next && next.balance > 0) { this.invoiceService.setInvoice(next); } else if (next.change && next.change > 0) {
@@ -1894,6 +1899,7 @@ export class OperationsService {
       },
       error1 => {
         console.error('paidByCheck', error1);
+        dialogInfoEvents.close();
         this.cashService.openGenericInfo('Error', error1);
         this.cashService.resetEnableState();
       }/*,
