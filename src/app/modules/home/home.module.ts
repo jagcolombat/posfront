@@ -15,6 +15,7 @@ import {SharedModule} from "../shared/shared.module";
 import {DebitCardComponent} from "../../components/presentationals/debit-card/debit-card.component";
 import { GenericInfoEventsComponent } from 'src/app/components/presentationals/generic-info-events/generic-info-events.component';
 import {CustomHeaderComponent} from "../../components/presentationals/ag-grid/custom-header.component";
+import {CustomNameupcCellComponent} from '../../components/presentationals/ag-grid/custom-nameupc-cell.component';
 import {PaidOutComponent} from "../../components/presentationals/paid-out/paid-out.component";
 import {ApplyDiscountComponent} from "../../components/presentationals/apply-discount/apply-discount.component";
 import {GenericSalesComponent} from "../../components/presentationals/generic-sales/generic-sales.component";
@@ -68,6 +69,7 @@ import {TimeWorkedComponent} from "../../components/presentationals/time-worked/
     DebitCardComponent,
     GenericInfoEventsComponent,
     CustomHeaderComponent,
+    CustomNameupcCellComponent,
     PaidOutComponent,
     ApplyDiscountComponent,
     GenericSalesComponent,
@@ -100,6 +102,7 @@ import {TimeWorkedComponent} from "../../components/presentationals/time-worked/
     DebitCardComponent,
     GenericInfoEventsComponent,
     CustomHeaderComponent,
+    CustomNameupcCellComponent,
     PaidOutComponent,
     ApplyDiscountComponent,
     GenericSalesComponent,

@@ -1,16 +1,28 @@
-ag-grid-angular /deep/ .customHeaderLabel {
-  /*Necessary to allow for text to grow vertically*/
-  width: 100% !important;
-  font-size: 14px !important;
-}
-
-ag-grid-angular /deep/ [col-id='total'] {
+ag-grid-angular {
   & /deep/ .customHeaderLabel {
+    /*Necessary to allow for text to grow vertically*/
+    width: 100% !important;
+    font-size: 14px !important;
+  }
+
+  & /deep/ * {
+    cursor: none !important;
+  }
+
+  & /deep/ [col-id='total'] {
+    & /deep/ .customHeaderLabel {
+      display: flex;
+      justify-content: flex-end;
+    }
+  }
+
+  & /deep/ .ag-cell-wrapper {
     display: flex;
-    justify-content: flex-end;
+    height: 100%;
+    align-items: center;
+    line-height: 25px;
   }
 }
 
-ag-grid-angular /deep/ * {
-  cursor: none !important;
-}
+
+

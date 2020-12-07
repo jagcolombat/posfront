@@ -894,7 +894,7 @@ export class AdminOptionsService {
         this.invoiceService.setInvoice(next);
       }, err => this.cashService.openGenericInfo(InformationType.ERROR, err)
 
-    )
+    );
   }
 
   weeklyClose(op) {
