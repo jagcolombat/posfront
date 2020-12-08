@@ -90,7 +90,7 @@ export class OperationsComponent implements OnInit {
       this.customerOperations.unshift(OtherOpEnum.SPLIT_CARD);
       this.customerColor.unshift('yellow');
     }
-    if(config.companyType === CompanyType.RESTAURANT || !config.allowEBT){
+    if (config.companyType === CompanyType.RESTAURANT || !config.allowEBT){
       // Remove EBT options and colors in payment
       this.paymentOperations.splice(0,1);
       this.paymentColor.splice(0,1);

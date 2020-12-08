@@ -15,6 +15,7 @@ export interface IInvoice {
   subTotal?: number;
   tax?: number;
   isRefund?: boolean;
+  isRefundSale?: boolean;
   fsTotal?: number;
   date?: Date;
   productsCount?: number;
@@ -41,6 +42,7 @@ export class Invoice implements IInvoice {
               public subTotal?: number,
               public tax?: number,
               public isRefund?: boolean,
+              public isRefundSale?: boolean,
               public fsTotal?: number,
               public date?: Date,
               public productsCount?: number,

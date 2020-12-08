@@ -64,7 +64,7 @@ export class AgGridComponent implements OnInit, /*OnChanges,*/ OnDestroy {
         width: 300,
         cellRendererFramework: CustomNameupcCellComponent,
         headerComponentFramework: CustomHeaderComponent,
-        headerComponentParams: { displayName: 'UPC & Name Product' }
+        headerComponentParams: { displayName: 'Product' }
       }/*,
       {
         headerComponentFramework: CustomHeaderComponent,

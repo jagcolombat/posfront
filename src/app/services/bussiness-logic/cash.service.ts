@@ -32,7 +32,7 @@ export class CashService {
   disabledInvoiceAdminOp: boolean | boolean[] = false;
   disabledOtherAdminOp: boolean | boolean[] = false;
   disabledCustomerOp: boolean | boolean[] = false;
-  //systemConfig: Configuration;
+  // systemConfig: Configuration;
   noLet4Supervisor =  [AdminOpEnum.APPLY_DISCOUNT, AdminOpEnum.REMOVE_HOLD, AdminOpEnum.CHARGE_ACCT_SETUP,
     AdminOpEnum.EMPLOYEE_SETUP, AdminOpEnum.CHANGE_PRICES, AdminOpEnum.CREDIT_LIMIT, AdminOpEnum.WTDZ]
     .map(a => a.toUpperCase());
@@ -43,14 +43,15 @@ export class CashService {
 
   constructor(public dialog: MatDialog, private dataStorage: DataStorageService, private authServ: AuthService,
               public config: ConfigurationService) {
-    //this.resetEnableState();
-    //this.systemConfig = this.config.sysConfig;
+    // this.resetEnableState();
+    // this.systemConfig = this.config.sysConfig;
   }
 
   opDenyByUser(op: AdminOpEnum | FinancialOpEnum, userRol?: UserrolEnum ){
     let opDeny = false;
-    if(this.config.sysConfig.companyType === CompanyType.ISLANDS)
+    if (this.config.sysConfig.companyType === CompanyType.ISLANDS) {
       this.noLet4Supervisor.push(FinancialOpEnum.HOLD.toUpperCase());
+    }
     // Apply Discount for Supervisor by Configuration
     this.opDenyAllowByConfig(AdminOpEnum.APPLY_DISCOUNT, this.config.sysConfig.allowApplyDiscount);
     // Change Prices for Supervisor by Configuration
@@ -82,7 +83,7 @@ export class CashService {
     this.disabledOtherAdminOp = false;
     this.disabledAdminOp = false;
     this.disableStock = false;
-    //this.disabledCustomerOp = [true, false, false, true];
+    // this.disabledCustomerOp = [true, false, false, true];
     this.splitAllow(false);
     this.evReviewEnableState.emit(false);
     this.evResetEnableState.emit(true);
@@ -130,19 +131,19 @@ export class CashService {
     this.disabledInvOp = [false, true, true, true];
   }
 
-  totalsEnableState(fs = false, refund=false) {
+  totalsEnableState(fs = false, refund = false) {
     console.log(fs);
     /*this.disabledInput = */this.disabledFinOp = this.disabledTotalOp = this.disableStock = true;
     this.disabledInvOp = [false, true, true, true];
-    //if(this.config.sysConfig && this.config.sysConfig.allowCardSplit) this.disabledOtherOp = false;
-    if(fs){
-      this.disabledPayment = [false, true, true, true, true, true]
+    // if(this.config.sysConfig && this.config.sysConfig.allowCardSplit) this.disabledOtherOp = false;
+    if (fs) {
+      this.disabledPayment = [false, true, true, true, true, true];
     } else if (refund) {
       this.disabledPayment = this.disabledPaymentByCompany();
       this.disabledPaymentMoney = this.disabledPaymentMoneyByCompany();
       this.disabledCustomerOp = false;
     } else {
-      //this.disabledPayment = this.disabledPaymentByCompany();
+      // this.disabledPayment = this.disabledPaymentByCompany();
       this.disabledPayment = false;
       this.disabledPaymentMoney = false;
       this.disabledCustomerOp = false;
@@ -150,21 +151,25 @@ export class CashService {
     this.splitAllow(true);
   }
 
-  totalsDisabled(){
-    console.log('totalsDisabled');
+  totalsDisabled(refund?: boolean, ebt?: boolean) {
+    console.log('totalsDisabled', refund, ebt);
     /*this.disabledInput =*/ this.disabledFinOp = this.disabledTotalOp = this.disableStock = true;
-    //this.disabledInvOp = [false, true, true, true];
-    //if(this.config.sysConfig && this.config.sysConfig.allowCardSplit) this.disabledOtherOp = false;
-    //this.splitAllow(true);
+    // this.disabledInvOp = [false, true, true, true];
+    // if(this.config.sysConfig && this.config.sysConfig.allowCardSplit) this.disabledOtherOp = false;
+    // this.splitAllow(true);
+    /*if (refund) {
+      this.disabledPayment = ebt ? [true, true, true, false] : [true, true, false, true];
+      this.disabledPaymentMoney = true;
+    }*/
   }
 
-  disabledPaymentByCompany(){
+  disabledPaymentByCompany() {
     return (this.config.sysConfig.companyType === CompanyType.MARKET && this.config.sysConfig.allowEBT) ?
-      [true, false, false, false, false, false] : false;
+      [true, true, false, false] : [true, false, false, true];
   }
 
-  disabledPaymentMoneyByCompany(){
-    return (this.config.sysConfig.companyType === CompanyType.MARKET) ? [true, true, true, true, true, true, false, false] : true;
+  disabledPaymentMoneyByCompany() {
+    return (this.config.sysConfig.companyType === CompanyType.MARKET) ? [true, true, true, true, true, true, true, true] : true;
   }
 
   ebtEnableState() {
@@ -175,21 +180,21 @@ export class CashService {
   cancelCheckEnableState() {
     this.disabledInput = this.disabledTotalOp = this.disabledPayment = this.disabledPaymentMoney = this.disabledFinOp =
       this.disableStock = true;
-    //this.disabledInvOp =[false, true, true, true];
+    // this.disabledInvOp =[false, true, true, true];
     this.disabledInvoiceAdminOp = [true, false];
     this.disabledReportsAdminOp = true;
     this.disabledAdminOp = [true, true, true, false, true, true, true, true, true, true, true, true, true, true, true, true];
-    //this.evReviewEnableState.emit(true);
+    // this.evReviewEnableState.emit(true);
   }
 
   removeHoldEnableState() {
     this.disabledInput = this.disabledTotalOp = this.disabledPayment = this.disabledPaymentMoney = this.disabledFinOp =
       this.disableStock = true;
-    //this.disabledInvOp =[false, true, true, true];
+    // this.disabledInvOp =[false, true, true, true];
     this.disabledInvoiceAdminOp = [true, false];
     this.disabledReportsAdminOp = true;
     this.disabledAdminOp = [true, true, true, true, false, true, true, true, true, true, true, true, true, true, true, true];
-    //this.evReviewEnableState.emit(true);
+    // this.evReviewEnableState.emit(true);
   }
 
   dayCloseEnableState() {

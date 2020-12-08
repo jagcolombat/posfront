@@ -437,20 +437,23 @@ export class OperationsService {
     const refund = this.currentOperation === FinancialOpEnum.REFUND;
     if (this.invoiceService.invoice.productOrders.length > 0 || ( this.cashService.config.sysConfig.fullRefund && refund )) {
       this.currentOperation = TotalsOpEnum.SUBTOTAL;
-      this.cashService.totalsDisabled();
+      const refundOrRefunSale = this.invoiceService.invoice.isRefund || this.invoiceService.invoice.isRefundSale;
+      this.cashService.totalsDisabled(refundOrRefunSale, this.cashService.config.sysConfig.allowEBT);
       this.invoiceService.subTotal().subscribe(
         next => {
           /*next.isPromotion = true;
           next.total = this.invoiceService.invoice.total - 0.50;*/
           // console.log('promoTotal', next.total, this.invoiceService.invoice.total);
           // Calculate total discount by promotion
-          if (next.isPromotion && !next.isRefund) { next.totalPromo = this.invoiceService.invoice.total - next.total; }
+          if (next.isPromotion && !(next.isRefund || next.isRefundSale)) {
+            next.totalPromo = this.invoiceService.invoice.total - next.total;
+          }
           this.invoiceService.setInvoice(next);
           if (this.invoiceService.invoice.status === InvoiceStatus.PAID) {
             this.invoiceService.warnInvoicePaid();
           } else {
             (this.invoiceService.invoice.productOrders.length > 0) ?
-              this.cashService.totalsEnableState(false, refund || next.isRefund) :
+              this.cashService.totalsEnableState(false, refund || (next.isRefund || next.isRefundSale)) :
               this.cashService.resetEnableState();
           }
         },
@@ -479,7 +482,7 @@ export class OperationsService {
             this.invoiceService.warnInvoicePaid();
           } else {
             this.invoiceService.invoice.productOrders.length > 0 ?
-              this.cashService.totalsEnableState(this.invoiceService.invoice.fsTotal > 0, refund || next.isRefund) :
+              this.cashService.totalsEnableState(this.invoiceService.invoice.fsTotal > 0, refund || (next.isRefund || next.isRefundSale)) :
               this.cashService.resetEnableState();
           }
         },
@@ -754,7 +757,7 @@ export class OperationsService {
     console.log('cash');
     const totalToPaid = this.getTotalToPaid();
     if ((totalToPaid !== 0 || (totalToPaid === 0 && this.cashService.config.sysConfig.fullRefund) )
-      && this.invoiceService.invoice.isRefund) {
+      && (this.invoiceService.invoice.isRefund || this.invoiceService.invoice.isRefundSale)) {
       console.log('paid refund, open cash!!!');
       this.invoiceService.cash(totalToPaid, totalToPaid, opType)
         .subscribe(
