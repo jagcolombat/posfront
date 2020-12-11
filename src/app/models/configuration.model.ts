@@ -25,4 +25,13 @@ export interface Configuration {
   allowClock?: boolean;
   allowChangePrice?: boolean;
   changePriceBySelection?: boolean;
+  closeAuth?: boolean;
+  debitAsCreditCard?: boolean;
+  closeDayAutomatic?: boolean;
+  restartDayAutomatic?: boolean;
+  printVoid?: boolean;
+  printHold?: boolean;
+  printInitTicket?: boolean;
+  printMerchantTicket?: boolean;
+  printTicket?: boolean;
 }
