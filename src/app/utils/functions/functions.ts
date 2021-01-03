@@ -1,17 +1,17 @@
-import {Report} from "../../models/report.model";
-import {ReportSummary} from "../../models/report-detail.model";
-import {FinancialOpEnum, PaymentOpEnum, TotalsOpEnum} from "../operations";
-import {AdminOpEnum} from "../operations/admin-op.enum";
-import {EFieldType} from "../field-type.enum";
+import {Report} from '../../models/report.model';
+import {ReportSummary} from '../../models/report-detail.model';
+import {FinancialOpEnum, PaymentOpEnum, TotalsOpEnum} from '../operations';
+import {AdminOpEnum} from '../operations/admin-op.enum';
+import {EFieldType} from '../field-type.enum';
 
 export function leaveFocusOnButton (ev: any) {
   (ev.target.tagName !== 'BUTTON') ? ev.target.parentElement.blur() : ev.target.blur();
 }
 
-export function transformCBReport(report) : Report {
-  let arrTmp = new Array<ReportSummary>();
-  let arrTmp1 = ['cash', 'credit', 'debit', 'ebt'];
-  arrTmp1.map(type => { arrTmp.push(transformReportSummary(report, type))});
+export function transformCBReport(report): Report {
+  const arrTmp = new Array<ReportSummary>();
+  const arrTmp1 = ['cash', 'credit', 'debit', 'ebt'];
+  arrTmp1.map(type => arrTmp.push(transformReportSummary(report, type)));
   return new Report(report.message, report.total, report.resultCode, report.resultTxt, arrTmp,
     report.reportDetailLookups);
 }
@@ -28,7 +28,7 @@ export const operationsWithClear = [FinancialOpEnum.REVIEW, FinancialOpEnum.REPR
   TotalsOpEnum.SUBTOTAL, PaymentOpEnum.CASH , PaymentOpEnum.EBT_CARD, AdminOpEnum.CANCEL_CHECK, AdminOpEnum.REMOVE_HOLD,
   AdminOpEnum.CHANGE_PRICES];
 
-export function dataValidation(type: EFieldType): any{
+export function dataValidation(type: EFieldType): any {
   switch (type) {
     case EFieldType.ADDRESS:
       return {max: 120};

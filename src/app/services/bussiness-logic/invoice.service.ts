@@ -79,7 +79,11 @@ export class InvoiceService {
         this.evCreateInvoice.next(true);
       }, err => {
         console.error('createCheck failed');
-        this.evCreateInvoice.next(false);
+        this.cashService.openGenericInfo('Error', err).afterClosed().subscribe(
+          next => {
+            this.evCreateInvoice.next(false);
+          }
+        );
       });
   }
 
@@ -101,7 +105,7 @@ export class InvoiceService {
     console.error('addProductOrder', err);
     // this.delPOFromInvoice(po);
     this.resetDigits();
-    (i && i.status === InvoiceStatus.CREATED) ? this.warnInvoicePaid(): this.cashService.openGenericInfo('Error', err);
+    (i && i.status === InvoiceStatus.CREATED) ? this.warnInvoicePaid() : this.cashService.openGenericInfo('Error', err);
   }
 
   warnInvoicePaid(){

@@ -413,22 +413,22 @@ export class AdminOptionsService {
 
   authPending() {
     this.operationService.currentOperation = AdminOpEnum.AUTH_PENDING;
-    if(this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS) {
-      //if(!this.removeHoldLoaded){
+    if (this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS) {
+      // if(!this.removeHoldLoaded){
         this.dataStorage.getInvoiceByTransferType(EOperationType.AuthPending, ETransferType.Auth)
           .subscribe(next => {
-            this.operationService.openDialogInvoices(next, i => this.authPendingOp(i))
-          },err => this.cashService.openGenericInfo('Error', 'Can\'t complete ' +
-            AdminOpEnum.AUTH_PENDING.toLowerCase()+' operation'));
+            this.operationService.openDialogInvoices(next, i => this.authPendingOp(i));
+          }, err => this.cashService.openGenericInfo('Error', 'Can\'t complete ' +
+            AdminOpEnum.AUTH_PENDING.toLowerCase() + ' operation'));
       /*} else {
         this.removeHoldOp();
       }*/
     } else {
-      this.cashService.openGenericInfo('Error', 'Can\'t complete remove a hold operation because check is in progress');
+      this.cashService.openGenericInfo('Error', 'Can\'t complete authorization pending operation because check is in progress');
     }
   }
 
-  authPendingOp(i:Invoice){
+  authPendingOp(i: Invoice) {
     console.log('authPendentOp', i);
     this.invoiceService.setInvoice(i);
     this.operationService.evBackUserOperation.emit();

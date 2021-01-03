@@ -62,7 +62,7 @@ export class OperationsService {
     // console.log('OperationService', this.inactivityTime);
     this.invoiceService.evAddProd.subscribe(() => this.onAddProduct());
     // If section products is showing
-    this.invoiceService.evCreateInvoice.subscribe(next => this.navigateToDept());
+    this.invoiceService.evCreateInvoice.subscribe(next => next ? this.navigateToDept() : this.logoutOp());
     // If was added a product update inactivity time
     this.invoiceService.evUpdateProds.subscribe(ev => this.resetInactivity(true));
     //
