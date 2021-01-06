@@ -36,6 +36,8 @@ import {GiftCardModel, IGiftCardPaymentModel, IGiftModel} from "../../models/gif
 import {EClockType} from "../../utils/clock-type.enum";
 import {UserClock} from "../../models/user-clock.model";
 import {WorkerRecords} from "../../models/worker-records";
+import {StationService} from './station.service';
+import {StationModel} from '../../models/station.model';
 
 @Injectable({
   providedIn: 'root'
@@ -54,7 +56,8 @@ export class DataStorageService {
               private journeyService: JourneyService,
               private configurationService: ConfigurationService,
               private adminOperationService: AdminOperationService,
-              private clientService: ClientService) { }
+              private clientService: ClientService,
+              private stationService: StationService) { }
 
   // Departments
   getDepartments(): Observable<Department[]> {
@@ -71,7 +74,7 @@ export class DataStorageService {
 
   // Products
   getProductByUpc(upc: string, typeOp: EOperationType): Observable<Product[]> {
-    //return this.productService.getProductByUpc(this.url, upc, typeOp).pipe(map(p => p[0]));
+    // return this.productService.getProductByUpc(this.url, upc, typeOp).pipe(map(p => p[0]));
     return this.productService.getProductByUpc(this.url, upc, typeOp).pipe();
   }
 
@@ -381,5 +384,9 @@ export class DataStorageService {
 
   getTimeWorkedByUser(id: string, date: string): Observable<string> {
     return this.adminOperationService.getTimeWorkedByUser(this.url, id, date);
+  }
+  // Stations
+  getStationsStatus(): Observable<StationModel[]> {
+    return this.stationService.getStatus(this.url);
   }
 }

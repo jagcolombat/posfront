@@ -1,10 +1,10 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {InvoiceService} from "../../../services/bussiness-logic/invoice.service";
-import {AgGridComponent} from "../../presentationals/ag-grid/ag-grid.component";
+import {InvoiceService} from '../../../services/bussiness-logic/invoice.service';
+import {AgGridComponent} from '../../presentationals/ag-grid/ag-grid.component';
 import {Subscription} from "rxjs";
 import {AdminOptionsService} from "../../../services/bussiness-logic/admin-options.service";
-import {Router} from "@angular/router";
-import {ProductOrder} from "../../../models/product-order.model";
+import {Router} from '@angular/router';
+import {ProductOrder} from '../../../models/product-order.model';
 
 @Component({
   selector: 'invoice',
@@ -43,11 +43,12 @@ export class InvoiceComponent implements OnInit, OnDestroy {
     /*(this.invoiceService.invoice)?
       this.invoiceService.setInvoice(this.invoiceService.invoice):*/
       this.cashier = this.invoiceService.getCashier();
+      this.invoiceService.getStationStatus();
       this.invoiceService.createInvoice();
     //}
   }
 
-  updateTotals(){
+  updateTotals() {
     this.subtotal = this.invoiceService.invoice.subTotal;
     this.tax = this.invoiceService.invoice.tax;
     this.total = this.invoiceService.invoice.total;
@@ -63,7 +64,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
       this.invoiceService.digits += number.toString();
       this.invoiceService.numbers = this.invoiceService.numbers + number.toString();
     } else {
-      if (this.invoiceService.qty === 1) this.invoiceService.qty = +this.invoiceService.numbers;
+      if (this.invoiceService.qty === 1) { this.invoiceService.qty = +this.invoiceService.numbers; }
       this.invoiceService.digits += ' @ ';
       this.invoiceService.numbers = '';
     }

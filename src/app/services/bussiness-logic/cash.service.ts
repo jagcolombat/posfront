@@ -12,6 +12,8 @@ import {InformationType} from "../../utils/information-type.enum";
 import {FinancialOpEnum} from "../../utils/operations";
 import {PAXConnTypeEnum} from "../../utils/pax-conn-type.enum";
 import {ConfigurationService} from "./configuration.service";
+import {StationModel} from '../../models/station.model';
+import {Observable} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -36,15 +38,15 @@ export class CashService {
   noLet4Supervisor =  [AdminOpEnum.APPLY_DISCOUNT, AdminOpEnum.REMOVE_HOLD, AdminOpEnum.CHARGE_ACCT_SETUP,
     AdminOpEnum.EMPLOYEE_SETUP, AdminOpEnum.CHANGE_PRICES, AdminOpEnum.CREDIT_LIMIT, AdminOpEnum.WTDZ]
     .map(a => a.toUpperCase());
+  stationStatus = new Array<StationModel>();
   @Output() evReviewEnableState = new EventEmitter<boolean>();
   @Output() evResetEnableState = new EventEmitter<boolean>();
   @Output() evLogout = new EventEmitter<boolean>();
   @Output() evResetStock = new EventEmitter<boolean>();
+  station: StationModel;
 
   constructor(public dialog: MatDialog, private dataStorage: DataStorageService, private authServ: AuthService,
               public config: ConfigurationService) {
-    // this.resetEnableState();
-    // this.systemConfig = this.config.sysConfig;
   }
 
   opDenyByUser(op: AdminOpEnum | FinancialOpEnum, userRol?: UserrolEnum ){
@@ -65,12 +67,13 @@ export class CashService {
   }
 
   opDenyAllowByConfig(op: AdminOpEnum | FinancialOpEnum, allow: boolean){
-    if(allow){
+    if (allow) {
       this.noLet4Supervisor.splice(this.noLet4Supervisor.
-      findIndex(v => v === op.toUpperCase()),1);
+      findIndex(v => v === op.toUpperCase()), 1);
     } else {
-      if(!this.noLet4Supervisor.includes(op.toUpperCase()))
-        this.noLet4Supervisor.push(op.toUpperCase())
+      if (!this.noLet4Supervisor.includes(op.toUpperCase())) {
+        this.noLet4Supervisor.push(op.toUpperCase());
+      }
     }
   }
 
@@ -239,25 +242,38 @@ export class CashService {
     });
   }*/
 
-  getOrder(inv: string){
+  getOrder(inv: string) {
     return this.dataStorage.getOrder(inv);
   }
 
   private splitAllow(enabled?: boolean) {
     /*this.disabledCustomerOp = (this.config.sysConfig && this.config.sysConfig.allowCardSplit && !enabled) ?
       [true, false, false, true] : false;*/
-    if(this.config.sysConfig && (this.config.sysConfig.allowCardSplit &&
-      this.config.sysConfig.paxConnType === PAXConnTypeEnum.ONLINE)){
+    if (this.config.sysConfig && (this.config.sysConfig.allowCardSplit &&
+      this.config.sysConfig.paxConnType === PAXConnTypeEnum.ONLINE)) {
       this.disabledCustomerOp = !enabled ? [true, false, false, true] : false;
-    } else if(this.config.sysConfig && (!this.config.sysConfig.allowCardSplit ||
-      this.config.sysConfig.paxConnType !== PAXConnTypeEnum.ONLINE)){
+    } else if (this.config.sysConfig && (!this.config.sysConfig.allowCardSplit ||
+      this.config.sysConfig.paxConnType !== PAXConnTypeEnum.ONLINE)) {
       this.disabledCustomerOp = !enabled ? [false, false, true] : false;
     } else {
       console.log('splitAllow', this.config.sysConfig, this.disabledCustomerOp);
     }
   }
 
-  openDialogs(){
+  openDialogs() {
     return (this.dialog.openDialogs && this.dialog.openDialogs.length);
+  }
+
+  getStationStatus(): Observable<StationModel[]> {
+    return this.dataStorage.getStationsStatus();
+  }
+
+  setStationStatus(status: StationModel[]) {
+    this.stationStatus = status;
+    this.getStatusByStation();
+  }
+
+  getStatusByStation() {
+    this.station= this.stationStatus.find((v, i) => +v.id === this.config.sysConfig.posNumber);
   }
 }

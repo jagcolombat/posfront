@@ -23,6 +23,8 @@ import {CheckPayment} from "../../models/check.model";
 import {TransferPayment} from "../../models/transfer.model";
 import {InformationType} from "../../utils/information-type.enum";
 import {GiftCardPayment} from "../../models/gift-card.model";
+import {EStationStatus} from '../../utils/station-status.enum';
+import {StationModel} from '../../models/station.model';
 
 @Injectable({
   providedIn: 'root'
@@ -53,20 +55,19 @@ export class InvoiceService {
   lastProdAdd: ProductOrder;
 
   constructor(public authService: AuthService, private dataStorage: DataStorageService, public cashService: CashService) {
-    //this.setSystemConfig();
   }
 
   getCashier(): string {
     return this.cashier = (this.authService.token && this.authService.token.username) ? this.authService.token.username : '';
-    //return this.cashier = (localStorage.getItem('userName')) ? localStorage.getItem('userName') : ''
+    // return this.cashier = (localStorage.getItem('userName')) ? localStorage.getItem('userName') : ''
   }
 
   getUserId(): string {
     return (this.authService.token && this.authService.token.user_id) ? this.authService.token.user_id : '';
-    //return this.cashier = (localStorage.getItem('userName')) ? localStorage.getItem('userName') : ''
+    // return this.cashier = (localStorage.getItem('userName')) ? localStorage.getItem('userName') : ''
   }
 
-  createInvoice(){
+  createInvoice() {
       this.resetDigits();
       this.dataStorage.createInvoice().subscribe(next => {
         console.info('createCheck successfull', next);
@@ -229,30 +230,30 @@ export class InvoiceService {
   }
 
   cash(payment: number, totalToPaid: number, type: PaymentOpEnum = PaymentOpEnum.CASH): Observable<Invoice> {
-    //const cashPayment = new CashPaymentModel(this.invoice.receiptNumber, payment, this.invoice.total);
+    // const cashPayment = new CashPaymentModel(this.invoice.receiptNumber, payment, this.invoice.total);
     const cashPayment = new CashPaymentModel(this.invoice.receiptNumber, totalToPaid, payment, type);
     return this.dataStorage.paidByCash(cashPayment);
   }
 
   debit(payment: number, tip?: number, transferType?: PaymentStatus): Observable<Invoice> {
-    const debitPayment = new CreditCardModel(payment, tip, this.invoice.receiptNumber,transferType);
+    const debitPayment = new CreditCardModel(payment, tip, this.invoice.receiptNumber, transferType);
     return this.dataStorage.paidByDeditCard(debitPayment);
   }
 
   credit(payment: number, tip?: number, transferType?: PaymentStatus): Observable<Invoice> {
-    const creditPayment = new CreditCardModel(payment, tip, this.invoice.receiptNumber,transferType);
+    const creditPayment = new CreditCardModel(payment, tip, this.invoice.receiptNumber, transferType);
     return this.dataStorage.paidByCreditCard(creditPayment);
   }
 
   creditManual(payment: number, tip?: number, ccnumber?: string, cvv?: string, ccdate?: string, zip?: string,
                street?: string): Observable<Invoice> {
-    const creditPayment = new CreditCardModel(payment, tip, this.invoice.receiptNumber,PaymentStatus.SAlE, ccnumber, cvv,
+    const creditPayment = new CreditCardModel(payment, tip, this.invoice.receiptNumber, PaymentStatus.SAlE, ccnumber, cvv,
       ccdate, SwipeMethod.MANUAL, zip, street);
     return this.dataStorage.paidByCreditCard(creditPayment);
   }
 
   ebt(payment: number, type?: number, tip?: number, transferType?: PaymentStatus): Observable<Invoice> {
-    const ebtPayment = new CreditCardModel(payment, tip, this.invoice.receiptNumber,transferType);
+    const ebtPayment = new CreditCardModel(payment, tip, this.invoice.receiptNumber, transferType);
     return this.dataStorage.paidByEBTCard(ebtPayment, type);
   }
 
@@ -331,7 +332,7 @@ export class InvoiceService {
 
   cancelCheck() {
     this.dataStorage.cancelCheck(this.invoice.receiptNumber).subscribe(
-      next=> {
+      next => {
         console.log(next);
         this.resetDigits();
         this.createInvoice();
@@ -432,5 +433,15 @@ export class InvoiceService {
   allowAddProductByStatus() {
     const allowStatus = [InvoiceStatus.IN_PROGRESS, InvoiceStatus.CREATED, InvoiceStatus.IN_HOLD]
     return (allowStatus.includes(this.invoice.status)) ? true : false;
+  }
+
+  getStationStatus() {
+    this.cashService.getStationStatus().subscribe(
+      next => {
+        console.log(next);
+        this.cashService.setStationStatus(next);
+      },
+      error => this.cashService.openGenericInfo(InformationType.ERROR, error)
+    );
   }
 }

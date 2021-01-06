@@ -12,6 +12,7 @@ import {InformationType} from "../../../utils/information-type.enum";
 import {EOperationType} from "../../../utils/operation.type.enum";
 import {ProductOrderService} from "../../../services/bussiness-logic/product-order.service";
 import {InvoiceStatus} from "../../../utils/invoice-status.enum";
+import {StationModel} from '../../../models/station.model';
 
 @Component({
   selector: 'app-cash-view',
@@ -33,6 +34,7 @@ export class CashViewComponent implements OnInit, OnDestroy {
     this.sub.push(this.ws.evScanner.subscribe(data => this.inputScanner(data)));
     this.sub.push(this.ws.evScannerPaidClose.subscribe(data => this.wsCloseConn(data)));
     this.sub.push(this.ws.evClientClose.subscribe(data => this.wsCloseClientConn(data)));
+    this.sub.push(this.ws.evStationStatus.subscribe(data => this.wsStationStatus(data)));
   }
 
   ngOnInit() {
@@ -162,5 +164,10 @@ export class CashViewComponent implements OnInit, OnDestroy {
           this.dialogWSCloseConn = null;
         }
       });
+  }
+
+  private wsStationStatus(data: StationModel[]) {
+    console.log('wsStationStatus', data);
+    this.invoiceService.cashService.setStationStatus(data);
   }
 }

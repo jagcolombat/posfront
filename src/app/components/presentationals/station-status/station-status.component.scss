@@ -1,0 +1,18 @@
+:host {
+  display: flex;
+  align-items: center;
+}
+
+.led {
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+}
+
+.green {
+  background-color: #1fff9c;
+}
+
+.red {
+  background-color: #f34141;
+}
