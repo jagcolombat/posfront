@@ -12,7 +12,7 @@ import {InformationType} from "../../../utils/information-type.enum";
 import {EOperationType} from "../../../utils/operation.type.enum";
 import {ProductOrderService} from "../../../services/bussiness-logic/product-order.service";
 import {InvoiceStatus} from "../../../utils/invoice-status.enum";
-import {StationModel} from '../../../models/station.model';
+import {Station} from '../../../models/station.model';
 
 @Component({
   selector: 'app-cash-view',
@@ -166,7 +166,7 @@ export class CashViewComponent implements OnInit, OnDestroy {
       });
   }
 
-  private wsStationStatus(data: StationModel[]) {
+  private wsStationStatus(data: Array<Station>) {
     console.log('wsStationStatus', data);
     this.invoiceService.cashService.setStationStatus(data);
   }

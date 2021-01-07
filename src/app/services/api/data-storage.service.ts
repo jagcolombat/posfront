@@ -13,7 +13,7 @@ import { EOperationType } from 'src/app/utils/operation.type.enum';
 import { ICashPayment } from 'src/app/models/cash-payment.model';
 import { Journey } from 'src/app/models/journey.model';
 import { JourneyService } from './journey.service';
-import {CreditCard, User, Payment, CardManualPayment, Credentials} from 'src/app/models';
+import {CreditCard, User, Payment, CardManualPayment, Credentials, Station} from 'src/app/models';
 import { ConfigurationService } from './configuration.service';
 import { Configuration } from 'src/app/models/configuration.model';
 import { AdminOperationService } from './admin.operation.service';
@@ -21,23 +21,22 @@ import { PaidOut } from 'src/app/models/paid-out.model';
 import { InvoiceStatus } from 'src/app/utils/invoice-status.enum';
 import { CloseBatch } from 'src/app/utils/close.batch.enum';
 import { Report } from 'src/app/models/report.model';
-import {OrderService} from "./order.service";
-import {Order} from "../../models/order.model";
-import {Table} from "../../models/table.model";
-import {ETransferType} from "../../utils/transfer-type.enum";
-import {EApplyDiscount} from "../../utils/apply-discount.enum";
-import {EmployeedModel, IPositionModel} from "../../models/employeed.model";
-import {ClientService} from "./client.service";
-import {ClientModel} from "../../models/client.model";
-import {PaymentMethodEnum} from "../../utils/operations/payment-method.enum";
-import {CheckPayment} from "../../models/check.model";
+import {OrderService} from './order.service';
+import {Order} from '../../models/order.model';
+import {Table} from '../../models/table.model';
+import {ETransferType} from '../../utils/transfer-type.enum';
+import {EApplyDiscount} from '../../utils/apply-discount.enum';
+import {EmployeedModel, IPositionModel} from '../../models/employeed.model';
+import {ClientService} from './client.service';
+import {ClientModel} from '../../models/client.model';
+import {PaymentMethodEnum} from '../../utils/operations/payment-method.enum';
+import {CheckPayment} from '../../models/check.model';
 import {ITransferPayment, TransferPayment} from '../../models/transfer.model';
-import {GiftCardModel, IGiftCardPaymentModel, IGiftModel} from "../../models/gift-card.model";
-import {EClockType} from "../../utils/clock-type.enum";
-import {UserClock} from "../../models/user-clock.model";
-import {WorkerRecords} from "../../models/worker-records";
+import {GiftCardModel, IGiftCardPaymentModel, IGiftModel} from '../../models/gift-card.model';
+import {EClockType} from '../../utils/clock-type.enum';
+import {UserClock} from '../../models/user-clock.model';
+import {WorkerRecords} from '../../models/worker-records';
 import {StationService} from './station.service';
-import {StationModel} from '../../models/station.model';
 
 @Injectable({
   providedIn: 'root'
@@ -272,29 +271,29 @@ export class DataStorageService {
   }
 
   // Order
-  getOrder(inv: string){
+  getOrder(inv: string) {
     return this.orderService.getByInvoice(this.url, inv);
   }
 
 
-  updateOrder(order: Order): Observable<Order>{
+  updateOrder(order: Order): Observable<Order> {
     return this.orderService.update(this.url, order);
   }
 
-  getTables(): Observable<Table[]>{
+  getTables(): Observable<Table[]> {
     return this.orderService.getTables(this.url);
   }
 
   // Report
   dayClose(close: boolean, date?: any) {
-    let result = (date !== null && date !== undefined) ?
+    const result = (date !== null && date !== undefined) ?
       this.adminOperationService.getDayClose(this.url, close, date.from) :
       this.adminOperationService.getDayClose(this.url, close);
     return result;
   }
 
   cashierClose(close: boolean, emp: string, date?: any) {
-    let result = (date !== null && date !== undefined) ?
+    const result = (date !== null && date !== undefined) ?
       this.adminOperationService.cashierCloseShift(this.url, close, emp, date.from) :
       this.adminOperationService.cashierCloseShift(this.url, close, emp);
     return result;
@@ -312,7 +311,7 @@ export class DataStorageService {
     return this.invoiceService.setUser(this.url, invoiceId, userId);
   }
 
-  //Other
+  // Other
   notSale(): Observable<any> {
     return this.adminOperationService.notSale(this.url);
   }
@@ -329,7 +328,7 @@ export class DataStorageService {
     return this.adminOperationService.employSetup(this.url, employee);
   }
 
-  employClock(credentials: Credentials, clockType?: EClockType): Observable<UserClock>{
+  employClock(credentials: Credentials, clockType?: EClockType): Observable<UserClock> {
     return this.adminOperationService.employClock(this.url, credentials, clockType);
   }
 
@@ -338,7 +337,7 @@ export class DataStorageService {
     return this.clientService.setClient(this.url, client);
   }
 
-  getClientById(id: string){
+  getClientById(id: string) {
     return this.clientService.getClientById(this.url, id);
   }
 
@@ -386,7 +385,7 @@ export class DataStorageService {
     return this.adminOperationService.getTimeWorkedByUser(this.url, id, date);
   }
   // Stations
-  getStationsStatus(): Observable<StationModel[]> {
+  getStationsStatus(): Observable<Array<Station>> {
     return this.stationService.getStatus(this.url);
   }
 }

@@ -23,8 +23,6 @@ import {CheckPayment} from "../../models/check.model";
 import {TransferPayment} from "../../models/transfer.model";
 import {InformationType} from "../../utils/information-type.enum";
 import {GiftCardPayment} from "../../models/gift-card.model";
-import {EStationStatus} from '../../utils/station-status.enum';
-import {StationModel} from '../../models/station.model';
 
 @Injectable({
   providedIn: 'root'

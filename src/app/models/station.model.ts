@@ -1,8 +1,8 @@
 import {EStationStatus} from '../utils/station-status.enum';
 
-export class StationModel {
+export interface Station {
   id: string;
   label: string;
   host: string;
-  status?: EStationStatus;
+  status: EStationStatus;
 }

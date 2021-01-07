@@ -3,7 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ProcessHTTPMSgService } from './ProcessHTTPMSg.service';
-import {StationModel} from '../../models/station.model';
+import {Station} from '../../models/station.model';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +14,7 @@ export class StationService {
 
   path = '/stations';
 
-  getStatus(url: string): Observable<StationModel[]> {
+  getStatus(url: string): Observable<Array<Station>> {
     return this._http.get<any>(url + this.path)
       .pipe(catchError(this.processHttpMsgService.handleError));
   }

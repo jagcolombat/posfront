@@ -1,18 +1,18 @@
 import {EventEmitter, Injectable, Output} from '@angular/core';
-import {GenericInfoModalComponent} from "../../components/presentationals/generic-info-modal/generic-info-modal.component";
-import {MatDialog} from "@angular/material";
-import {Configuration} from "../../models/configuration.model";
-import {AuthService} from "../api/auth.service";
-import {DataStorageService} from "../api/data-storage.service";
-import {CompanyType} from "../../utils/company-type.enum";
-import {BreakTextEnum} from "../../utils/breaktext.enum";
-import {AdminOpEnum} from "../../utils/operations/admin-op.enum";
-import {UserrolEnum} from "../../utils/userrol.enum";
-import {InformationType} from "../../utils/information-type.enum";
-import {FinancialOpEnum} from "../../utils/operations";
-import {PAXConnTypeEnum} from "../../utils/pax-conn-type.enum";
-import {ConfigurationService} from "./configuration.service";
-import {StationModel} from '../../models/station.model';
+import {GenericInfoModalComponent} from '../../components/presentationals/generic-info-modal/generic-info-modal.component';
+import {MatDialog} from '@angular/material';
+import {Configuration} from '../../models/configuration.model';
+import {AuthService} from '../api/auth.service';
+import {DataStorageService} from '../api/data-storage.service';
+import {CompanyType} from '../../utils/company-type.enum';
+import {BreakTextEnum} from '../../utils/breaktext.enum';
+import {AdminOpEnum} from '../../utils/operations/admin-op.enum';
+import {UserrolEnum} from '../../utils/userrol.enum';
+import {InformationType} from '../../utils/information-type.enum';
+import {FinancialOpEnum} from '../../utils/operations';
+import {PAXConnTypeEnum} from '../../utils/pax-conn-type.enum';
+import {ConfigurationService} from './configuration.service';
+import {Station} from '../../models/station.model';
 import {Observable} from 'rxjs';
 
 @Injectable({
@@ -38,18 +38,18 @@ export class CashService {
   noLet4Supervisor =  [AdminOpEnum.APPLY_DISCOUNT, AdminOpEnum.REMOVE_HOLD, AdminOpEnum.CHARGE_ACCT_SETUP,
     AdminOpEnum.EMPLOYEE_SETUP, AdminOpEnum.CHANGE_PRICES, AdminOpEnum.CREDIT_LIMIT, AdminOpEnum.WTDZ]
     .map(a => a.toUpperCase());
-  stationStatus = new Array<StationModel>();
+  stationStatus = new Array<Station>();
   @Output() evReviewEnableState = new EventEmitter<boolean>();
   @Output() evResetEnableState = new EventEmitter<boolean>();
   @Output() evLogout = new EventEmitter<boolean>();
   @Output() evResetStock = new EventEmitter<boolean>();
-  station: StationModel;
+  station: Station;
 
   constructor(public dialog: MatDialog, private dataStorage: DataStorageService, private authServ: AuthService,
               public config: ConfigurationService) {
   }
 
-  opDenyByUser(op: AdminOpEnum | FinancialOpEnum, userRol?: UserrolEnum ){
+  opDenyByUser(op: AdminOpEnum | FinancialOpEnum, userRol?: UserrolEnum ) {
     let opDeny = false;
     if (this.config.sysConfig.companyType === CompanyType.ISLANDS) {
       this.noLet4Supervisor.push(FinancialOpEnum.HOLD.toUpperCase());
@@ -59,14 +59,14 @@ export class CashService {
     // Change Prices for Supervisor by Configuration
     this.opDenyAllowByConfig(AdminOpEnum.CHANGE_PRICES, this.config.sysConfig.allowChangePrice);
 
-    if(this.authServ.token.rol === userRol && this.noLet4Supervisor.includes(op)){
+    if (this.authServ.token.rol === userRol && this.noLet4Supervisor.includes(op)) {
       this.openGenericInfo(InformationType.INFO, userRol + ' hasn\'t access to ' + op + ' operation.');
       opDeny = true;
     }
     return opDeny;
   }
 
-  opDenyAllowByConfig(op: AdminOpEnum | FinancialOpEnum, allow: boolean){
+  opDenyAllowByConfig(op: AdminOpEnum | FinancialOpEnum, allow: boolean) {
     if (allow) {
       this.noLet4Supervisor.splice(this.noLet4Supervisor.
       findIndex(v => v === op.toUpperCase()), 1);
@@ -115,7 +115,7 @@ export class CashService {
     this.changePriceEnableStateGeneric();
   }
 
-  changePriceEnableStateGeneric(){
+  changePriceEnableStateGeneric() {
     this.disabledTotalOp = this.disabledPayment = this.disabledPaymentMoney = true;
     this.disabledFinOp = [true, true, true, true, true, true, true, true];
     this.disabledInvOp = [false, true, true, true];
@@ -203,11 +203,11 @@ export class CashService {
   dayCloseEnableState() {
     this.disabledInput = this.disabledTotalOp = this.disabledPayment = this.disabledPaymentMoney = this.disabledFinOp =
       this.disabledAdminOp = this.disableStock = true;
-    this.disabledInvOp =[false, true, true, true];
+    this.disabledInvOp = [false, true, true, true];
   }
 
   openGenericInfo(title: string, content?: string, content2?: any, confirm?: boolean, disableClose?: boolean) {
-    return this.dialog.open(GenericInfoModalComponent,{
+    return this.dialog.open(GenericInfoModalComponent, {
       width: '400px', height: '350px', data: {
         title: title ? title : 'Information',
         content: content,
@@ -219,7 +219,7 @@ export class CashService {
     });
   }
 
-  getSystemConfig(){
+  getSystemConfig() {
     return this.dataStorage.getConfiguration();
   }
 
@@ -264,16 +264,16 @@ export class CashService {
     return (this.dialog.openDialogs && this.dialog.openDialogs.length);
   }
 
-  getStationStatus(): Observable<StationModel[]> {
+  getStationStatus(): Observable<Array<Station>> {
     return this.dataStorage.getStationsStatus();
   }
 
-  setStationStatus(status: StationModel[]) {
+  setStationStatus(status: Array<Station>) {
     this.stationStatus = status;
     this.getStatusByStation();
   }
 
   getStatusByStation() {
-    this.station= this.stationStatus.find((v, i) => +v.id === this.config.sysConfig.posNumber);
+    this.station = this.stationStatus.find((v, i) => +v.id === this.config.sysConfig.posNumber);
   }
 }
