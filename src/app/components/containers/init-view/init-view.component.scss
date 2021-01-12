@@ -17,4 +17,10 @@ slide-promotions /deep/ a, slide-promotions /deep/ .arrow-container {
   cursor: none !important;
 }
 
+.toolbox {
+  & label {
+    padding: 0 10px;
+  }
+}
+
 

@@ -19,7 +19,7 @@ export class InitViewComponent implements OnInit, AfterViewInit, OnDestroy {
   showClock: boolean;
   showLogin: boolean;
 
-  constructor(private initService: InitViewService) {
+  constructor(public initService: InitViewService) {
   }
 
   ngOnInit() {
