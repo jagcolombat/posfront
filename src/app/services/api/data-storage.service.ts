@@ -13,7 +13,7 @@ import { EOperationType } from 'src/app/utils/operation.type.enum';
 import { ICashPayment } from 'src/app/models/cash-payment.model';
 import { Journey } from 'src/app/models/journey.model';
 import { JourneyService } from './journey.service';
-import {CreditCard, User, Payment, CardManualPayment, Credentials} from 'src/app/models';
+import {CreditCard, User, Payment, CardManualPayment, Credentials, CredentialsModel} from 'src/app/models';
 import { ConfigurationService } from './configuration.service';
 import { Configuration } from 'src/app/models/configuration.model';
 import { AdminOperationService } from './admin.operation.service';
@@ -328,6 +328,10 @@ export class DataStorageService {
 
   employClock(credentials: Credentials, clockType?: EClockType): Observable<UserClock>{
     return this.adminOperationService.employClock(this.url, credentials, clockType);
+  }
+
+  employUpdate(credential: Credentials) {
+    return this.adminOperationService.employUpdate(this.url, credential);
   }
 
   // Clients

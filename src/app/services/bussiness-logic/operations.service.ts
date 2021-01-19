@@ -604,6 +604,16 @@ export class OperationsService {
     }
   }
 
+  openDialogWithPagObs(dataArr: Array<any>, title: string, subTitle: string, label: string,
+                    detail?: string, subdetail?: string, noSelectionMsg?: string): Observable<any> {
+      return this.cashService.dialog.open(DialogInvoiceComponent,
+        {
+          width: '780px', height: '680px',
+          data: {invoice: dataArr, title: title, subtitle: subTitle, label: label, detail: detail, subdetail: subdetail},
+          disableClose: true
+        }).afterClosed();
+  }
+
   refund() {
     console.log('refund');
     this.currentOperation = FinancialOpEnum.REFUND;
