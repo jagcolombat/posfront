@@ -33,6 +33,7 @@ import {GiftCardModel, GiftModel} from '../../models/gift-card.model';
 import {thousandFormatter} from '../../utils/functions/transformers';
 import {UtilsService} from './utils.service';
 import {Credentials, CredentialsModel} from '../../models';
+import {EmployActions} from '../../utils/employ-actions.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -560,7 +561,8 @@ export class AdminOptionsService {
   }
 
   employeeAction() {
-    const adTypes = new Array<any>({value: 1, text: 'CREATE'}, {value: 2, text: 'UPDATE PASS'});
+    const adTypes = new Array<any>(
+{value: EmployActions.CREATE, text: 'CREATE'}, {value: EmployActions.PASS, text: 'UPDATE PASS'}, {value: EmployActions.CARD, text: 'UPDATE CARD'});
     this.cashService.dialog.open(DialogDeliveryComponent,
       {
         width: '600px', height: '340px', data: {name: 'Employees Actions', label: 'Select an action', arr: adTypes},
@@ -569,17 +571,20 @@ export class AdminOptionsService {
       .afterClosed().subscribe(next => {
       console.log(next);
       switch (next) {
-        case 1:
+        case EmployActions.CREATE:
           this.employSetup();
           break;
-        case 2:
-          this.updatePassword();
+        case EmployActions.PASS:
+          this.updatePassword(next);
+          break;
+        case EmployActions.CARD:
+          this.updatePassword(next);
           break;
       }
     });
   }
 
-  updatePassword() {
+  updatePassword(action: EmployActions) {
     this.dataStorage.getApplicationUsers().subscribe(next =>  {
       console.log('getEmployees', next);
       this.operationService.openDialogWithPagObs(next, 'Employees',
@@ -588,7 +593,7 @@ export class AdminOptionsService {
             console.log(employee);
             if (employee) {
               const credential = new CredentialsModel(employee.userName);
-              this.getPassword(credential);
+              (action === EmployActions.PASS) ? this.getPassword(credential) : this.getPassByCard(credential);
             }
           }
       );
@@ -612,6 +617,25 @@ export class AdminOptionsService {
             );
           }
         });
+  }
+
+  getPassByCard(credential: Credentials) {
+    this.operationService.openSwipeCredentialCard('Password card', 'Swipe password card')
+      .subscribe(
+        next => {
+          console.log('Swipe password card', next);
+          console.log('Swipe password userScanned', this.initService.userScanned);
+          credential.newPasswordByCard = (next) ? next.pass : this.initService.userScanned;
+          this.initService.cleanUserScanned();
+          if (credential.newPasswordByCard) {
+            this.dataStorage.employUpdate(credential).subscribe(
+        e => {
+              console.log(AdminOpEnum.UPDATE_CARD, e);
+              this.cashService.openGenericInfo(InformationType.INFO, 'The employee ' + e.userName + ' was updated.');
+            }, err => { this.cashService.openGenericInfo('Error', err); });
+          }
+        }, err => { console.error(err); }
+      );
   }
 
   employSetup() {

@@ -27,5 +27,6 @@ export enum AdminOpEnum {
   CLIENT = 'Client Setup',
   GIFT_CARD = 'Gift Card',
   TIME_WORKED = 'Time Worked',
-  UPDATE_PASS = 'Update Password'
+  UPDATE_PASS = 'Update Password',
+  UPDATE_CARD = 'Update Card'
 }
