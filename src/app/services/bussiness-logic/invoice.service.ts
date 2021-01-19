@@ -434,6 +434,10 @@ export class InvoiceService {
   }
 
   getStationStatus() {
+    this.dataStorage.station ? this.cashService.station = this.dataStorage.station : this.getStationStatusFromServer();
+  }
+
+  getStationStatusFromServer() {
     this.cashService.getStationStatus().subscribe(
       next => {
         console.log(next);

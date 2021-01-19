@@ -15,7 +15,6 @@ export class InitViewService {
   station: Station;
 
   constructor(public config: ConfigurationService, private dataStore: DataStorageService, private utils: UtilsService) {
-    this.getStationStatus();
   }
 
   cleanUserScanned() {
@@ -42,6 +41,6 @@ export class InitViewService {
   }
 
   getStatusByStation(status: Array<Station>) {
-    this.station = status.find((v, i) => +v.id === this.config.sysConfig.posNumber);
+    this.dataStore.station = this.station = status.find((v, i) => +v.id === this.config.sysConfig.posNumber);
   }
 }

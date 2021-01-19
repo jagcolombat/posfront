@@ -1,8 +1,7 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {InvoiceService} from '../../../services/bussiness-logic/invoice.service';
 import {AgGridComponent} from '../../presentationals/ag-grid/ag-grid.component';
-import {Subscription} from "rxjs";
-import {AdminOptionsService} from "../../../services/bussiness-logic/admin-options.service";
+import {Subscription} from 'rxjs';
 import {Router} from '@angular/router';
 import {ProductOrder} from '../../../models/product-order.model';
 
@@ -45,7 +44,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
       this.cashier = this.invoiceService.getCashier();
       this.invoiceService.getStationStatus();
       this.invoiceService.createInvoice();
-    //}
+    // }
   }
 
   updateTotals() {
