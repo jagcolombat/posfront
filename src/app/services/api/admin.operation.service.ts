@@ -106,6 +106,11 @@ export class AdminOperationService {
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
+  employUpdate(url: string, credentials: Credentials) {
+    return this._http.post<any>(url + '/account/pos/' + credentials.username + '/changePassword', credentials)
+      .pipe(catchError(this.processHttpMsgService.handleError));
+  }
+
   employClock(url: string, credentials: Credentials, clockType = 1) {
     return this._http.post<any>(url + '/account/clock/' + clockType, credentials)
       .pipe(catchError(this.processHttpMsgService.handleError));

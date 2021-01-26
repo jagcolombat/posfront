@@ -604,6 +604,16 @@ export class OperationsService {
     }
   }
 
+  openDialogWithPagObs(dataArr: Array<any>, title: string, subTitle: string, label: string,
+                    detail?: string, subdetail?: string, noSelectionMsg?: string): Observable<any> {
+      return this.cashService.dialog.open(DialogInvoiceComponent,
+        {
+          width: '780px', height: '680px',
+          data: {invoice: dataArr, title: title, subtitle: subTitle, label: label, detail: detail, subdetail: subdetail},
+          disableClose: true
+        }).afterClosed();
+  }
+
   refund() {
     console.log('refund');
     this.currentOperation = FinancialOpEnum.REFUND;
@@ -1128,11 +1138,11 @@ export class OperationsService {
           }
         });*/
         // No get card number nor authorization code
-        const card = { number: '1111', authCode: '2222'};
+        const card = { number: '', authCode: ''};
         op === PaymentOpEnum.EBT_CARD ?
-          this.externalCardPaymentOp(amount.unitCost, card.number, card.authCode, op, client,
+          this.externalCardPaymentOp(amount.unitCost, card.number, card.authCode, '', client,
             (ebtType === EBTTypes.EBT ? PaymentMethodEnum.EBT_CARD : PaymentMethodEnum.EBT_CASH)) :
-          this.externalCardPaymentOp(amount.unitCost, card.number, card.authCode, 'VISA', client,
+          this.externalCardPaymentOp(amount.unitCost, card.number, card.authCode, '', client,
             (op === PaymentOpEnum.CREDIT_CARD) ? PaymentMethodEnum.CREDIT_CARD : PaymentMethodEnum.DEBIT_CARD);
       } else {
         /*this.cashService.openGenericInfo('Error', 'Can\'t complete external card payment operation '

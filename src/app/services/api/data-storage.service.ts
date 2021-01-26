@@ -333,6 +333,10 @@ export class DataStorageService {
     return this.adminOperationService.employClock(this.url, credentials, clockType);
   }
 
+  employUpdate(credential: Credentials) {
+    return this.adminOperationService.employUpdate(this.url, credential);
+  }
+
   // Clients
   clientSetup(client: ClientModel) {
     return this.clientService.setClient(this.url, client);

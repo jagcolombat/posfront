@@ -51,9 +51,6 @@ export class CashService {
 
   opDenyByUser(op: AdminOpEnum | FinancialOpEnum, userRol?: UserrolEnum ) {
     let opDeny = false;
-    if (this.config.sysConfig.companyType === CompanyType.ISLANDS) {
-      this.noLet4Supervisor.push(FinancialOpEnum.HOLD.toUpperCase());
-    }
     // Apply Discount for Supervisor by Configuration
     this.opDenyAllowByConfig(AdminOpEnum.APPLY_DISCOUNT, this.config.sysConfig.allowApplyDiscount);
     // Change Prices for Supervisor by Configuration
