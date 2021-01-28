@@ -1,17 +1,20 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {InvoiceService} from '../../../services/bussiness-logic/invoice.service';
 import {AgGridComponent} from '../../presentationals/ag-grid/ag-grid.component';
 import {Subscription} from 'rxjs';
 import {Router} from '@angular/router';
 import {ProductOrder} from '../../../models/product-order.model';
+import {Station} from '../../../models';
 
 @Component({
+  // tslint:disable-next-line:component-selector
   selector: 'invoice',
   templateUrl: './invoice.component.html',
   styleUrls: ['./invoice.component.scss']
 })
 export class InvoiceComponent implements OnInit, OnDestroy {
   @ViewChild('productstable') productstable: AgGridComponent;
+  @Input() station: Station;
   prodOrders: ProductOrder[];
   cashier: string;
   subtotal = 0;
@@ -42,7 +45,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
     /*(this.invoiceService.invoice)?
       this.invoiceService.setInvoice(this.invoiceService.invoice):*/
       this.cashier = this.invoiceService.getCashier();
-      this.invoiceService.getStationStatus();
+      // this.invoiceService.getStationStatus();
       this.invoiceService.createInvoice();
     // }
   }

@@ -1,33 +1,42 @@
-import {EventEmitter, Injectable, Input, Output} from '@angular/core';
-import {EOperationType} from "../../utils/operation.type.enum";
-import {DataStorageService} from "../api/data-storage.service";
-import {ConfigurationService} from "./configuration.service";
+import {EventEmitter, Injectable, Input, OnDestroy, Output} from '@angular/core';
+import {EOperationType} from '../../utils/operation.type.enum';
+import {DataStorageService} from '../api/data-storage.service';
+import {ConfigurationService} from './configuration.service';
 import {InformationType} from '../../utils/information-type.enum';
 import {Station} from '../../models';
 import {UtilsService} from './utils.service';
+import {WebsocketService} from '../api/websocket.service';
+import {Subscription} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class InitViewService {
+export class InitViewService implements OnDestroy {
   @Output() evUserScanned = new EventEmitter<string>();
   @Input() userScanned: string;
   station: Station;
+  sub: Subscription[] = new Array<Subscription>();
 
-  constructor(public config: ConfigurationService, private dataStore: DataStorageService, private utils: UtilsService) {
+  constructor(public config: ConfigurationService, private dataStore: DataStorageService, private utils: UtilsService, private ws: WebsocketService) {
+    this.sub.push(this.ws.evStationStatus.subscribe(data => this.wsStationStatus(data)));
   }
 
   cleanUserScanned() {
     this.userScanned = '';
   }
 
-  setOperation(typeOp: EOperationType, entity: string, desc: string){
+  setOperation(typeOp: EOperationType, entity: string, desc: string) {
     console.log(typeOp, entity, desc);
     const descrip = 'Operation: ' + EOperationType[typeOp] + ' | ' + desc;
     this.dataStore.registryOperation({operationType: typeOp, entityName: entity, description: descrip}).subscribe(
       next => console.log('InitViewService.setOperation', next),
       error1 => console.error('InitViewService.setOperation', error1)
     );
+  }
+
+  private wsStationStatus(data: Array<Station>) {
+    console.log('wsStationStatus', data);
+    this.getStatusByStation(data);
   }
 
   getStationStatus() {
@@ -41,6 +50,10 @@ export class InitViewService {
   }
 
   getStatusByStation(status: Array<Station>) {
-    this.dataStore.station = this.station = status.find((v, i) => +v.id === this.config.sysConfig.posNumber);
+    this.station = status.find((v, i) => +v.id === this.config.sysConfig.posNumber);
+  }
+
+  ngOnDestroy() {
+    this.sub.map(sub => sub.unsubscribe());
   }
 }

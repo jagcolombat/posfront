@@ -44,7 +44,6 @@ import {StationService} from './station.service';
 export class DataStorageService {
 
   disableOp = false;
-  station: Station;
 
   private url = baseURL;
 

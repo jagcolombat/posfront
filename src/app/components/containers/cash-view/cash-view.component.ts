@@ -12,7 +12,6 @@ import {InformationType} from '../../../utils/information-type.enum';
 import {EOperationType} from '../../../utils/operation.type.enum';
 import {ProductOrderService} from '../../../services/bussiness-logic/product-order.service';
 import {InvoiceStatus} from '../../../utils/invoice-status.enum';
-import {Station} from '../../../models/station.model';
 
 @Component({
   selector: 'app-cash-view',
@@ -34,13 +33,14 @@ export class CashViewComponent implements OnInit, OnDestroy {
     this.sub.push(this.ws.evScanner.subscribe(data => this.inputScanner(data)));
     this.sub.push(this.ws.evScannerPaidClose.subscribe(data => this.wsCloseConn(data)));
     this.sub.push(this.ws.evClientClose.subscribe(data => this.wsCloseClientConn(data)));
-    this.sub.push(this.ws.evStationStatus.subscribe(data => this.wsStationStatus(data)));
   }
 
   ngOnInit() {
     // this.ws.start();
     // this.invoiceService.cashService.resetEnableState();
     // if(this.invoiceService.authService.token) this.invoiceService.cashService.setSystemConfig();
+    console.log('cashview init');
+    this.initService.getStationStatus();
   }
 
   handleKeyboardEvent(ev: KeyboardEvent) {
@@ -164,10 +164,5 @@ export class CashViewComponent implements OnInit, OnDestroy {
           this.dialogWSCloseConn = null;
         }
       });
-  }
-
-  private wsStationStatus(data: Array<Station>) {
-    console.log('wsStationStatus', data);
-    this.invoiceService.cashService.setStationStatus(data);
   }
 }

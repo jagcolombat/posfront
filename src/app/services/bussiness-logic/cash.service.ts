@@ -261,7 +261,7 @@ export class CashService {
     return (this.dialog.openDialogs && this.dialog.openDialogs.length);
   }
 
-  getStationStatus(): Observable<Array<Station>> {
+  /*getStationStatus(): Observable<Array<Station>> {
     return this.dataStorage.getStationsStatus();
   }
 
@@ -272,5 +272,5 @@ export class CashService {
 
   getStatusByStation() {
     this.station = this.stationStatus.find((v, i) => +v.id === this.config.sysConfig.posNumber);
-  }
+  }*/
 }
