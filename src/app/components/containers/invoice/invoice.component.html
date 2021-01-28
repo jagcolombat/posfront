@@ -5,7 +5,7 @@
   <info-pos title="Products" *ngIf="invoiceService.invoice?.productOrders.length"
             [value]="invoiceService.invoice?.productOrders.length" fxFlex="10" class="title-header"></info-pos>
   <input-calculator [data]="invoiceService.digits" fxFlex="50" class="title-header"></input-calculator>
-  <app-station-status [status]="invoiceService.cashService.station?.status" fxFlex="5" class="title-header"></app-station-status>
+  <app-station-status [status]="station?.status" fxFlex="5" class="title-header"></app-station-status>
 </div>
 
 <ag-grid #productstable class="container" fxFlex="100"></ag-grid>

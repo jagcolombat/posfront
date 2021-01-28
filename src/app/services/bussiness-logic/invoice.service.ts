@@ -432,14 +432,4 @@ export class InvoiceService {
     const allowStatus = [InvoiceStatus.IN_PROGRESS, InvoiceStatus.CREATED, InvoiceStatus.IN_HOLD]
     return (allowStatus.includes(this.invoice.status)) ? true : false;
   }
-
-  getStationStatus() {
-    this.cashService.getStationStatus().subscribe(
-      next => {
-        console.log(next);
-        this.cashService.setStationStatus(next);
-      },
-      error => this.cashService.openGenericInfo(InformationType.ERROR, error)
-    );
-  }
 }

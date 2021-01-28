@@ -51,9 +51,6 @@ export class CashService {
 
   opDenyByUser(op: AdminOpEnum | FinancialOpEnum, userRol?: UserrolEnum ) {
     let opDeny = false;
-    if (this.config.sysConfig.companyType === CompanyType.ISLANDS) {
-      this.noLet4Supervisor.push(FinancialOpEnum.HOLD.toUpperCase());
-    }
     // Apply Discount for Supervisor by Configuration
     this.opDenyAllowByConfig(AdminOpEnum.APPLY_DISCOUNT, this.config.sysConfig.allowApplyDiscount);
     // Change Prices for Supervisor by Configuration
@@ -264,7 +261,7 @@ export class CashService {
     return (this.dialog.openDialogs && this.dialog.openDialogs.length);
   }
 
-  getStationStatus(): Observable<Array<Station>> {
+  /*getStationStatus(): Observable<Array<Station>> {
     return this.dataStorage.getStationsStatus();
   }
 
@@ -275,5 +272,5 @@ export class CashService {
 
   getStatusByStation() {
     this.station = this.stationStatus.find((v, i) => +v.id === this.config.sysConfig.posNumber);
-  }
+  }*/
 }

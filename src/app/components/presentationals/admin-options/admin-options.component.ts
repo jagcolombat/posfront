@@ -108,7 +108,8 @@ export class AdminOptionsComponent implements OnInit {
           this.adminOpService.dayCloseType();
           break;
         case AdminOpEnum.EMPLOYEE_SETUP.toUpperCase():
-          this.adminOpService.employSetup();
+          // this.adminOpService.employSetup();
+          this.adminOpService.employeeAction();
           break;
         case AdminOpEnum.CHANGE_PRICES.toUpperCase():
           this.adminOpService.changePrice();
