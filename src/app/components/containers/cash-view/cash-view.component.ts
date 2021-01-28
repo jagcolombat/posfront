@@ -29,7 +29,7 @@ export class CashViewComponent implements OnInit, OnDestroy {
 
   constructor(private invoiceService: InvoiceService, private operationService: OperationsService,
               private adminOpService: AdminOptionsService, private ws: WebsocketService,
-              private initService: InitViewService, public productOrderService: ProductOrderService) {
+              public initService: InitViewService, public productOrderService: ProductOrderService) {
     this.sub.push(this.ws.evScanner.subscribe(data => this.inputScanner(data)));
     this.sub.push(this.ws.evScannerPaidClose.subscribe(data => this.wsCloseConn(data)));
     this.sub.push(this.ws.evClientClose.subscribe(data => this.wsCloseClientConn(data)));
