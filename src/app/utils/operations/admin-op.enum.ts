@@ -28,5 +28,6 @@ export enum AdminOpEnum {
   GIFT_CARD = 'Gift Card',
   TIME_WORKED = 'Time Worked',
   UPDATE_PASS = 'Update Password',
-  UPDATE_CARD = 'Update Card'
+  UPDATE_CARD = 'Update Card',
+  DELETE_ACCOUNT = 'Delete Account'
 }

@@ -111,6 +111,10 @@ export class AdminOperationService {
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
+  employDelete(url: string, id: string) {
+    return this._http.delete<any>(url + '/account/pos/' + id).pipe(catchError(this.processHttpMsgService.handleError));
+  }
+
   employClock(url: string, credentials: Credentials, clockType = 1) {
     return this._http.post<any>(url + '/account/clock/' + clockType, credentials)
       .pipe(catchError(this.processHttpMsgService.handleError));

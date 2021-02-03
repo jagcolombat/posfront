@@ -336,6 +336,10 @@ export class DataStorageService {
     return this.adminOperationService.employUpdate(this.url, credential);
   }
 
+  employDelete(employId: string) {
+    return this.adminOperationService.employDelete(this.url, employId);
+  }
+
   // Clients
   clientSetup(client: ClientModel) {
     return this.clientService.setClient(this.url, client);

@@ -562,10 +562,12 @@ export class AdminOptionsService {
 
   employeeAction() {
     const adTypes = new Array<any>(
-{value: EmployActions.CREATE, text: 'CREATE'}, {value: EmployActions.PASS, text: 'UPDATE PASS'}, {value: EmployActions.CARD, text: 'UPDATE CARD'});
+{value: EmployActions.CREATE, text: 'CREATE'}/*, {value: EmployActions.PASS, text: 'UPDATE NAME'},
+      {value: EmployActions.CARD, text: 'UPDATE POSITION'}*/, {value: EmployActions.PASS, text: 'UPDATE PASS'},
+      {value: EmployActions.CARD, text: 'UPDATE CARD'}, {value: EmployActions.DELETE, text: 'DELETE'});
     this.cashService.dialog.open(DialogDeliveryComponent,
       {
-        width: '600px', height: '340px', data: {name: 'Employees Actions', label: 'Select an action', arr: adTypes},
+        width: '600px', height: '360px', data: {name: 'Employees Actions', label: 'Select an action', arr: adTypes},
         disableClose: true
       })
       .afterClosed().subscribe(next => {
@@ -580,13 +582,27 @@ export class AdminOptionsService {
         case EmployActions.CARD:
           this.updatePassword(next);
           break;
+        /*case EmployActions.NAME:
+          this.updateName(next);
+          break;
+        case EmployActions.POSITION:
+          this.updatePosition(next);
+          break;*/
+        case EmployActions.DELETE:
+          this.deleteEmploy(next);
+          break;
       }
     });
+  }
+
+  noShowAdminUser(next) {
+    return next.splice(next.findIndex((v, i) => v.userName === 'Admin'), 1);
   }
 
   updatePassword(action: EmployActions) {
     this.dataStorage.getApplicationUsers().subscribe(next =>  {
       console.log('getEmployees', next);
+      if (this.invoiceService.cashier !== 'Admin') { this.noShowAdminUser(next); }
       this.operationService.openDialogWithPagObs(next, 'Employees',
         'Select a employee:', '', 'userName' ).subscribe(
           employee => {
@@ -600,6 +616,70 @@ export class AdminOptionsService {
     }, error1 => {
       this.cashService.openGenericInfo('Error', 'Can\'t get the employees');
     });
+  }
+
+  deleteEmploy(action: EmployActions) {
+    this.dataStorage.getApplicationUsers().subscribe(next =>  {
+      console.log('getEmployees', next);
+      if (this.invoiceService.cashier !== 'Admin') { this.noShowAdminUser(next); }
+      this.operationService.openDialogWithPagObs(next, 'Employees',
+        'Select a employee:', '', 'userName' ).subscribe(
+        employee => {
+          console.log('deleteEmploy', employee);
+          if (employee) {
+            this.deleteEmployOp(employee);
+          }
+        }
+      );
+    }, error1 => {
+      this.cashService.openGenericInfo('Error', 'Can\'t get the employees');
+    });
+  }
+
+  /*updateName(action: EmployActions) {
+    this.dataStorage.getApplicationUsers().subscribe(next =>  {
+      console.log('getEmployees', next);
+      if (this.invoiceService.cashier !== 'Admin') { this.noShowAdminUser(next); }
+      this.operationService.openDialogWithPagObs(next, 'Employees',
+        'Select a employee:', '', 'userName' ).subscribe(
+        employee => {
+          console.log('deleteEmploy', employee);
+          if (employee) {
+            this.deleteEmployOp(employee.id);
+          }
+        }
+      );
+    }, error1 => {
+      this.cashService.openGenericInfo('Error', 'Can\'t get the employees');
+    });
+  }*/
+
+  /*updatePosition(action: EmployActions) {
+    this.dataStorage.getApplicationUsers().subscribe(next =>  {
+      console.log('getEmployees', next);
+      if (this.invoiceService.cashier !== 'Admin') { this.noShowAdminUser(next); }
+      this.operationService.openDialogWithPagObs(next, 'Employees',
+        'Select a employee:', '', 'userName' ).subscribe(
+        employee => {
+          console.log('deleteEmploy', employee);
+          if (employee) {
+            this.deleteEmployOp(employee.id);
+          }
+        }
+      );
+    }, error1 => {
+      this.cashService.openGenericInfo('Error', 'Can\'t get the employees');
+    });
+  }*/
+
+  deleteEmployOp(emp: any) {
+    this.dataStorage.employDelete(emp.id).subscribe(
+      next => {
+        console.log(AdminOpEnum.DELETE_ACCOUNT, next);
+        this.cashService.openGenericInfo(InformationType.INFO, 'The employee ' + emp.userName + ' was deleted.');
+      },
+      err => { this.cashService.openGenericInfo('Error', err); }
+    );
   }
 
   getPassword(credential: Credentials) {
