@@ -1,17 +1,14 @@
-import {Component, OnInit, Inject} from "@angular/core";
+import {Component, OnInit, Inject} from '@angular/core';
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 
 @Component({
   selector: 'app-generic-info-modal',
   templateUrl: './generic-info-modal.component.html',
-  styleUrls: ['./generic-info-modal.component.scss']/*,
-  host: {
-    '(document:keypress)': 'handleKeyboardEvent($event)'
-  }*/
+  styleUrls: ['./generic-info-modal.component.scss']
 })
 export class GenericInfoModalComponent implements OnInit {
 
-  passwordScan='';
+  passwordScan = '';
 
   constructor( public dialogRef: MatDialogRef<GenericInfoModalComponent>,
                @Inject(MAT_DIALOG_DATA) public data: any) {}
@@ -27,7 +24,7 @@ export class GenericInfoModalComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  close(){
+  close() {
     return (this.data.disableClose === undefined || this.data.disableClose === false) ? true: false;
   }
 

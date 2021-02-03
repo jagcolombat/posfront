@@ -1,4 +1,4 @@
-<div oncontextmenu="return false">
+<div class="container" oncontextmenu="return false">
   <mat-toolbar color="primary">
     {{ title }}
     <span class="flex-spacer"></span>
@@ -7,5 +7,8 @@
   <div mat-dialog-content>
     <h2>{{ subtitle }}</h2>
     <order-info-details [details]="details"></order-info-details>
+  </div>
+  <div mat-dialog-actions *ngIf="data.account">
+    <button mat-raised-button (click)="onAction()">Print</button>
   </div>
 </div>

@@ -40,6 +40,7 @@ import {UserrolEnum} from '../../utils/userrol.enum';
 import {PaymentMethodEnum} from '../../utils/operations/payment-method.enum';
 import {InitViewService} from './init-view.service';
 import {ScanOpEnum} from '../../utils/operations/scanner-op.enum';
+import {ClientModel} from '../../models/client.model';
 
 @Injectable({
   providedIn: 'root'
@@ -1707,13 +1708,24 @@ export class OperationsService {
     this.clientService.getClients().subscribe(
       clients => {
         console.log(CustomerOpEnum.ACCT_BALANCE, clients);
-        this.openDialogWithPag(clients, (c) => this.printBalance(c.id), 'Clients', 'Select a client:',
+        this.openDialogWithPag(clients, (c) => this.showAccountInfo(c), 'Clients', 'Select a client:',
           '', 'name', 'balance' );
       },
       error1 => {
         this.cashService.openGenericInfo(InformationType.INFO, 'Can\'t get the clients');
       }, () => this.currentOperation = '');
+  }
 
+  showAccountInfo(account: ClientModel) {
+    const client = { client: { name: account['name'], address: account.address, telephone: account['telephone']}};
+    const clientAccount = { balance: account.balance, credit: account.credit, creditLimit: account.creditLimit};
+    this.cashService.dialog.open(OrderInfoComponent,
+      { width: '480px', height: '450px', data: {title: CustomerOpEnum.ACCT_BALANCE, subtitle: account.accountNumber,
+          type: client, account: clientAccount}, disableClose: true }).afterClosed().subscribe(
+            next => {
+              if (next.print) { this.printBalance(account.id); }
+            }
+    );
   }
 
   private showBalance(c: any) {
@@ -1734,7 +1746,7 @@ export class OperationsService {
     );
   }
 
-  acctCharge() {
+   acctCharge() {
     console.log(CustomerOpEnum.ACCT_CHARGE);
     this.clientService.getClients().subscribe(
       clients => {
