@@ -562,8 +562,8 @@ export class AdminOptionsService {
 
   employeeAction() {
     const adTypes = new Array<any>(
-{value: EmployActions.CREATE, text: 'CREATE'}/*, {value: EmployActions.PASS, text: 'UPDATE NAME'},
-      {value: EmployActions.CARD, text: 'UPDATE POSITION'}*/, {value: EmployActions.PASS, text: 'UPDATE PASS'},
+{value: EmployActions.CREATE, text: 'CREATE'}, {value: EmployActions.NAME, text: 'UPDATE NAME'},
+      {value: EmployActions.POSITION, text: 'UPDATE POSITION'}, {value: EmployActions.PASS, text: 'UPDATE PASS'},
       {value: EmployActions.CARD, text: 'UPDATE CARD'}, {value: EmployActions.DELETE, text: 'DELETE'});
     this.cashService.dialog.open(DialogDeliveryComponent,
       {
@@ -582,12 +582,12 @@ export class AdminOptionsService {
         case EmployActions.CARD:
           this.updatePassword(next);
           break;
-        /*case EmployActions.NAME:
-          this.updateName(next);
+        case EmployActions.NAME:
+          this.updateNamePosition(next);
           break;
         case EmployActions.POSITION:
-          this.updatePosition(next);
-          break;*/
+          this.updateNamePosition(next);
+          break;
         case EmployActions.DELETE:
           this.deleteEmploy(next);
           break;
@@ -636,41 +636,25 @@ export class AdminOptionsService {
     });
   }
 
-  /*updateName(action: EmployActions) {
+  updateNamePosition(action: EmployActions) {
     this.dataStorage.getApplicationUsers().subscribe(next =>  {
       console.log('getEmployees', next);
       if (this.invoiceService.cashier !== 'Admin') { this.noShowAdminUser(next); }
       this.operationService.openDialogWithPagObs(next, 'Employees',
         'Select a employee:', '', 'userName' ).subscribe(
         employee => {
-          console.log('deleteEmploy', employee);
+          console.log('updateNamePosition', employee);
           if (employee) {
-            this.deleteEmployOp(employee.id);
+            const credential = new CredentialsModel(employee.userName);
+            credential.id = employee.id;
+            (action === EmployActions.NAME) ? this.getName(credential) : this.getPosition(credential);
           }
         }
       );
     }, error1 => {
       this.cashService.openGenericInfo('Error', 'Can\'t get the employees');
     });
-  }*/
-
-  /*updatePosition(action: EmployActions) {
-    this.dataStorage.getApplicationUsers().subscribe(next =>  {
-      console.log('getEmployees', next);
-      if (this.invoiceService.cashier !== 'Admin') { this.noShowAdminUser(next); }
-      this.operationService.openDialogWithPagObs(next, 'Employees',
-        'Select a employee:', '', 'userName' ).subscribe(
-        employee => {
-          console.log('deleteEmploy', employee);
-          if (employee) {
-            this.deleteEmployOp(employee.id);
-          }
-        }
-      );
-    }, error1 => {
-      this.cashService.openGenericInfo('Error', 'Can\'t get the employees');
-    });
-  }*/
+  }
 
   deleteEmployOp(emp: any) {
     this.dataStorage.employDelete(emp.id).subscribe(
@@ -688,7 +672,7 @@ export class AdminOptionsService {
         code => {
           if (code) {
             credential.newPassword = code.number;
-            this.dataStorage.employUpdate(credential).subscribe(
+            this.dataStorage.employUpdatePass(credential).subscribe(
               next => {
                 console.log(AdminOpEnum.UPDATE_PASS, next);
                 this.cashService.openGenericInfo(InformationType.INFO, 'The employee ' + next.userName + ' was updated.');
@@ -708,7 +692,7 @@ export class AdminOptionsService {
           credential.newPasswordByCard = (next) ? next.pass : this.initService.userScanned;
           this.initService.cleanUserScanned();
           if (credential.newPasswordByCard) {
-            this.dataStorage.employUpdate(credential).subscribe(
+            this.dataStorage.employUpdatePass(credential).subscribe(
         e => {
               console.log(AdminOpEnum.UPDATE_CARD, e);
               this.cashService.openGenericInfo(InformationType.INFO, 'The employee ' + e.userName + ' was updated.');
@@ -716,6 +700,44 @@ export class AdminOptionsService {
           }
         }, err => { console.error(err); }
       );
+  }
+
+  getName(credential: Credentials) {
+    this.operationService.getField(AdminOpEnum.EMPLOYEE_SETUP, 'New Name', EFieldType.NAME)
+      .subscribe(
+        name => {
+          console.log('getName', name);
+          if (name) {
+            credential.username = name.text;
+            this.dataStorage.employUpdate(credential).subscribe(
+              next => {
+                console.log(AdminOpEnum.UPDATE_NAME, next);
+                this.cashService.openGenericInfo(InformationType.INFO, 'The name of employee was updated.');
+              },
+              err => { this.cashService.openGenericInfo('Error', err); }
+            );
+          }
+        });
+  }
+
+  getPosition(credential: Credentials) {
+    this.getUsersPosition().subscribe(
+      positions => {
+        console.log(AdminOpEnum.EMPLOYEE_SETUP, positions);
+        this.showUsersPosition(<IPositionModel[]> positions).subscribe(positionSelected => {
+          console.log('getPosition', positionSelected);
+          if (positionSelected) {
+            credential.userPosition = positionSelected.id;
+            this.dataStorage.employUpdate(credential).subscribe(
+              next => {
+                console.log(AdminOpEnum.UPDATE_POSITION, next);
+                this.cashService.openGenericInfo(InformationType.INFO, 'The position of employee was updated.');
+              },
+              err => { this.cashService.openGenericInfo('Error', err); }
+            );
+          }
+        });
+      });
   }
 
   employSetup() {

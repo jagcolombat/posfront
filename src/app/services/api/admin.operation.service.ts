@@ -107,6 +107,11 @@ export class AdminOperationService {
   }
 
   employUpdate(url: string, credentials: Credentials) {
+    return this._http.put<any>(url + '/account/pos/' + credentials.id, credentials)
+      .pipe(catchError(this.processHttpMsgService.handleError));
+  }
+
+  employUpdatePass(url: string, credentials: Credentials) {
     return this._http.post<any>(url + '/account/pos/' + credentials.username + '/changePassword', credentials)
       .pipe(catchError(this.processHttpMsgService.handleError));
   }

@@ -29,5 +29,7 @@ export enum AdminOpEnum {
   TIME_WORKED = 'Time Worked',
   UPDATE_PASS = 'Update Password',
   UPDATE_CARD = 'Update Card',
-  DELETE_ACCOUNT = 'Delete Account'
+  DELETE_ACCOUNT = 'Delete Account',
+  UPDATE_NAME = 'Update Account Name',
+  UPDATE_POSITION = 'Update Account Position'
 }
