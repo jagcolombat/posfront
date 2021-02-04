@@ -727,7 +727,7 @@ export class AdminOptionsService {
         this.showUsersPosition(<IPositionModel[]> positions).subscribe(positionSelected => {
           console.log('getPosition', positionSelected);
           if (positionSelected) {
-            credential.userPosition = positionSelected.id;
+            credential.userPositionId = positionSelected.id;
             this.dataStorage.employUpdate(credential).subscribe(
               next => {
                 console.log(AdminOpEnum.UPDATE_POSITION, next);

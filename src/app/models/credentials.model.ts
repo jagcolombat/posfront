@@ -6,7 +6,7 @@ export interface Credentials {
   newPassword?: string;
   newPasswordByCard?: string;
   id?: string;
-  userPosition?: string;
+  userPositionId?: string;
 }
 
 export class CredentialsModel implements Credentials {
