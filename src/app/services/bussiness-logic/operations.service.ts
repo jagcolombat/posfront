@@ -698,6 +698,7 @@ export class OperationsService {
     this.authService.token = this.authService.initialLogin = undefined;
     this.cashService.dialog.closeAll();
     this.invoiceService.resetDigits();
+    this.invoiceService.removeInvoice();
     this.cashService.resetEnableState();
     this.cashService.evResetStock.emit();
     this.router.navigateByUrl('/init');

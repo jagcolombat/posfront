@@ -250,6 +250,12 @@ export class InvoiceService {
     this.qty = 1;
   }
 
+  removeInvoice() {
+    console.log('removeInvoice');
+    this.invoice = null;
+    this.receiptNumber = '';
+  }
+
   cancelInvoice(): Observable<Invoice> {
     // this.setUserToInvoice();
     return this.dataStorage.changeInvoiceToVoid(this.invoice)
