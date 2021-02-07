@@ -24,7 +24,7 @@ export class UtilsService {
     });
   }
   /** Check if there is any dialog open  **/
-  openDialogs(){
+  openDialogs() {
     return (this.dialog.openDialogs && this.dialog.openDialogs.length);
   }
 

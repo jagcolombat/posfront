@@ -46,7 +46,7 @@ export class InvoiceComponent implements OnInit, OnDestroy {
       this.invoiceService.setInvoice(this.invoiceService.invoice):*/
       this.cashier = this.invoiceService.getCashier();
       // this.invoiceService.getStationStatus();
-      this.invoiceService.createInvoice();
+      if (this.invoiceService.authService.token) { this.invoiceService.createInvoice(); }
     // }
   }
 

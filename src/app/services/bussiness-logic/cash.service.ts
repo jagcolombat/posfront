@@ -14,6 +14,7 @@ import {PAXConnTypeEnum} from '../../utils/pax-conn-type.enum';
 import {ConfigurationService} from './configuration.service';
 import {Station} from '../../models/station.model';
 import {Observable} from 'rxjs';
+import {EOperationType} from '../../utils/operation.type.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -118,7 +119,7 @@ export class CashService {
     this.disabledInvOp = [false, true, true, true];
     this.disabledOtherOp = [true, true, true, true, true, false];
     this.disabledReportsAdminOp = true;
-    this.disabledFinanceAdminOp = [false, true, true, true, true, true];
+    this.disabledFinanceAdminOp = [true, true, true, true, true, true];
     this.disabledInvoiceAdminOp = [true, false];
     this.disabledOtherAdminOp = true;
     this.disabledAdminOp = true;
@@ -261,16 +262,10 @@ export class CashService {
     return (this.dialog.openDialogs && this.dialog.openDialogs.length);
   }
 
-  /*getStationStatus(): Observable<Array<Station>> {
-    return this.dataStorage.getStationsStatus();
+  setOperation(typeOp: EOperationType, entity: string, desc: string) {
+    this.dataStorage.registryOperation({operationType: typeOp, entityName: entity, description: desc}).subscribe(
+      next => console.log('OperationService.setOperation', next),
+      error1 => console.error('OperationService.setOperation', error1)
+    );
   }
-
-  setStationStatus(status: Array<Station>) {
-    this.stationStatus = status;
-    this.getStatusByStation();
-  }
-
-  getStatusByStation() {
-    this.station = this.stationStatus.find((v, i) => +v.id === this.config.sysConfig.posNumber);
-  }*/
 }

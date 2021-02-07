@@ -43,7 +43,7 @@ export class StockService {
     return this.dataStore.getProductsByUpc(filter, EOperationType.List, pageNumber, pageSize);
   }
 
-  setOperation(typeOp: EOperationType, entity: string, desc: string){
+  setOperation(typeOp: EOperationType, entity: string, desc: string) {
     this.dataStore.registryOperation({operationType: typeOp, entityName: entity, description: desc}).subscribe(
       next => console.log('OperationService.setOperation', next),
       error1 => console.error('OperationService.setOperation', error1)

@@ -29,7 +29,7 @@ export class ClientViewComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.initService.setOperation(EOperationType.InitCustomerScreen, 'Client View', 'Initialization');
+    // this.initService.setOperation(EOperationType.InitCustomerScreen, 'Client View', 'Initialization');
     this.sub.push(this.ws.evInvoiceUpdated.subscribe(data => this.invoiceUpdated(data)));
     this.sub.push(this.ws.evOperation.subscribe(data => this.getOperation(data)));
     this.sub.push(this.ws.evReconnect.subscribe(data => this.wsReconnet(data)));
@@ -45,18 +45,18 @@ export class ClientViewComponent implements OnInit, OnDestroy {
       + data.entity.id);
     this.logged = true;
     this.invoiceService.cashier = data.entity.applicationUserName;
-    //data.entity.addProduct = this.addProduct = !this.addProduct;
+    // data.entity.addProduct = this.addProduct = !this.addProduct;
     (data.entity.addProduct && data.entity.productOrders.length > 0) ?
-      this.addPO2Invoice(data.entity): this.invoiceService.setInvoice(data.entity);
-    //Payment return
-    if(data.entity.status !== InvoiceStatus.IN_PROGRESS && (data.entity.change > 0 || data.entity.change < 0)){
+      this.addPO2Invoice(data.entity) : this.invoiceService.setInvoice(data.entity);
+    // Payment return
+    if (data.entity.status !== InvoiceStatus.IN_PROGRESS && (data.entity.change > 0 || data.entity.change < 0)) {
       this.showPaymentReturn(data.entity.change);
     } else {
-      if(this.modalPaymentReturn) this.modalPaymentReturn.close();
+      if (this.modalPaymentReturn) { this.modalPaymentReturn.close(); }
     }
   }
 
-  private showPaymentReturn(valueToReturn){
+  private showPaymentReturn(valueToReturn) {
     console.log('showPaymentReturn', valueToReturn);
     this.modalPaymentReturn = this.invoiceService.cashService.dialog.open(CashPaymentComponent,
       {
@@ -65,12 +65,12 @@ export class ClientViewComponent implements OnInit, OnDestroy {
   }
 
   private addPO2Invoice(inv: Invoice) {
-    !this.invoiceService.invoice ? this.invoiceService.setInvoice(inv): this.invoiceService.addPO2Invoice(inv);
+    !this.invoiceService.invoice ? this.invoiceService.setInvoice(inv) : this.invoiceService.addPO2Invoice(inv);
   }
 
   private getOperation(data: any) {
     console.log('getOperation', data);
-    if(data.operationType === EOperationType.Disconnect){
+    if (data.operationType === EOperationType.Disconnect) {
       this.logged = false;
       this.invoiceService.cashService.dialog.closeAll();
     }
@@ -78,16 +78,16 @@ export class ClientViewComponent implements OnInit, OnDestroy {
 
   private wsReconnet(data?: boolean) {
     console.log('wsReconnet', this.ws.isConnected());
-    this.initService.setOperation(EOperationType.ReconnectCustomerScreen, 'Client View', 'Reconnect: ' + this.ws.isConnected()+'');
-    if(!this.ws.isConnected()){
+    this.initService.setOperation(EOperationType.ReconnectCustomerScreen, 'Client View', 'Reconnect: ' + this.ws.isConnected() + '');
+    if (!this.ws.isConnected()) {
       this.ws.start();
     }
   }
 
   private wsCloseClientConn(data: any) {
-    const ref = data ? this.snackBar.open(` Trying reconnect in ${data/1000} sec`, '', {duration: data}):
+    const ref = data ? this.snackBar.open(` Trying reconnect in ${data / 1000} sec`, '', {duration: data}) :
       this.snackBar.open(` Please restart app`, 'Restart');
-    ref.onAction().subscribe(()=> location.reload(true));
+    ref.onAction().subscribe(() => location.reload(true));
 
   }
 }

@@ -20,15 +20,15 @@ export class OperationsComponent implements OnInit {
 
   @Input() financeOperations = [FinancialOpEnum.MANAGER, OtherOpEnum.PRINT_LAST, AdminOpEnum.EBT_INQUIRY, FinancialOpEnum.LOGOUT];
   @Input() financeColor = 'green';
-  @Input() financeDisabled: boolean | boolean []= this.operationService.cashService.disabledFinOp;
+  @Input() financeDisabled: boolean | boolean [] = this.operationService.cashService.disabledFinOp;
 
   @Input() invoiceOperations = [InvioceOpEnum.CLEAR, InvioceOpEnum.PLU, InvioceOpEnum.PRICE, InvioceOpEnum.VOID];
   @Input() invoiceColor = ['red', 'green', 'green', 'red'];
-  @Input() invoiceDisabled : boolean | boolean []= this.operationService.cashService.disabledInvOp;
+  @Input() invoiceDisabled: boolean | boolean [] = this.operationService.cashService.disabledInvOp;
 
   @Input() totalsOperations = [TotalsOpEnum.FS_SUBTOTAL, TotalsOpEnum.SUBTOTAL];
   @Input() totalColor = ['yellow', 'red'];
-  @Input() totalDisabled: boolean | boolean []= this.operationService.cashService.disabledTotalOp;
+  @Input() totalDisabled: boolean | boolean [] = this.operationService.cashService.disabledTotalOp;
 
   @Input() numpadOption = '@/FOR';
 

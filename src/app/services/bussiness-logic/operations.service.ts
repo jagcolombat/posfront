@@ -906,8 +906,6 @@ export class OperationsService {
 
   reprint() {
     console.log('reprint');
-    this.currentOperation = FinancialOpEnum.REPRINT;
-
     if (this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS) {
       if (this.invoiceService.digits) {
         this.getCheckById(EOperationType.Reprint, i => {
@@ -929,6 +927,7 @@ export class OperationsService {
   }
 
   private print (i: Invoice) {
+    this.currentOperation = FinancialOpEnum.REPRINT;
     this.invoiceService.print(i).subscribe(
       data => this.cashService.openGenericInfo('Print', 'Print is finish'),
       err => this.cashService.openGenericInfo('Error', 'Can\'t complete print operation'));

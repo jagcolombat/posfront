@@ -1,28 +1,29 @@
 import {EventEmitter, Injectable, Output} from '@angular/core';
-import {AuthService} from "../api/auth.service";
-import {ProductOrder} from "../../models/product-order.model";
-import {DataStorageService} from "../api/data-storage.service";
-import {BehaviorSubject, Observable} from "rxjs";
-import {CardManualPayment, CreditCardModel, Product, SwipeMethod} from "../../models";
-import {InvoiceStatus} from "../../utils/invoice-status.enum";
-import {Invoice} from "../../models/invoice.model";
-import {map} from "rxjs/operators";
-import {EOperationType} from "../../utils/operation.type.enum";
-import {CashPaymentModel} from "../../models/cash-payment.model";
-import {CashService} from "./cash.service";
-import {PaidOut} from "../../models/paid-out.model";
-import {PaymentStatus} from "../../utils/payment-status.enum";
-import {Client, Order, OrderType} from "../../models/order.model";
-import {ETXType} from "../../utils/delivery.enum";
-import {Table} from "../../models/table.model";
+import {AuthService} from '../api/auth.service';
+import {ProductOrder} from '../../models/product-order.model';
+import {DataStorageService} from '../api/data-storage.service';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
+import {CardManualPayment, CreditCardModel, Product, SwipeMethod} from '../../models';
+import {InvoiceStatus} from '../../utils/invoice-status.enum';
+import {Invoice} from '../../models/invoice.model';
+import {map} from 'rxjs/operators';
+import {EOperationType} from '../../utils/operation.type.enum';
+import {CashPaymentModel} from '../../models/cash-payment.model';
+import {CashService} from './cash.service';
+import {PaidOut} from '../../models/paid-out.model';
+import {PaymentStatus} from '../../utils/payment-status.enum';
+import {Client, Order, OrderType} from '../../models/order.model';
+import {ETXType} from '../../utils/delivery.enum';
+import {Table} from '../../models/table.model';
 import {PaymentOpEnum} from 'src/app/utils/operations';
-import {EApplyDiscount} from "../../utils/apply-discount.enum";
-import {CardTypes} from "../../utils/card-payment-types.enum";
-import {PaymentMethodEnum} from "../../utils/operations/payment-method.enum";
-import {CheckPayment} from "../../models/check.model";
-import {TransferPayment} from "../../models/transfer.model";
-import {InformationType} from "../../utils/information-type.enum";
-import {GiftCardPayment} from "../../models/gift-card.model";
+import {EApplyDiscount} from '../../utils/apply-discount.enum';
+import {CardTypes} from '../../utils/card-payment-types.enum';
+import {PaymentMethodEnum} from '../../utils/operations/payment-method.enum';
+import {CheckPayment} from '../../models/check.model';
+import {TransferPayment} from '../../models/transfer.model';
+import {InformationType} from '../../utils/information-type.enum';
+import {GiftCardPayment} from '../../models/gift-card.model';
+import {MatDialogRef} from '@angular/material';
 
 @Injectable({
   providedIn: 'root'
@@ -67,8 +68,13 @@ export class InvoiceService {
 
   createInvoice() {
       this.resetDigits();
-      this.dataStorage.createInvoice().subscribe(next => {
-        console.info('createCheck successfull', next);
+      const opMsg = 'create invoice';
+      const dialogInfoEvents = this.cashService.openGenericInfo(InformationType.INFO, 'Creating invoice...',
+        undefined, undefined, true);
+      const $creating = this.dataStorage.createInvoice().subscribe(next => {
+        console.log('createCheck successfull', next);
+        dialogInfoEvents.close();
+        clearTimeout(timeOut);
         this.receiptNumber = next.receiptNumber;
         this.invoice = <Invoice> next;
         this.isReviewed = false;
@@ -76,24 +82,42 @@ export class InvoiceService {
         this.lastProdAdd = null;
         this.setTotal();
         this.evCreateInvoice.next(true);
+        this.cashService.setOperation(EOperationType.CreateInvoice, 'Invoice', 'Created invoice ' + next.receiptNumber);
       }, err => {
         console.error('createCheck failed');
+        dialogInfoEvents.close();
+        clearTimeout(timeOut);
         this.cashService.openGenericInfo('Error', err).afterClosed().subscribe(
           next => {
             this.evCreateInvoice.next(false);
-          }
-        );
+          });
+        this.cashService.setOperation(EOperationType.CreateInvoice, 'Invoice', 'Create invoice failed');
       });
+
+      const timeOut = this.operationTimeOut($creating, dialogInfoEvents, opMsg);
   }
 
-  addProductOrder(po: ProductOrder){
+  operationTimeOut($op: Subscription, dialogInfoEvents: MatDialogRef<any, any>, opMsg: string): number {
+    return setTimeout(() => {
+      dialogInfoEvents.close();
+      $op.unsubscribe();
+      this.cashService.evLogout.emit(true);
+      /*this.cashService.openGenericInfo('Error', 'Can\'t complete ' + opMsg + ' operation because timeout. ' +
+        'The session will be closed. Please login again.').afterClosed().subscribe(
+          next => this.cashService.evLogout.emit(true)
+      );*/
+      // this.cashService.resetEnableState();
+    }, 5000);
+  }
+
+  addProductOrder(po: ProductOrder) {
     // Update invoice on database
     this.dataStorage.addProductOrderByInvoice(this.invoice.receiptNumber, po, EOperationType.Add, this.invoice.isRefund)
       .subscribe(next => {
       console.log('addProductOrder-next', next);
       (next.productOrders.length > 0 /*&& next.total >= this.invoice.total*/) ?
-        //this.setInvoice(next):
-        (next.isRefund)? this.setInvoice(next): this.addPO2Invoice(next):
+        // this.setInvoice(next):
+        (next.isRefund) ? this.setInvoice(next) : this.addPO2Invoice(next) :
         this.showErr('The invoice hasn\'t products', next);
     }, err => {
       this.showErr(err);

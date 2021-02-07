@@ -7,6 +7,7 @@ import {Station} from '../../models';
 import {UtilsService} from './utils.service';
 import {WebsocketService} from '../api/websocket.service';
 import {Subscription} from 'rxjs';
+import {AuthService} from '../api/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,8 @@ export class InitViewService implements OnDestroy {
   station: Station;
   sub: Subscription[] = new Array<Subscription>();
 
-  constructor(public config: ConfigurationService, private dataStore: DataStorageService, private utils: UtilsService, private ws: WebsocketService) {
+  constructor(public config: ConfigurationService, private dataStore: DataStorageService, private utils: UtilsService,
+              private ws: WebsocketService, private auth: AuthService) {
     this.sub.push(this.ws.evStationStatus.subscribe(data => this.wsStationStatus(data)));
   }
 
@@ -28,10 +30,13 @@ export class InitViewService implements OnDestroy {
   setOperation(typeOp: EOperationType, entity: string, desc: string) {
     console.log(typeOp, entity, desc);
     const descrip = 'Operation: ' + EOperationType[typeOp] + ' | ' + desc;
-    this.dataStore.registryOperation({operationType: typeOp, entityName: entity, description: descrip}).subscribe(
-      next => console.log('InitViewService.setOperation', next),
-      error1 => console.error('InitViewService.setOperation', error1)
-    );
+    console.log('setOperation', this.auth.token);
+    if (this.auth.token) {
+      this.dataStore.registryOperation({operationType: typeOp, entityName: entity, description: descrip}).subscribe(
+        next => console.log('InitViewService.setOperation', next),
+        error1 => console.error('InitViewService.setOperation', error1)
+      );
+    }
   }
 
   private wsStationStatus(data: Array<Station>) {

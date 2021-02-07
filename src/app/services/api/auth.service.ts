@@ -17,7 +17,7 @@ export class AuthService {
   credentials: Credentials;
   headers: HttpHeaders;
   initialLogin: Token;
-  adminRoles=[UserrolEnum.ADMIN, UserrolEnum.SUPERVISOR]
+  adminRoles = [UserrolEnum.ADMIN, UserrolEnum.SUPERVISOR];
 
   constructor(private http: HttpClient, private processHttpMsgService: ProcessHTTPMSgService) {
     this.headers = new HttpHeaders({
