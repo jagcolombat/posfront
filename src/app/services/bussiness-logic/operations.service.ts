@@ -665,9 +665,11 @@ export class OperationsService {
   logout(direct?: boolean) {
     console.log('logout');
     this.currentOperation = 'logout';
-    if (!this.letLogout(this.invoiceService.invoice.status)) {
+    if (!this.invoiceService.isCreating && this.invoiceService.invoice !== undefined &&
+      !this.letLogout(this.invoiceService.invoice.status)) {
       this.cashService.openGenericInfo('Error', 'Can\'t complete logout operation because check is in progress');
     } else {
+      this.invoiceService.isCreating = false;
       direct ? this.logoutOp() :
         this.cashService.openGenericInfo('Confirm', 'Do you want logout?', null, true)
           .afterClosed().subscribe(next => {

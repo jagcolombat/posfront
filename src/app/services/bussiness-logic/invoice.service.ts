@@ -40,6 +40,7 @@ export class InvoiceService {
   order: Order;
   invoiceProductSelected: any[] = [];
   isReviewed: boolean;
+  isCreating: boolean;
   priceWic: string;
 
   @Output() evAddProd = new EventEmitter<ProductOrder>();
@@ -68,12 +69,17 @@ export class InvoiceService {
 
   createInvoice() {
       this.resetDigits();
+      this.isCreating = true;
       const opMsg = 'create invoice';
-      const dialogInfoEvents = this.cashService.openGenericInfo(InformationType.INFO, 'Creating invoice...',
-        undefined, undefined, true);
+      let  dialogInfoEvents;
+      setTimeout(() => {
+        dialogInfoEvents = this.cashService.openGenericInfo(InformationType.INFO, 'Creating invoice...',
+          undefined, undefined, true);
+      }, 1000);
       const $creating = this.dataStorage.createInvoice().subscribe(next => {
         console.log('createCheck successfull', next);
-        dialogInfoEvents.close();
+        this.isCreating = false;
+        if (dialogInfoEvents) { dialogInfoEvents.close(); }
         clearTimeout(timeOut);
         this.receiptNumber = next.receiptNumber;
         this.invoice = <Invoice> next;
@@ -85,7 +91,8 @@ export class InvoiceService {
         this.cashService.setOperation(EOperationType.CreateInvoice, 'Invoice', 'Created invoice ' + next.receiptNumber);
       }, err => {
         console.error('createCheck failed');
-        dialogInfoEvents.close();
+        this.isCreating = false;
+        if (dialogInfoEvents) { dialogInfoEvents.close(); }
         clearTimeout(timeOut);
         this.cashService.openGenericInfo('Error', err).afterClosed().subscribe(
           next => {
@@ -99,15 +106,10 @@ export class InvoiceService {
 
   operationTimeOut($op: Subscription, dialogInfoEvents: MatDialogRef<any, any>, opMsg: string): number {
     return setTimeout(() => {
-      dialogInfoEvents.close();
+      if (dialogInfoEvents) { dialogInfoEvents.close(); }
       $op.unsubscribe();
       this.cashService.evLogout.emit(true);
-      /*this.cashService.openGenericInfo('Error', 'Can\'t complete ' + opMsg + ' operation because timeout. ' +
-        'The session will be closed. Please login again.').afterClosed().subscribe(
-          next => this.cashService.evLogout.emit(true)
-      );*/
-      // this.cashService.resetEnableState();
-    }, 5000);
+    }, 8000);
   }
 
   addProductOrder(po: ProductOrder) {
