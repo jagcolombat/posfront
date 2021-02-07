@@ -73,8 +73,10 @@ export class InvoiceService {
       const opMsg = 'create invoice';
       let  dialogInfoEvents;
       setTimeout(() => {
-        dialogInfoEvents = this.cashService.openGenericInfo(InformationType.INFO, 'Creating invoice...',
+        if (this.isCreating) {
+          dialogInfoEvents = this.cashService.openGenericInfo(InformationType.INFO, 'Creating invoice...',
           undefined, undefined, true);
+        }
       }, 1000);
       const $creating = this.dataStorage.createInvoice().subscribe(next => {
         console.log('createCheck successfull', next);
@@ -109,7 +111,7 @@ export class InvoiceService {
       if (dialogInfoEvents) { dialogInfoEvents.close(); }
       $op.unsubscribe();
       this.cashService.evLogout.emit(true);
-    }, 8000);
+    }, 5000);
   }
 
   addProductOrder(po: ProductOrder) {
