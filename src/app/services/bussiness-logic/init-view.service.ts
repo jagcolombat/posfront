@@ -39,7 +39,7 @@ export class InitViewService implements OnDestroy {
     }
   }
 
-  private wsStationStatus(data: Array<Station>) {
+  public wsStationStatus(data: Array<Station>) {
     console.log('wsStationStatus', data);
     this.getStatusByStation(data);
   }

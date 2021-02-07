@@ -24,7 +24,7 @@ export class ClientViewComponent implements OnInit, OnDestroy {
   pathAnnounces = 'anuncios/';
 
   constructor(private invoiceService: InvoiceService, private ws: WebsocketService,
-              private initService: InitViewService, public snackBar: MatSnackBar) {
+              public initService: InitViewService, public snackBar: MatSnackBar) {
     this.sub.push(this.ws.evClientClose.subscribe(data => this.wsCloseClientConn(data)));
   }
 
@@ -33,6 +33,7 @@ export class ClientViewComponent implements OnInit, OnDestroy {
     this.sub.push(this.ws.evInvoiceUpdated.subscribe(data => this.invoiceUpdated(data)));
     this.sub.push(this.ws.evOperation.subscribe(data => this.getOperation(data)));
     this.sub.push(this.ws.evReconnect.subscribe(data => this.wsReconnet(data)));
+    this.sub.push(this.ws.evStationStatus.subscribe(data => this.initService.wsStationStatus(data)));
   }
 
   ngOnDestroy(): void {
