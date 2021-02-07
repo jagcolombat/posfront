@@ -1708,7 +1708,7 @@ export class OperationsService {
       clients => {
         console.log(CustomerOpEnum.ACCT_BALANCE, clients);
         this.openDialogWithPag(clients, (c) => this.showAccountInfo(c), 'Clients', 'Select a client:',
-          '', 'name', 'balance' );
+          '', 'name', 'credit' );
       },
       error1 => {
         this.cashService.openGenericInfo(InformationType.INFO, 'Can\'t get the clients');
