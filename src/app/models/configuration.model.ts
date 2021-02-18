@@ -34,4 +34,5 @@ export interface Configuration {
   printInitTicket?: boolean;
   printMerchantTicket?: boolean;
   printTicket?: boolean;
+  printCloseDayAutomatic?: boolean;
 }

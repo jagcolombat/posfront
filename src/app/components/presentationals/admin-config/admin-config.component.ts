@@ -40,7 +40,6 @@ export class AdminConfigComponent implements OnInit {
   allowCloseDayAutom: boolean;
   allowRestartDayAutom: boolean;
   printCloseDayAutom: boolean;
-  restartDayAutomatic: boolean;
   printVoid: boolean;
   printHold: boolean;
   printTicket: boolean;
@@ -77,6 +76,7 @@ export class AdminConfigComponent implements OnInit {
     this.printTicket = this.cashService.config.sysConfig.printTicket;
     this.printInitTicket = this.cashService.config.sysConfig.printInitTicket;
     this.printMerchantTicket = this.cashService.config.sysConfig.printMerchantTicket;
+    this.printCloseDayAutom = this.cashService.config.sysConfig.printCloseDayAutomatic;
 
     if (this.cashService.config.sysConfig.inactivityTime) {
       this.timeLogout = this.cashService.config.sysConfig.inactivityTime + '';
@@ -222,8 +222,8 @@ export class AdminConfigComponent implements OnInit {
   }
 
   setPrintCloseDayAutom($event: any) {
-    console.log('setPrintCloseDayAutom', $event, this.restartDayAutomatic);
-    this.allowRestartDayAutom = $event.checked;
+    console.log('setPrintCloseDayAutom', $event, this.printCloseDayAutom);
+    this.printCloseDayAutom = $event.checked;
   }
 
   setPrintVoid($event: any) {
@@ -281,6 +281,7 @@ export class AdminConfigComponent implements OnInit {
     this.cashService.config.sysConfig.printTicket = this.printTicket;
     this.cashService.config.sysConfig.printInitTicket = this.printInitTicket;
     this.cashService.config.sysConfig.printMerchantTicket = this.printMerchantTicket;
+    this.cashService.config.sysConfig.printCloseDayAutomatic = this.printCloseDayAutom;
 
     this.cashService.config.setConfig(this.cashService.config.sysConfig).subscribe(value => {
       console.log('set configuration', value, conf);
