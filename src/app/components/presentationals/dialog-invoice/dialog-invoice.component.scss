@@ -2,7 +2,7 @@
   height: 95%;
   max-height: 70vh;
 
-  & /deep/ :first-child {
+  & ::ng-deep :first-child {
     flex-wrap: wrap;
     overflow: auto;
     //max-height: 350px;

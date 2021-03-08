@@ -3,15 +3,15 @@
 /*[mat-dialog-content] button {
   @include red;
 }*/
-[mat-dialog-content] button /deep/ span {
+[mat-dialog-content] button ::ng-deep span {
   font-size: 16px;
   font-weight: normal;
 }
-[mat-dialog-content] button /deep/ span p {
+[mat-dialog-content] button ::ng-deep span p {
   font-size: 20px;
   margin: 5px 0;
 }
-[mat-dialog-content] /deep/ div.buttons {
+[mat-dialog-content]  div.buttons {
   flex-wrap: wrap;
   overflow: auto;
   max-height: 275px;

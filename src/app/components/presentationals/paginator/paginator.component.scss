@@ -1,11 +1,11 @@
-.my-pagination /deep/ ul {
+.my-pagination  ul {
   display: flex;
   padding: 0;
   margin: 5px 10px;
   justify-content: center;
 }
 
-.my-pagination /deep/ .pagination-previous, .my-pagination /deep/ .pagination-next {
+.my-pagination  .pagination-previous, .my-pagination  .pagination-next {
   margin: 3px;
   width: 130px;
   height: 85px;
@@ -22,15 +22,15 @@
   justify-content: center;
 }
 
-.my-pagination /deep/.disabled {
+.my-pagination .disabled {
   padding: initial;
   cursor: default;
   background-color: #B8B8B8;
 }
 
-.my-pagination /deep/ .disabled:hover,
-.my-pagination /deep/ .pagination-previous.disabled a:hover,
-.my-pagination /deep/ .pagination-next.disabled a:hover{
+.my-pagination  .disabled:hover,
+.my-pagination  .pagination-previous.disabled a:hover,
+.my-pagination  .pagination-next.disabled a:hover{
   background-color: #B8B8B8 !important;
 }
 
@@ -38,11 +38,11 @@
   display: flex;
 }
 
-.my-pagination /deep/ .pagination-previous a:hover, .my-pagination /deep/ .pagination-next a:hover {
+.my-pagination  .pagination-previous a:hover, .my-pagination  .pagination-next a:hover {
   background-color: #5b4cab;
 }
 
-.my-pagination /deep/ .pagination-previous a, .my-pagination /deep/ .pagination-next a {
+.my-pagination  .pagination-previous a, .my-pagination  .pagination-next a {
   height: 80%;
   display: flex;
   align-items: center;

@@ -51,13 +51,13 @@ app-loading {
 }
 
 .break-all {
-  & button /deep/ span {
+  & button  span {
     word-break: break-all;
   }
 }
 
 .break-word {
-  & button /deep/ span {
+  & button  span {
     word-wrap: break-word;
   }
 }
