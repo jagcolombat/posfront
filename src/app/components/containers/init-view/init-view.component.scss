@@ -9,11 +9,11 @@ img {
   height: 50%;
 }
 
-slide-announce /deep/ a, slide-announce /deep/ .arrow-container {
+slide-announce ::ng-deep a, slide-announce ::ng-deep .arrow-container {
   cursor: none !important;
 }
 
-slide-promotions /deep/ a, slide-promotions /deep/ .arrow-container {
+slide-promotions ::ng-deep a, slide-promotions ::ng-deep .arrow-container {
   cursor: none !important;
 }
 

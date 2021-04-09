@@ -10,7 +10,7 @@
   background-color: lightyellow;
 }
 
-.total info-pos /deep/ span {
+.total info-pos ::ng-deep span {
   font-size: 1.5em;
   font-weight: bold;
 }
@@ -34,14 +34,14 @@ info-pos {
   color: black;
 }
 
-.info-pos-button /deep/ label, .info-pos-button /deep/ span {
+.info-pos-button ::ng-deep label, .info-pos-button ::ng-deep span {
   justify-content: center !important;
 }
 
 .title-header {
   background-color: lightyellow;
 
-  &/deep/ span {
+  & ::ng-deep span {
     padding-top: 5px;
     font-weight: bold;
   }
@@ -54,7 +54,7 @@ div.header {
 
 .header, .total {
   height: 80px;
-  & /deep/ * {
+  & ::ng-deep * {
     cursor: none !important;
   }
 }

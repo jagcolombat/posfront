@@ -16,11 +16,11 @@ div[oncontextmenu]{
 }
 
 mat-slide-toggle {
-  & /deep/ .mat-slide-toggle-content {
+  & ::ng-deep .mat-slide-toggle-content {
     font-size: inherit !important;
     color: rgba(0, 0, 0, .60);
   }
-  & /deep/ .mat-slide-toggle-label {
+  & ::ng-deep .mat-slide-toggle-label {
     justify-content: space-between;
   }
 }

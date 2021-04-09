@@ -13,24 +13,24 @@ ag-grid-angular {
   height: 450px;
   margin-bottom: 2px;
   font: 400 18px "Roboto", sans-serif;
-  & /deep/ .ag-paging-row-summary-panel {
+  & ::ng-deep .ag-paging-row-summary-panel {
     margin-left: 10px !important;
   }
-  & /deep/ .ag-paging-page-summary-panel {
+  & ::ng-deep .ag-paging-page-summary-panel {
     height: 100%;
     display: flex;
     align-items: center;
   }
-  & /deep/ button.ag-paging-button {
+  & ::ng-deep button.ag-paging-button {
     background-size: 32px !important;
     margin: 0 8px !important;
     cursor: none !important;
     height: 100%;
   }
-  & /deep/ .ag-header {
+  & ::ng-deep .ag-header {
     font-size: 15px !important;
   }
-  & /deep/ .ag-font-style {
+  & ::ng-deep .ag-font-style {
     cursor: none !important;
   }
 }

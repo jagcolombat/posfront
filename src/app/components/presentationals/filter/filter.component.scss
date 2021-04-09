@@ -1,7 +1,7 @@
-numpad /deep/ button[mat-button]:last-of-type {
+numpad ::ng-deep button[mat-button]:last-of-type {
   max-width: 160px !important;
 }
 
-operation-group /deep/ button[mat-button]:last-of-type {
+operation-group ::ng-deep button[mat-button]:last-of-type {
   height: 175px;
 }

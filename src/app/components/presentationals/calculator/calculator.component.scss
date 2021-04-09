@@ -61,14 +61,14 @@ button[mat-button].right:last-of-type, button[mat-button].right:first-of-type{
 }
 
 button[mat-button].numbers{
-  & /deep/ span {
+  & ::ng-deep span {
     font-size: 20px !important;
   }
 }
 
 button[mat-button].numbers:last-of-type{
   @include light-gray;
-  & /deep/ span {
+  & ::ng-deep span {
     font-size: 18px !important;
   }
 }

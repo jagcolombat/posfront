@@ -32,7 +32,7 @@ button[mat-button] {
   }
 }
 
-button[mat-button] /deep/ span {
+button[mat-button]  span {
   word-wrap: break-word;
   max-width: 100px;
   white-space: normal !important;
@@ -67,7 +67,7 @@ button.mat-raised-button {
   text-decoration: line-through !important;
 }
 
-mat-toolbar /deep/ button[mat-dialog-close] {
+mat-toolbar  button[mat-dialog-close] {
   height: 80% !important;
   cursor: none !important;
   span.mat-button-wrapper{
@@ -75,8 +75,8 @@ mat-toolbar /deep/ button[mat-dialog-close] {
   }
 }
 
-mat-datepicker-content /deep/ mat-calendar-header {
-  & /deep/ button[mat-button] {
+mat-datepicker-content  mat-calendar-header {
+  &  button[mat-button] {
     color: black !important;
     height: 45px !important;
     font-weight: normal !important;
