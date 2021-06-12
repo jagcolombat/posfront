@@ -8,7 +8,7 @@ import {catchError, map} from 'rxjs/operators';
 import { Invoice } from 'src/app/models/invoice.model';
 import { CloseBatch } from 'src/app/utils/close.batch.enum';
 import { Report } from 'src/app/models/report.model';
-import {EmployeedModel, IPositionModel} from "../../models/employeed.model";
+import {EmployeedModel, IPositionModel} from '../../models/employeed.model';
 import { WorkerRecords } from 'src/app/models/worker-records';
 
 @Injectable({
@@ -136,6 +136,11 @@ export class AdminOperationService {
     let params = new HttpParams();
     params = params.append('date', date + '');
     return this._http.get<WorkerRecords[]>(url + '/account/' + id + '/clock', {params})
+      .pipe(catchError(this.processHttpMsgService.handleError));
+  }
+
+  updateProducts(url: string): Observable<any> {
+    return this._http.post<any>(url + '/op/backoffice/demand', {})
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 }

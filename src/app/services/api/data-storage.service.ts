@@ -270,6 +270,10 @@ export class DataStorageService {
     return this.adminOperationService.getCloseBatchReport(this.url, closeBatch);
   }
 
+  updateProducts(): Observable<any> {
+    return this.adminOperationService.updateProducts(this.url);
+  }
+
   // Order
   getOrder(inv: string) {
     return this.orderService.getByInvoice(this.url, inv);

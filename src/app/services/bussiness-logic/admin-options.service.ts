@@ -1108,14 +1108,37 @@ export class AdminOptionsService {
     );
   }
 
-  updateBrowser() {
+  update() {
     // let e = new KeyboardEvent("keydown", { key: 'F11', bubbles: true });
     /*let e = this.createKeyboradEvent('keydown', 'F11')
     console.log('update browser', e);
     document.addEventListener('keydown', (e) => { console.log('keydown', e); })
     document.addEventListener('keypress', (e) => { console.log('keypress', e); })
     document.body.dispatchEvent(e);*/
-    this.utils.updateBrowser();
+    /*this.
+    this.utils.updateBrowser();*/
+    const adTypes = new Array<any>(
+      {value: 1, text: 'UPDATE APP'}, {value: 2, text: 'UPDATE PRODUCTS'});
+    this.cashService.dialog.open(DialogDeliveryComponent,
+      {
+        width: '400px', height: '360px', data: {name: 'Update Options', label: 'Select an option', arr: adTypes},
+        disableClose: true
+      })
+      .afterClosed().subscribe(next => {
+      console.log(next);
+      switch (next) {
+        case 1:
+          this.utils.updateBrowser();
+          break;
+        case 2:
+          this.dataStorage.updateProducts().subscribe(
+            // tslint:disable-next-line:no-shadowed-variable
+            next => this.utils.openGenericInfo(InformationType.INFO,
+              'Update products on demand was successfully'),
+            error => this.utils.openGenericInfo(InformationType.ERROR, error));
+          break;
+      }
+    });
   }
 
   createKeyboradEvent(name, key, altKey = false, ctrlKey = false, shitKey = false, metaKey = false, bubbles = true) {
@@ -1164,5 +1187,9 @@ export class AdminOptionsService {
         }
       });
 
+  }
+
+  private updateProducts() {
+    console.log('update products');
   }
 }
