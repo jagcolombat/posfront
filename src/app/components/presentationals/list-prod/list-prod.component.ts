@@ -130,15 +130,17 @@ export class ListProdComponent implements OnInit {
 
   getColorByProp(prod: Product): string {
     let color = 'normal';
-    if(prod.generic){
+    if (prod.name === 'CONSULTATIONS') {
+      color = 'violet';
+    } else if (prod.generic) {
       color = 'generic';
-    } else if(prod.scalable){
+    } else if (prod.scalable) {
       color = 'scalable';
     }
     return color;
   }
 
-  getBreakTextType(){
+  getBreakTextType() {
     return this.stockService.cashService.config.sysConfig.breakText;
   }
 

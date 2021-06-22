@@ -1,15 +1,15 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {OperationsService} from "../../../services/bussiness-logic/operations.service";
-import {FinancialOpEnum, InvioceOpEnum, PaymentOpEnum, TotalsOpEnum} from "../../../utils/operations";
-import {OtherOpEnum} from "../../../utils/operations/other.enum";
-import {CompanyType} from "../../../utils/company-type.enum";
-import {AuthService} from "../../../services/api/auth.service";
-import {AdminOpEnum} from "../../../utils/operations/admin-op.enum";
-import {AdminOptionsService} from "../../../services/bussiness-logic/admin-options.service";
-import {NavigationEnd, Router} from "@angular/router";
-import {CustomerOpEnum} from "../../../utils/operations/customer.enum";
-import {UserrolEnum} from "../../../utils/userrol.enum";
-import {PAXConnTypeEnum} from "../../../utils/pax-conn-type.enum";
+import {OperationsService} from '../../../services/bussiness-logic/operations.service';
+import {FinancialOpEnum, InvioceOpEnum, PaymentOpEnum, TotalsOpEnum} from '../../../utils/operations';
+import {OtherOpEnum} from '../../../utils/operations/other.enum';
+import {CompanyType} from '../../../utils/company-type.enum';
+import {AuthService} from '../../../services/api/auth.service';
+import {AdminOpEnum} from '../../../utils/operations/admin-op.enum';
+import {AdminOptionsService} from '../../../services/bussiness-logic/admin-options.service';
+import {NavigationEnd, Router} from '@angular/router';
+import {CustomerOpEnum} from '../../../utils/operations/customer.enum';
+import {UserrolEnum} from '../../../utils/userrol.enum';
+import {PAXConnTypeEnum} from '../../../utils/pax-conn-type.enum';
 
 @Component({
   selector: 'operations',
@@ -17,6 +17,18 @@ import {PAXConnTypeEnum} from "../../../utils/pax-conn-type.enum";
   styleUrls: ['./operations.component.scss']
 })
 export class OperationsComponent implements OnInit {
+
+  constructor(public operationService: OperationsService, public authService: AuthService,
+              private adminOpService: AdminOptionsService, private router: Router) {
+    this.router.events.subscribe(ev => {
+      if (ev instanceof NavigationEnd) {
+        // console.log('evRoute', this.router.url);
+        this.routeAdmin = this.isRouteAdmin(this.router.url);
+        this.showForAdmin = (this.routeAdmin && this.authService.adminLogged() ? true : false);
+        // console.log('for admin', this.routeAdmin, this.authService.adminLogged(), this.showForAdmin);
+      }
+    });
+  }
 
   @Input() financeOperations = [FinancialOpEnum.MANAGER, OtherOpEnum.PRINT_LAST, AdminOpEnum.EBT_INQUIRY, FinancialOpEnum.LOGOUT];
   @Input() financeColor = 'green';
@@ -65,66 +77,54 @@ export class OperationsComponent implements OnInit {
 
   @Input() restaurantOperations = [FinancialOpEnum.TXTYPE, OtherOpEnum.ORDER_INFO, OtherOpEnum.TABLES];
   @Input() restaurantColor = 'green';
-
-  isRouteAdmin = (route: string) => (route.startsWith('/cash/options') ? true : false);
   routeAdmin: boolean;
   showForAdmin = false;
 
-  constructor(public operationService: OperationsService, public authService: AuthService,
-              private adminOpService: AdminOptionsService, private router: Router) {
-    this.router.events.subscribe(ev => {
-      if(ev instanceof NavigationEnd) {
-        // console.log('evRoute', this.router.url);
-        this.routeAdmin = this.isRouteAdmin(this.router.url);
-        this.showForAdmin = (this.routeAdmin && this.authService.adminLogged() ? true : false)
-        // console.log('for admin', this.routeAdmin, this.authService.adminLogged(), this.showForAdmin);
-      }
-    });
-  }
+  isRouteAdmin = (route: string) => (route.startsWith('/cash/options') ? true : false);
 
   ngOnInit() {
     // this.operationService.cashService.systemConfig.companyType = CompanyType.RESTAURANT;
-    //this.operationService.cashService.getSystemConfig().subscribe(config => {
-    let config = this.operationService.cashService.config.sysConfig;
-    if(config.allowCardSplit && config.paxConnType === PAXConnTypeEnum.ONLINE ){
+    // this.operationService.cashService.getSystemConfig().subscribe(config => {
+    const config = this.operationService.cashService.config.sysConfig;
+    if (config.allowCardSplit && config.paxConnType === PAXConnTypeEnum.ONLINE ) {
       this.customerOperations.unshift(OtherOpEnum.SPLIT_CARD);
       this.customerColor.unshift('yellow');
     }
-    if (config.companyType === CompanyType.RESTAURANT || !config.allowEBT){
+    if (config.companyType === CompanyType.RESTAURANT || !config.allowEBT) {
       // Remove EBT options and colors in payment
-      this.paymentOperations.splice(0,1);
-      this.paymentColor.splice(0,1);
+      this.paymentOperations.splice(0, 1);
+      this.paymentColor.splice(0, 1);
       // Remove EBT total and color in totals
-      this.totalsOperations.splice(0,1);
-      this.totalColor.splice(0,1);
+      this.totalsOperations.splice(0, 1);
+      this.totalColor.splice(0, 1);
       // Remove EBT total and color in finance
-      this.financeOperations.splice(this.financeOperations.indexOf(AdminOpEnum.EBT_INQUIRY),1);
+      this.financeOperations.splice(this.financeOperations.indexOf(AdminOpEnum.EBT_INQUIRY), 1);
       // Push in money operations other payment option
       this.paymentOperations.splice(-1).map(op => this.moneyOperations.push(op));
       this.paymentColor.splice(-1).map(op => this.moneyColor.push(op));
     } else {
       // Remove TXType operation
-      //this.financeOperations.splice(1, 1);
+      // this.financeOperations.splice(1, 1);
       // Remove Table operation and relative color
-      //this.otherOperations.splice(-1);
-      //this.otherColor.splice(-1);
+      // this.otherOperations.splice(-1);
+      // this.otherColor.splice(-1);
       // Push in money operations check and other payment options
       this.paymentOperations.splice(-2).map(op => this.moneyOperations.push(op));
       this.paymentColor.splice(-2).map(op => this.moneyColor.push(op));
-      //this.operationService.cashService.disabledPayment=[true, false, true, true, true, true];
+      // this.operationService.cashService.disabledPayment=[true, false, true, true, true, true];
     }
-    if(config.companyType !== CompanyType.RESTAURANT){
+    if (config.companyType !== CompanyType.RESTAURANT) {
       // Remove restaurant operations
       this.restaurantOperations.splice(0);
       this.restaurantColor = '';
     }
     if (config.companyType !== CompanyType.ISLANDS) {
       // Push in finance operations reprint, hold order, review and recall check options before logout
-      let logoutOp = this.financeOperations.splice(-1);
+      const logoutOp = this.financeOperations.splice(-1);
       console.log('logoutOp', logoutOp);
       this.financeAdminOperations.splice(0, 4).map( op => {
         this.financeOperations.push(op);
-        if (op === FinancialOpEnum.REPRINT) this.financeAdminOperations.unshift(op);
+        if (op === FinancialOpEnum.REPRINT) { this.financeAdminOperations.unshift(op); }
       });
       this.financeOperations.push(logoutOp[0]);
     }
@@ -134,7 +134,7 @@ export class OperationsComponent implements OnInit {
   }
 
   financeKey(ev) {
-    if(!this.adminOpService.cashService.opDenyByUser(ev.toUpperCase(), UserrolEnum.SUPERVISOR)) {
+    if (!this.adminOpService.cashService.opDenyByUser(ev.toUpperCase(), UserrolEnum.SUPERVISOR)) {
       switch (ev) {
         case FinancialOpEnum.LOGOUT:
           this.operationService.logout();
@@ -278,7 +278,7 @@ export class OperationsComponent implements OnInit {
   }
 
   reportKey(ev) {
-    if(!this.adminOpService.cashService.opDenyByUser(ev.toUpperCase(), UserrolEnum.SUPERVISOR)) {
+    if (!this.adminOpService.cashService.opDenyByUser(ev.toUpperCase(), UserrolEnum.SUPERVISOR)) {
       switch (ev) {
         case AdminOpEnum.EMPLZ:
           this.adminOpService.emplZ();
@@ -300,11 +300,11 @@ export class OperationsComponent implements OnInit {
     switch (ev) {
       case AdminOpEnum.PREV_SCREEN:
         this.adminOpService.backToUser();
-        //this.router.navigateByUrl('/cash/dptos');
+        // this.router.navigateByUrl('/cash/dptos');
         break;
       case AdminOpEnum.WEEKLY_CLOSE:
         this.adminOpService.weeklyClose(ev);
-        //this.router.navigateByUrl('/cash/dptos');
+        // this.router.navigateByUrl('/cash/dptos');
         break;
     }
   }

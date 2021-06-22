@@ -250,6 +250,10 @@ export class DataStorageService {
     return this.adminOperationService.getInvoiceByUser(this.url, id);
   }
 
+  getInvoiceByUserAndDate(id: string, date: string): Observable<Invoice[]> {
+    return this.adminOperationService.getInvoiceByUser(this.url, id);
+  }
+
   getPaymentByType(): Observable<Payment[]> {
     return this.adminOperationService.getPaymentByType(this.url);
   }

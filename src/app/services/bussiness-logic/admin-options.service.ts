@@ -177,25 +177,36 @@ export class AdminOptionsService {
     this.dataStorage.getApplicationUsers().subscribe(next =>  {
       console.log(AdminOpEnum.EMPLZ, next);
       next.unshift({id: '-1', userName: 'ALL'});
-      /*this.cashService.dialog.open(GenericSalesComponent,
-        {
-          width: '480px', height: '640px', disableClose: true, data: {title: AdminOpEnum.EMPLZ, empl: next }
-        })*/
-      this.operationService.openDialogWithPag(next, (e) => this.showSalesByEmployee(e), 'Employees',
-        'Select a employee:', '', 'userName' );
+      this.operationService.openDialogWithPag(next, (e) => this.showSalesByEmployee(AdminOpEnum.EMPLZ, e),
+        'Employees', 'Select a employee:', '', 'userName' );
     }, error1 => {
       this.cashService.openGenericInfo('Error', 'Can\'t complete ' + AdminOpEnum.EMPLZ + ' operation');
     });
     this.operationService.resetInactivity(true, 'empZ');
   }
 
-  showSalesByEmployee(emp: any) {
+  showSalesByEmployee(op: AdminOpEnum, emp?: string) {
+    this.cashService.dialog.open(SetDateComponent,
+      { width: '400px', height: '340px', data: {title: AdminOpEnum.EMPLZ, subtitle: 'Set date', closeWeek: true},
+        disableClose: true })
+      .afterClosed().subscribe(next => {
+        console.log('afterCloseSetDate', next, emp);
+        this.cashService.dialog.open(GenericSalesComponent, {
+          width: '700px', height: '680px', disableClose: true, data: {
+            title: AdminOpEnum.EMPLZ, empl: emp, salesDate: next.date
+          }
+        });
+      });
+    // this.dayCloseType('', AdminOpEnum.WTDZ);
+  }
+
+  /*showSalesByEmployee1(emp: any) {
     console.log('showSalesByEmployee', emp);
     this.cashService.dialog.open(GenericSalesComponent,
       {
         width: '700px', height: '680px', disableClose: true, data: {title: AdminOpEnum.EMPLZ, empl: emp }
       });
-  }
+  }*/
 
   systemVersion() {
     this.cashService.openGenericInfo('System Version', environment.version);

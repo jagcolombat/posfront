@@ -77,7 +77,7 @@ export class AdminOperationService {
 
   getDayClose(url: string, close: boolean, date?: string): Observable<Report> {
     let params = new HttpParams();
-    if(date) params = params.append('date', date + '');
+    if (date) { params = params.append('date', date + ''); }
     params = params.append('closeDay', close + '');
     return this._http.post<any>(url + this.path + '/op/report', {}, {params})
       .pipe(catchError(this.processHttpMsgService.handleError));
@@ -85,7 +85,7 @@ export class AdminOperationService {
 
   cashierCloseShift(url: string, close: boolean, emp: string, date?: string): Observable<Report> {
     let params = new HttpParams();
-    if(date) params = params.append('date', date + '');
+    if (date) { params = params.append('date', date + ''); }
     params = params.append('closeDay', close + '');
     return this._http.post<any>(url + this.path + '/op/report/user/' + emp, {}, {params})
       .pipe(catchError(this.processHttpMsgService.handleError));
@@ -125,14 +125,14 @@ export class AdminOperationService {
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
-  getTimeWorkedByUser(url: string, id: string, date: string) : Observable<string> {
+  getTimeWorkedByUser(url: string, id: string, date: string): Observable<string> {
     let params = new HttpParams();
     params = params.append('date', date + '');
     return this._http.get<string>(url + '/account/' + id + '/clock/hoursworked', {params})
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
-  getWorkerRecordsByUser(url: string, id: string, date: string) : Observable<WorkerRecords[]> {
+  getWorkerRecordsByUser(url: string, id: string, date: string): Observable<WorkerRecords[]> {
     let params = new HttpParams();
     params = params.append('date', date + '');
     return this._http.get<WorkerRecords[]>(url + '/account/' + id + '/clock', {params})
