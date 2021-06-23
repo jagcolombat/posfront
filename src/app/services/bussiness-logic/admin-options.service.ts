@@ -187,7 +187,8 @@ export class AdminOptionsService {
 
   showSalesByEmployee(op: AdminOpEnum, emp?: string) {
     this.cashService.dialog.open(SetDateComponent,
-      { width: '400px', height: '340px', data: {title: AdminOpEnum.EMPLZ, subtitle: 'Set date', closeWeek: true},
+      { width: '400px', height: '340px', data: {title: AdminOpEnum.EMPLZ, subtitle: 'Set date',
+          closeWeek: true, cleanDate: true},
         disableClose: true })
       .afterClosed().subscribe(next => {
         console.log('afterCloseSetDate', next, emp);
@@ -318,7 +319,7 @@ export class AdminOptionsService {
   }
 
   currentDate(date): boolean {
-    const currentDate = new Date().toISOString().split('T')[0];
+    const currentDate = new Intl.DateTimeFormat('sv-SE', {timeZone: 'utc'}).format(new Date());
     const selectedDate = date.from.split(' ')[0];
     console.log('currentDate', currentDate, selectedDate);
     return currentDate === selectedDate;

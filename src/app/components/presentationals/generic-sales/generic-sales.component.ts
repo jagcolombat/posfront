@@ -27,7 +27,7 @@ export class GenericSalesComponent implements OnInit {
     if (this.data.empl && !this.data.date && !this.data.salesDate ) {
       this.getSales(this.data.empl.id); }
     if (this.data.empl && !this.data.date && this.data.salesDate) {
-      this.getSalesByDate(this.data.empl.id, this.data.date);
+      this.getSalesByDate(this.data.empl.id, this.data.salesDate);
     }
     if (this.data.empl && this.data.date && !this.data.salesDate) {
       this.getRecords(this.data.empl.id, this.data.date);

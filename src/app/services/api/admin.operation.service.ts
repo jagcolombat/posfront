@@ -35,6 +35,14 @@ export class AdminOperationService {
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
+  getInvoiceByUserAndDate(url: string, id: string, date: any): Observable<Invoice[]> {
+    let params = new HttpParams();
+    if (date && date['from']) { params = params.append('fromDate', date['from'] + ''); }
+    if (date && date['to']) { params = params.append('toDate', date['to'] + ''); }
+    return this._http.get<Invoice[]>(url + this.path + '/stats/user/' + id + '/invoices', {params})
+      .pipe(catchError(this.processHttpMsgService.handleError));
+  }
+
   getPaymentByType(url: string): Observable<Payment[]> {
     return this._http.get<Payment[]>(url + this.path + '/stats/invoices/payments')
       .pipe(catchError(this.processHttpMsgService.handleError));
