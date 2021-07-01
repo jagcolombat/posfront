@@ -1140,7 +1140,7 @@ export class AdminOptionsService {
       console.log(next);
       switch (next) {
         case 1:
-          this.utils.updateBrowser();
+          this.updateApp();
           break;
         case 2:
           this.dataStorage.updateProducts().subscribe(
@@ -1151,6 +1151,10 @@ export class AdminOptionsService {
           break;
       }
     });
+  }
+
+  updateApp() {
+    this.utils.updateBrowser();
   }
 
   createKeyboradEvent(name, key, altKey = false, ctrlKey = false, shitKey = false, metaKey = false, bubbles = true) {

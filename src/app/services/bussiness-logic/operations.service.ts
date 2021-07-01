@@ -869,6 +869,7 @@ export class OperationsService {
   }
 
   paxTimeOut($op: Subscription, dialogInfoEvents: MatDialogRef<any, any>, opMsg: string): number {
+    // @ts-ignore
     return setTimeout(() => {
       dialogInfoEvents.close();
       $op.unsubscribe();
@@ -1685,8 +1686,10 @@ export class OperationsService {
     if (this.invoiceService.invoice.balance) {
       this.cashService.dialog.open(ProductGenericComponent,
         {
-          width: '480px', height: '650px', data: {unitCost: 0, name: OtherOpEnum.SPLIT_CARD, label: 'Amount',
-            max: this.invoiceService.invoice.balance},
+          width: '480px', height: '650px', data: {
+            unitCost: 0, name: OtherOpEnum.SPLIT_CARD, label: 'Amount',
+            max: this.invoiceService.invoice.balance
+          },
           disableClose: true
         }).afterClosed().subscribe(
         next => {

@@ -71,9 +71,10 @@ export class OperationsComponent implements OnInit {
   @Input() otherAdminOperations = [OtherOpEnum.PRINT_LAST, OtherOpEnum.NO_SALE, OtherOpEnum.PAID_OUT];
   @Input() otherAdminColor = ['blue', 'blue', 'blue'];
 
-  @Input() customerOperations: Array<CustomerOpEnum | OtherOpEnum> = [/*CustomerOpEnum.CUSTOMER, */CustomerOpEnum.ACCT_BALANCE, CustomerOpEnum.ACCT_PAYMENT,
-    CustomerOpEnum.ACCT_CHARGE];
-  @Input() customerColor = ['orange', 'orange', 'orange'];
+  @Input() customerOperations: Array<CustomerOpEnum | OtherOpEnum | AdminOpEnum> = [
+    /*CustomerOpEnum.CUSTOMER, */CustomerOpEnum.ACCT_BALANCE, CustomerOpEnum.ACCT_PAYMENT,
+    CustomerOpEnum.ACCT_CHARGE, AdminOpEnum.UPDATE_APP];
+  @Input() customerColor = ['orange', 'orange', 'orange', 'red'];
 
   @Input() restaurantOperations = [FinancialOpEnum.TXTYPE, OtherOpEnum.ORDER_INFO, OtherOpEnum.TABLES];
   @Input() restaurantColor = 'green';
@@ -87,8 +88,9 @@ export class OperationsComponent implements OnInit {
     // this.operationService.cashService.getSystemConfig().subscribe(config => {
     const config = this.operationService.cashService.config.sysConfig;
     if (config.allowCardSplit && config.paxConnType === PAXConnTypeEnum.ONLINE ) {
-      this.customerOperations.unshift(OtherOpEnum.SPLIT_CARD);
-      this.customerColor.unshift('yellow');
+      /*this.customerOperations.unshift(OtherOpEnum.SPLIT_CARD);
+      this.customerColor.unshift('yellow');*/
+      this.restaurantOperations.push(OtherOpEnum.SPLIT_CARD);
     }
     if (config.companyType === CompanyType.RESTAURANT || !config.allowEBT) {
       // Remove EBT options and colors in payment
@@ -324,8 +326,11 @@ export class OperationsComponent implements OnInit {
       case CustomerOpEnum.ACCT_CHARGE:
         this.operationService.acctCharge();
         break;
-      case OtherOpEnum.SPLIT_CARD:
+      /*case OtherOpEnum.SPLIT_CARD:
         this.operationService.splitCard();
+        break;*/
+      case AdminOpEnum.UPDATE_APP:
+        this.adminOpService.updateApp();
         break;
     }
   }
@@ -341,6 +346,10 @@ export class OperationsComponent implements OnInit {
         break;
       case FinancialOpEnum.TXTYPE:
         this.operationService.txType();
+        break;
+      case OtherOpEnum.SPLIT_CARD:
+        this.operationService.splitCard();
+        break;
     }
   }
 }
