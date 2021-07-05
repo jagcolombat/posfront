@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import {Configuration} from "../../models/configuration.model";
-import {PAXConnTypeEnum} from "../../utils/pax-conn-type.enum";
-import {BreakTextEnum} from "../../utils/breaktext.enum";
-import {DataStorageService} from "../api/data-storage.service";
-import {UtilsService} from "./utils.service";
+import {Configuration} from '../../models/configuration.model';
+import {PAXConnTypeEnum} from '../../utils/pax-conn-type.enum';
+import {BreakTextEnum} from '../../utils/breaktext.enum';
+import {DataStorageService} from '../api/data-storage.service';
+import {UtilsService} from './utils.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +13,7 @@ export class ConfigurationService {
 
   constructor(private dataStore: DataStorageService, private utils: UtilsService) { }
 
-  load(): Promise<any>{
+  load(): Promise<any> {
     return this.getConfig().toPromise().then(next => {
       console.info('getConfig successfull', next);
       this.setSystemConfig(next);
@@ -23,7 +23,7 @@ export class ConfigurationService {
         null, true, true).afterClosed().subscribe(
           next => {
             console.log(next);
-            if(next.confirm){
+            if (next.confirm) {
               this.utils.updateBrowser();
             }
           }
@@ -32,15 +32,16 @@ export class ConfigurationService {
   }
 
   setSystemConfig(conf: any) {
-    if(!conf.paxTimeout) conf.paxTimeout = 60;
-    if(!conf.paxConnType) conf.paxConnType = PAXConnTypeEnum.OFFLINE;
-    if(!conf.inactivityTime) conf.inactivityTime = 60;
-    if(!conf.breakText) conf.breakText = BreakTextEnum.ALL;
+    if (!conf.paxTimeout) { conf.paxTimeout = 60; }
+    if (!conf.paxConnType) { conf.paxConnType = PAXConnTypeEnum.OFFLINE; }
+    if (!conf.inactivityTime) { conf.inactivityTime = 60; }
+    if (!conf.debounceTime) { conf.debounceTime = 1; }
+    if (!conf.breakText) { conf.breakText = BreakTextEnum.ALL; }
     this.sysConfig = conf;
-    //this.resetEnableState();
+    // this.resetEnableState();
   }
 
-  getConfig(){
+  getConfig() {
     return this.dataStore.getConfiguration();
   }
 

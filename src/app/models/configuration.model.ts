@@ -35,4 +35,6 @@ export interface Configuration {
   printMerchantTicket?: boolean;
   printTicket?: boolean;
   printCloseDayAutomatic?: boolean;
+  allowClientUpdate?: boolean;
+  debounceTime?: number;
 }

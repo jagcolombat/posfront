@@ -34,7 +34,7 @@ export class InvoiceService {
   // For manage numpadInput
   digits = '';
   numbers = '';
-  qty: number = 1;
+  qty = 1;
   // Invoice
   invoice: Invoice;
   order: Order;
@@ -107,6 +107,7 @@ export class InvoiceService {
   }
 
   operationTimeOut($op: Subscription, dialogInfoEvents: MatDialogRef<any, any>, opMsg: string): number {
+    // @ts-ignore
     return setTimeout(() => {
       if (dialogInfoEvents) { dialogInfoEvents.close(); }
       $op.unsubscribe();
@@ -128,14 +129,14 @@ export class InvoiceService {
     });
   }
 
-  private showErr(err: any, i?: Invoice){
+  private showErr(err: any, i?: Invoice) {
     console.error('addProductOrder', err);
     // this.delPOFromInvoice(po);
     this.resetDigits();
     (i && i.status === InvoiceStatus.CREATED) ? this.warnInvoicePaid() : this.cashService.openGenericInfo('Error', err);
   }
 
-  warnInvoicePaid(){
+  warnInvoicePaid() {
     console.log('this invoice is paid', this.invoice);
     this.cashService.openGenericInfo(InformationType.INFO, 'The invoice was paid');
     this.createInvoice();
@@ -148,7 +149,7 @@ export class InvoiceService {
     .subscribe( data => console.log(data), err => console.log(err) );
   }
 
-  addPO2Invoice(inv: Invoice){
+  addPO2Invoice(inv: Invoice) {
     this.invoice.status = inv.status;
     this.invoice.paymentStatus = inv.paymentStatus;
     this.invoice.productOrders.push(inv.productOrders[0]);
@@ -158,7 +159,7 @@ export class InvoiceService {
     this.resetDigits();
   }
 
-  updateTotals(inv: Invoice){
+  updateTotals(inv: Invoice) {
     this.invoice.subTotal = inv.subTotal;
     this.invoice.tax = inv.tax;
     this.invoice.total = inv.total;
@@ -193,13 +194,13 @@ export class InvoiceService {
   removeHoldOrder(i: Invoice): void {
     // this.setUserToInvoice();
     this.dataStorage.changeInvoiceToRemoveHold(i).subscribe(
-      next=> {
+      next => {
         console.log(next);
         this.resetDigits();
         this.createInvoice();
         this.cashService.resetEnableState();
       },
-      err=> {
+      err => {
         console.error(err);
         this.cashService.openGenericInfo('Error', 'Can\'t complete remove on hold operation');
       });
@@ -227,15 +228,15 @@ export class InvoiceService {
     return this.dataStorage.getInvoiceById(this.digits, typeOp);
   }
 
-  getProductByUpc(typeOp: EOperationType): Observable<Product[]>{
+  getProductByUpc(typeOp: EOperationType): Observable<Product[]> {
     return this.dataStorage.getProductByUpc(this.numbers, typeOp);
   }
 
-  updateProductsPrice(upc: string, price: string, id: string){
+  updateProductsPrice(upc: string, price: string, id: string) {
     return this.dataStorage.updateProductByUpc(upc, price, id);
   }
 
-  setInvoice(inv: Invoice){
+  setInvoice(inv: Invoice) {
     this.invoice = inv;
     this.receiptNumber = this.invoice.receiptNumber;
     this.setTotal();
@@ -258,7 +259,7 @@ export class InvoiceService {
 
   cancelInvoice(): Observable<Invoice> {
     // this.setUserToInvoice();
-    return this.dataStorage.changeInvoiceToVoid(this.invoice)
+    return this.dataStorage.changeInvoiceToVoid(this.invoice);
   }
 
   cash(payment: number, totalToPaid: number, type: PaymentOpEnum = PaymentOpEnum.CASH): Observable<Invoice> {
@@ -297,11 +298,11 @@ export class InvoiceService {
                paymentMethod?: PaymentMethodEnum): Observable<Invoice> {
     const cardPayment = new CardManualPayment(payment, PaymentStatus.SAlE, this.invoice.receiptNumber, accountNumber,
       authCode, cardType);
-    return (client)? this.dataStorage.acctPayment(client, cardPayment,PaymentMethodEnum.CREDIT_CARD) :
+    return (client) ? this.dataStorage.acctPayment(client, cardPayment, PaymentMethodEnum.CREDIT_CARD) :
       this.dataStorage.paidByExternalCard(cardPayment, paymentMethod);
   }
 
-  getExternalCadTypes(): Observable<any>{
+  getExternalCadTypes(): Observable<any> {
     return this.dataStorage.getPaymentMedia();
   }
 
@@ -309,7 +310,7 @@ export class InvoiceService {
     return this.dataStorage.printInvoices(invoice);
   }
 
-  refund(): Observable<Invoice>{
+  refund(): Observable<Invoice> {
     return this.dataStorage.getInvoiceByIdRefund(this.digits);
   }
 
@@ -359,7 +360,7 @@ export class InvoiceService {
   }
 
   addPaidOut(data: string, descrip?: string) {
-    return this.dataStorage.addPaidOut(new PaidOut(+data, descrip))
+    return this.dataStorage.addPaidOut(new PaidOut(+data, descrip));
   }
 
   cancelCheck() {
@@ -370,7 +371,7 @@ export class InvoiceService {
         this.createInvoice();
         this.cashService.resetEnableState();
         },
-        err=> {
+        err => {
           console.error(err);
           this.cashService.openGenericInfo('Error', 'Can\'t complete cancel check operation');
       });
@@ -378,23 +379,23 @@ export class InvoiceService {
   }
 
   setDineIn(table: Table): Observable<Order> {
-    let createOrder = (table) => new Order(this.invoice.id, new OrderType(ETXType.DINEIN, null, table));
+    const createOrder = (table) => new Order(this.invoice.id, new OrderType(ETXType.DINEIN, null, table));
     return this.dataStorage.updateOrder(createOrder(table));
   }
 
   setRetail(): Observable<Order> {
-    let createOrder = () => new Order(this.invoice.id, new OrderType(ETXType.RETAIL, null, null));
+    const createOrder = () => new Order(this.invoice.id, new OrderType(ETXType.RETAIL, null, null));
     return this.dataStorage.updateOrder(createOrder());
   }
 
   setPickUp(data: string, text: any, descrip?): Observable<Order> {
-    let createOrder = (name, tel) => new Order(this.invoice.id, new OrderType(ETXType.PICKUP, new Client(name, tel),null, descrip));
+    const createOrder = (name, tel) => new Order(this.invoice.id, new OrderType(ETXType.PICKUP, new Client(name, tel), null, descrip));
     return this.dataStorage.updateOrder(createOrder(data, text));
   }
 
   setDelivery(name, address, phone, descrip?): Observable<Order> {
-    let createOrder = (name, address, phone, descrip) => {
-      return new Order(this.invoice.id, new OrderType(ETXType.DELIVERY, new Client(name, phone, address),null, descrip));
+    const createOrder = (name, address, phone, descrip) => {
+      return new Order(this.invoice.id, new OrderType(ETXType.DELIVERY, new Client(name, phone, address), null, descrip));
     };
     return this.dataStorage.updateOrder(createOrder(name, address, phone, descrip));
   }
@@ -403,7 +404,7 @@ export class InvoiceService {
     return this.dataStorage.getTables();
   }
 
-  setUser(userId):Observable<Invoice> {
+  setUser(userId): Observable<Invoice> {
     return this.dataStorage.setUserToInvoice(this.invoice.receiptNumber, userId);
   }
 
@@ -419,26 +420,26 @@ export class InvoiceService {
     return this.dataStorage.acctCharge(c, amount, this.receiptNumber);
   }
 
-  acctPaymentCash(client, amount){
-    let cashPayment = new CardManualPayment(amount, null, null, null, null, null);
+  acctPaymentCash(client, amount) {
+    const cashPayment = new CardManualPayment(amount, null, null, null, null, null);
     return this.dataStorage.acctPayment(client, <CardManualPayment>cashPayment, PaymentMethodEnum.CASH);
   }
 
-  subTotal(): Observable<Invoice>{
+  subTotal(): Observable<Invoice> {
     return this.dataStorage.subtotalInvoice(this.receiptNumber);
   }
 
-  fsSubTotal(): Observable<Invoice>{
+  fsSubTotal(): Observable<Invoice> {
     return this.dataStorage.fsSubtotalInvoice(this.receiptNumber);
   }
 
-  clear(): Observable<Invoice>{
+  clear(): Observable<Invoice> {
     return this.dataStorage.clearInvoice(this.receiptNumber);
   }
 
   paidByCheck(amount: number, checkNumber: string, descrip?: string, client?: string): Observable<Invoice> {
     const checkPayment = new CheckPayment(this.invoice.receiptNumber, amount, checkNumber, descrip);
-    return (client)? this.dataStorage.acctPayment(client, checkPayment, PaymentMethodEnum.CHECK) :
+    return (client) ? this.dataStorage.acctPayment(client, checkPayment, PaymentMethodEnum.CHECK) :
       this.dataStorage.paidByCheck(checkPayment);
 
   }
@@ -463,7 +464,7 @@ export class InvoiceService {
   }
 
   allowAddProductByStatus() {
-    const allowStatus = [InvoiceStatus.IN_PROGRESS, InvoiceStatus.CREATED, InvoiceStatus.IN_HOLD]
+    const allowStatus = [InvoiceStatus.IN_PROGRESS, InvoiceStatus.CREATED, InvoiceStatus.IN_HOLD];
     return (allowStatus.includes(this.invoice.status)) ? true : false;
   }
 }

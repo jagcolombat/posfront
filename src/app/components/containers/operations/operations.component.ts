@@ -73,8 +73,8 @@ export class OperationsComponent implements OnInit {
 
   @Input() customerOperations: Array<CustomerOpEnum | OtherOpEnum | AdminOpEnum> = [
     /*CustomerOpEnum.CUSTOMER, */CustomerOpEnum.ACCT_BALANCE, CustomerOpEnum.ACCT_PAYMENT,
-    CustomerOpEnum.ACCT_CHARGE, AdminOpEnum.UPDATE_APP];
-  @Input() customerColor = ['orange', 'orange', 'orange', 'red'];
+    CustomerOpEnum.ACCT_CHARGE];
+  @Input() customerColor = ['orange', 'orange', 'orange'];
 
   @Input() restaurantOperations = [FinancialOpEnum.TXTYPE, OtherOpEnum.ORDER_INFO, OtherOpEnum.TABLES];
   @Input() restaurantColor = 'green';
@@ -84,8 +84,6 @@ export class OperationsComponent implements OnInit {
   isRouteAdmin = (route: string) => (route.startsWith('/cash/options') ? true : false);
 
   ngOnInit() {
-    // this.operationService.cashService.systemConfig.companyType = CompanyType.RESTAURANT;
-    // this.operationService.cashService.getSystemConfig().subscribe(config => {
     const config = this.operationService.cashService.config.sysConfig;
     if (config.allowCardSplit && config.paxConnType === PAXConnTypeEnum.ONLINE ) {
       /*this.customerOperations.unshift(OtherOpEnum.SPLIT_CARD);
@@ -130,9 +128,11 @@ export class OperationsComponent implements OnInit {
       });
       this.financeOperations.push(logoutOp[0]);
     }
-   /* }, err => {
-      this.operationService.cashService.openGenericInfo('Error', 'Can\'t get configuration');
-    });*/
+    if (config.allowClientUpdate) {
+      // Remove restaurant operations
+      this.customerOperations.push(AdminOpEnum.UPDATE_APP);
+      this.customerColor.push('red');
+    }
   }
 
   financeKey(ev) {

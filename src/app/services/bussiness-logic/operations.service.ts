@@ -41,6 +41,7 @@ import {PaymentMethodEnum} from '../../utils/operations/payment-method.enum';
 import {InitViewService} from './init-view.service';
 import {ScanOpEnum} from '../../utils/operations/scanner-op.enum';
 import {ClientModel} from '../../models/client.model';
+import {debounceTime} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -243,33 +244,35 @@ export class OperationsService {
       this.getPriceAndUPCOfWFP();
     }
     // Consume servicio addProduct con this.digits esto devuelve ProductOrder
-    this.invoiceService.addProductByUpc(EOperationType.Plu).subscribe(prods => {
-      this.selectProd(prods).subscribe(prod => {
-        console.log(EOperationType[op], prod, this.invoiceService.qty);
-        this.initService.setOperation(op, 'Product', 'Get product id: ' + prod.id);
-        prod ? this.invoiceService.evAddProdByUPC.emit(prod) : this.invoiceService.resetDigits();
-      });
-    }, err => {
-      console.error('addProductByUpc', err);
-      if (isWFormat) {
-        this.invoiceService.numbers = origUPC;
-        this.invoiceService.addProductByUpc(op).subscribe(prods => {
-          this.selectProd(prods).subscribe(prod => {
-            console.log(EOperationType[op], prod, this.invoiceService.qty);
-            this.initService.setOperation(op, 'Product', 'Get product id: ' + prod.id);
-            prod ? this.invoiceService.evAddProdByUPC.emit(prod) : this.invoiceService.resetDigits();
+    this.invoiceService.addProductByUpc(EOperationType.Plu)
+      .pipe(debounceTime(this.cashService.config.sysConfig.debounceTime * 100))
+      .subscribe(prods => {
+        this.selectProd(prods).subscribe(prod => {
+          console.log(EOperationType[op], prod, this.invoiceService.qty);
+          this.initService.setOperation(op, 'Product', 'Get product id: ' + prod.id);
+          prod ? this.invoiceService.evAddProdByUPC.emit(prod) : this.invoiceService.resetDigits();
+        });
+      }, err => {
+        console.error('addProductByUpc', err);
+        if (isWFormat) {
+          this.invoiceService.numbers = origUPC;
+          this.invoiceService.addProductByUpc(op).subscribe(prods => {
+            this.selectProd(prods).subscribe(prod => {
+              console.log(EOperationType[op], prod, this.invoiceService.qty);
+              this.initService.setOperation(op, 'Product', 'Get product id: ' + prod.id);
+              prod ? this.invoiceService.evAddProdByUPC.emit(prod) : this.invoiceService.resetDigits();
+            });
+          }, err => {
+            console.error('addProductByUpc', err);
+            this.invoiceService.resetDigits();
+            this.cashService.openGenericInfo('Error', 'Can\'t complete get product by plu');
           });
-        }, err => {
-          console.error('addProductByUpc', err);
+        } else {
           this.invoiceService.resetDigits();
           this.cashService.openGenericInfo('Error', 'Can\'t complete get product by plu');
-        });
-      } else {
-        this.invoiceService.resetDigits();
-        this.cashService.openGenericInfo('Error', 'Can\'t complete get product by plu');
-      }
-    });
-    this.resetInactivity(false);
+        }
+      });
+      this.resetInactivity(false);
   }
 
   selectProd(prods: Product[]): Observable<Product> {

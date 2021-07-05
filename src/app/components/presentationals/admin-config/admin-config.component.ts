@@ -45,6 +45,8 @@ export class AdminConfigComponent implements OnInit {
   printTicket: boolean;
   printMerchantTicket: boolean;
   printInitTicket: boolean;
+  allowClientUpdate: boolean;
+  debounceTimeScanner: string;
 
   constructor( public dialogRef: MatDialogRef<AdminConfigComponent>, @Inject(MAT_DIALOG_DATA) public data: any,
                private cashService: CashService) {
@@ -77,6 +79,8 @@ export class AdminConfigComponent implements OnInit {
     this.printInitTicket = this.cashService.config.sysConfig.printInitTicket;
     this.printMerchantTicket = this.cashService.config.sysConfig.printMerchantTicket;
     this.printCloseDayAutom = this.cashService.config.sysConfig.printCloseDayAutomatic;
+    this.allowClientUpdate = this.cashService.config.sysConfig.allowClientUpdate;
+    this.debounceTimeScanner = this.cashService.config.sysConfig.debounceTime + '';
 
     if (this.cashService.config.sysConfig.inactivityTime) {
       this.timeLogout = this.cashService.config.sysConfig.inactivityTime + '';
@@ -251,6 +255,17 @@ export class AdminConfigComponent implements OnInit {
     this.printMerchantTicket = $event.checked;
   }
 
+  setAllowClientUpdate($event: any) {
+    console.log('setAllowClientUpdate', $event, this.allowClientUpdate);
+    this.allowClientUpdate = $event.checked;
+    this.needLogout = true;
+  }
+
+  setTime4Scanner($event: any) {
+    console.log('setTime4Scanner', $event, this.debounceTimeScanner);
+    this.needLogout = true;
+  }
+
   done() {
     const conf = Object.assign({}, this.cashService.config.sysConfig);
     this.cashService.config.sysConfig.allowAddProdGen = this.allowAddProdGen;
@@ -282,10 +297,15 @@ export class AdminConfigComponent implements OnInit {
     this.cashService.config.sysConfig.printInitTicket = this.printInitTicket;
     this.cashService.config.sysConfig.printMerchantTicket = this.printMerchantTicket;
     this.cashService.config.sysConfig.printCloseDayAutomatic = this.printCloseDayAutom;
+    this.cashService.config.sysConfig.allowClientUpdate = this.allowClientUpdate;
+    this.cashService.config.sysConfig.debounceTime = +this.debounceTimeScanner;
 
     this.cashService.config.setConfig(this.cashService.config.sysConfig).subscribe(value => {
       console.log('set configuration', value, conf);
       this.cashService.config.sysConfig = <Configuration> value;
+      if (!this.cashService.config.sysConfig.debounceTime) {
+        this.cashService.config.sysConfig.debounceTime = +this.debounceTimeScanner;
+      }
       if (this.needLogout) {
         this.cashService.openGenericInfo(InformationType.INFO,
           'Please logout and login for apply the new configuration successfully. Do you want logout?',
