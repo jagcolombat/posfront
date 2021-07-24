@@ -32,7 +32,7 @@ export class AgGridComponent implements OnInit, /*OnChanges,*/ OnDestroy {
     };
     // this.subscriptions.push(this.invoiceService.evAddProd.subscribe(po => this.onAddRow(po)));
     this.subscriptions.push(this.invoiceService.evDelAllProds.subscribe(ev => this.clearData()));
-    this.subscriptions.push(this.invoiceService.evDelProd.subscribe(ev => this.onRemoveSelected()));
+    this.subscriptions.push(this.invoiceService.evDelProd.subscribe(ev => this.onRemoveSelected(ev)));
     this.subscriptions.push(this.invoiceService.evUpdateProds.subscribe(ev => this.updateItems(ev)));
     this.subscriptions.push(this.invoiceService.evAddProd.subscribe(ev => this.onAddRow(ev)));
     this.subscriptions.push(this.cashService.evReviewEnableState.subscribe(ev => this.updateSelectable(ev)));
@@ -151,7 +151,7 @@ export class AgGridComponent implements OnInit, /*OnChanges,*/ OnDestroy {
     });
   }
 
-  onRemoveSelected() {
+  onRemoveSelected(ev: any) {
     const selectedData = this.gridOptions.api.getSelectedRows();
     console.log('selectedData', selectedData);
     if (selectedData.length > 0 && this.selectableProd) {
@@ -159,6 +159,13 @@ export class AgGridComponent implements OnInit, /*OnChanges,*/ OnDestroy {
       this.invoiceService.delPOFromInvoice(selectedData)
         .subscribe(data => {
             console.log('delPOFromInvoice', data);
+            if(ev) {
+              this.cashService.authServ.logout().subscribe(
+                next => {
+                  this.cashService.authServ.token = ev;
+                }
+              )
+            }
             if (data.status === InvoiceStatus.PAID) {
               this.invoiceService.warnInvoicePaid();
             } else {

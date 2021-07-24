@@ -173,7 +173,7 @@ export class OperationsService {
           }
         });
       } else {
-        this.invoiceService.evDelProd.emit(true);
+        this.invoiceService.evDelProd.emit();
       }
 
     }
@@ -192,8 +192,8 @@ export class OperationsService {
     this.authService.adminLogged() ? this.deleteSelectedProducts() : this.manager('clear');
   }
 
-  deleteSelectedProducts() {
-    this.invoiceService.evDelProd.emit(true); /*
+  deleteSelectedProducts(token?: any) {
+    this.invoiceService.evDelProd.emit(token); /*
     this.invoiceService.invoiceProductSelected.splice(0);
     this.invoiceService.setTotal();*/
   }
@@ -443,6 +443,8 @@ export class OperationsService {
       this.currentOperation = TotalsOpEnum.SUBTOTAL;
       const refundOrRefunSale = this.invoiceService.invoice.isRefund || this.invoiceService.invoice.isRefundSale;
       this.cashService.totalsDisabled(refundOrRefunSale, this.cashService.config.sysConfig.allowEBT);
+      this.cashService.setOperation(EOperationType.Subtotal, 'Invoice', 'Before operation Subtotal by ' + 
+        this.cashService.authServ.token.user_id);
       this.invoiceService.subTotal().subscribe(
         next => {
           /*next.isPromotion = true;
@@ -722,12 +724,20 @@ export class OperationsService {
     this.resetInactivity(true);
   }
 
+  opByAdminLogout(t: Token) {
+    this.authService.logout().subscribe(
+      next => this.authService.token = t,
+      error => this.cashService.openGenericInfo(InformationType.ERROR, error)
+    )
+  }
+
   cancelCheckByAdmin(t?: Token) {
     console.log('cancelCheckByAdmin', t);
     const dialog = this.cashService.openGenericInfo(InformationType.INFO, 'Voiding transaction');
     this.invoiceService.cancelInvoice().subscribe(next => {
       dialog.close();
-      this.authService.token = t;
+      this.opByAdminLogout(t);
+      // this.authService.token = t;
       this.invoiceService.createInvoice();
     }, err => {
       console.error('cancelCheck failed');
@@ -739,8 +749,8 @@ export class OperationsService {
 
   clearCheckByAdmin(t?: Token) {
     console.log('clearCheckByAdmin', t);
-    this.deleteSelectedProducts();
-    this.authService.token = t;
+    this.deleteSelectedProducts(t);
+    // this.authService.token = t;
     this.resetInactivity(true);
   }
 

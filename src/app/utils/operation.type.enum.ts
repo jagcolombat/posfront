@@ -45,6 +45,7 @@ export enum EOperationType {
     Tables,
     OrderInfo,
     WeightItem,
+    PrevScreen,
 
     InitCustomerScreen,
     ReconnectCustomerScreen,

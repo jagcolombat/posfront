@@ -215,6 +215,9 @@ export class AdminOptionsService {
 
   backToUser() {
     console.log('backUser', this.auth.token, this.auth.initialLogin);
+    const initUserId = this.auth.initialLogin ? this.auth.initialLogin.user_id : '';
+    this.cashService.setOperation(EOperationType.PrevScreen, 'Previous Screen', 'token: ' + 
+      this.auth.token.user_id + ' - initialToken: ' + initUserId);
     if (this.auth.initialLogin && (this.auth.token.user_id !== this.auth.initialLogin.user_id)) {
       this.auth.restoreInitialLogin();
       this.router.navigateByUrl('/cash/dptos');
@@ -223,10 +226,30 @@ export class AdminOptionsService {
         next => console.log(this.invoiceService.cashier + ' was assigned to the invoice ' + next.receiptNumber),
         error1 => this.cashService.openGenericInfo(InformationType.ERROR,
           'Can\'t be assigned the user ' + this.invoiceService.cashier + ' to invoice'));
+      /* this.auth.logout().subscribe(
+        next => {
+          this.auth.login(new CredentialsModel(this.auth.initialLogin.username)).subscribe(
+            next => this.prevScreen(next),
+            error => this.cashService.openGenericInfo(InformationType.ERROR, error)
+          )
+        }
+      ) */
     } else {
       // this.cashService.openGenericInfo('Information', 'Any user was logged previously')
       this.router.navigateByUrl('/cash/dptos');
     }
+  }
+
+  prevScreen(loginResp: any) {
+    console.log("prevScreen", loginResp);
+    // this.auth.restoreInitialLogin();
+    this.auth.initialLogin = undefined;
+    this.router.navigateByUrl('/cash/dptos');
+    this.invoiceService.getCashier();
+    this.invoiceService.setUser(this.invoiceService.getUserId()).subscribe(
+      next => console.log(this.invoiceService.cashier + ' was assigned to the invoice ' + next.receiptNumber),
+      error1 => this.cashService.openGenericInfo(InformationType.ERROR,
+        'Can\'t be assigned the user ' + this.invoiceService.cashier + ' to invoice'));
   }
 
   configOption() {
