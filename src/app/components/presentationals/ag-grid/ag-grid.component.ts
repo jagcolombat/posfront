@@ -7,6 +7,7 @@ import { CustomHeaderComponent } from './custom-header.component';
 import { CustomNameupcCellComponent } from './custom-nameupc-cell.component';
 import { CashService } from '../../../services/bussiness-logic/cash.service';
 import {InvoiceStatus} from '../../../utils/invoice-status.enum';
+import { error } from 'protractor';
 
 @Component({
   selector: 'ag-grid',
@@ -163,6 +164,8 @@ export class AgGridComponent implements OnInit, /*OnChanges,*/ OnDestroy {
               this.cashService.authServ.logout().subscribe(
                 next => {
                   this.cashService.authServ.token = ev;
+                }, error => {
+                  this.cashService.evLogout.emit(true);
                 }
               )
             }

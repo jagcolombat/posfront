@@ -724,10 +724,17 @@ export class OperationsService {
     this.resetInactivity(true);
   }
 
-  opByAdminLogout(t: Token) {
+  opByAdminLogout(t: Token, callback?: () => void) {
     this.authService.logout().subscribe(
-      next => this.authService.token = t,
-      error => this.cashService.openGenericInfo(InformationType.ERROR, error)
+      next => {
+        this.authService.token = t;
+        callback();
+      },
+      error => {
+        this.cashService.openGenericInfo(InformationType.ERROR, error).afterClosed().subscribe(
+          next => this.logoutOp()
+        );
+      }  
     )
   }
 
@@ -736,15 +743,20 @@ export class OperationsService {
     const dialog = this.cashService.openGenericInfo(InformationType.INFO, 'Voiding transaction');
     this.invoiceService.cancelInvoice().subscribe(next => {
       dialog.close();
-      this.opByAdminLogout(t);
+      this.opByAdminLogout(t, () => this.afterCancel());
       // this.authService.token = t;
-      this.invoiceService.createInvoice();
     }, err => {
       console.error('cancelCheck failed');
       dialog.close();
       this.cashService.openGenericInfo('Error', 'Can\'t complete void operation');
     });
     this.resetInactivity(true);
+  }
+
+  afterCancel(){
+    this.cashService.setOperation(EOperationType.CreateInvoice, 'Invoice', 
+      'Before create invoice after void by ' + this.cashService.authServ.token.user_id);
+    this.invoiceService.createInvoice();
   }
 
   clearCheckByAdmin(t?: Token) {

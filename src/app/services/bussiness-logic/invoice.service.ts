@@ -91,7 +91,7 @@ export class InvoiceService {
         this.setTotal();
         this.evCreateInvoice.next(true);
         this.cashService.setOperation(EOperationType.CreateInvoice, 'Invoice', 'Created invoice ' + next.receiptNumber +
-          'by ' + this.cashService.authServ.token.user_id);
+          ' by ' + this.cashService.authServ.token.user_id);
       }, err => {
         console.error('createCheck failed');
         this.isCreating = false;
