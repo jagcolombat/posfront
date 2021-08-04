@@ -76,7 +76,7 @@ export class OperationsService {
   navigateToDept() {
     this.resetInactivity(true);
     if (this.router.url.includes('products')) {
-      this.router.navigateByUrl('/cash/dptos');
+      this.router.navigateByUrl('/cash/dptos', { replaceUrl: true });
     }
   }
 
@@ -346,7 +346,7 @@ export class OperationsService {
         this.actionByManager(action, this.authService.token, data);
       } else {
         this.authService.token.rol === UserrolEnum.ADMIN ?
-          this.router.navigateByUrl('/cash/options') :
+          this.router.navigateByUrl('/cash/options', { replaceUrl: true }) :
           this.adminLogin().subscribe( res => this.adminLoginOp(res));
       }
     } else {
@@ -369,7 +369,7 @@ export class OperationsService {
         this.actionByManager(action, response.token, data);
       } else {
         this.invoiceService.getCashier();
-        this.router.navigateByUrl('/cash/options');
+        this.router.navigateByUrl('/cash/options', { replaceUrl: true });
       }
     }
   }
@@ -706,7 +706,7 @@ export class OperationsService {
     this.invoiceService.removeInvoice();
     this.cashService.resetEnableState();
     this.cashService.evResetStock.emit();
-    this.router.navigateByUrl('/init');
+    this.router.navigateByUrl('/init', { replaceUrl: true });
     this.resetInactivity(false);
   }
 
@@ -2131,7 +2131,7 @@ export class OperationsService {
               console.log(next);
               this.cashService.openGenericInfo('Information', 'The price of product ' +
                 next['upc'] + ' was updated to ' + next['price'].toFixed(2))
-                .afterClosed().subscribe(next => this.router.navigateByUrl('/cash/dptos'));
+                .afterClosed().subscribe(next => this.router.navigateByUrl('/cash/dptos', { replaceUrl: true }));
             },
             err => {
               this.cashService.openGenericInfo('Error', 'Can\'t change price of this product ' + prod.upc);

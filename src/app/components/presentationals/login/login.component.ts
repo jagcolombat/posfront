@@ -67,8 +67,9 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   selectRoute() {
-    (this.authService.adminLogged()) ? this.router.navigateByUrl('/cash/options') :
-      this.router.navigateByUrl('/cash');
+    (this.authService.adminLogged()) ? 
+      this.router.navigateByUrl('/cash/options', { replaceUrl: true }) :
+      this.router.navigateByUrl('/cash', { replaceUrl: true });
   }
 
   invalidAuth(msg?: string) {

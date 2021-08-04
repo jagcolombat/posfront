@@ -68,7 +68,7 @@ export class AdminOptionsComponent implements OnInit {
     if(!this.adminOpService.cashService.opDenyByUser(opt, UserrolEnum.SUPERVISOR)) {
       switch (opt) {
         case AdminOpEnum.DEPARMENTS.toUpperCase():
-          this.router.navigateByUrl('/cash/dptos');
+          this.router.navigateByUrl('/cash/dptos', { replaceUrl: true });
           break;
         case AdminOpEnum.APPLY_DISCOUNT.toUpperCase():
           this.adminOpService.setApplyDiscountType();

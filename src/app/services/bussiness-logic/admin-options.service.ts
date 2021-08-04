@@ -220,7 +220,7 @@ export class AdminOptionsService {
       this.auth.token.user_id + ' - initialToken: ' + initUserId);
     if (this.auth.initialLogin && (this.auth.token.user_id !== this.auth.initialLogin.user_id)) {
       this.auth.restoreInitialLogin();
-      this.router.navigateByUrl('/cash/dptos');
+      this.router.navigateByUrl('/cash/dptos', { replaceUrl: true });
       this.invoiceService.getCashier();
       this.invoiceService.setUser(this.invoiceService.getUserId()).subscribe(
         next => console.log(this.invoiceService.cashier + ' was assigned to the invoice ' + next.receiptNumber),
@@ -236,7 +236,7 @@ export class AdminOptionsService {
       ) */
     } else {
       // this.cashService.openGenericInfo('Information', 'Any user was logged previously')
-      this.router.navigateByUrl('/cash/dptos');
+      this.router.navigateByUrl('/cash/dptos', { replaceUrl: true });
     }
   }
 

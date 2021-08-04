@@ -55,7 +55,7 @@ export class ListProdComponent implements OnInit {
           }, error1 => {
             this.loading = false;
             this.stockService.cashService.openGenericInfo('Error', error1/*'Can\'t get products for this deparment'*/);
-            this.router.navigateByUrl('/cash/dptos');
+            this.router.navigateByUrl('/cash/dptos', { replaceUrl: true });
           });
       }
     });
@@ -149,7 +149,7 @@ export class ListProdComponent implements OnInit {
       .filter(dept => dept.id === this.dpto);
 
     (dept.length === 1 && dept[0].departmentType === EDepartmentType.CHILD) ?
-      this.router.navigateByUrl('cash/dptos/' + dept[0].parentId) :
-      this.router.navigateByUrl('cash/dptos/');
+      this.router.navigateByUrl('cash/dptos/' + dept[0].parentId, { replaceUrl: true }) :
+      this.router.navigateByUrl('cash/dptos/', { replaceUrl: true });
   }
 }

@@ -39,7 +39,7 @@ export class ListDptoComponent implements OnInit {
     } else if (dpto.departmentType === EDepartmentType.PARENT){
       this.getChildrenDept(dpto.id);
     } else {
-      this.router.navigateByUrl('/cash/products/' + dpto.id + '/' + dpto.tax);
+      this.router.navigateByUrl('/cash/products/' + dpto.id + '/' + dpto.tax, { replaceUrl: true });
     }
     this.stockService.operationService.resetInactivity(true, 'select dept');
   }
@@ -104,7 +104,7 @@ export class ListDptoComponent implements OnInit {
           this.stockService.getProductsByFilter(next.text).subscribe(prods => {
             this.stockService.productsFiltered.splice(0);
             Object.assign(this.stockService.productsFiltered, prods);
-            this.router.navigateByUrl('/cash/filteredproducts/' + next.text);
+            this.router.navigateByUrl('/cash/filteredproducts/' + next.text, { replaceUrl: true });
           }, err => {
             this.stockService.cashService.openGenericInfo('Error', 'Not match any products with ' +
               'the specified filter');

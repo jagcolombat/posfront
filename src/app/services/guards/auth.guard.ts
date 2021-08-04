@@ -18,7 +18,7 @@ export class AuthGuard implements CanActivate {
     state: RouterStateSnapshot): Observable<boolean> {
     return of(this.authService.token ? true : false).pipe(map(allowed => {
       console.log('authguard', allowed);
-      if (!allowed) { this.router.navigate(['/init']); } else { return true; }
+      if (!allowed) { this.router.navigate(['/init'], {replaceUrl: true}); } else { return true; }
     }));
   }
 }
