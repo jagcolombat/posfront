@@ -244,7 +244,7 @@ export class AdminOptionsService {
     console.log("prevScreen", loginResp);
     // this.auth.restoreInitialLogin();
     this.auth.initialLogin = undefined;
-    this.router.navigateByUrl('/cash/dptos');
+    this.router.navigateByUrl('/cash/dptos', { replaceUrl: true });
     this.invoiceService.getCashier();
     this.invoiceService.setUser(this.invoiceService.getUserId()).subscribe(
       next => console.log(this.invoiceService.cashier + ' was assigned to the invoice ' + next.receiptNumber),
@@ -529,7 +529,7 @@ export class AdminOptionsService {
   }
 
   selectForChangePrice() {
-    this.router.navigateByUrl('/cash/dptos');
+    this.router.navigateByUrl('/cash/dptos', { replaceUrl: true });
     this.operationService.currentOperation = AdminOpEnum.CHANGE_PRICES;
     this.cashService.changePriceEnableState();
   }

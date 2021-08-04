@@ -5,6 +5,7 @@ import {InitViewService} from '../../../services/bussiness-logic/init-view.servi
 import {Subscription} from 'rxjs';
 import {UserrolEnum} from '../../../utils/userrol.enum';
 import {NgForm} from '@angular/forms';
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'login',
@@ -30,7 +31,9 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   login() {
-    this.authService.login({ username: 'user', password: this.input }).subscribe(t => {
+    this.authService.login({ username: 'user', password: this.input })
+    .pipe(debounceTime(1000))
+    .subscribe(t => {
       this.loginOK(t);
     }, error1 => {
       this.loginFail(error1);
