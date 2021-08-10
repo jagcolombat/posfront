@@ -86,9 +86,8 @@ export class OperationsComponent implements OnInit {
   ngOnInit() {
     const config = this.operationService.cashService.config.sysConfig;
     if (config.allowCardSplit && config.paxConnType === PAXConnTypeEnum.ONLINE ) {
-      /*this.customerOperations.unshift(OtherOpEnum.SPLIT_CARD);
-      this.customerColor.unshift('yellow');*/
-      this.restaurantOperations.push(OtherOpEnum.SPLIT_CARD);
+      this.customerOperations.unshift(OtherOpEnum.SPLIT_CARD);
+      this.customerColor.unshift('yellow');
     }
     if (config.companyType === CompanyType.RESTAURANT || !config.allowEBT) {
       // Remove EBT options and colors in payment
@@ -129,9 +128,9 @@ export class OperationsComponent implements OnInit {
       this.financeOperations.push(logoutOp[0]);
     }
     if (config.allowClientUpdate) {
-      // Remove restaurant operations
-      this.customerOperations.push(AdminOpEnum.UPDATE_APP);
-      this.customerColor.push('red');
+      // Add update app operation to customer group
+      // this.customerOperations.push(AdminOpEnum.UPDATE_APP);
+      // this.customerColor.push('red');
     }
   }
 
@@ -326,11 +325,8 @@ export class OperationsComponent implements OnInit {
       case CustomerOpEnum.ACCT_CHARGE:
         this.operationService.acctCharge();
         break;
-      /*case OtherOpEnum.SPLIT_CARD:
+      case OtherOpEnum.SPLIT_CARD:
         this.operationService.splitCard();
-        break;*/
-      case AdminOpEnum.UPDATE_APP:
-        this.adminOpService.updateApp();
         break;
     }
   }
@@ -346,9 +342,6 @@ export class OperationsComponent implements OnInit {
         break;
       case FinancialOpEnum.TXTYPE:
         this.operationService.txType();
-        break;
-      case OtherOpEnum.SPLIT_CARD:
-        this.operationService.splitCard();
         break;
     }
   }
