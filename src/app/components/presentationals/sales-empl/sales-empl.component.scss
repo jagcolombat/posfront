@@ -1,5 +1,5 @@
 :host {
-  font-size: 18px;
+  font-size: 16px;
   width: 100%;
   display: flex;
   align-items: center;
@@ -7,6 +7,27 @@
   flex-direction: column;
   padding: 10px;
 }
+
+label.employee {
+  margin: 5px 0 15px 0;
+}
+
+.grid, .button {
+  display: flex;
+  width: 95%;
+  height: 500px;
+}
+
+.button {
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+
+  & > list-invoices {
+    display: flex;
+    flex-wrap: wrap;
+  }
+} 
 
 ag-grid-angular {
   width: 650px;

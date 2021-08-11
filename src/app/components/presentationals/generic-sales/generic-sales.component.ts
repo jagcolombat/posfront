@@ -6,6 +6,7 @@ import {DataStorageService} from '../../../services/api/data-storage.service';
 import {CashService} from '../../../services/bussiness-logic/cash.service';
 import {InvoiceService} from '../../../services/bussiness-logic/invoice.service';
 import {OperationsService} from '../../../services/bussiness-logic/operations.service';
+import { InformationType } from 'src/app/utils/information-type.enum';
 
 @Component({
   selector: 'app-generic-sales',
@@ -98,11 +99,16 @@ export class GenericSalesComponent implements OnInit {
 
   onPrint() {
     console.log('Print invoices by user', this.data.empl);
+    this.cashService.dialog.closeAll();
+    let dialog;
     if ( this.data.empl) {
+      dialog = this.cashService.openGenericInfo(InformationType.INFO, 'Printing report...');
       this.dataStorage.printInvoiceByUser( this.data.empl.id).subscribe(next => {
+        dialog.close();
         console.log(next);
       }, error1 => {
-        console.error('getSales', error1);
+        dialog.close();
+        this.cashService.openGenericInfo(InformationType.ERROR, error1);
       });
     } else {
       console.log('Debe seleccionar un empleado');

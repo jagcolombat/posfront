@@ -193,12 +193,22 @@ export class AdminOptionsService {
       .afterClosed().subscribe(next => {
         console.log('afterCloseSetDate', next, emp);
         this.cashService.dialog.open(GenericSalesComponent, {
-          width: '700px', height: '680px', disableClose: true, data: {
+          width: '820px', disableClose: true, data: {
             title: AdminOpEnum.EMPLZ, empl: emp, salesDate: next.date
           }
-        });
+        }).afterClosed().subscribe(
+          next => {
+            console.log('after close emplZ', next);
+            if(next.receiptNumber) this.reviewCheck(next.receiptNumber);
+          }  
+        );
       });
     // this.dayCloseType('', AdminOpEnum.WTDZ);
+  }
+
+  reviewCheck(receiptNumber: string) {
+    this.invoiceService.digits = receiptNumber;
+    this.operationService.reviewCheck();
   }
 
   /*showSalesByEmployee1(emp: any) {

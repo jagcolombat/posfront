@@ -10,7 +10,7 @@
 }
 
 sales-shop, sales-empl {
-  width: 100%;
+  width: 95%;
 }
 
 .price {
@@ -25,8 +25,8 @@ sales-shop, sales-empl {
   flex-direction: column;
 }
 
-button[mat-raised-button] {
-  //cursor: default !important;
+button [mat-raised-button] {
+  cursor: none !important;
 }
 
 .show {

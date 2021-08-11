@@ -24,24 +24,23 @@ export class SalesEmplComponent implements OnInit {
   @Output() selectEmployed = new EventEmitter<string>();
   @Output() selectInvoice = new EventEmitter<string>();
   @Input() emplSel: any;
+  @Input() listType: 'grid' | 'button' = 'grid';
   public gridOptions: GridOptions;
   private gridApi: GridApi;
   columnDefs: any;
-  /*bottomOptions = <GridOptions>{
-    alignedGrids: [],
-    suppressHorizontalScroll: true,
-    rowStyle: {fontWeight: 'bold', fontSize: '16px'}
-  };
-
-  @ViewChild('topGrid') topGrid;
-  @ViewChild('bottomGrid') bottomGrid;*/
 
   bottomData = [{
     receiptNumber: 'Total',
     date: '',
     total: 0,
     tips: 0
-  }]
+  }];
+
+  listButtonData: { invoice: any[], label: string, detail?: string, subdetail?: string} = {
+    invoice: [], label: '', detail: '', subdetail: ''
+  };
+  sizePage = 12;
+  page = 1;
 
   constructor(private dataStorage: DataStorageService, private cashService: CashService) {
     this.updateGridOptions();
@@ -123,18 +122,30 @@ export class SalesEmplComponent implements OnInit {
 
   private setData() {
     console.log('setData', this.sales);
-    let salesTotal = 0;
-    let tipsTotal = 0;
-    this.sales.forEach((v, i) => {
-      this.sales[i].total = (v.total).toFixed(2);
-      salesTotal += +this.sales[i].total;
-      this.sales[i]['tips']= (v.tips ? v.tips : 0.00).toFixed(2);
-      tipsTotal += +this.sales[i]['tips'];
-    });
-    this.bottomData[0].total = +salesTotal.toFixed(2);
-    this.bottomData[0].tips = +tipsTotal.toFixed(2);
-    this.gridOptions.api.setRowData(this.sales);
-    this.gridOptions.api.sizeColumnsToFit();
+    
+    if(this.listType === 'grid') {
+      // Set footer data for grid
+      let salesTotal = 0;
+      let tipsTotal = 0;
+      this.sales.forEach((v, i) => {
+        this.sales[i].total = (v.total).toFixed(2);
+        salesTotal += +this.sales[i].total;
+        this.sales[i]['tips']= (v.tips ? v.tips : 0.00).toFixed(2);
+        tipsTotal += +this.sales[i]['tips'];
+      });
+
+      this.bottomData[0].total = +salesTotal.toFixed(2);
+      this.bottomData[0].tips = +tipsTotal.toFixed(2);
+      this.gridOptions.api.setRowData(this.sales);
+      this.gridOptions.api.sizeColumnsToFit();
+    } else {
+      // Prepare data for buutons list 
+      this.sales.map(sale => sale.date = dateFormatter(sale.date));
+      this.listButtonData['invoice'] = this.sales;
+      this.listButtonData['label'] = 'receiptNumber';
+      this.listButtonData['detail'] = 'total';
+      this.listButtonData['subdetail'] = 'date';
+    }
   }
 
   /*onPrint() {
@@ -158,5 +169,9 @@ export class SalesEmplComponent implements OnInit {
     //this.gridOptions.columnApi.setColumnVisible('tips', show);
     //this.gridOptions.api.sizeColumnsToFit();
     //this.gridOptions.alignedGrids.push(this.gridOptions);
+  }
+
+  setPage(ev){
+    this.page = ev;
   }
 }
