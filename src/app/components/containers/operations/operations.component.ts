@@ -78,10 +78,16 @@ export class OperationsComponent implements OnInit {
 
   @Input() restaurantOperations = [FinancialOpEnum.TXTYPE, OtherOpEnum.ORDER_INFO, OtherOpEnum.TABLES];
   @Input() restaurantColor = 'green';
+
+  @Input() cashierAdminOperations = [AdminOpEnum.UPDATE_APP, AdminOpEnum.WTDZ, AdminOpEnum.CCSZ];
+  @Input() cashierAdminColor = 'red';
   routeAdmin: boolean;
   showForAdmin = false;
 
   isRouteAdmin = (route: string) => (route.startsWith('/cash/options') ? true : false);
+
+  isRestaurant = 
+    () => [CompanyType.RESTAURANT].includes(this.operationService.cashService.config.sysConfig.companyType);
 
   ngOnInit() {
     const config = this.operationService.cashService.config.sysConfig;
@@ -127,10 +133,10 @@ export class OperationsComponent implements OnInit {
       });
       this.financeOperations.push(logoutOp[0]);
     }
-    if (config.allowClientUpdate) {
+    if (config.companyType === CompanyType.RESTAURANT && !config.allowClientUpdate) {
       // Add update app operation to customer group
-      // this.customerOperations.push(AdminOpEnum.UPDATE_APP);
-      // this.customerColor.push('red');
+      this.cashierAdminOperations.splice(0);
+      this.cashierAdminColor = '';
     }
   }
 
@@ -343,6 +349,22 @@ export class OperationsComponent implements OnInit {
       case FinancialOpEnum.TXTYPE:
         this.operationService.txType();
         break;
+    }
+  }
+
+  cashierAdminKey(ev) {
+    if (!this.adminOpService.cashService.opDenyByUser(ev.toUpperCase(), UserrolEnum.SUPERVISOR)) {
+      switch (ev) {
+        case AdminOpEnum.UPDATE_APP:
+          this.adminOpService.updateApp();
+          break;
+        case AdminOpEnum.WTDZ:
+          this.adminOpService.closeDay(AdminOpEnum.WTDZ);
+          break;
+        case AdminOpEnum.CCSZ:
+          this.adminOpService.cashierCloseShift();
+          break;
+      }
     }
   }
 }

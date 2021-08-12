@@ -76,6 +76,10 @@
   </operation-group>
   <operation-group fxFlex.lg="20" fxFlex.md="25" [operations]="restaurantOperations" [colors]="restaurantColor"
                    (evPressKeys)="restaurantKey($event)"
-                   *ngIf="!showForAdmin ">
+                   *ngIf="!showForAdmin && isRestaurant() ">
+  </operation-group>
+  <operation-group fxFlex.lg="20" fxFlex.md="25" [operations]="cashierAdminOperations" [colors]="cashierAdminColor"
+                   (evPressKeys)="cashierAdminKey($event)"
+                   *ngIf="!showForAdmin && !isRestaurant() ">
   </operation-group>
 </div>

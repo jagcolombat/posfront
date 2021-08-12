@@ -24,7 +24,7 @@ export class SalesEmplComponent implements OnInit {
   @Output() selectEmployed = new EventEmitter<string>();
   @Output() selectInvoice = new EventEmitter<string>();
   @Input() emplSel: any;
-  @Input() listType: 'grid' | 'button' = 'grid';
+  @Input() listType: 'grid' | 'button' = 'button';
   public gridOptions: GridOptions;
   private gridApi: GridApi;
   columnDefs: any;
