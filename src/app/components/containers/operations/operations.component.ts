@@ -138,6 +138,11 @@ export class OperationsComponent implements OnInit {
       this.cashierAdminOperations.splice(0);
       this.cashierAdminColor = '';
     }
+    if (config.companyType === CompanyType.BAR) {
+      // Add update app operation to customer group
+      this.cashierAdminOperations.splice(1, 2, AdminOpEnum.APPLY_DISCOUNT);
+      this.cashierAdminColor = 'red';
+    }
   }
 
   financeKey(ev) {
@@ -363,6 +368,9 @@ export class OperationsComponent implements OnInit {
           break;
         case AdminOpEnum.CCSZ:
           this.adminOpService.cashierCloseShift();
+          break;
+        case AdminOpEnum.APPLY_DISCOUNT:
+          this.adminOpService.setApplyDiscountType();
           break;
       }
     }
