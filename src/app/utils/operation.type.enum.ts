@@ -50,5 +50,6 @@ export enum EOperationType {
     InitCustomerScreen,
     ReconnectCustomerScreen,
     UpdateInvoiceCustomerScreen,
-    CreateInvoice
+    CreateInvoice,
+    ResetDigits
 }

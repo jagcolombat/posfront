@@ -30,7 +30,7 @@ export class ProductOrderService implements OnDestroy {
 
   constructor(private invoiceService: InvoiceService, private cashService: CashService,
               private operationService: OperationsService, private initService: InitViewService) {
-    this.subscription.push(this.invoiceService.evAddProdByUPC.subscribe(prod => this.addProduct(prod)));
+    this.subscription.push(this.operationService.evAddProdByUPC.subscribe(prod => this.addProduct(prod)));
     this.subscription.push(this.operationService.evAddProdGen.subscribe(prod => this.productGeneric(prod)));
   }
 

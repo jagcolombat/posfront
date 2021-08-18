@@ -54,6 +54,7 @@ export class OperationsService {
   @Output() evCancelCheck = new EventEmitter<any>();
   @Output() evRemoveHold = new EventEmitter<any>();
   @Output() evCleanAdminOperation = new EventEmitter<any>();
+  @Output() evAddProdByUPC = new EventEmitter<any>();
   @Output() evAddProdGen = new EventEmitter<Product>();
   @Output() evBackUserOperation = new EventEmitter<any>();
 
@@ -250,7 +251,12 @@ export class OperationsService {
         this.selectProd(prods).subscribe(prod => {
           console.log(EOperationType[op], prod, this.invoiceService.qty);
           this.initService.setOperation(op, 'Product', 'Get product id: ' + prod.id);
-          prod ? this.invoiceService.evAddProdByUPC.emit(prod) : this.invoiceService.resetDigits();
+          if(prod) {
+            this.initService.setOperation(op, 'Product', 'Emit add product id: ' + prod.id);
+            this.evAddProdByUPC.emit(prod); 
+          } else {
+            this.invoiceService.resetDigits(); 
+          }
         });
       }, err => {
         console.error('addProductByUpc', err);
@@ -260,7 +266,7 @@ export class OperationsService {
             this.selectProd(prods).subscribe(prod => {
               console.log(EOperationType[op], prod, this.invoiceService.qty);
               this.initService.setOperation(op, 'Product', 'Get product id: ' + prod.id);
-              prod ? this.invoiceService.evAddProdByUPC.emit(prod) : this.invoiceService.resetDigits();
+              prod ? this.evAddProdByUPC.emit(prod) : this.invoiceService.resetDigits();
             });
           }, err => {
             console.error('addProductByUpc', err);
@@ -301,7 +307,7 @@ export class OperationsService {
               console.log(next);
               if (next !== undefined && next.confirm ) {
                 // Logout
-                this.invoiceService.evAddProdByUPC.emit(prod);
+                this.evAddProdByUPC.emit(prod);
               }
             });
           } else {
@@ -1667,7 +1673,7 @@ export class OperationsService {
         next => {
           console.log(next);
           next['unitCost'] = price;
-          this.invoiceService.evAddProdByUPC.emit(next);
+          this.evAddProdByUPC.emit(next);
         },
         err => { this.cashService.openGenericInfo('Error', 'Can\'t get product by upc'); },
         () => this.invoiceService.resetDigits()

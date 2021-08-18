@@ -54,7 +54,8 @@ export class InvoiceService {
   evCreateInvoice = new BehaviorSubject<boolean>(true);
   lastProdAdd: ProductOrder;
 
-  constructor(public authService: AuthService, private dataStorage: DataStorageService, public cashService: CashService) {
+  constructor(public authService: AuthService, private dataStorage: DataStorageService, 
+    public cashService: CashService) {
   }
 
   getCashier(): string {
@@ -247,6 +248,8 @@ export class InvoiceService {
 
   resetDigits() {
     console.log('resetDigits');
+    this.cashService.setOperation(EOperationType.ResetDigits, 'Invoice', 
+    'Reset digits ' + this.digits);
     this.digits = '';
     this.numbers = '';
     this.qty = 1;
