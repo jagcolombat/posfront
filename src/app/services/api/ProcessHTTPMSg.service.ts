@@ -7,7 +7,7 @@ import { throwError } from 'rxjs';
 })
 export class ProcessHTTPMSgService {
 
-constructor() { }
+  constructor() { }
 
   public handleError(response: HttpErrorResponse | any) {
       console.error('handleError', response);
@@ -15,6 +15,8 @@ constructor() { }
 
       if(response.status === 504 || (response.status === 0 && response.statusText === 'Unknown Error') ){
         errMsg = 'Timeout trying connect with server. Please review server status or contact to support team.';
+      } else if (response.status === 403 || response.statusText === 'Forbidden' ) {
+        errMsg = 'Operation not allowed.';
       } else if (response.error instanceof ErrorEvent) {
         errMsg = response.error.message;
       } else if (response.error && response.error.message) {
