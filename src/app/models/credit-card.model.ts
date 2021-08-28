@@ -46,12 +46,12 @@ export enum SwipeMethod {
 
 export class CreditCardModel implements CreditCard{
   constructor(public amount: number, public tip: number=0, public receiptNumber: string,
-              public transferType: PaymentStatus=PaymentStatus.SAlE, public account?: string, public cvv?: string,
+              public transferType: PaymentStatus=PaymentStatus.SALE, public account?: string, public cvv?: string,
               public expDate?: string, public swipeMethod?: SwipeMethod, public zipCode?: string, public street?: string) {}
 }
 
 export class CardManualPayment implements ICardManualPayment{
-  constructor(public amount: number, public transferType: PaymentStatus=PaymentStatus.SAlE,
+  constructor(public amount: number, public transferType: PaymentStatus=PaymentStatus.SALE,
               public receiptNumber: string, public accountNumber: string,
               public authCode: string, public cardType: string | CardTypes) {}
 }

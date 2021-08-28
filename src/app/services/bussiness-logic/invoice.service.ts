@@ -284,7 +284,7 @@ export class InvoiceService {
 
   creditManual(payment: number, tip?: number, ccnumber?: string, cvv?: string, ccdate?: string, zip?: string,
                street?: string): Observable<Invoice> {
-    const creditPayment = new CreditCardModel(payment, tip, this.invoice.receiptNumber, PaymentStatus.SAlE, ccnumber, cvv,
+    const creditPayment = new CreditCardModel(payment, tip, this.invoice.receiptNumber, PaymentStatus.SALE, ccnumber, cvv,
       ccdate, SwipeMethod.MANUAL, zip, street);
     return this.dataStorage.paidByCreditCard(creditPayment);
   }
@@ -300,7 +300,7 @@ export class InvoiceService {
 
   externalCard(payment: number, accountNumber?: string, authCode?: string, cardType?: string | CardTypes, client?: any,
                paymentMethod?: PaymentMethodEnum): Observable<Invoice> {
-    const cardPayment = new CardManualPayment(payment, PaymentStatus.SAlE, this.invoice.receiptNumber, accountNumber,
+    const cardPayment = new CardManualPayment(payment, PaymentStatus.SALE, this.invoice.receiptNumber, accountNumber,
       authCode, cardType);
     return (client) ? this.dataStorage.acctPayment(client, cardPayment, PaymentMethodEnum.CREDIT_CARD) :
       this.dataStorage.paidByExternalCard(cardPayment, paymentMethod);

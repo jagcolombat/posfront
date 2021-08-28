@@ -1032,7 +1032,7 @@ export class OperationsService {
     this.resetInactivity(true);
   }
 
-  setTip(action?: (i?: any, j?: any) => void, op?: PaymentOpEnum, context?: any) {
+  setTip(action?: (i?: any, j?: any, k?: any) => void, op?: PaymentOpEnum, context?: any) {
     if (this.cashService.config.sysConfig.companyType === CompanyType.RESTAURANT &&
       this.invoiceService.invoice.paymentStatus === PaymentStatus.AUTH) {
       this.cashService.dialog.open(ProductGenericComponent,
@@ -1043,7 +1043,8 @@ export class OperationsService {
         next => {
           console.log(next);
           this.invoiceService.invoice.tip = next.unitCost;
-          (op === PaymentOpEnum.CREDIT_CARD) ? action(null, context) : action(context);
+          (op === PaymentOpEnum.CREDIT_CARD) ? 
+            action(null, context, PaymentStatus.ADJUST) : action(context, PaymentStatus.ADJUST);
         },
         err => {console.error(err); });
     } else {
@@ -1051,12 +1052,13 @@ export class OperationsService {
     }
   }
 
-  debitOp(context?: any) {
+  debitOp(context?: any, transferType?: PaymentStatus) {
     if (!context) { context = this; }
     context.currentOperation = PaymentOpEnum.DEBIT_CARD;
     const opMsg = 'debit card payment';
     const dialogInfoEvents = context.openInfoEventDialog('Paying by debit card');
-    const $debit = context.invoiceService.debit(context.invoiceService.invoice.balance, context.invoiceService.invoice.tip)
+    const $debit = context.invoiceService.debit(context.invoiceService.invoice.balance, 
+      context.invoiceService.invoice.tip, transferType)
       .subscribe(data => {
         context.closeTimeout(dialogInfoEvents, timeOut, data);
         context.setOrCreateInvoice(data);
@@ -1084,13 +1086,13 @@ export class OperationsService {
     this.resetInactivity(true);
   }
 
-  private creditOp(splitAmount?: number, context?: any) {
+  private creditOp(splitAmount?: number, context?: any, transferType?: PaymentStatus) {
     if (!context) { context = this; }
     context.currentOperation = PaymentOpEnum.CREDIT_CARD;
     const opMsg = 'credit card payment';
     const dialogInfoEvents = context.openInfoEventDialog('Paying by credit card');
     const $credit = context.invoiceService.credit(splitAmount ? splitAmount : context.invoiceService.invoice.balance,
-      context.invoiceService.invoice.tip)
+      context.invoiceService.invoice.tip, transferType)
       .subscribe(data => {
           context.closeTimeout(dialogInfoEvents, timeOut, data);
           context.setOrCreateInvoice(data);
