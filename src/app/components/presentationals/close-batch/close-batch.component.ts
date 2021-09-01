@@ -18,7 +18,7 @@ export class CloseBatchComponent implements OnInit {
   cbReport: Report;
   public gridOptionsSummary: GridOptions;
   public gridOptionsDetails: GridOptions;
-  loading = true;
+  loading = false;
   colDefsSummary = [
     {
       headerName: 'Type',

@@ -451,6 +451,7 @@ export class OperationsService {
       this.cashService.totalsDisabled(refundOrRefunSale, this.cashService.config.sysConfig.allowEBT);
       this.cashService.setOperation(EOperationType.Subtotal, 'Invoice', 'Before operation Subtotal by ' + 
         this.cashService.authServ.token.user_id);
+      const paymentStatus = this.invoiceService.invoice.paymentStatus;
       this.invoiceService.subTotal().subscribe(
         next => {
           /*next.isPromotion = true;
@@ -460,8 +461,10 @@ export class OperationsService {
           if (next.isPromotion && !(next.isRefund || next.isRefundSale)) {
             next.totalPromo = this.invoiceService.invoice.total - next.total;
           }
+          if(paymentStatus === PaymentStatus.AUTH) next.paymentStatus = paymentStatus;
           this.invoiceService.setInvoice(next);
-          if (this.invoiceService.invoice.status === InvoiceStatus.PAID) {
+          if (this.invoiceService.invoice.status === InvoiceStatus.PAID && 
+            this.invoiceService.invoice.paymentStatus !== PaymentStatus.AUTH) {
             this.invoiceService.warnInvoicePaid();
           } else {
             (this.invoiceService.invoice.productOrders.length > 0) ?

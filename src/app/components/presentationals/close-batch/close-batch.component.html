@@ -7,7 +7,7 @@
   <div mat-dialog-content class="content">
     <mat-form-field>
       <mat-label>Type:</mat-label>
-      <mat-select (selectionChange)="setTypeCloseBatch($event)" [(value)] = 'typeCloseBatch'>
+      <mat-select (selectionChange)="setTypeCloseBatch($event)" [(value)] = 'typeCloseBatch' [disabled]="loading">
         <mat-option>None</mat-option>
         <mat-option value="{{cb.SUMMARY}}">{{cb[cb.SUMMARY]}}</mat-option>
         <mat-option value="{{cb.DETAILS}}">{{cb[cb.DETAILS]}}</mat-option>
