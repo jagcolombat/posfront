@@ -25,10 +25,14 @@ export class GenericSalesComponent implements OnInit {
                private cashService: CashService, private invoiceService: InvoiceService, private operationService: OperationsService) {
     console.log('GenericSalesComponent', data);
     if (this.data.content) { this.populateSales(this.data.content); }
-    if (this.data.empl && !this.data.date && !this.data.salesDate ) {
-      this.getSales(this.data.empl.id); }
-    if (this.data.empl && !this.data.date && this.data.salesDate) {
-      this.getSalesByDate(this.data.empl.id, this.data.salesDate);
+    if (this.data.empl && !this.data.date && !this.data.salesDate.from && !this.data.salesDate.to &&
+      !this.data.invoiceStatus) {
+      this.getSales(this.data.empl.id);
+      return;
+    }
+    if (this.data.empl && !this.data.date && (this.data.salesDate || this.data.invoiceStatus)) {
+      this.getSalesByDate(this.data.empl.id, this.data.salesDate, this.data.invoiceStatus);
+      return;
     }
     if (this.data.empl && this.data.date && !this.data.salesDate) {
       this.getRecords(this.data.empl.id, this.data.date);
@@ -61,10 +65,10 @@ export class GenericSalesComponent implements OnInit {
     }
   }
 
-  getSalesByDate(ev, date) {
-    console.log('getSalesByDate', ev, date);
+  getSalesByDate(ev, date?: string, status?: string) {
+    console.log('getSalesByDate', ev, date, status);
     if (ev) {
-      this.dataStorage.getInvoiceByUserAndDate(ev, date).subscribe(next => {
+      this.dataStorage.getInvoiceByUserAndDate(ev, date, status).subscribe(next => {
         console.log(next);
         this.salesByUser = next;
       }, error1 => {
@@ -98,12 +102,13 @@ export class GenericSalesComponent implements OnInit {
   }
 
   onPrint() {
-    console.log('Print invoices by user', this.data.empl);
+    console.log('Print invoices by user', this.data);
     this.cashService.dialog.closeAll();
     let dialog;
-    if ( this.data.empl) {
+    if ( this.data.empl.id) {
       dialog = this.cashService.openGenericInfo(InformationType.INFO, 'Printing report...');
-      this.dataStorage.printInvoiceByUser( this.data.empl.id).subscribe(next => {
+      this.dataStorage.printInvoiceByUser( this.data.empl.id, this.data.salesDate, this.data.invoiceStatus)
+      .subscribe(next => {
         dialog.close();
         console.log(next);
       }, error1 => {

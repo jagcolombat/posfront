@@ -177,24 +177,36 @@ export class AdminOptionsService {
     this.dataStorage.getApplicationUsers().subscribe(next =>  {
       console.log(AdminOpEnum.EMPLZ, next);
       next.unshift({id: '-1', userName: 'ALL'});
-      this.operationService.openDialogWithPag(next, (e) => this.showSalesByEmployee(AdminOpEnum.EMPLZ, e),
-        'Employees', 'Select a employee:', '', 'userName' );
+      this.operationService.openDialogWithPag(next, (e) => this.showStatusInvoices(AdminOpEnum.EMPLZ, e),
+      AdminOpEnum.EMPLZ + ' - Employees', 'Select a employee:', '', 'userName' );
     }, error1 => {
       this.cashService.openGenericInfo('Error', 'Can\'t complete ' + AdminOpEnum.EMPLZ + ' operation');
     });
     this.operationService.resetInactivity(true, 'empZ');
   }
 
-  showSalesByEmployee(op: AdminOpEnum, emp?: string) {
+  showStatusInvoices(op: AdminOpEnum, emp?: string) {
+    this.dataStorage.getStatusInvoices().subscribe(next =>  {
+      console.log('Invoices status', next);
+      // next.unshift({id: '-1', name: 'ALL'});
+      this.operationService.openDialogWithPag(next, 
+        (e) => this.showSalesByEmployee(AdminOpEnum.EMPLZ, emp, e.id),
+        AdminOpEnum.EMPLZ + ' - Invoices state', 'Select a invoices state:', '', 'name' );
+    }, error1 => {
+      this.cashService.openGenericInfo('Error', 'Can\'t complete ' + AdminOpEnum.EMPLZ + ' operation');
+    });
+  }
+
+  showSalesByEmployee(op: AdminOpEnum, emp?: string, status?: string) {
     this.cashService.dialog.open(SetDateComponent,
       { width: '400px', height: '340px', data: {title: AdminOpEnum.EMPLZ, subtitle: 'Set date',
           closeWeek: true, cleanDate: true},
         disableClose: true })
       .afterClosed().subscribe(next => {
-        console.log('afterCloseSetDate', next, emp);
+        console.log('afterCloseSetDate', next, emp, status);
         this.cashService.dialog.open(GenericSalesComponent, {
-          width: '820px', disableClose: true, data: {
-            title: AdminOpEnum.EMPLZ, empl: emp, salesDate: next.date
+          width: '840px', disableClose: true, data: {
+            title: AdminOpEnum.EMPLZ, empl: emp, salesDate: next.date, invoiceStatus: status
           }
         }).afterClosed().subscribe(
           next => {

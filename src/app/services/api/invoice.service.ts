@@ -57,6 +57,11 @@ export class InvoiceService {
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
+  getStatusInvoices(url: string) {
+    return this._http.get<any[]>(url + this.path + '/status/')
+      .pipe(catchError(this.processHttpMsgService.handleError));
+  }
+
   getById (url: string, id: string, operationType: EOperationType): Observable<Invoice> {
     let params = new HttpParams();
     params = params

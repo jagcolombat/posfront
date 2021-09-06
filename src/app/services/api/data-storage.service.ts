@@ -117,6 +117,10 @@ export class DataStorageService {
     return this.invoiceService.getInvoiceByStatus(this.url, status);
   }
 
+  getStatusInvoices() {
+    return this.invoiceService.getStatusInvoices(this.url);
+  }
+
   getInvoiceById(id: string, operationType: EOperationType): Observable<Invoice>  {
     console.log('getInvoiceById', id);
     return this.invoiceService.getById(this.url, id, operationType);
@@ -250,16 +254,16 @@ export class DataStorageService {
     return this.adminOperationService.getInvoiceByUser(this.url, id);
   }
 
-  getInvoiceByUserAndDate(id: string, date: any): Observable<Invoice[]> {
-    return this.adminOperationService.getInvoiceByUserAndDate(this.url, id, date);
+  getInvoiceByUserAndDate(id: string, date?: any, status?: string): Observable<Invoice[]> {
+    return this.adminOperationService.getInvoiceByUserAndDate(this.url, id, date, status);
   }
 
   getPaymentByType(): Observable<Payment[]> {
     return this.adminOperationService.getPaymentByType(this.url);
   }
 
-  printInvoiceByUser(id: string): Observable<any> {
-    return this.adminOperationService.printInvoiceByUser(this.url, id);
+  printInvoiceByUser(id: string, date?: any, state?: string): Observable<any> {
+    return this.adminOperationService.printInvoiceByUser(this.url, id, date, state);
   }
 
   printPaymentByType(): Observable<any> {
