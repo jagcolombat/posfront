@@ -37,6 +37,7 @@ import {EClockType} from '../../utils/clock-type.enum';
 import {UserClock} from '../../models/user-clock.model';
 import {WorkerRecords} from '../../models/worker-records';
 import {StationService} from './station.service';
+import {IInvoicesByStates} from '../../models/invoices-by-user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -250,11 +251,11 @@ export class DataStorageService {
     return this.adminOperationService.addPaidOut(this.url, paidOut);
   }
 
-  getInvoiceByUser(id: string): Observable<Invoice[]> {
+  getInvoiceByUser(id: string): Observable<IInvoicesByStates> {
     return this.adminOperationService.getInvoiceByUser(this.url, id);
   }
 
-  getInvoiceByUserAndDate(id: string, date?: any, status?: string): Observable<Invoice[]> {
+  getInvoiceByUserAndDate(id: string, date?: any, status?: string): Observable<IInvoicesByStates> {
     return this.adminOperationService.getInvoiceByUserAndDate(this.url, id, date, status);
   }
 

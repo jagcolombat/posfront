@@ -10,6 +10,7 @@ import { CloseBatch } from 'src/app/utils/close.batch.enum';
 import { Report } from 'src/app/models/report.model';
 import {EmployeedModel, IPositionModel} from '../../models/employeed.model';
 import { WorkerRecords } from 'src/app/models/worker-records';
+import {IInvoicesByStates} from '../../models/invoices-by-user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -30,17 +31,17 @@ export class AdminOperationService {
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
-  getInvoiceByUser(url: string, id: string): Observable<Invoice[]> {
-    return this._http.get<Invoice[]>(url + this.path + '/stats/user/' + id + '/invoices')
+  getInvoiceByUser(url: string, id: string): Observable<IInvoicesByStates> {
+    return this._http.get<IInvoicesByStates>(url + this.path + '/stats/user/' + id + '/invoices')
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
-  getInvoiceByUserAndDate(url: string, id: string, date: any, status?: string): Observable<Invoice[]> {
+  getInvoiceByUserAndDate(url: string, id: string, date: any, status?: string): Observable<IInvoicesByStates> {
     let params = new HttpParams();
     if (date && date['from']) { params = params.append('fromDate', date['from'] + ''); }
     if (date && date['to']) { params = params.append('toDate', date['to'] + ''); }
     if (status) { params = params.append('invoiceState', status + ''); }
-    return this._http.get<Invoice[]>(url + this.path + '/stats/user/' + id + '/invoices', {params})
+    return this._http.get<IInvoicesByStates>(url + this.path + '/stats/user/' + id + '/invoices', {params})
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 

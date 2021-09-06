@@ -57,7 +57,7 @@ export class GenericSalesComponent implements OnInit {
     if (ev) {
       this.dataStorage.getInvoiceByUser(ev).subscribe(next => {
         console.log(next);
-        this.salesByUser = next;
+        this.salesByUser = next.invoices;
       }, error1 => {
         console.error('getSales', error1);
         this.cashService.openGenericInfo('Error', error1);
@@ -70,7 +70,7 @@ export class GenericSalesComponent implements OnInit {
     if (ev) {
       this.dataStorage.getInvoiceByUserAndDate(ev, date, status).subscribe(next => {
         console.log(next);
-        this.salesByUser = next;
+        this.salesByUser = next.invoices;
       }, error1 => {
         console.error('getSales', error1);
         this.cashService.openGenericInfo('Error', error1);

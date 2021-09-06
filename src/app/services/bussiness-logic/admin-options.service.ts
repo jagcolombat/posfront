@@ -188,8 +188,7 @@ export class AdminOptionsService {
   showStatusInvoices(op: AdminOpEnum, emp?: string) {
     this.dataStorage.getStatusInvoices().subscribe(next =>  {
       console.log('Invoices status', next);
-      // next.unshift({id: '-1', name: 'ALL'});
-      this.operationService.openDialogWithPag(next, 
+      this.operationService.openDialogWithPag(next,
         (e) => this.showSalesByEmployee(AdminOpEnum.EMPLZ, emp, e.id),
         AdminOpEnum.EMPLZ + ' - Invoices state', 'Select a invoices state:', '', 'name' );
     }, error1 => {
@@ -211,8 +210,8 @@ export class AdminOptionsService {
         }).afterClosed().subscribe(
           next => {
             console.log('after close emplZ', next);
-            if(next.receiptNumber) this.reviewCheck(next.receiptNumber);
-          }  
+            if (next.receiptNumber) { this.reviewCheck(next.receiptNumber); }
+          }
         );
       });
     // this.dayCloseType('', AdminOpEnum.WTDZ);
@@ -238,7 +237,7 @@ export class AdminOptionsService {
   backToUser() {
     console.log('backUser', this.auth.token, this.auth.initialLogin);
     const initUserId = this.auth.initialLogin ? this.auth.initialLogin.user_id : '';
-    this.cashService.setOperation(EOperationType.PrevScreen, 'Previous Screen', 'token: ' + 
+    this.cashService.setOperation(EOperationType.PrevScreen, 'Previous Screen', 'token: ' +
       this.auth.token.user_id + ' - initialToken: ' + initUserId);
     if (this.auth.initialLogin && (this.auth.token.user_id !== this.auth.initialLogin.user_id)) {
       this.auth.restoreInitialLogin();
