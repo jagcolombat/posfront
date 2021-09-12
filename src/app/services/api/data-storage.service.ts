@@ -251,10 +251,6 @@ export class DataStorageService {
     return this.adminOperationService.addPaidOut(this.url, paidOut);
   }
 
-  getInvoiceByUser(id: string): Observable<IInvoicesByStates> {
-    return this.adminOperationService.getInvoiceByUser(this.url, id);
-  }
-
   getInvoiceByUserAndDate(id: string, date?: any, status?: string): Observable<IInvoicesByStates> {
     return this.adminOperationService.getInvoiceByUserAndDate(this.url, id, date, status);
   }

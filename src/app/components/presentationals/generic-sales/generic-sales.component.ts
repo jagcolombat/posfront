@@ -25,12 +25,8 @@ export class GenericSalesComponent implements OnInit {
                private cashService: CashService, private invoiceService: InvoiceService, private operationService: OperationsService) {
     console.log('GenericSalesComponent', data);
     if (this.data.content) { this.populateSales(this.data.content); }
-    if (this.data.empl && !this.data.date && !this.data.salesDate.from && !this.data.salesDate.to &&
-      !this.data.invoiceStatus) {
-      this.getSales(this.data.empl.id);
-      return;
-    }
-    if (this.data.empl && !this.data.date && (this.data.salesDate || this.data.invoiceStatus)) {
+    
+    if (this.data.empl && !this.data.date) {
       this.getSalesByDate(this.data.empl.id, this.data.salesDate, this.data.invoiceStatus);
       return;
     }
@@ -50,19 +46,6 @@ export class GenericSalesComponent implements OnInit {
     this.sales = data.map(payment => {
       return {'name': payment.name, 'total': payment.total};
     });
-  }
-
-  getSales(ev) {
-    console.log('getSales', ev);
-    if (ev) {
-      this.dataStorage.getInvoiceByUser(ev).subscribe(next => {
-        console.log(next);
-        this.salesByUser = next.invoices;
-      }, error1 => {
-        console.error('getSales', error1);
-        this.cashService.openGenericInfo('Error', error1);
-      });
-    }
   }
 
   getSalesByDate(ev, date?: string, status?: string) {

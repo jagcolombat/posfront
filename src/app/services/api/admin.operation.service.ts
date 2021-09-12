@@ -31,11 +31,6 @@ export class AdminOperationService {
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
-  getInvoiceByUser(url: string, id: string): Observable<IInvoicesByStates> {
-    return this._http.get<IInvoicesByStates>(url + this.path + '/stats/user/' + id + '/invoices')
-      .pipe(catchError(this.processHttpMsgService.handleError));
-  }
-
   getInvoiceByUserAndDate(url: string, id: string, date: any, status?: string): Observable<IInvoicesByStates> {
     let params = new HttpParams();
     if (date && date['from']) { params = params.append('fromDate', date['from'] + ''); }

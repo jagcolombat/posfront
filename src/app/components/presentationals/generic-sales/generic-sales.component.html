@@ -6,7 +6,7 @@
   </mat-toolbar>
   <div mat-dialog-content class="content">
     <sales-shop *ngIf="data.content" [sales]="sales"></sales-shop>
-    <sales-empl *ngIf="data.empl" [emplSel]="data.empl" [sales]="salesByUser" (selectEmployed)="getSales($event)"
+    <sales-empl *ngIf="data.empl" [emplSel]="data.empl" [sales]="salesByUser" (selectEmployed)="getSalesByDate($event)"
                 (selectInvoice)="reviewCheck($event)">
     </sales-empl>
     <time-worked *ngIf="data.empl && data.date" [emplSel]="data.empl" [records]="recordsByUser" [time]="timeWorkedByUser">
