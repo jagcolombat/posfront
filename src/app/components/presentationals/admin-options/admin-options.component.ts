@@ -49,7 +49,11 @@ export class AdminOptionsComponent implements OnInit {
       console.log('allowGiftCard', config.allowGiftCard);
       this.removeOption(this.options.indexOf(AdminOpEnum.GIFT_CARD));
     }
-      this.$options = of(this.options.map(o=> <AdminOpEnum> o.toUpperCase()));
+    if(this.adminOpService.isRefundSale()){
+      // Change Refund Sale operation by Revert Sale
+      this.replaceOption(AdminOpEnum.REFUND_SALE, AdminOpEnum.REVERT_SALE);          
+    }
+    this.updateOptions();
     /*}, err => {
       this.adminOpService.cashService.openGenericInfo('Error', 'Can\'t get configuration');
     });*/
@@ -124,6 +128,13 @@ export class AdminOptionsComponent implements OnInit {
           this.adminOpService.updateCreditLimit();
           break;
         case AdminOpEnum.REFUND_SALE.toUpperCase():
+          this.replaceOption(AdminOpEnum.REFUND_SALE, AdminOpEnum.REVERT_SALE);
+          this.updateOptions();
+          this.adminOpService.refundSale();
+          break;
+        case AdminOpEnum.REVERT_SALE.toUpperCase():
+          this.replaceOption(AdminOpEnum.REFUND_SALE, AdminOpEnum.REVERT_SALE);
+          this.updateOptions();
           this.adminOpService.refundSale();
           break;
         case AdminOpEnum.CLIENT.toUpperCase():
@@ -145,5 +156,13 @@ export class AdminOptionsComponent implements OnInit {
 
   setDisabled(index) {
     return typeof this.disable === 'boolean' ? this.disable : this.disable[this.options.indexOf(index)]
+  }
+
+  replaceOption(from: AdminOpEnum, to: AdminOpEnum) {
+    this.options.splice(this.options.findIndex(op => op === from), 1, to);
+  }
+
+  updateOptions() {
+    this.$options = of(this.options.map(o=> <AdminOpEnum> o.toUpperCase()));
   }
 }

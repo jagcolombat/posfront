@@ -1252,4 +1252,9 @@ export class AdminOptionsService {
   private updateProducts() {
     console.log('update products');
   }
+
+  isRefundSale(): boolean {
+    return (this.invoiceService.invoice) ? 
+      this.invoiceService.invoice.isRefundSale: false;
+  }
 }

@@ -25,6 +25,7 @@ export enum AdminOpEnum {
   EBT_INQUIRY = 'EBT Inquiry',
   CREDIT_LIMIT = 'Credit Limit',
   REFUND_SALE = 'Refund Sale',
+  REVERT_SALE = 'Revert Sale',
   WEEKLY_CLOSE = 'Weekly Close',
   CLIENT = 'Client Setup',
   GIFT_CARD = 'Gift Card',
