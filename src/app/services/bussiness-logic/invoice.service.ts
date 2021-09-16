@@ -183,9 +183,8 @@ export class InvoiceService {
     return this.getProductByUpc(typeOp);
   }
 
-  holdOrder(): Observable<any> {
-    // this.setUserToInvoice();
-    return this.dataStorage.changeInvoiceToHold(this.invoice);
+  holdOrder(userName: string): Observable<any> {
+    return this.dataStorage.changeInvoiceToHold(this.invoice, userName);
   }
 
   voidOrder(i: Invoice): Observable<any> {

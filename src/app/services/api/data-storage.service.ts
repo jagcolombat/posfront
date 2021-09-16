@@ -91,9 +91,9 @@ export class DataStorageService {
     return this.invoiceService.create(this.url);
   }
 
-  changeInvoiceToHold(invoice: Invoice): Observable<Invoice> {
-    console.log(invoice);
-    return this.invoiceService.changeInvoiceToHold(this.url, invoice);
+  changeInvoiceToHold(invoice: Invoice, userName: string): Observable<Invoice> {
+    console.log(invoice, userName);
+    return this.invoiceService.changeInvoiceToHold(this.url, invoice, userName);
   }
 
   changeInvoiceToVoid(invoice: Invoice, isRefund = false): Observable<Invoice> {

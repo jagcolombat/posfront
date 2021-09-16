@@ -24,10 +24,13 @@ export class InvoiceService {
     return this._http.get<Invoice>(url + this.path + '/status/created');
   }
 
-  changeInvoiceToHold(url: string, invoice: Invoice): Observable<Invoice> {
+  changeInvoiceToHold(url: string, invoice: Invoice, userName: string): Observable<Invoice> {
     if (invoice.id) {
       console.log('Hold:', invoice);
-      return this._http.post<Invoice>(url + this.path + '/' + invoice.receiptNumber + '/status/hold', invoice)
+      let params = new HttpParams();
+      if (userName) params = params.append('username', userName);
+      return this._http.post<Invoice>(url + this.path + '/' + invoice.receiptNumber + 
+        '/status/hold', invoice, { params: params})
         .pipe(catchError(this.processHttpMsgService.handleError));
     }
   }

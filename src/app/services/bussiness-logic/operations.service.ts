@@ -384,13 +384,32 @@ export class OperationsService {
     console.log('hold');
     this.currentOperation = 'hold';
     if (this.invoiceService.invoice.productOrders.length > 0) {
-      this.invoiceService.holdOrder().subscribe(
-        next => this.invoiceService.createInvoice(),
-        err => this.cashService.openGenericInfo('Error', 'Can\'t complete hold order operation'));
+      if (this.cashService.config.sysConfig.companyType === CompanyType.BAR) {
+        this.getHoldOrderUser();
+      } else {
+        this.holdOp();
+      }
     } else {
       this.cashService.openGenericInfo('Error', 'Not possible Hold Order without products in this Invoice');
     }
     this.resetInactivity(true);
+  }
+
+  getHoldOrderUser() {
+    if (this.cashService.config.sysConfig.companyType === CompanyType.BAR) {
+      this.getField(EOperationType[EOperationType.HoldOlder], 'Client Name', EFieldType.NAME).subscribe((name) => {
+        console.log('pick up modal', name);
+        if (name.text) {
+          this.holdOp(name.text);
+        }
+      });
+    }
+  }
+
+  holdOp(user?: string){
+    this.invoiceService.holdOrder(user).subscribe(
+      next => this.invoiceService.createInvoice(),
+      err => this.cashService.openGenericInfo('Error', 'Can\'t complete hold order operation'));
   }
 
   recallCheck() {
