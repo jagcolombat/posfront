@@ -133,7 +133,7 @@ export class OperationsComponent implements OnInit {
       });
       this.financeOperations.push(logoutOp[0]);
     }
-    if (config.companyType === CompanyType.RESTAURANT && !config.allowClientUpdate) {
+    if (config.companyType !== CompanyType.RESTAURANT && !config.allowClientUpdate) {
       // Add update app operation to customer group
       this.cashierAdminOperations.splice(0);
       this.cashierAdminColor = '';
