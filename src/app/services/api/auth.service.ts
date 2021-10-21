@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Credentials, Token } from '../../models/index';
 import jwt_decode from 'jwt-decode';
 import { baseURL } from '../../utils/url.path.enum';
@@ -62,10 +62,12 @@ export class AuthService {
     return token;
   }
 
-  logout(): Observable<any> {
+  logout(switchUser?: boolean): Observable<any> {
     //this.saveUser(this.token, false);
     //this.token = {};
-    return this.http.post(this.url+ '/login/pos/out', {})
+    let params = new HttpParams();
+    if (switchUser) params = params.append('switchUser', switchUser+'');
+    return this.http.post(this.url+ '/login/pos/out', null, {params: params})
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 

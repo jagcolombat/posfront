@@ -154,15 +154,16 @@ export class AgGridComponent implements OnInit, /*OnChanges,*/ OnDestroy {
 
   onRemoveSelected(ev: any) {
     const selectedData = this.gridOptions.api.getSelectedRows();
-    console.log('selectedData', selectedData);
+    console.log('items to remove', selectedData, 'token', ev);
     if (selectedData.length > 0 && this.selectableProd) {
       console.log('remove selected');
       this.invoiceService.delPOFromInvoice(selectedData)
         .subscribe(data => {
             console.log('delPOFromInvoice', data);
             if(ev) {
-              this.cashService.authServ.logout().subscribe(
+              this.cashService.authServ.logout(true).subscribe(
                 next => {
+                  console.log('Set token after logout', ev, 'previousToken', this.cashService.authServ.token);
                   this.cashService.authServ.token = ev;
                 }, error => {
                   this.cashService.evLogout.emit(true);
@@ -172,6 +173,7 @@ export class AgGridComponent implements OnInit, /*OnChanges,*/ OnDestroy {
             if (data.status === InvoiceStatus.PAID) {
               this.invoiceService.warnInvoicePaid();
             } else {
+              console.log('Set invoice after delete items');
               this.invoiceService.setInvoice(data);
               this.invoiceService.invoiceProductSelected.splice(0);
               this.invoiceService.setTotal();

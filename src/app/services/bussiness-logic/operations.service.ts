@@ -194,6 +194,7 @@ export class OperationsService {
   }
 
   deleteSelectedProducts(token?: any) {
+    console.log('deleteSelected', token);
     this.invoiceService.evDelProd.emit(token); /*
     this.invoiceService.invoiceProductSelected.splice(0);
     this.invoiceService.setTotal();*/
@@ -363,8 +364,8 @@ export class OperationsService {
   }
 
   adminLogin() {
-    return this.cashService.dialog.open(DialogLoginComponent, { width: '530px', height: '580px', disableClose: true,
-      autoFocus: false})
+    return this.cashService.dialog.open(DialogLoginComponent, { width: '530px', height: '580px', 
+      disableClose: true, autoFocus: false})
       .afterClosed();
   }
 
@@ -753,7 +754,7 @@ export class OperationsService {
   }
 
   opByAdminLogout(t: Token, callback?: () => void) {
-    this.authService.logout().subscribe(
+    this.authService.logout(true).subscribe(
       next => {
         this.authService.token = t;
         callback();
