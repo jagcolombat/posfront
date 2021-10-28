@@ -35,11 +35,13 @@ export class InvoiceService {
     }
   }
 
-  changeInvoiceToVoid(url: string, invoice: Invoice): Observable<Invoice> {
+  changeInvoiceToVoid(url: string, invoice: Invoice, userName?: string): Observable<Invoice> {
     if (invoice.id) {
       console.log('Void:', invoice);
-      return this._http.post<Invoice>(url + this.path + '/' + invoice.receiptNumber + '/status/void', invoice)
-        .pipe(catchError(this.processHttpMsgService.handleError));
+      let params = new HttpParams();
+      if(userName) params = params.append('username', userName);
+      return this._http.post<Invoice>(url + this.path + '/' + invoice.receiptNumber + '/status/void',
+        invoice, {params: params}).pipe(catchError(this.processHttpMsgService.handleError));
     }
   }
 
@@ -88,9 +90,12 @@ export class InvoiceService {
     .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
-  deleteProductOrders(url: string, productOrders: ProductOrder[], invoiceId: string): Observable<any> {
-    return this._http.request('delete', url + this.path + '/' + invoiceId + '/product', {body: productOrders})
-    .pipe(catchError(this.processHttpMsgService.handleError));
+  deleteProductOrders(url: string, productOrders: ProductOrder[], invoiceId: string, 
+    userName?: string): Observable<any> {
+    let params = new HttpParams();
+    if(userName) params = params.append('username', userName);
+    return this._http.request('delete', url + this.path + '/' + invoiceId + '/product', 
+      {body: productOrders, params: params}).pipe(catchError(this.processHttpMsgService.handleError));
   }
 
   getByDateRange(url: string, fromDate: Date, toDate: Date, pageNumber: number, pageSize: number) {

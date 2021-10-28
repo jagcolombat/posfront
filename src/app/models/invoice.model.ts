@@ -28,6 +28,7 @@ export interface IInvoice {
   isPromotion?: boolean;
   totalPromo?: number;
   isDiscount?: boolean;
+  token?: string;
 }
 
 export class Invoice implements IInvoice {
@@ -54,7 +55,8 @@ export class Invoice implements IInvoice {
               public change?: number,
               public isPromotion?: boolean,
               public totalPromo?: number,
-              public isDiscount?: boolean
+              public isDiscount?: boolean,
+              public token?: string
               ) {
   }
 }

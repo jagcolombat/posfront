@@ -59,7 +59,9 @@ export class InvoiceService {
   }
 
   getCashier(): string {
-    return this.cashier = (this.authService.token && this.authService.token.username) ? this.authService.token.username : '';
+    this.cashier = (this.authService.token && this.authService.token.username) ? this.authService.token.username : '';
+    console.log('getCashier', this.cashier);
+    return this.cashier;
     // return this.cashier = (localStorage.getItem('userName')) ? localStorage.getItem('userName') : ''
   }
 
@@ -170,12 +172,13 @@ export class InvoiceService {
     this.setTotal();
   }
 
-  delPOFromInvoice(po: ProductOrder[]): Observable<any> {
+  delPOFromInvoice(po: ProductOrder[], userName?: string): Observable<Invoice> {
     /*const productOrdersIds = po.map(prodOrder => {
       return prodOrder.id;
     });*/
 
-    return this.dataStorage.deleteProductOrdersByInvoice(this.invoice.receiptNumber, po, this.invoice.isRefund);
+    return this.dataStorage.deleteProductOrdersByInvoice(this.invoice.receiptNumber, po, 
+      this.invoice.isRefund, userName);
   }
 
   addProductByUpc(typeOp: EOperationType): Observable<Product[]> {
@@ -260,9 +263,9 @@ export class InvoiceService {
     this.receiptNumber = '';
   }
 
-  cancelInvoice(): Observable<Invoice> {
+  cancelInvoice(userName?: string): Observable<Invoice> {
     // this.setUserToInvoice();
-    return this.dataStorage.changeInvoiceToVoid(this.invoice);
+    return this.dataStorage.changeInvoiceToVoid(this.invoice, userName);
   }
 
   cash(payment: number, totalToPaid: number, type: PaymentOpEnum = PaymentOpEnum.CASH): Observable<Invoice> {

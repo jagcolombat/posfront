@@ -190,6 +190,7 @@ export class OperationsService {
   }
 
   delSelProdByAdmin() {
+    console.log('Delete products by admin');
     this.authService.adminLogged() ? this.deleteSelectedProducts() : this.manager('clear');
   }
 
@@ -770,13 +771,16 @@ export class OperationsService {
   cancelCheckByAdmin(t?: Token) {
     console.log('cancelCheckByAdmin', t);
     const dialog = this.cashService.openGenericInfo(InformationType.INFO, 'Voiding transaction');
-    this.invoiceService.cancelInvoice().subscribe(next => {
+    this.invoiceService.cancelInvoice(t ? this.invoiceService.cashier: null).subscribe(next => {
+      console.log('cancelChekByAdmin', next);
       dialog.close();
-      this.opByAdminLogout(t, () => this.afterCancel());
-      // this.authService.token = t;
+      // this.opByAdminLogout(t, () => this.afterCancel());
+      this.authService.token = this.authService.decodeToken(next);
+      this.afterCancel();
     }, err => {
       console.error('cancelCheck failed');
       dialog.close();
+      if (t) this.authService.token = t;
       this.cashService.openGenericInfo('Error', 'Can\'t complete void operation');
     });
     this.resetInactivity(true);

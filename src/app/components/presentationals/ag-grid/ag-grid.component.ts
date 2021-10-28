@@ -8,6 +8,7 @@ import { CustomNameupcCellComponent } from './custom-nameupc-cell.component';
 import { CashService } from '../../../services/bussiness-logic/cash.service';
 import {InvoiceStatus} from '../../../utils/invoice-status.enum';
 import { error } from 'protractor';
+import { InformationType } from 'src/app/utils/information-type.enum';
 
 @Component({
   selector: 'ag-grid',
@@ -152,23 +153,27 @@ export class AgGridComponent implements OnInit, /*OnChanges,*/ OnDestroy {
     });
   }
 
-  onRemoveSelected(ev: any) {
+  onRemoveSelected(ev?: any) {
     const selectedData = this.gridOptions.api.getSelectedRows();
     console.log('items to remove', selectedData, 'token', ev);
     if (selectedData.length > 0 && this.selectableProd) {
       console.log('remove selected');
-      this.invoiceService.delPOFromInvoice(selectedData)
+      const dialog = this.cashService.openGenericInfo(InformationType.INFO, 'Removing products...');
+
+      this.invoiceService.delPOFromInvoice(selectedData, ev ? this.invoiceService.cashier: '')
         .subscribe(data => {
             console.log('delPOFromInvoice', data);
+            dialog.close();
             if(ev) {
-              this.cashService.authServ.logout(true).subscribe(
+              /* this.cashService.authServ.logout(true).subscribe(
                 next => {
                   console.log('Set token after logout', ev, 'previousToken', this.cashService.authServ.token);
                   this.cashService.authServ.token = ev;
                 }, error => {
                   this.cashService.evLogout.emit(true);
                 }
-              )
+              ) */
+              this.cashService.authServ.token = this.cashService.authServ.decodeToken(data.token);
             }
             if (data.status === InvoiceStatus.PAID) {
               this.invoiceService.warnInvoicePaid();
@@ -183,6 +188,8 @@ export class AgGridComponent implements OnInit, /*OnChanges,*/ OnDestroy {
           },
           err => {
             console.log(err);
+            dialog.close();
+            if(ev) this.cashService.authServ.token = ev;
             this.cashService.openGenericInfo('Error', err);
           });
 
@@ -190,7 +197,10 @@ export class AgGridComponent implements OnInit, /*OnChanges,*/ OnDestroy {
       // this.invoiceService.setTotal();
       this.updateData.emit(true);
       // this.deleteOnInvoice();
+    } else {
+      if(ev) this.cashService.authServ.token = ev;
     }
+    
   }
 
   deleteOnInvoice() {

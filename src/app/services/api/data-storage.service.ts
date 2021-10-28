@@ -96,9 +96,9 @@ export class DataStorageService {
     return this.invoiceService.changeInvoiceToHold(this.url, invoice, userName);
   }
 
-  changeInvoiceToVoid(invoice: Invoice, isRefund = false): Observable<Invoice> {
+  changeInvoiceToVoid(invoice: Invoice, userName?: string, isRefund = false): Observable<Invoice> {
     console.log(invoice);
-      return this.invoiceService.changeInvoiceToVoid(this.url, invoice);
+    return this.invoiceService.changeInvoiceToVoid(this.url, invoice, userName);
   }
 
   changeInvoiceToRemoveHold(invoice: Invoice): Observable<any> {
@@ -171,8 +171,9 @@ export class DataStorageService {
       return this.invoiceService.deleteProductOrder(this.url, productOrderId, invoiceId);
   }
 
-  deleteProductOrdersByInvoice(invoiceId: string, productOrders: ProductOrder[], isRefund = false): Observable<Invoice> {
-      return this.invoiceService.deleteProductOrders(this.url, productOrders, invoiceId);
+  deleteProductOrdersByInvoice(invoiceId: string, productOrders: ProductOrder[], isRefund = false,
+    userName?: string): Observable<Invoice> {
+      return this.invoiceService.deleteProductOrders(this.url, productOrders, invoiceId, userName);
   }
 
   applyDiscountInvoice (id: string, discount: number, productOrderIds: Array<string>, discountType: EApplyDiscount): Observable<Invoice> {
