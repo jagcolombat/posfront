@@ -32,4 +32,10 @@ export class DepartmentService {
       .pipe(map(data => data))
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
+
+  getDepartmentById(url: string, id: string): Observable<Department> {
+    return this._http.get<Department>(url + '/departments/'+id)
+      .pipe(map(data => data))
+      .pipe(catchError(this.processHttpMsgService.handleError));
+  }
 }

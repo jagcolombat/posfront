@@ -30,6 +30,10 @@ export class StockService {
     return this.dataStore.getDepartments();
   }
 
+  getDepartmentById(id: string): Observable<Department> {
+    return this.dataStore.getDepartmentById(id);
+  }
+
   getSubDeptByDepartment(id: string): Observable<Department[]> {
     return this.dataStore.getSubDepartments(id);
   }
