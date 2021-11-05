@@ -46,7 +46,7 @@ export class CashService {
   @Output() evResetStock = new EventEmitter<boolean>();
   station: Station;
 
-  constructor(public dialog: MatDialog, private dataStorage: DataStorageService, public authServ: AuthService,
+  constructor(public dialog: MatDialog, public dataStorage: DataStorageService, public authServ: AuthService,
               public config: ConfigurationService) {
   }
 

@@ -7,7 +7,7 @@ import {Department} from '../../models/department.model';
 import {InvoiceService} from './invoice.service';
 import {ProductGenericComponent} from '../../components/presentationals/product-generic/product-generic.component';
 import {ProductGeneric} from '../../models/product-generic';
-import {Subscription} from 'rxjs';
+import {Observable, of, Subscription} from 'rxjs';
 import {CashService} from './cash.service';
 import {EOperationType} from '../../utils/operation.type.enum';
 import {OperationsService} from './operations.service';
@@ -40,22 +40,43 @@ export class ProductOrderService implements OnDestroy {
       if (!this.isAddByPluOrScan()) {
         this.operationService.currentOperation = StockOpEnum.ADD_PROD;
       }
-      if (product.followDepartment && this.departments) {
-        const dpto = this.departments.find(dpto => dpto.id === product.departmentId);
-        // const isAgeVerification = this.departments.find(dpto => dpto.id === product.departmentId).ageVerification;
-        if (dpto && dpto.ageVerification && !this.invoiceService.invoice.clientAge) {
-          this.ageVerification(product);
-        } else {
-          this.onCreateProductOrder(product);
-        }
-      } else if (product.ageVerification && !this.invoiceService.invoice.clientAge) {
+      /* if (product.followDepartment) {
+        this.getAttProdByDept(product);
+      } else */ 
+      if (product.ageVerification && !this.invoiceService.invoice.clientAge) {
         this.ageVerification(product);
       } else {
         this.onCreateProductOrder(product);
-      }
+      } 
     } else {
       this.cashService.openGenericInfo(InformationType.INFO, 'Invoice status no let add products');
     }
+  }
+
+  getAttProdByDept(product: Product) {
+    this.getDeptByProd(product).subscribe(dept => {
+      console.log('Getting products attributes from dept', dept);
+      if(dept) {
+        if(dept.ageVerification && !this.invoiceService.invoice.clientAge) {
+          this.ageVerification(product);
+        } else {
+          // if(product.applyTax) product.tax = dept.tax;
+          this.onCreateProductOrder(product);
+        }
+      } else {
+        this.cashService.openGenericInfo(InformationType.ERROR, 
+          'Cannot get the department of this product');
+      }
+    }, error => {
+      this.cashService.openGenericInfo(InformationType.ERROR, 
+        'Cannot get the department of this product');
+    });
+  }
+
+  getDeptByProd(product: Product): Observable<Department> {
+    return (this.departments && this.departments.length > 0) ?
+     of(this.departments.find(dpto => dpto.id === product.departmentId)):
+     this.cashService.dataStorage.getDepartmentById(product.departmentId);
   }
 
   isAddByPluOrScan() {
@@ -166,23 +187,11 @@ export class ProductOrderService implements OnDestroy {
   private createProductOrder(prod: Product, totalWF?: number): ProductOrder {
     const qty = this.invoiceService.qty > 1 ? this.invoiceService.qty : this.quantityByProduct;
     if (this.quantityByProduct !== 1) { this.quantityByProduct = 1; }
-    const tax = this.getTax(prod);
+    // const tax = prod.applyTax ? prod.tax ? prod.tax: 0: 0;
     const price = Number(prod.unitCost.toFixed(2));
     const total = Number((qty * price).toFixed(2));
-    // let total = Number((qty * price).toFixed(2));
-    return new ProductOrder(qty, prod.unitCost, totalWF ? totalWF : total, tax, 0, prod.id, prod.upc,
+    return new ProductOrder(qty, prod.unitCost, totalWF ? totalWF : total, 0, 0, prod.id, prod.upc,
       prod.name, prod.foodStamp, prod.isRefund, 0, prod.scalable);
-  }
-
-  private getTax(product: Product) {
-    let tax = 0;
-    if (product.applyTax && product.followDepartment) {
-      tax = this.departments.filter(dpto => dpto.id === product.departmentId).
-      map(dpto => dpto.tax)[0];
-    } else if (product.applyTax && !product.followDepartment) {
-      tax = product.tax;
-    }
-    return tax;
   }
 
   private ageVerification(product: Product) {
