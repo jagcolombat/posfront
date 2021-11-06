@@ -570,18 +570,25 @@ export class AdminOptionsService {
             console.log(next);
             if (next !== undefined && next.confirm ) {
               this.operationService.changePriceOp(prod);
+            } else {
+              this.cleanChangePrices();
             }
           });
         } else {
-          this.invoiceService.resetDigits();
+          this.cleanChangePrices();
         }
       });
     }, err => {
-      this.cashService.openGenericInfo('Error', 'Can\'t found this product ' + this.invoiceService.digits);
-    }, () =>  {
-      this.invoiceService.resetDigits();
-      this.currentOperation = '';
+      this.cashService.openGenericInfo('Error', 'Can\'t found this product ' + 
+        this.invoiceService.digits);
+      this.cleanChangePrices();
     });
+  }
+
+  cleanChangePrices() {
+    this.invoiceService.resetDigits();
+    this.currentOperation = '';
+    this.cashService.resetEnableState();
   }
 
   /*changePriceOp(prod: Product){
