@@ -8,6 +8,7 @@
     "compact": "powershell Compress-Archive \"./dist/%npm_package_name%/*.js\", \"./dist/posfront/*.css\", \"./dist/posfront/*.html\" ./dist/%npm_package_name%-%npm_package_version%.zip",
     "serve:prod": "ng serve --base-href=/posfront/ --deploy-url=/posfront/ --prod",
     "build:prod": "npm run generate:patch && npm run build && npm run compact",
+    "build:electron": "ng build --base-href=index.html --output-path=dist/electron --prod --configuration=electron",
     "generate:patch": "git format-patch -1 -o ./dist",
     "test": "ng test",
     "lint": "ng lint",

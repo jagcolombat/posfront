@@ -4,4 +4,5 @@ interface EnvConfig {
   ENVIRONMENT: string;
   API_URL: string;
   CLIENT: string;
+  BASE_URL: string;
 }
