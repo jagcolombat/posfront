@@ -6,6 +6,7 @@ import {Subscription} from 'rxjs';
 import {UserrolEnum} from '../../../utils/userrol.enum';
 import {NgForm} from '@angular/forms';
 import { debounceTime } from 'rxjs/operators';
+import { CashService } from 'src/app/services/bussiness-logic/cash.service';
 
 @Component({
   selector: 'login',
@@ -23,19 +24,22 @@ export class LoginComponent implements OnInit, OnDestroy {
   errorMsg: string;
   subscription: Subscription [] = [];
 
-  constructor(private router: Router, public authService: AuthService, private initService: InitViewService) {
+  constructor(private router: Router, public authService: AuthService, 
+    private initService: InitViewService, private cashService: CashService) {
     this.subscription.push(this.initService.evUserScanned.subscribe(next => this.userScan(next)));
   }
 
   ngOnInit() {
   }
 
-  login() {
+  login(userScan?: boolean) {
     this.authService.login({ username: 'user', password: this.input })
     .pipe(debounceTime(1000))
     .subscribe(t => {
+      if(userScan) this.cashService.disabledInput = false;
       this.loginOK(t);
     }, error1 => {
+      if(userScan) this.cashService.disabledInput = false;
       this.loginFail(error1);
     });
   }
@@ -119,7 +123,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     console.log('userScan', user, userTmp);
     this.input = userTmp;
     if (!this.initService.config.sysConfig.allowClock) {
-      this.login();
+      this.login(true);
     }
   }
 }
