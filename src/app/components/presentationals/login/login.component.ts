@@ -1,10 +1,10 @@
-import {Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import { Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AuthService } from '../../../services/api/auth.service';
-import { Router } from '@angular/router';
-import {InitViewService} from '../../../services/bussiness-logic/init-view.service';
-import {Subscription} from 'rxjs';
-import {UserrolEnum} from '../../../utils/userrol.enum';
-import {NgForm} from '@angular/forms';
+import { ActivatedRoute, ActivatedRouteSnapshot, Router } from '@angular/router';
+import { InitViewService } from '../../../services/bussiness-logic/init-view.service';
+import { Subscription } from 'rxjs';
+import { UserrolEnum } from '../../../utils/userrol.enum';
+import { NgForm } from '@angular/forms';
 import { debounceTime } from 'rxjs/operators';
 import { CashService } from 'src/app/services/bussiness-logic/cash.service';
 
@@ -24,7 +24,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   errorMsg: string;
   subscription: Subscription [] = [];
 
-  constructor(private router: Router, public authService: AuthService, 
+  constructor(private router: Router, private route: ActivatedRoute, public authService: AuthService, 
     private initService: InitViewService, private cashService: CashService) {
     this.subscription.push(this.initService.evUserScanned.subscribe(next => this.userScan(next)));
   }
@@ -122,7 +122,9 @@ export class LoginComponent implements OnInit, OnDestroy {
     const userTmp = user.substr(1, user.length - 2);
     console.log('userScan', user, userTmp);
     this.input = userTmp;
-    if (!this.initService.config.sysConfig.allowClock) {
+    console.log('route', this.route.snapshot.firstChild);
+    const cash = (this.route.snapshot.firstChild.url.find(seg => seg.path === 'cash') ? true : false);
+    if (!this.initService.config.sysConfig.allowClock || cash) {
       this.login(true);
     }
   }

@@ -56,7 +56,7 @@ export class CashViewComponent implements OnInit, OnDestroy {
         this.invoiceService.evNumpadInput.emit(ev.key);
       }
     } else if ((ev.key === 'Enter' || ev.keyCode === 13)) {
-      (this.invoiceService.digits) ? this.selectInputData() : this.passwordCard();
+      (this.invoiceService.digits && !this.passwordScan) ? this.selectInputData() : this.passwordCard();
     } else if ((ev.keyCode > 48 && ev.keyCode < 57) || (ev.keyCode === 73  || ev.keyCode === 82 || ev.keyCode === 105 ||
         ev.keyCode === 114) || !isNaN(parseInt(ev.key)) ) {
 
