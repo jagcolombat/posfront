@@ -15,6 +15,7 @@
   isRefund?: boolean;
   discount?: number;
   scalable?: boolean;
+  generic?: boolean;
 }
 
 export class ProductOrder implements IProductOrder {
@@ -30,7 +31,8 @@ export class ProductOrder implements IProductOrder {
               public foodStamp: boolean,
               public isRefund?: boolean,
               public discount?: number,
-              public scalable?: boolean) {
+              public scalable?: boolean,
+              public generic?: boolean) {
 
   }
 }

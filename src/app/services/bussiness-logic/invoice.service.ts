@@ -3,7 +3,7 @@ import {AuthService} from '../api/auth.service';
 import {ProductOrder} from '../../models/product-order.model';
 import {DataStorageService} from '../api/data-storage.service';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
-import {CardManualPayment, CreditCardModel, Product, SwipeMethod} from '../../models';
+import {CardManualPayment, CreditCardModel, Product, SwipeMethod, Token} from '../../models';
 import {InvoiceStatus} from '../../utils/invoice-status.enum';
 import {Invoice} from '../../models/invoice.model';
 import {map} from 'rxjs/operators';
@@ -121,16 +121,23 @@ export class InvoiceService {
 
   addProductOrder(po: ProductOrder) {
     // Update invoice on database
-    this.dataStorage.addProductOrderByInvoice(this.invoice.receiptNumber, po, EOperationType.Add, this.invoice.isRefund)
+    this.dataStorage.addProductOrderByInvoice(this.invoice.receiptNumber, po, EOperationType.Add, 
+      this.invoice.isRefund, this.addProdWithUser(po) ? this.cashier: '')
       .subscribe(next => {
       console.log('addProductOrder-next', next);
       (next.productOrders.length > 0 /*&& next.total >= this.invoice.total*/) ?
         // this.setInvoice(next):
         (next.isRefund) ? this.setInvoice(next) : this.addPO2Invoice(next) :
         this.showErr('The invoice hasn\'t products', next);
+      if(next.token) this.authService.token = this.authService.decodeToken(next.token);   
     }, err => {
       this.showErr(err);
+      if(this.addProdWithUser(po)) this.authService.token = this.authService.initialLogin;
     });
+  }
+
+  addProdWithUser(po: ProductOrder){
+    return po.generic && !this.cashService.config.sysConfig.allowAddProdGen;
   }
 
   private showErr(err: any, i?: Invoice) {

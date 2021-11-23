@@ -191,7 +191,7 @@ export class ProductOrderService implements OnDestroy {
     const price = Number(prod.unitCost.toFixed(2));
     const total = Number((qty * price).toFixed(2));
     return new ProductOrder(qty, prod.unitCost, totalWF ? totalWF : total, 0, 0, prod.id, prod.upc,
-      prod.name, prod.foodStamp, prod.isRefund, 0, prod.scalable);
+      prod.name, prod.foodStamp, prod.isRefund, 0, prod.scalable, prod.generic);
   }
 
   private ageVerification(product: Product) {

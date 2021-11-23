@@ -75,12 +75,15 @@ export class InvoiceService {
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
-  addProductOrder(url: string, product: ProductOrder, invoiceId: string, operation: EOperationType, isRefund: boolean): Observable<any> {
+  addProductOrder(url: string, product: ProductOrder, invoiceId: string, operation: EOperationType, 
+    isRefund: boolean, username?: string): Observable<any> {
     let params = new HttpParams();
     params = params.append('operationType', operation + '' );
     params = params.append('isRefund', isRefund + '' );
     params = params.append('isScalable', product.scalable + '' );
-    const productDto = {productId: product.productId, quantity: product.quantity, unitCost: product.unitCost, total: product.total};
+    params = params.append('username', username + '' );
+    const productDto = {productId: product.productId, quantity: product.quantity, 
+      unitCost: product.unitCost, total: product.total};
     return this._http.post(url + this.path + '/' + invoiceId + '/product', productDto, {params})
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
