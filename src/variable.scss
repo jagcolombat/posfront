@@ -11,6 +11,8 @@ $blue-border: #22539f;
 $violet-background: #9a61ff;
 $dark-violet-background: #5b4cab;
 $violet-border: #5b4cab;
+$pink-background: #f888d3;
+$pink-border: #eb40ce;
 $gray-background: lightgrey;
 $gray-border: darkgray;
 $white: #fff;
@@ -56,4 +58,10 @@ $black: #000;
   background-color: $gray-background;
   border-color: $gray-border;
   color: black;
+}
+
+@mixin pink {
+  background-color: $pink-background;
+  border-color: $pink-border;
+  color: $black !important;
 }

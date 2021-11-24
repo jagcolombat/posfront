@@ -129,7 +129,7 @@ export class ListProdComponent implements OnInit {
   }
 
   getColorByProp(prod: Product): string {
-    let color = 'normal';
+    let color = prod.color? prod.color: 'normal';
     if (prod.name === 'CONSULTATIONS') {
       color = 'violet';
     } else if (prod.generic) {

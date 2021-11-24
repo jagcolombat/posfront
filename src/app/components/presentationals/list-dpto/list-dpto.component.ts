@@ -113,4 +113,12 @@ export class ListDptoComponent implements OnInit {
       });
     this.stockService.operationService.resetInactivity(true, 'Filter Dept');
   }
+
+  getColorByProp(dpto: Department): string {
+    let color = dpto.color ? dpto.color: 'normal';
+    if (dpto.generic) {
+      color = 'generic';
+    }
+    return color;
+  }
 }

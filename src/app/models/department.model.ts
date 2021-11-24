@@ -10,4 +10,5 @@ export interface Department {
   ageVerification?: boolean;
   departmentType?: EDepartmentType;
   parentId?: number;
+  color: string;
 }
