@@ -1194,11 +1194,7 @@ export class AdminOptionsService {
           this.updateApp();
           break;
         case 2:
-          this.dataStorage.updateProducts().subscribe(
-            // tslint:disable-next-line:no-shadowed-variable
-            next => this.utils.openGenericInfo(InformationType.INFO,
-              'Update products on demand was successfully'),
-            error => this.utils.openGenericInfo(InformationType.ERROR, error));
+          this.updateProducts();
           break;
       }
     });
@@ -1258,10 +1254,57 @@ export class AdminOptionsService {
 
   private updateProducts() {
     console.log('update products');
+    this.dataStorage.updateProducts().subscribe(
+      // tslint:disable-next-line:no-shadowed-variable
+      next => this.utils.openGenericInfo(InformationType.INFO,
+        'Update products on demand was successfully'),
+      error => this.utils.openGenericInfo(InformationType.ERROR, error));
   }
 
   isRefundSale(): boolean {
     return (this.invoiceService.invoice) ? 
       this.invoiceService.invoice.isRefundSale: false;
+  }
+
+  changeColor() {
+    this.currentOperation = AdminOpEnum.CHANGE_COLOR;
+    if (this.invoiceService.digits) {
+      this.doChangeColor();
+    } /* else if (!this.invoiceService.digits && this.cashService.config.sysConfig.changePriceBySelection) {
+      this.selectOrScanForChangePrice();
+    } */ else {
+      this.scanForChangePrice();
+    }
+  }
+
+  doChangeColor() {
+    const colors = ['red', 'blue', 'yellow', 'green', 'violet', 'pink', 'orange'];
+    this.invoiceService.getProductByUpc(EOperationType.ChangeColor).subscribe(prods => {
+      this.operationService.selectProd(prods).subscribe( prod => {
+        if (prod) {
+          const adTypes = colors.map((v, i) => { return {"value": i, "text": v.toUpperCase(), "color": v}});
+          this.cashService.dialog.open(DialogDeliveryComponent,
+            {
+              width: '800px', height: '400px', data: {name: 'Change Color', label: 'Select an option', arr: adTypes},
+              disableClose: true
+            })
+            .afterClosed().subscribe(next => {
+              console.log(next);
+              if(next !== ""){
+                prod.color = adTypes[next].color;
+                this.operationService.changeProductOp(prod);
+              } else {
+                this.cleanChangePrices();
+              }
+            });
+        } else {
+          this.cleanChangePrices();
+        }
+      });
+    }, err => {
+      this.cashService.openGenericInfo('Error', 'Can\'t found this product ' + 
+        this.invoiceService.digits);
+      this.cleanChangePrices();
+    });
   }
 }

@@ -87,7 +87,11 @@ export class DataStorageService {
   }
 
   updateProductByUpc(upc: string, price: string, id: string): Observable<Product[]> {
-    return this.productService.updateProductByUpc(this.url, upc, price, id).pipe();
+    return this.productService.updateProductByUpc(this.url, upc, id, price).pipe();
+  }
+
+  updateColorByUpc(upc: string, color: string, id: string): Observable<Product[]> {
+    return this.productService.updateProductByAttr(this.url, upc, id, color, 'color').pipe();
   }
 
   // Invoice

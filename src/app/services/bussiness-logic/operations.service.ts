@@ -2180,4 +2180,22 @@ export class OperationsService {
       });
   }
 
+  changeProductOp(prod: Product) {    
+    this.invoiceService.updateProductsColor(prod.upc, prod.color, prod.id).subscribe(next => {
+        console.log(next);
+        this.cashService.openGenericInfo('Information', 'The color of product ' +
+          next['upc'] + ' was updated to ' + next['color'])
+          .afterClosed().subscribe(next => this.router.navigateByUrl('/cash/dptos', { replaceUrl: true }));
+      },
+      err => {
+        this.cashService.openGenericInfo('Error', 'Can\'t change color of this product ' + prod.upc);
+      },
+      () => {
+        this.currentOperation = '';
+        this.evCleanAdminOperation.emit();
+        this.cashService.resetEnableState();
+        this.invoiceService.resetDigits();
+      });
+  }
+
 }

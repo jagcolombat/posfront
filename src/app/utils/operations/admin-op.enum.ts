@@ -22,6 +22,7 @@ export enum AdminOpEnum {
   CHARGE_ACCT_SETUP = 'Acct Charge Setup',
   EMPLOYEE_SETUP = 'Employee Setup',
   CHANGE_PRICES = 'Change Prices',
+  CHANGE_COLOR = 'Change Colors',
   EBT_INQUIRY = 'EBT Inquiry',
   CREDIT_LIMIT = 'Credit Limit',
   REFUND_SALE = 'Refund Sale',

@@ -247,6 +247,10 @@ export class InvoiceService {
     return this.dataStorage.updateProductByUpc(upc, price, id);
   }
 
+  updateProductsColor(upc: string, color: string, id: string) {
+    return this.dataStorage.updateColorByUpc(upc, color, id);
+  }
+
   setInvoice(inv: Invoice) {
     this.invoice = inv;
     this.receiptNumber = this.invoice.receiptNumber;

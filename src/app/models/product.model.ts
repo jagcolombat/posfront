@@ -23,9 +23,10 @@ export interface Product {
 export interface IProductUpdate {
   id: string;
   upc: string;
-  price: number;
+  price?: number;  
+  color?: string;
 }
 
 export class ProductUpdate implements IProductUpdate {
-  constructor(public id: string, public upc: string, public price: number) { }
+  constructor(public id: string, public upc: string, public price?: number, public color?: string) { }
 }

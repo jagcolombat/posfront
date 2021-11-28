@@ -23,9 +23,15 @@ export class ProductService {
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
-  updateProductByUpc(url: string, upc: string, price: string, id: string): Observable<Product[]> {
+  updateProductByUpc(url: string, upc: string, id: string, price: string): Observable<Product[]> {
     const payload = new ProductUpdate(id, upc, +price);
-    return this._http.post<any>(url + '/products/attribute/price', payload)
+    return this._http.post<any>(url + '/products/attribute/', payload)
+      .pipe(catchError(this.processHttpMsgService.handleError));
+  }
+
+  updateProductByAttr(url: string, upc: string, id: string, value: string, attr: 'price' | 'color'): Observable<Product[]> {
+    const payload = new ProductUpdate(id, upc, null, value);
+    return this._http.post<any>(url + '/products/attribute/' + attr, payload)
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 

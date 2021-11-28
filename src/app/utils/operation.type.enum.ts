@@ -40,6 +40,7 @@ export enum EOperationType {
     AuthPending,
     Departments,
     ChangePrice,
+    ChangeColor,
     AgeVerification,
     List,
     Tables,
