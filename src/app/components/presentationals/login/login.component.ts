@@ -15,6 +15,7 @@ import { CashService } from 'src/app/services/bussiness-logic/cash.service';
 })
 export class LoginComponent implements OnInit, OnDestroy {
   @Output() evRol = new EventEmitter<boolean>();
+  @Output() formValid = new EventEmitter<boolean>();
   @Input() rol: UserrolEnum[];
   @ViewChild('loginForm') loginForm: NgForm;
 
@@ -30,6 +31,10 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.loginForm.statusChanges.subscribe(next => {
+      console.log('change status login form', next);
+      if(next === 'VALID') this.formValid.emit(true);
+    });
   }
 
   login(userScan?: boolean) {
@@ -123,7 +128,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     console.log('userScan', user, userTmp);
     this.input = userTmp;
     console.log('route', this.route.snapshot.firstChild);
-    const cash = (this.route.snapshot.firstChild.url.find(seg => seg.path === 'cash') ? true : false);
+    const cash = (this.route.snapshot.firstChild && this.route.snapshot.firstChild.url.find(seg => seg.path === 'cash') ? true : false);
     if (!this.initService.config.sysConfig.allowClock || cash) {
       this.login(true);
     }

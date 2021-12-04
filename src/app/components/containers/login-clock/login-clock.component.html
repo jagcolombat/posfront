@@ -1,4 +1,4 @@
 <div class="login-container">
-  <login #login fxLayout="column" fxFlex="95"></login>
-  <clock-in-out [clock]="showClock" (evClock)="clockInOut($event)"></clock-in-out>
+  <login #login fxLayout="column" fxFlex="95" (formValid)="valid = $event"></login>
+  <clock-in-out [clock]="showClock" (evClock)="clockInOut($event)" [valid]=valid></clock-in-out>
 </div>

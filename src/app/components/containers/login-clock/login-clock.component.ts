@@ -15,6 +15,7 @@ export class LoginClockComponent implements OnInit {
 
   @Input() showClock: boolean;
   @ViewChild('login') login: LoginComponent;
+  @Input() valid: boolean;
 
   constructor(public dataStore: DataStorageService, private utils: UtilsService) { }
 

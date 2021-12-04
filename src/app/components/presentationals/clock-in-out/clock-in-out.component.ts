@@ -10,6 +10,7 @@ import {leaveFocusOnButton} from "../../../utils/functions/functions";
 export class ClockInOutComponent implements OnInit {
   @Output() evClock = new EventEmitter<string>();
   @Input() clock: boolean;
+  @Input() valid: boolean;
   clockValue: Array<EClockType>;
   clockLabel: Array<string>;
 

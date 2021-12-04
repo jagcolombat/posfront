@@ -10,5 +10,6 @@
       <span class="err-msg">{{errorMsg}}</span>
     </mat-error>
   </div>
-  <generic-keyboard (evKeys)="getKeys($event)" [valid]="loginForm.form.invalid"></generic-keyboard>
+  <generic-keyboard (evKeys)="getKeys($event)" [valid]="loginForm.form.invalid" 
+    [dirty]="input"></generic-keyboard>
 </form>

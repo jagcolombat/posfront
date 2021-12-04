@@ -2,6 +2,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {TypeKey} from "../../../utils/typekey.enum";
 import {ValueCalculator} from "../../../models/value-calculator.model";
 import {OperationsService} from "../../../services/bussiness-logic/operations.service";
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'calculator',
@@ -14,11 +15,13 @@ export class CalculatorComponent implements OnInit {
   @Input() numbers = [1,2,3,4,5,6,7,8,9,0,"00","@/FOR"];
   @Input() leftOperations=["F/S Subtotal", "Subtotal"];
   @Input() valid: boolean;
+  @Input() form: FormGroup;
+  @Input() dirty: boolean;
   space = "5px";
 
   constructor(private op: OperationsService) { }
 
-  ngOnInit() {
+  ngOnInit() {    
   }
 
   sendKey(val: string | number, type: string) {

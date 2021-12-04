@@ -1,4 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'generic-keyboard',
@@ -7,6 +8,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 })
 export class GenericKeyboardComponent implements OnInit {
   @Input() valid: boolean;
+  @Input() dirty: boolean;
   @Output() evKeys = new EventEmitter<any>();
   input = "";
   operations = ['Clear', 'Enter'];
