@@ -20,6 +20,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   @ViewChild('loginForm') loginForm: NgForm;
 
   input = '';
+  dirty: boolean;
   tryValidation: boolean;
   valid: boolean;
   errorMsg: string;
@@ -34,6 +35,11 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.loginForm.statusChanges.subscribe(next => {
       console.log('change status login form', next);
       if(next === 'VALID') this.formValid.emit(true);
+    });
+
+    this.loginForm.valueChanges.subscribe(next => {
+      console.log('value changes', next);
+      this.dirty = next['password'] !== '';
     });
   }
 
