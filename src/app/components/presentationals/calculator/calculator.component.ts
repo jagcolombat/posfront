@@ -17,6 +17,7 @@ export class CalculatorComponent implements OnInit {
   @Input() valid: boolean;
   @Input() form: FormGroup;
   @Input() dirty: boolean;
+  @Input() disabled: boolean;
   space = "5px";
 
   constructor(private op: OperationsService) { }

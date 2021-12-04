@@ -21,6 +21,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   input = '';
   dirty: boolean;
+  loading: boolean;
   tryValidation: boolean;
   valid: boolean;
   errorMsg: string;
@@ -44,12 +45,15 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   login(userScan?: boolean) {
+    this.loading = true;
     this.authService.login({ username: 'user', password: this.input })
     .pipe(debounceTime(1000))
     .subscribe(t => {
+      this.loading = false;
       if(userScan) this.cashService.disabledInput = false;
       this.loginOK(t);
     }, error1 => {
+      this.loading = false;
       if(userScan) this.cashService.disabledInput = false;
       this.loginFail(error1);
     });
@@ -123,6 +127,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.input = '';
     this.tryValidation = false;
     this.valid = false;
+    this.loading = false;
   }
 
   ngOnDestroy() {

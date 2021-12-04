@@ -12,6 +12,8 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import {MatNativeDateModule, MatSelectModule, MatSnackBarModule} from "@angular/material";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatDatepickerModule } from "@angular/material/datepicker";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { MatProgressBarModule } from "@angular/material/progress-bar";
 
 @NgModule({
   imports: [
@@ -29,7 +31,8 @@ import { MatDatepickerModule } from "@angular/material/datepicker";
     MatSlideToggleModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatProgressBarModule
   ],
   exports: [
     MatCardModule,
@@ -46,7 +49,8 @@ import { MatDatepickerModule } from "@angular/material/datepicker";
     MatSlideToggleModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatProgressBarModule
   ],
   declarations: []
 })

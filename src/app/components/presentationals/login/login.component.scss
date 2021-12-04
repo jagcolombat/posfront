@@ -25,3 +25,22 @@ input {
   width: 200px;
 }
 
+.processing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  span, mat-progress-bar {
+    margin-bottom: 10px;
+  }
+  span {
+    color: rgba(19, 34, 87, 0.71);
+    label {
+      font-family: Roboto, sans-serif;
+    }
+  }
+  span::before {
+    margin: 0 10px;
+  }
+}
+

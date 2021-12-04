@@ -1,5 +1,5 @@
 <form novalidate #loginForm="ngForm" fxFlex="100" fxLayout="column" fxLayoutAlign="space-between">
-  <div class="form-field" fxFlex="100" fxLayoutAlign="center center">
+  <div *ngIf="!loading" class="form-field" fxFlex="100" fxLayoutAlign="center center">
     <mat-form-field>
       <input matInput placeholder="Password" type="password" [(ngModel)]="input" autocomplete="new-password"
              name="password" #password="ngModel" required [minlength]="4" (input)="tryValidation = false"/>
@@ -10,6 +10,10 @@
       <span class="err-msg">{{errorMsg}}</span>
     </mat-error>
   </div>
+  <div *ngIf="loading" class="form-field processing" fxFlex="100">
+    <span class="fa fa-warning fa-lg"><label>Processing... Please wait.</label></span>
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  </div>
   <generic-keyboard (evKeys)="getKeys($event)" [valid]="loginForm.form.invalid" 
-    [dirty]="dirty"></generic-keyboard>
+    [dirty]="dirty" [disabled]=loading></generic-keyboard>
 </form>

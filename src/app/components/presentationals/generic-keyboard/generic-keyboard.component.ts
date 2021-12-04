@@ -9,6 +9,7 @@ import { FormGroup } from '@angular/forms';
 export class GenericKeyboardComponent implements OnInit {
   @Input() valid: boolean;
   @Input() dirty: boolean;
+  @Input() disabled: boolean;
   @Output() evKeys = new EventEmitter<any>();
   input = "";
   operations = ['Clear', 'Enter'];
