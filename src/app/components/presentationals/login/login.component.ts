@@ -137,6 +137,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   private userScan(user: string) {
     const userTmp = user.substr(1, user.length - 2);
     console.log('userScan', user, userTmp);
+    this.cashService.disabledInput = true;
     this.input = userTmp;
     console.log('route', this.route.snapshot.firstChild);
     const cash = (this.route.snapshot.firstChild && this.route.snapshot.firstChild.url.find(seg => seg.path === 'cash') ? true : false);
