@@ -32,8 +32,9 @@ import {SetDateComponent} from '../../components/presentationals/set-date/set-da
 import {GiftCardModel, GiftModel} from '../../models/gift-card.model';
 import {thousandFormatter} from '../../utils/functions/transformers';
 import {UtilsService} from './utils.service';
-import {Credentials, CredentialsModel} from '../../models';
+import {Credentials, CredentialsModel, Product} from '../../models';
 import {EmployActions} from '../../utils/employ-actions.enum';
+import { Department } from 'src/app/models/department.model';
 
 @Injectable({
   providedIn: 'root'
@@ -1266,37 +1267,39 @@ export class AdminOptionsService {
       this.invoiceService.invoice.isRefundSale: false;
   }
 
-  changeColor() {
-    this.currentOperation = AdminOpEnum.CHANGE_COLOR;
-    if (this.invoiceService.digits) {
-      this.doChangeColor();
-    } /* else if (!this.invoiceService.digits && this.cashService.config.sysConfig.changePriceBySelection) {
-      this.selectOrScanForChangePrice();
-    } */ else {
-      this.scanForChangePrice();
-    }
+  selectChangeColorPoD() {
+    const ccTypes = new Array<any>({value: 1, text: 'Department'}, {value: 2, text: 'Product'});
+    this.cashService.dialog.open(DialogDeliveryComponent,
+      { width: '600px', height: '340px', data: {name: 'Change color to Department or Product',
+          label: 'Please select what item you wish to change the color', arr: ccTypes},
+        disableClose: true })
+      .afterClosed().subscribe(next => {
+        console.log(next);      
+        this.changeColor(next);
+    });
   }
 
-  doChangeColor() {
-    const colors = ['red', 'blue', 'yellow', 'green', 'violet', 'pink', 'orange'];
+  changeColor(itemType: number) {
+    if (itemType === 2) {
+      (this.invoiceService.digits) ? this.changeProductColor(): 
+        this.cashService.openGenericInfo(InformationType.INFO, 
+           "Please, scan or input a UPC product before select " + AdminOpEnum.CHANGE_COLOR);
+    }
+    else if(itemType === 1) {
+      this.changeDeptColor();
+    }/* else if (!this.invoiceService.digits && this.cashService.config.sysConfig.changePriceBySelection) {
+      this.selectOrScanForChangePrice();
+    }  else {
+      this.scanForChangePrice();
+    }*/ 
+  }
+
+  changeProductColor(){    
+    this.currentOperation = AdminOpEnum.CHANGE_COLOR;
     this.invoiceService.getProductByUpc(EOperationType.ChangeColor).subscribe(prods => {
       this.operationService.selectProd(prods).subscribe( prod => {
         if (prod) {
-          const adTypes = colors.map((v, i) => { return {"value": i, "text": v.toUpperCase(), "color": v}});
-          this.cashService.dialog.open(DialogDeliveryComponent,
-            {
-              width: '800px', height: '400px', data: {name: 'Change Color', label: 'Select an option', arr: adTypes},
-              disableClose: true
-            })
-            .afterClosed().subscribe(next => {
-              console.log(next);
-              if(next !== ""){
-                prod.color = adTypes[next].color;
-                this.operationService.changeProductOp(prod);
-              } else {
-                this.cleanChangePrices();
-              }
-            });
+          this.doChangeColor(prod);
         } else {
           this.cleanChangePrices();
         }
@@ -1306,5 +1309,44 @@ export class AdminOptionsService {
         this.invoiceService.digits);
       this.cleanChangePrices();
     });
+  }
+
+  changeDeptColor() {    
+    this.cashService.dataStorage.getDepartments().subscribe(depts => {
+      this.operationService.openDialogWithPag(depts, dept => this.doChangeColor(dept), 
+      AdminOpEnum.CHANGE_COLOR, 'Pick a department to change your color', 'name');
+    }, err => {
+      this.cashService.openGenericInfo('Error', 'Can\'t found departments ');
+      this.cleanChangePrices();
+    });
+  }
+
+  doChangeColor(item: Product | Department) {
+    this.currentOperation = AdminOpEnum.CHANGE_COLOR;
+    const deptColors = ['red', 'yellow'];
+    const prodColors = ['blue', 'orange'];
+    const colors = ['green', 'violet', 'pink', 'gray', 'brown', 'dark-blue', 'olive', 'magenta', 'gold'];
+    
+    if (item) {
+      item['upc'] ? colors.push(...prodColors) : colors.push(...deptColors);
+      const adTypes = colors.map((v, i) => { return {"value": i, "text": v.toUpperCase(), "color": v}});
+      this.cashService.dialog.open(DialogDeliveryComponent,
+        {
+          width: '800px', height: '450px', data: {name: 'Change Color', label: 'Select an option', arr: adTypes},
+          disableClose: true
+        })
+        .afterClosed().subscribe(next => {
+          console.log(next);
+          if(next !== ""){
+            item.color = adTypes[next].color;
+            item['upc'] ? this.operationService.changeProductOp(<Product> item): 
+              this.operationService.changeProductOp(<Department> item);
+          } else {
+            this.cleanChangePrices();
+          }
+        });
+    } else {
+      this.cleanChangePrices();
+    }
   }
 }

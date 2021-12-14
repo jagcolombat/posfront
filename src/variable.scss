@@ -17,6 +17,15 @@ $gray-background: lightgrey;
 $gray-border: darkgray;
 $white: #fff;
 $black: #000;
+//Botanica suggestions
+$brown: #910404;
+$olive: #205000;
+$ocre: #895700;
+$magenta: #500457;
+$blue-darker: #003953;
+$magenta-dark: #410059;
+$gray-dark: #535353;
+
 
 @mixin red {
   background-color: $red-background;
@@ -65,3 +74,34 @@ $black: #000;
   border-color: $pink-border;
   color: $black !important;
 }
+
+@mixin brown {
+  background-color: $brown;
+  border-color: $brown;
+  color: $white !important;
+}
+
+@mixin olive {
+  background-color: $olive;
+  border-color: $olive;
+  color: $white !important;
+}
+
+@mixin ocre {
+  background-color: $ocre;
+  border-color: $ocre;
+  color: $white !important;
+}
+
+@mixin magenta {
+  background-color: $magenta;
+  border-color: $magenta;
+  color: $white !important;
+}
+
+@mixin dark-blue {
+  background-color: $blue-darker;
+  border-color: $blue-darker;
+  color: $white !important;
+}
+

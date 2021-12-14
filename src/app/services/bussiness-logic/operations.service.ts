@@ -42,6 +42,7 @@ import {InitViewService} from './init-view.service';
 import {ScanOpEnum} from '../../utils/operations/scanner-op.enum';
 import {ClientModel} from '../../models/client.model';
 import {debounceTime} from 'rxjs/operators';
+import { Department } from 'src/app/models/department.model';
 
 @Injectable({
   providedIn: 'root'
@@ -629,7 +630,8 @@ export class OperationsService {
         });
       dialogRef.afterClosed().subscribe(order => {
         console.log('The dialog with pagination was closed', order);
-        if (order) { action(order); } else {
+        if (order) { action(order); 
+        } else {
           if (noSelectionMsg) { this.cashService.openGenericInfo('Error', noSelectionMsg); }
           // this.cashService.resetEnableState();
         }
@@ -2180,15 +2182,15 @@ export class OperationsService {
       });
   }
 
-  changeProductOp(prod: Product) {    
-    this.invoiceService.updateProductsColor(prod.upc, prod.color, prod.id).subscribe(next => {
+  changeProductOp(item: Product | Department) { 
+    this.changeItemOp(item).subscribe(next => {
         console.log(next);
-        this.cashService.openGenericInfo('Information', 'The color of product ' +
-          next['upc'] + ' was updated to ' + next['color'])
+        this.cashService.openGenericInfo('Information', 'The color of ' +
+          next['name'] + ' was updated to ' + next['color'].toUpperCase())
           .afterClosed().subscribe(next => this.router.navigateByUrl('/cash/dptos', { replaceUrl: true }));
       },
       err => {
-        this.cashService.openGenericInfo('Error', 'Can\'t change color of this product ' + prod.upc);
+        this.cashService.openGenericInfo('Error', 'Can\'t change color');
       },
       () => {
         this.currentOperation = '';
@@ -2196,6 +2198,11 @@ export class OperationsService {
         this.cashService.resetEnableState();
         this.invoiceService.resetDigits();
       });
+  }
+
+  changeItemOp(item: Product | Department): Observable<any> {
+    return item['upc'] ? this.invoiceService.updateProductsColor(item['upc'], item.color, item.id):
+      this.invoiceService.updateDepartmentColor(item.color, item.id)
   }
 
 }

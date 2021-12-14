@@ -250,6 +250,10 @@ export class InvoiceService {
   updateProductsColor(upc: string, color: string, id: string) {
     return this.dataStorage.updateColorByUpc(upc, color, id);
   }
+  
+  updateDepartmentColor(color: string, id: string): Observable<any> {
+    return this.dataStorage.updateColorDept(id, color);
+  }
 
   setInvoice(inv: Invoice) {
     this.invoice = inv;

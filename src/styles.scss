@@ -114,3 +114,23 @@ mat-datepicker-content  mat-calendar-header {
 .gray {
   @include light-gray;
 }
+
+.brown {
+  @include brown;
+}
+
+.gold {
+  @include ocre;
+}
+
+.olive {
+  @include olive;
+}
+
+.magenta {
+  @include magenta;
+}
+
+.dark-blue {
+  @include dark-blue;
+}

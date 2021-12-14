@@ -119,7 +119,7 @@ export class AdminOptionsComponent implements OnInit {
           this.adminOpService.changePrice();
           break;
         case AdminOpEnum.CHANGE_COLOR.toUpperCase():
-          this.adminOpService.changeColor();
+          this.adminOpService.selectChangeColorPoD();
           break;
         /*case AdminOpEnum.EBT_INQUIRY.toUpperCase():
           this.adminOpService.ebtInquiry();

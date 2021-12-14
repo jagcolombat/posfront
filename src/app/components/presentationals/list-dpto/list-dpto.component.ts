@@ -115,6 +115,7 @@ export class ListDptoComponent implements OnInit {
   }
 
   getColorByProp(dpto: Department): string {
+    console.log(dpto);
     let color = dpto.color ? dpto.color: 'normal';
     if (dpto.generic) {
       color = 'generic';

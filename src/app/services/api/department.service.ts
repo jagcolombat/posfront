@@ -38,4 +38,10 @@ export class DepartmentService {
       .pipe(map(data => data))
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
+  
+  updateDeptByAttr(url: string, id: string, value: string): Observable<Department[]> {
+    const payload = {id: id, color: value};
+    return this._http.post<any>(url + '/departments/attribute/color', payload)
+      .pipe(catchError(this.processHttpMsgService.handleError));
+  }
 }

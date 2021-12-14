@@ -74,6 +74,10 @@ export class DataStorageService {
 
   getDepartmentById(id): Observable<Department> {
     return this.departmentService.getDepartmentById(this.url, id);
+  }  
+
+  updateColorDept(id: string, color: string): Observable<Department[]> {
+    return this.departmentService.updateDeptByAttr(this.url, id, color).pipe();
   }
 
   // Products
