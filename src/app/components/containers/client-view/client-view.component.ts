@@ -22,6 +22,9 @@ export class ClientViewComponent implements OnInit, OnDestroy {
   logged = false;
   pathPromotions = 'promotions/';
   pathAnnounces = 'anuncios/';
+  weight = 0;
+  upcProdWeighted = "";
+  nameProdWeighted = "";
 
   constructor(private invoiceService: InvoiceService, private ws: WebsocketService,
               public initService: InitViewService, public snackBar: MatSnackBar) {
@@ -42,6 +45,7 @@ export class ClientViewComponent implements OnInit, OnDestroy {
 
   private invoiceUpdated(data: any) {
     console.log('invoiceUpdated', data);
+    this.weight = 0;
     this.initService.setOperation(EOperationType.UpdateInvoiceCustomerScreen, 'Client View', 'Update invoice '
       + data.entity.id);
     this.logged = true;
@@ -66,6 +70,14 @@ export class ClientViewComponent implements OnInit, OnDestroy {
   }
 
   private addPO2Invoice(inv: Invoice) {
+    let length = inv.productOrders.length - 1; 
+    if(length>=0 && inv.productOrders[length]['scalable']) {
+      this.weight = inv.productOrders[length].quantity;
+      this.upcProdWeighted = inv.productOrders[length].productUpc;
+      this.nameProdWeighted = inv.productOrders[length].productName;
+    } else {
+      this.weight = 0;
+    } 
     !this.invoiceService.invoice ? this.invoiceService.setInvoice(inv) : this.invoiceService.addPO2Invoice(inv);
   }
 

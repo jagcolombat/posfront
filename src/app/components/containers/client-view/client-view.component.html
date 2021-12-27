@@ -7,8 +7,10 @@
   </div>
 
   <div id="left" fxFlex.lt-lg="46" fxFlex.md="40" fxFlex.lg="35" fxFlex.xl="30" fxLayout="column" fxLayoutAlign="space-between" class="border">
-    <div fxLayoutAlign="center center" class="border">
-      <slide-promotions [path]="env.myVarForImageURLS + pathPromotions" [height]="'350px'"></slide-promotions>
+    <div fxLayoutAlign="center center" flex="100" class="border">
+      <!-- <slide-promotions [path]="env.myVarForImageURLS + pathPromotions" [height]="'350px'">
+      </slide-promotions> -->
+      <app-weight-product [weight]=weight [upc]=upcProdWeighted [name]=nameProdWeighted></app-weight-product>
     </div>
     <div fxLayoutAlign="center" fxLayout="column" id="logoAnnounce">
       <!--<slide-announce [path]="env.myVarForImageURLS + pathAnnounces" [height]="'400px'"></slide-announce>-->

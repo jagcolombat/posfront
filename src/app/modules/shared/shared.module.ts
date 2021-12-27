@@ -21,6 +21,7 @@ import {PromotionsComponent} from "../../components/presentationals/promotions/p
 import {SlideshowModule} from "ng-simple-slideshow";
 import {LoadingComponent} from "../../components/presentationals/loading/loading.component";
 import {StationStatusComponent} from '../../components/presentationals/station-status/station-status.component';
+import { WeightProductComponent } from '../../components/presentationals/weight-product/weight-product.component';
 
 // export const options: Partial<IConfig>| (() => Partial<IConfig>);
 
@@ -59,7 +60,8 @@ import {StationStatusComponent} from '../../components/presentationals/station-s
     AnnounceComponent,
     PromotionsComponent,
     LoadingComponent,
-    StationStatusComponent
+    StationStatusComponent,
+    WeightProductComponent
   ],
   declarations: [CalculatorComponent,
     GenericKeyboardComponent,
@@ -74,7 +76,8 @@ import {StationStatusComponent} from '../../components/presentationals/station-s
     AnnounceComponent,
     PromotionsComponent,
     LoadingComponent,
-    StationStatusComponent
+    StationStatusComponent,
+    WeightProductComponent
   ]
 })
 export class SharedModule { }
