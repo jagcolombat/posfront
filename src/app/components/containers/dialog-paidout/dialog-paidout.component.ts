@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import {MatDialogRef} from "@angular/material";
+import { Component, Inject, OnInit } from '@angular/core';
+import {MatDialogRef, MAT_DIALOG_DATA} from "@angular/material";
 import {FilterComponent} from "../../presentationals/filter/filter.component";
 
 @Component({
@@ -8,8 +8,13 @@ import {FilterComponent} from "../../presentationals/filter/filter.component";
   styleUrls: ['./dialog-paidout.component.scss']
 })
 export class DialogPaidoutComponent implements OnInit {
+  title: string = "Paid out";
 
-  constructor(public dialogRef: MatDialogRef<FilterComponent>) { }
+  constructor(public dialogRef: MatDialogRef<FilterComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
+    if (this.data.title) {
+      this.title = this.data.title;
+    }
+  }
 
   ngOnInit() {
   }

@@ -1327,21 +1327,39 @@ export class OperationsService {
     }
   }
 
-  paidOut() {
+  paidInOrOut() {
     if (this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS) {
+      const paidTypes = new Array<any>({value: 1, text: 'Paid Out'}, {value: 2, text: 'Paid In'});
+      this.cashService.dialog.open(DialogDeliveryComponent,
+        { width: '600px', height: '340px', data: {name: 'Paid type selection',
+            label: 'Please select type of Paid', arr: paidTypes},
+          disableClose: true })
+        .afterClosed().subscribe(next => {
+          console.log(next);      
+          this.paidOut(next);
+      });
+    } else {
+      this.cashService.openGenericInfo('Error', 'Paid out operation is not allow if a invoice is in progress');
+    }
+    this.resetInactivity(true); 
+  }
+
+  paidOut(type?: number) {
+    // if (this.invoiceService.invoice.status !== InvoiceStatus.IN_PROGRESS) {
+      const title = (type === 1 || !type) ? 'Paid Out': 'Paid In';
       this.cashService.dialog.open(PaidOutComponent,
         {
-          width: '480px', height: '600px', disableClose: true
+          width: '480px', height: '600px', disableClose: true, data: { title: title }
         })
         .afterClosed().subscribe((data: string) => {
         console.log('paided out modal', data);
         if (data) {
           this.cashService.dialog.open(DialogPaidoutComponent,
             {
-              width: '1024px', height: '600px', disableClose: true
+              width: '1024px', height: '600px', disableClose: true, data: { title: title }
             })
             .afterClosed().subscribe(next => {
-            this.invoiceService.addPaidOut(data, next.text).subscribe(next => {
+            this.invoiceService.addPaidOut(data, next.text, type).subscribe(next => {
               console.log('paided out service', data, next);
             }, error1 => {
               console.error('paid out', error1);
@@ -1350,10 +1368,10 @@ export class OperationsService {
           });
         }
       });
-    } else {
+    /* } else {
       this.cashService.openGenericInfo('Error', 'Paid out operation is not allow if a invoice is in progress');
     }
-    this.resetInactivity(true);
+    this.resetInactivity(true); */
   }
 
   keyboard(action?: FinancialOpEnum | AdminOpEnum) {

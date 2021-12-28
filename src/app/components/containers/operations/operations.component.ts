@@ -250,7 +250,7 @@ export class OperationsComponent implements OnInit {
         this.operationService.notSale();
         break;
       case 'Paid Out':
-        this.operationService.paidOut();
+        this.operationService.paidInOrOut();
         break;
       case 'House Charge':
         this.operationService.cashService.openGenericInfo('House Charge', 'Sending event');

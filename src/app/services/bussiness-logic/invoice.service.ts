@@ -380,8 +380,8 @@ export class InvoiceService {
     return this.dataStorage.applyDiscountInvoice(this.invoice.receiptNumber, discount, idProdOrders, type);
   }
 
-  addPaidOut(data: string, descrip?: string) {
-    return this.dataStorage.addPaidOut(new PaidOut(+data, descrip));
+  addPaidOut(data: string, descrip?: string, type?: number) {
+    return this.dataStorage.addPaidOut(new PaidOut(+data, descrip, type));
   }
 
   cancelCheck() {
