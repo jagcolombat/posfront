@@ -15,6 +15,7 @@ import {ConfigurationService} from './configuration.service';
 import {Station} from '../../models/station.model';
 import {Observable} from 'rxjs';
 import {EOperationType} from '../../utils/operation.type.enum';
+import { DialogDeliveryComponent } from 'src/app/components/presentationals/dialog-delivery/dialog-delivery.component';
 
 @Injectable({
   providedIn: 'root'
@@ -215,6 +216,15 @@ export class CashService {
       },
       disableClose: true
     });
+  }
+
+  genericOptionsModal(options: Array<{value: string, text: string}>, name: string, label?: string, width?: number, height?: number) {
+    return this.dialog.open(DialogDeliveryComponent,
+      {
+        width: width ? width + 'px': '600px', height: height ? height + 'px': '360px', 
+        data: {name: name, label: 'Select an option', arr: options},
+        disableClose: true
+      });
   }
 
   getSystemConfig() {
