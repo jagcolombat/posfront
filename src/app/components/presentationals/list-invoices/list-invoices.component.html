@@ -1,9 +1,11 @@
-<button mat-button fxFlex="170px" *ngFor="let i of data.invoice | paginate: { itemsPerPage: sizePage, currentPage: page }"
-        [mat-dialog-close]="i" [ngClass]="setColor(i.type)">
-  <span *ngIf="data.label" [ngClass]="breakText">{{i[data.label].substring(0, 30)}}</span>
+<button mat-button fxFlex="170px" [mat-dialog-close]="i" [ngClass]="setColor(i.type)"
+    *ngFor="let i of data.invoice | paginate: { itemsPerPage: sizePage, currentPage: page }">
+  <span *ngIf="data.label" [ngClass]="breakText">
+    {{i[data.label].substring(0, lengthText)}}
+  </span>
   <p *ngIf="data.detail && (currencyProps.includes(data.detail))">{{i[data.detail] | currency }}</p>
   <p *ngIf="data.detail && (!currencyProps.includes(data.detail))" [ngClass]="breakText">
-    {{i[data.detail].substring(0, 30)}}
+    {{i[data.detail].substring(0, lengthText)}}
   </p>
   <span *ngIf="data.subdetail && (currencyProps.includes(data.subdetail))">{{i[data.subdetail] | currency }}</span>
   <span *ngIf="data.subdetail && (!currencyProps.includes(data.subdetail))">{{i[data.subdetail]}}</span>

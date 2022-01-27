@@ -18,6 +18,7 @@ export class DialogInvoiceComponent {
   sizePage = 12;
   showFilter: true;
   breakText: string;
+  lengthLabel: string;
 
   constructor(
     private cashService: CashService,
@@ -26,6 +27,7 @@ export class DialogInvoiceComponent {
     if(data.title) this.title = data.title;
     if(data.subtitle) this.subtitle = data.subtitle;
     if(data.filter) this.showFilter = data.filter;
+    if(data.lengthLabel) this.lengthLabel = data.lengthLabel;
     this.breakText = this.cashService.config.sysConfig.breakText;
   }
 

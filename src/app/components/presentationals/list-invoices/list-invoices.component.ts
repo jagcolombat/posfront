@@ -15,6 +15,7 @@ export class ListInvoicesComponent implements OnInit {
   @Input() detail: string;
   @Input() subdetail: string;
   @Input() breakText: string;
+  @Input() lengthText: number = 30;
   currencyProps = ['total', 'unitCost', 'balance', 'creditLimit', 'credit', 'giftAmount'];
 
   constructor() { }
