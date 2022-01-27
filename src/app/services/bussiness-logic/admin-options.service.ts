@@ -29,12 +29,14 @@ import {CustomerOpEnum} from '../../utils/operations/customer.enum';
 import {ClientService} from './client.service';
 import {CloseBatchComponent} from '../../components/presentationals/close-batch/close-batch.component';
 import {SetDateComponent} from '../../components/presentationals/set-date/set-date.component';
+import {RangeDateComponent} from '../../components/presentationals/range-date/range-date.component';
 import {GiftCardModel, GiftModel} from '../../models/gift-card.model';
 import {thousandFormatter} from '../../utils/functions/transformers';
 import {UtilsService} from './utils.service';
 import {Credentials, CredentialsModel, Product} from '../../models';
 import {EmployActions} from '../../utils/employ-actions.enum';
 import { Department } from 'src/app/models/department.model';
+import { FinancialReportComponent } from '../../components/presentationals/financial-report/financial-report.component';
 
 @Injectable({
   providedIn: 'root'
@@ -1141,16 +1143,20 @@ export class AdminOptionsService {
     );
   }
 
-  weeklyClose(op) {
-    this.cashService.dayCloseEnableState();
-    /*this.cashService.dialog.open(SetDateComponent,
-      { width: '400px', height: '340px', data: {title: 'Weekly Close', subtitle: 'Set date', closeWeek: true},
-        disableClose: true })
-      .afterClosed().subscribe(next => {
-      console.log('afterCloseSetDate', next);
-      (next.date) ? this.weeklyCloseOp( AdminOpEnum.WEEKLY_CLOSE, next.date.to) : this.cashService.resetEnableState();
-    });*/
-    this.weeklyCloseOp(AdminOpEnum.WEEKLY_CLOSE);
+  closeReports() {
+    const options = [
+      {value: '1', text: AdminOpEnum.WEEKLY_REPORT.toString()}, 
+      {value: '2', text: AdminOpEnum.RANGE_REPORT.toString()}
+    ]
+    this.cashService.genericOptionsModal(options, 'Close Reports', 'Select a report type', 480, 320).afterClosed()
+      .subscribe(next => {
+        next === '1' ? this.weeklyClose() : this.rangeReport();
+      });
+  }
+
+  weeklyClose() {
+    this.cashService.dayCloseEnableState();    
+    this.weeklyCloseOp(AdminOpEnum.WEEKLY_REPORT);
   }
 
   weeklyCloseOp(op: any, date?: any) {
@@ -1172,22 +1178,44 @@ export class AdminOptionsService {
     );
   }
 
+  rangeReport(){
+    this.getDateReport().afterClosed().subscribe(next=> {
+      console.log('afterCloseSetDate', next);
+      (next) ? this.getFullCloseReport(next) : this.cashService.resetEnableState();
+    });
+  }
+
+  getDateReport(){
+    return this.cashService.dialog.open(RangeDateComponent,
+      { 
+        width: '600px', height: '480px', data: {
+          title: 'Close Range Report', subtitle: 'Set date'
+        },
+        disableClose: true 
+      });
+  }
+
+  getFullCloseReport(date: {startCloseDate: any, endCloseDate: any}) {
+    console.log('getFullReport', date);
+    this.dataStorage.getCloseReport(date.startCloseDate, date.endCloseDate).subscribe(
+      next => {
+        console.log(next);
+        this.cashService.dialog.open(FinancialReportComponent,
+          { 
+            width: '600px', height: '480px', data: {
+              title: 'Financial Report', data: next
+            },
+            disableClose: true 
+          });
+      },
+      err => console.error(err)
+    )
+  }
+
   update() {
-    // let e = new KeyboardEvent("keydown", { key: 'F11', bubbles: true });
-    /*let e = this.createKeyboradEvent('keydown', 'F11')
-    console.log('update browser', e);
-    document.addEventListener('keydown', (e) => { console.log('keydown', e); })
-    document.addEventListener('keypress', (e) => { console.log('keypress', e); })
-    document.body.dispatchEvent(e);*/
-    /*this.
-    this.utils.updateBrowser();*/
     const adTypes = new Array<any>(
       {value: 1, text: 'UPDATE APP'}, {value: 2, text: 'UPDATE PRODUCTS'});
-    this.cashService.dialog.open(DialogDeliveryComponent,
-      {
-        width: '400px', height: '360px', data: {name: 'Update Options', label: 'Select an option', arr: adTypes},
-        disableClose: true
-      })
+    this.cashService.genericOptionsModal(adTypes, 'Update Options', null, 400, 360)
       .afterClosed().subscribe(next => {
       console.log(next);
       switch (next) {
@@ -1269,10 +1297,8 @@ export class AdminOptionsService {
 
   selectChangeColorPoD() {
     const ccTypes = new Array<any>({value: 1, text: 'Department'}, {value: 2, text: 'Product'});
-    this.cashService.dialog.open(DialogDeliveryComponent,
-      { width: '600px', height: '340px', data: {name: 'Change color to Department or Product',
-          label: 'Please select what item you wish to change the color', arr: ccTypes},
-        disableClose: true })
+    this.cashService.genericOptionsModal(ccTypes, 'Change color to Department or Product',
+          'Please select what item you wish to change the color', 600, 340)
       .afterClosed().subscribe(next => {
         console.log(next);      
         this.changeColor(next);

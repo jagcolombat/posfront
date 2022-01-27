@@ -84,6 +84,22 @@ export class AdminOperationService {
       .pipe(catchError(this.processHttpMsgService.handleError));
   }
 
+  getCloseReportsByDate(url: string, from: string, to?: string) {
+    let params = new HttpParams();
+    if (from) { params = params.append('fromDate', from + ''); }
+    if (to) { params = params.append('toDate', to + ''); }
+    return this._http.get<any>(url + this.path + '/op/financials', {params})
+      .pipe(catchError(this.processHttpMsgService.handleError));
+  }
+
+  getCloseReport(url: string, from, to) {
+    let params = new HttpParams();
+    if (from) { params = params.append('fromDate', from + ''); }
+    if (to) { params = params.append('toDate', to + ''); }
+    return this._http.get<any>(url + this.path + '/op/financial', {params})
+      .pipe(catchError(this.processHttpMsgService.handleError));
+  }
+
   getDayClose(url: string, close: boolean, date?: string): Observable<Report> {
     let params = new HttpParams();
     if (date) { params = params.append('date', date + ''); }

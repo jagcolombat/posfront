@@ -620,7 +620,8 @@ export class OperationsService {
   }
 
   openDialogWithPag(dataArr: Array<any>, action: (i: any) => void, title: string, subTitle: string, label: string,
-                       detail?: string, subdetail?: string, noSelectionMsg?: string) {
+                       detail?: string, subdetail?: string, noSelectionMsg?: string, 
+                       lengthLabel?: number) {
     if (dataArr.length > 0) {
       const dialogRef = this.cashService.dialog.open(DialogInvoiceComponent,
         {

@@ -1,0 +1,40 @@
+<div oncontextmenu="return false">
+  <mat-toolbar color="primary">
+    {{ title }}
+    <span class="flex-spacer"></span>
+    <button mat-raised-button mat-dialog-close color="primary">&times;</button>
+  </mat-toolbar>
+  <div mat-dialog-content class="flex-center">
+    <p>{{ subtitle }}</p>
+    <div class="date-range flex-center">
+      <mat-form-field>
+        <input matInput [matDatepicker]="startpicker" placeholder="Choose a start date" 
+          (dateChange)="addEvent('start', $event)" [value]="startdate" disabled [max]="maxStartDate" [min]="minDate">
+        <mat-datepicker-toggle matSuffix [for]="startpicker"></mat-datepicker-toggle>
+        <mat-datepicker #startpicker touchUi disabled="false"></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput [matDatepicker]="endpicker" placeholder="Choose a end date"
+          (dateChange)="addEvent('end', $event)" [value]="enddate" disabled [max]="maxDate" [min]="minEndDate">
+        <mat-datepicker-toggle matSuffix [for]="endpicker" [disabled]="enddisabled"></mat-datepicker-toggle>
+        <mat-datepicker #endpicker touchUi disabled="false"></mat-datepicker>
+      </mat-form-field>
+    </div>
+
+    <div class="date-range flex-center">
+      <button *ngIf="startClose" mat-button fxFlex="170px" class="red">
+        <span>{{startClose.date}}</span>
+        <p>{{startClose.value | currency }}</p>
+      </button>
+
+      <button *ngIf="endClose" mat-button fxFlex="170px" class="red">
+        <span>{{endClose.date}}</span>
+        <p>{{endClose.value | currency }}</p>
+      </button>
+    </div>  
+  </div>
+  <div mat-dialog-actions>
+    <button mat-raised-button [disabled]="enddisabled" (click)="getCloseReport()">Get Close Report</button>
+  </div>
+</div>

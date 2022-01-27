@@ -36,9 +36,11 @@ import {EbtInquiryInfoComponent} from "../../components/presentationals/ebt-inqu
 import {SwipeCredentialCardComponent} from "../../components/presentationals/swipe-credential-card/swipe-credential-card.component";
 import {DailyCloseComponent} from "../../components/presentationals/daily-close/daily-close.component";
 import {SetDateComponent} from "../../components/presentationals/set-date/set-date.component";
+import {RangeDateComponent} from "../../components/presentationals/range-date/range-date.component";
 import {ClockInOutComponent} from "../../components/presentationals/clock-in-out/clock-in-out.component";
 import {LoginClockComponent} from "../../components/containers/login-clock/login-clock.component";
 import {TimeWorkedComponent} from "../../components/presentationals/time-worked/time-worked.component";
+import { FinancialReportComponent } from 'src/app/components/presentationals/financial-report/financial-report.component';
 
 @NgModule({
   imports: [
@@ -85,7 +87,9 @@ import {TimeWorkedComponent} from "../../components/presentationals/time-worked/
     SwipeCredentialCardComponent,
     DailyCloseComponent,
     SetDateComponent,
-    TimeWorkedComponent
+    RangeDateComponent,
+    TimeWorkedComponent,
+    FinancialReportComponent
   ],
   entryComponents: [
     AgeValidationComponent,
@@ -116,7 +120,9 @@ import {TimeWorkedComponent} from "../../components/presentationals/time-worked/
     OrderInfoDetailsComponent,
     SwipeCredentialCardComponent,
     DailyCloseComponent,
-    SetDateComponent
+    SetDateComponent,
+    RangeDateComponent,
+    FinancialReportComponent
   ],
 })
 export class HomeModule { }

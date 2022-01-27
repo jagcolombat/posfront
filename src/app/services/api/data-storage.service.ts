@@ -43,7 +43,6 @@ import {IInvoicesByStates} from '../../models/invoices-by-user.model';
   providedIn: 'root'
 })
 export class DataStorageService {
-
   disableOp = false;
 
   private url = baseURL;
@@ -328,6 +327,14 @@ export class DataStorageService {
 
   getInvoiceByTransferType(authPending: EOperationType, auth: ETransferType) {
     return this.invoiceService.getInvoiceByTransferType(this.url, auth);
+  }
+
+  getCloseReportsByDate(from?: string, to?: string): Observable<any>{
+    return this.adminOperationService.getCloseReportsByDate(this.url, from, to);
+  }
+
+  getCloseReport(from, to){
+    return this.adminOperationService.getCloseReport(this.url, from, to);
   }
 
   setUserToInvoice(invoiceId, userId): Observable<Invoice> {

@@ -58,7 +58,7 @@ export class OperationsComponent implements OnInit {
   @Input() reportOperations = [AdminOpEnum.EMPLZ, AdminOpEnum.SYSZ, AdminOpEnum.WTDZ, AdminOpEnum.CCSZ];
   @Input() reportColor = 'yellow';
 
-  @Input() backOperations = [AdminOpEnum.PREV_SCREEN, AdminOpEnum.WEEKLY_CLOSE];
+  @Input() backOperations = [AdminOpEnum.PREV_SCREEN, AdminOpEnum.CLOSE_REPORTS];
   @Input() backColor = 'yellow';
 
   @Input() financeAdminOperations = [FinancialOpEnum.REPRINT, FinancialOpEnum.HOLD, FinancialOpEnum.REVIEW,
@@ -314,8 +314,8 @@ export class OperationsComponent implements OnInit {
         this.adminOpService.backToUser();
         // this.router.navigateByUrl('/cash/dptos');
         break;
-      case AdminOpEnum.WEEKLY_CLOSE:
-        this.adminOpService.weeklyClose(ev);
+      case AdminOpEnum.CLOSE_REPORTS:
+        this.adminOpService.closeReports();
         // this.router.navigateByUrl('/cash/dptos');
         break;
     }

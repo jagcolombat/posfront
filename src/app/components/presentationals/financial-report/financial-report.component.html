@@ -1,0 +1,45 @@
+<div oncontextmenu="return false">
+  <mat-toolbar color="primary">
+    {{ title }}
+    <span class="flex-spacer"></span>
+    <button mat-raised-button mat-dialog-close color="primary">&times;</button>
+  </mat-toolbar>
+  <div mat-dialog-content class="flex-center">
+    <p>{{ subtitle }}</p>
+    <div class="financial-group">
+      <h3>Sales</h3>
+      <div class="financial-item">
+        <label>Sales</label>
+        <span>{{sales?.saleTax}}</span>
+      </div>
+      <div class="financial-item">
+        <label>Sales Tax</label>
+        <span>{{sales?.saleWithTax}}</span>
+      </div>
+      <div class="financial-item bold">
+        <label>Gross Sale</label>
+        <span>{{sales?.grossSale}}</span>
+      </div>
+      <div class="financial-item">
+        <label>Deduction</label>
+        <span>{{sales?.deduction}}</span>
+      </div>
+      <div class="financial-item">
+        <label>Deduction Tax</label>
+        <span>{{sales?.deductiontax}}</span>
+      </div>
+      <div class="financial-item">
+        <label>Charges to Accounts</label>
+        <span>{{sales?.chargesAccount}}</span>
+      </div>
+      <div class="financial-item">
+        <label>Accounts Payments</label>
+        <span>{{sales?.paymentsAccounts}}</span>
+      </div>
+      <div class="financial-item bold">
+        <label>Net Sale</label>
+        <span>{{sales?.netSale}}</span>
+      </div>
+    </div>
+  </div>
+</div>    
