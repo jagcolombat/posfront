@@ -1,3 +1,14 @@
+div[mat-dialog-content] {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.financial-layout {
+    display: flex;
+    flex-direction: row;
+}
+
 .financial-group {
     border-radius: 10px;
     border: 1px solid gray;
@@ -5,7 +16,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    max-width: 250px;
+    max-width: 350px;
     flex-direction: column;
     padding: 5px 20px;
 

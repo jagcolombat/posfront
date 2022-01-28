@@ -11,14 +11,15 @@
         <input matInput [matDatepicker]="startpicker" placeholder="Choose a start date" 
           (dateChange)="addEvent('start', $event)" [value]="startdate" disabled [max]="maxStartDate" [min]="minDate">
         <mat-datepicker-toggle matSuffix [for]="startpicker"></mat-datepicker-toggle>
-        <mat-datepicker #startpicker touchUi disabled="false"></mat-datepicker>
+        <mat-datepicker #startpicker touchUi disabled="false" (closed)="closeDatePickerEvent(true)">
+        </mat-datepicker>
       </mat-form-field>
 
       <mat-form-field>
         <input matInput [matDatepicker]="endpicker" placeholder="Choose a end date"
           (dateChange)="addEvent('end', $event)" [value]="enddate" disabled [max]="maxDate" [min]="minEndDate">
         <mat-datepicker-toggle matSuffix [for]="endpicker" [disabled]="enddisabled"></mat-datepicker-toggle>
-        <mat-datepicker #endpicker touchUi disabled="false"></mat-datepicker>
+        <mat-datepicker #endpicker touchUi disabled="false" (closed)="closeDatePickerEvent(false)"></mat-datepicker>
       </mat-form-field>
     </div>
 
@@ -35,6 +36,6 @@
     </div>  
   </div>
   <div mat-dialog-actions>
-    <button mat-raised-button [disabled]="enddisabled" (click)="getCloseReport()">Get Close Report</button>
+    <button mat-raised-button [disabled]="btnDisabled" (click)="getCloseReport()">Get Close Report</button>
   </div>
 </div>

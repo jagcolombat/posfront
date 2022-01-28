@@ -23,6 +23,8 @@ export class RangeDateComponent implements OnInit {
   maxStartDate  = new Date();
   response = {startCloseDate: '', endCloseDate: ''};
   enddisabled: boolean = true;
+  btnDisabled: boolean = true;
+  showingCloseReports: boolean = false;
 
   constructor(
     public dialogRef: MatDialogRef<RangeDateComponent>, @Inject(MAT_DIALOG_DATA) public data: any,
@@ -38,6 +40,7 @@ export class RangeDateComponent implements OnInit {
 
   addEvent(type: string, event: MatDatepickerInputEvent<Date>) {
     console.log('setDate addEvent', type, event.value);
+    this.showingCloseReports = true;
     if(type === 'start') { 
       this.startdate = event.value;
       this.enddisabled = false;
@@ -46,17 +49,25 @@ export class RangeDateComponent implements OnInit {
     } else {
       this.enddate = event.value;
       this.maxStartDate = event.value;
-      this.showCloseReports(this.getFormatDate(new Date(this.enddate), false), false);
+      this.showCloseReports(this.enddate, false);
     }
   }
 
-  showCloseReports(date: string, start: boolean) {
+  closeDatePickerEvent(start: boolean){
+    if(!this.showingCloseReports) {
+      const date = start ? this.startdate: this.enddate;
+      this.showCloseReports(date, start);
+    } 
+  }
+
+  showCloseReports(date: any, start: boolean) {
     //const closeReports = new Array<any>({value: '1000', date: date+'-12:00'});
-    const from= this.getFormatDate(new Date(this.startdate), true);
-    const to= this.getFormatDate(new Date(this.startdate), false);
+    const from= this.getFormatDate(new Date(date), true);
+    const to= this.getFormatDate(new Date(date), false);
     this.dataStorage.getCloseReportsByDate(from, to).subscribe(
         next => {
           console.log(next);
+          this.showingCloseReports = false;
           const closeReports = next.map(close => new Object({
             total: close.saleTax + '',
             range: this.removeTFromISODate(close.openingTime) + ' - ' + this.removeTFromISODate(close.closeTime),
@@ -75,7 +86,14 @@ export class RangeDateComponent implements OnInit {
   
   selectedCloseReport(report: any, start: boolean) {
     console.log('selectedCloseReport', report, start);
-    start ? this.startClose = report: this.endClose = report;
+    if(report){
+      if(start) {
+        this.startClose = report;
+      } else {
+        this.endClose = report;
+        this.btnDisabled = false;
+      }  
+    }
   }
 
   getCloseReport() {

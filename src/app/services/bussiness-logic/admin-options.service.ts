@@ -31,7 +31,7 @@ import {CloseBatchComponent} from '../../components/presentationals/close-batch/
 import {SetDateComponent} from '../../components/presentationals/set-date/set-date.component';
 import {RangeDateComponent} from '../../components/presentationals/range-date/range-date.component';
 import {GiftCardModel, GiftModel} from '../../models/gift-card.model';
-import {thousandFormatter} from '../../utils/functions/transformers';
+import {dateFormatter, thousandFormatter} from '../../utils/functions/transformers';
 import {UtilsService} from './utils.service';
 import {Credentials, CredentialsModel, Product} from '../../models';
 import {EmployActions} from '../../utils/employ-actions.enum';
@@ -1202,8 +1202,10 @@ export class AdminOptionsService {
         console.log(next);
         this.cashService.dialog.open(FinancialReportComponent,
           { 
-            width: '600px', height: '480px', data: {
-              title: 'Financial Report', data: next
+            width: '950px', height: '600px', data: {
+              title: 'Financial Report', 
+              subtitle: dateFormatter(date.startCloseDate) + '-' + dateFormatter(date.endCloseDate),
+              data: next
             },
             disableClose: true 
           });

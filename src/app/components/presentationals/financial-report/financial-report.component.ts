@@ -1,6 +1,6 @@
 import { Component, Inject, Input, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { ICashSales, IFunctions, ISales, Sales } from 'src/app/models/financials';
+import { CashSales, Functions, ICashSales, IFunctions, ISales, Sales } from 'src/app/models/financials';
 
 @Component({
   selector: 'app-financial-report',
@@ -16,13 +16,20 @@ export class FinancialReportComponent implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<FinancialReportComponent>, 
     @Inject(MAT_DIALOG_DATA) public data: any) {
-      console.log('financial report', this.data);
-      if (data.title) { this.title = this.data.title; }
-      if (this.data.data) { 
+      console.log('financial report', data);
+      if (data.title) { this.title = data.title; }
+      if (data.subtitle) { this.subtitle = data.subtitle; }
+      if (data.data) { 
         const data = this.data.data;
         this.sales = new Sales(data.salesTax, data.saleWithTax, data.grossSale, 
           data.deduction, data.deductionTax, data.accountChargeTotal, 
-          data.accountPaymentTotal, data.netSale); 
+          data.accountPaymentTotal, data.netSale);
+          
+        this.cash = new CashSales(data.cashSale, data.cashAccountPayment, data.paidOut,
+          data.cashDue, data.ticketsCount, data.avgTickets);
+
+        this.functions = new Functions(data.refunds, data.openChecks, data.voidTickets,
+          data.paidOut, data.discounts);   
       }
   }
 
